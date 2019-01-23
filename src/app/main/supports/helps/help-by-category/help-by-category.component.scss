@@ -1,0 +1,30 @@
+@import "src/@fuse/scss/fuse";
+
+:host {
+    #help-by-category {
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+
+        .articles-list {
+            width: 560px;
+            min-width: 400px;
+            margin: 16px;
+            padding: 16px;
+
+            @include media-breakpoint('xs') {
+                min-width: 300px;
+                margin: 16px 0;
+            }
+
+            .mat-list-item {
+                text-decoration: none !important;
+                font-size: 12px;
+            }
+
+            .see-all-link {
+                font-size: 14px;
+            }
+        }
+    }
+}

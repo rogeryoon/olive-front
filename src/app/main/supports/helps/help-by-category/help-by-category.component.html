@@ -1,0 +1,26 @@
+<div id="help-by-category" class="page-layout simple" fusePerfectScrollbar>
+    <div class="content p-24">
+        <div fxLayout="row wrap" fxLayoutAlign="center">
+            <mat-nav-list class="articles-list mat-white-bg mat-elevation-z4" *ngFor="let category of categoryHelps">
+
+                <h3 mat-subheader>{{category.helpCategoryName}}</h3>
+               
+                <a mat-list-item *ngFor="let help of category.helpInfos"
+                   (click)="readArticle(help.helpId)">
+                    <mat-icon class="secondary-text mr-8">note</mat-icon>
+                    <span *ngIf="help.title.length > maxShortenLength" matTooltip="{{help.title}}" matTooltipShowDelay="500">
+                        {{ help.title | shorten: maxShortenLength: '...' }}
+                    </span>
+                    <span *ngIf="help.title.length <= maxShortenLength">
+                        {{ help.title}}
+                    </span>
+                </a>
+
+                <a mat-list-item class="see-all-link accent-fg" [routerLink]="'/supports/helps'" [queryParams]="{category:category.helpCategoryCode}">
+                    모두 보기 ({{category.totalCategoryHelpCount}})
+                </a>
+
+            </mat-nav-list>
+        </div>
+    </div>
+</div>

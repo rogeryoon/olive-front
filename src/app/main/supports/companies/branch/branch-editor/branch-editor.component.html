@@ -1,0 +1,52 @@
+﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
+      <mat-form-field class="w-100-p" *ngIf="isIdVisible">
+        <input matInput name="id" formControlName="id" placeholder="Id" readonly="readonly">
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="code" formControlName="code" placeholder="Code" maxlength="20" class="to-uppercase">
+        <mat-hint align="end">{{code.value?.length || 0}}/20</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="name" formControlName="name" placeholder="Name" required maxlength="200">
+        <mat-hint align="end">{{name.value?.length || 0}}/200</mat-hint>
+        <mat-error *ngIf="name.hasError('required')">
+           {{'common.entryError.required' | translate}}
+         </mat-error>
+      </mat-form-field>
+
+      <mat-checkbox formControlName="outsourcing">Outsourcing</mat-checkbox>
+
+      <mat-checkbox formControlName="private">Private</mat-checkbox>
+
+      <mat-checkbox formControlName="activated">Activated</mat-checkbox>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="phoneNumber" formControlName="phoneNumber" placeholder="Phone Number" maxlength="100">
+        <mat-hint align="end">{{phoneNumber.value?.length || 0}}/100</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="faxNumber" formControlName="faxNumber" placeholder="Fax Number" maxlength="100">
+        <mat-hint align="end">{{faxNumber.value?.length || 0}}/100</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="email" formControlName="email" placeholder="Email" maxlength="200">
+        <mat-hint align="end">{{email.value?.length || 0}}/200</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="weekdayBusinessHours" formControlName="weekdayBusinessHours" placeholder="Weekday Business Hours" maxlength="200">
+        <mat-hint align="end">{{weekdayBusinessHours.value?.length || 0}}/200</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="weekendBusinessHours" formControlName="weekendBusinessHours" placeholder="Weekend Business Hours" maxlength="200">
+        <mat-hint align="end">{{weekendBusinessHours.value?.length || 0}}/200</mat-hint>
+      </mat-form-field>
+
+
+      <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+</form>

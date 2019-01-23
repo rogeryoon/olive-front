@@ -1,0 +1,22 @@
+﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
+      <mat-form-field class="w-100-p" *ngIf="isIdVisible">
+        <input matInput name="id" formControlName="id" placeholder="Id" readonly="readonly">
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="name" formControlName="name" placeholder="Name" required maxlength="200">
+        <mat-hint align="end">{{name.value?.length || 0}}/200</mat-hint>
+        <mat-error *ngIf="name.hasError('required')">
+          {{'common.entryError.required' | translate}}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-checkbox name="activated" formControlName="activated">Activated</mat-checkbox>
+
+      <mat-form-field class="w-100-p">
+        <textarea matInput name="memo" formControlName="memo" placeholder="Memo" rows="5">
+        </textarea>
+      </mat-form-field>
+
+      <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+</form>

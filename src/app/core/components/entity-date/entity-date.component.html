@@ -1,0 +1,20 @@
+<div class="form-group row top-pad" [formGroup]="oForm" novalidate>
+  <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px" *ngIf="updatedDatesExists">
+      <mat-form-field fxFlex>
+          <input matInput name="updatedUser" formControlName="updatedUser" placeholder="수정인" readonly="readonly">
+      </mat-form-field>
+
+      <mat-form-field fxFlex>
+          <input matInput name="updatedUtc" formControlName="updatedUtc" placeholder="수정일" readonly="readonly">
+      </mat-form-field>      
+  </div>
+  <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" fxLayoutGap.lt-md="0px" *ngIf="createdDatesExists">
+      <mat-form-field fxFlex>
+          <input matInput name="createdUser" formControlName="createdUser" placeholder="등록인" readonly="readonly">
+      </mat-form-field>
+
+      <mat-form-field fxFlex>
+          <input matInput name="createdUtc" formControlName="createdUtc" placeholder="등록일" readonly="readonly">
+      </mat-form-field>      
+  </div>  
+</div>

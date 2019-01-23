@@ -1,0 +1,95 @@
+<form [formGroup]="oForm" class="maxwidth">
+  <mat-table [dataSource]="itemsDataSource" formArrayName="formarray">
+    <mat-header-row *matHeaderRowDef="displayedColumns">
+    </mat-header-row>
+
+    <mat-footer-row *matFooterRowDef="displayedColumns">
+    </mat-footer-row>
+
+    <mat-row *matRowDef="let row; columns: displayedColumns; let i=index" #cdkrow [ngClass]="{'highlightrow': (currentRow) && row.ObjId == currentRow.ObjId}"
+      (click)="currentRow=row;">
+    </mat-row>
+
+    <ng-container matColumnDef="productVariantId">
+      <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="center">{{Id36(row.Obj.id)}}</mat-cell>
+      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
+        <mat-form-field fxFlex='95%'>
+          <input matInput name="inputName{{row.ObjId}}" formControlName="name" (change)="onChange($event)" (keyup)="onKeyup($event)"
+            (blur)="onBlur($event)" class="small-font">
+          <mat-error *ngIf="hasRequiredError('name',i)">
+            {{'common.entryError.required' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="quantity">
+      <mat-header-cell *matHeaderCellDef>수량</mat-header-cell>
+      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
+        <mat-form-field fxFlex='95%'>
+          <input name="inputQuantity{{row.ObjId}}" type="number" matInput class="right" formControlName="quantity"
+            (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)">
+          <mat-error *ngIf="hasRequiredError('quantity',i)">
+            {{'common.entryError.required' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef>{{totalQuantity}}</mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <mat-header-cell *matHeaderCellDef>가격</mat-header-cell>
+      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
+        <mat-form-field fxFlex='95%'>
+          <input name="inputPrice{{row.ObjId}}" type="number" matInput class="right" formControlName="price" (change)="onChange($event)"
+            (keyup)="onKeyup($event)" (blur)="onBlur($event)">
+          <mat-error *ngIf="hasRequiredError('price',i)">
+            {{'common.entryError.required' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="amount">
+      <mat-header-cell *matHeaderCellDef>소계</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="end pr-16">
+        {{row.Obj.price * row.Obj.quantity | money}}
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef>{{totalQuantity}}</mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="remark">
+      <mat-header-cell *matHeaderCellDef>Remark</mat-header-cell>
+      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
+        <mat-form-field fxFlex='95%'>
+          <input name="inputRemark{{row.ObjId}}" matInput type="text" formControlName="remark" (change)="onChange($event)"
+            (keyup)="onKeyup($event)" (blur)="onBlur($event)">
+        </mat-form-field>
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef fxFlex="100px">
+        <button mat-button color="primary" matTooltip="신규" (click)="newItem()">
+          <mat-icon class="mat-button-icon">add</mat-icon>신규
+        </button>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row" fxFlex="100px">
+        <button mat-icon-button matTooltip="{{'management.Delete' | translate}}" (click)="deleteItem(row)">
+          <mat-icon color="warn">delete</mat-icon>
+        </button>
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+    </ng-container>
+
+  </mat-table>
+</form>

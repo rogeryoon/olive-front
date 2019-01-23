@@ -1,0 +1,9 @@
+  <mat-form-field class="w-100-p" [floatLabel]="floatLabels" fxFlex>
+    <input matInput #lookupCtrl [formControl]="lookupName" [readonly]="true" [value]="getValue()" [type]="type" [id]="id" [placeholder]="placeholder"  
+    (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" (dblclick)="lookUp()"/>
+    <span matPrefix *ngIf="isEditMode"><mat-icon class="secondary-text link-cursor" (click)="lookUp()">zoom_in</mat-icon>&nbsp;&nbsp;</span>
+    <mat-error *ngIf="lookupName.hasError('required')">
+      {{'common.entryError.needToSelect' | translate}}
+    </mat-error>
+  </mat-form-field>
+

@@ -1,0 +1,36 @@
+﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
+      <mat-form-field class="w-100-p" *ngIf="isIdVisible">
+        <input matInput name="id" formControlName="id" placeholder="Id" readonly="readonly">
+      </mat-form-field>
+
+      <olive-lookup-host #product formControlName="productFk" required  [placeholder]="'Product'" [isEditMode]="canAssignItem"></olive-lookup-host>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="name" formControlName="name" placeholder="Type Name"maxlength="200">
+        <mat-hint align="end">{{name.value?.length || 0}}/200</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="code" formControlName="code" placeholder="Code" maxlength="100" class="to-uppercase">
+        <mat-hint align="end">{{code.value?.length || 0}}/100</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="standPrice" formControlName="standPrice" placeholder="Stand Price" type="number">
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="weight" formControlName="weight" placeholder="Weight" type="number">
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <mat-select name="weightTypeCode" formControlName="weightTypeCode" placeholder="Type of Product Weight" required>
+          <mat-option *ngFor="let unit of weightTypes" [value]="unit.code">{{unit.name}} ({{unit.symbol}})</mat-option>
+        </mat-select>
+        <mat-error *ngIf="weightTypeCode.hasError('required')">
+          {{'common.entryError.needToSelect' | translate}}
+        </mat-error>
+      </mat-form-field>
+
+      <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+</form>

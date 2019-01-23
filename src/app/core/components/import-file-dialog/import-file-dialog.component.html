@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>{{translate('common.title.importDialog')}}</h1>
+<div mat-dialog-content>
+    {{translate('common.message.clickFileButton')}}
+    <button mat-raised-button (click)="excelfile.click()" color="primary"><mat-icon>ballot</mat-icon> {{translate('common.button.exelFile')}}</button>
+    <input #excelfile type="file" id="excelfile" (change)="onUpload($event)" style="display:none;"/> 
+
+    <div class="top-pad bottom-pad">
+        <mat-progress-bar *ngIf="showLoadingBar" class="loading-bar" color="accent" mode="indeterminate"></mat-progress-bar>
+        <table id="import-table" class="display" style="width:100%"></table>
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button [disabled]="!exceljson" (click)="save();" color="accent">
+        <mat-icon>save</mat-icon> {{translate('common.button.save')}}</button>
+    <button mat-raised-button (click)="cancel()">
+        <mat-icon>cancel</mat-icon>{{translate('common.button.cancel')}}</button>
+</div>

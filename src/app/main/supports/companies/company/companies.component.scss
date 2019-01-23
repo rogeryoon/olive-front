@@ -1,0 +1,43 @@
+﻿:host {
+    table {
+        th:nth-child(1) {
+            width: 20px;
+        }
+
+        th:nth-child(2) {
+            width: 120px;
+        }
+
+        th:nth-child(4) {
+            width: 180px;
+        }
+
+        th:nth-child(5) {
+            width: 100px;
+        }
+
+        th:nth-child(6) {
+            width: 100px;
+        }        
+
+        td:nth-child(1) {
+            text-align: center;
+        }
+
+        td:nth-child(2) {
+            text-transform: uppercase;
+        }
+
+        td:nth-child(3) {
+            text-align: justify;
+        }
+
+        td:nth-child(4) {
+            text-align: justify;
+        }
+
+        td:nth-child(5), td:nth-child(6) {
+            text-align: center;
+        }
+    }
+}

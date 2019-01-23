@@ -1,0 +1,112 @@
+<div class="page-layout carded fullwidth inner-scroll">
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent p-16 p-sm-24 olive-header" fxLayout="column" fxLayoutAlign="start" fxLayout.gt-xs="row"
+            fxLayoutAlign.gt-xs="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <div class="logo" fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon class="logo-icon mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">{{setting.icon}}
+                    </mat-icon>
+                    <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                        {{setting.translateTitleId | translate}}
+                    </span>
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="ml-sm-32" fxLayout="row" fxLayoutAlign="center center" fxFlex>
+
+                <div class="search-wrapper mt-16 mt-sm-0">
+
+                    <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                        <span (click)="openSearchDialog()" matTooltip="Advanced Search">
+                            <mat-icon>search</mat-icon>
+                        </span>
+                        <input type="search" id="search" matInput #filter placeholder="Search" (keyup)="onSearch($event)"
+                            (blur)="onSearch($event)" autocomplete="off">
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- / SEARCH -->
+
+            <!-- ADD FILE BUTTON -->
+            <button [matMenuTriggerFor]="ctxmenu" mat-fab class="add-item-button mat-warn" title="{{'common.menu.menuButton' | translate}}"
+                *fuseIfOnDom [@animate]="{value:'*', params:{delay:'300ms',scale:'0.2'}}">
+                <mat-icon>keyboard_hide</mat-icon>
+            </button>
+            <mat-menu #ctxmenu="matMenu">
+                <button mat-menu-item (click)="editItem()" *ngIf="canManageItems">
+                    <mat-icon>add_box</mat-icon>
+                    <span>{{'common.menu.addNewItem' | translate}}</span>
+                </button>
+                <button mat-menu-item (click)="onExcel()">
+                    <mat-icon>cancel_presentation</mat-icon>
+                    <span>{{'common.menu.exportExcelFile' | translate}}</span>
+                </button>
+                <button mat-menu-item (click)="onPrint()">
+                    <mat-icon>print</mat-icon>
+                    <span>{{'common.menu.printList' | translate}}</span>
+                </button>
+                <button mat-menu-item (click)="onUpload()" *ngIf="canManageItems">
+                    <mat-icon>cloud_upload</mat-icon>
+                    <span>{{'common.menu.upload' | translate}}</span>
+                </button>
+            </mat-menu>
+            <!-- / ADD FILE BUTTON -->
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT-CARD -->
+        <div class="content-card mat-white-bg">
+            <mat-progress-bar *ngIf="loadingIndicator" mode="query"></mat-progress-bar>
+            <div class="content p-24">
+                <div layout="column" layout-xs="column" style="width: 100%;">
+                    <div>
+                        <table id="{{setting.dataTableId}}" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                            class="row-border hover olive-datatable">
+                            <thead>
+                                <tr>
+                                    <th class="nosort">
+                                        <input type="checkbox" [(ngModel)]="selectedAll" (change)="selectAll();" />
+                                    </th>
+                                    <th *ngFor="let column of dataColumns" [class]="renderTHClass(column.thClass)">{{column.thName}}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of items" (click)="editItem(item, $event)" class="print">
+                                    <td>
+                                        <input class="select" name="select" type="checkbox" [(ngModel)]="item.selected"
+                                            (change)="checkIfAllSelected();">
+                                    </td>
+                                    <td *ngFor="let column of dataColumns" [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}"
+                                        [class]="renderTDClass(item, column)" (click)="onTdClick($event, item, column.data)">
+                                        <mat-icon *ngIf="icon(item, column.data)" [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}">{{iconName(item,
+                                            column.data)}}</mat-icon>
+                                        {{renderItem(item, column.data)}}
+                                    </td>
+                                </tr>
+                                <tr *ngIf="items?.length == 0">
+                                    <td colspan="setting.columns.length" class="no-data-available">{{'common.message.noRecordsFound'
+                                        | translate}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- / CONTENT-CARD -->
+    </div>
+    <!-- / CENTER -->
+</div>

@@ -1,0 +1,40 @@
+<div class="page-layout carded fullwidth inner-scroll">
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent p-16 p-sm-24 olive-header" fxLayout="column" fxLayoutAlign="start" fxLayout.gt-xs="row"
+            fxLayoutAlign.gt-xs="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center">
+                <div class="logo" fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon class="logo-icon mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">{{pageIcon}}
+                    </mat-icon>
+                    <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                        {{pageTitleId | translate}}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- / HEADER -->
+
+        <div class="content-card mat-white-bg">
+            <div class="content p-24">
+                <div layout="column" layout-xs="column" style="width: 100%;">
+                    <div>
+                        <olive-purchase-order-manager></olive-purchase-order-manager>
+                    </div>
+                    <div>
+                        tests
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- CENTER -->
+</div>

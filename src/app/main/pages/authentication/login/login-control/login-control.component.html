@@ -1,0 +1,35 @@
+<form name="loginForm" [formGroup]="loginForm" novalidate>
+
+  <mat-form-field>
+      <input matInput placeholder="UserName" formControlName="userName">
+      <mat-error *ngIf="loginFormErrors.userName.required">
+          Username is required
+      </mat-error>
+      <mat-error *ngIf="loginFormErrors.userName.required">
+          Please enter a valid username
+      </mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+      <input matInput type="password" placeholder="Password" formControlName="password">
+      <mat-error *ngIf="loginFormErrors.password.required">
+          Password is required
+      </mat-error>
+  </mat-form-field>
+
+  <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column"
+       fxLayoutAlign="space-between center">
+      <mat-checkbox class="remember-me" aria-label="Remember Me" formControlName="rememberMe">
+          Remember Me
+      </mat-checkbox>
+
+      <a class="forgot-password" [routerLink]="'/pages/auth/forgot-password'">
+          Forgot Password?
+      </a>
+  </div>
+
+  <!-- <button mat-raised-button color="accent" class="submit-button" aria-label="LOG IN"
+      [disabled]="loginForm.invalid || isLoading" (click)="login()">
+      LOGIN
+  </button> -->
+</form>

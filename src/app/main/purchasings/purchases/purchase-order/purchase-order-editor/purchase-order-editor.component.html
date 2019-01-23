@@ -1,0 +1,87 @@
+﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutGap="1em" autocomplete="off" class="maxwidth">
+  <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+    <div flex>
+      <mat-form-field fxFlex class="w-100-p">
+        <input matInput [matDatepicker]="dateCtrl" placeholder="Date" formControlName="poDate" readonly>
+        <mat-datepicker-toggle matSuffix [for]="dateCtrl"></mat-datepicker-toggle>
+        <mat-datepicker #dateCtrl></mat-datepicker>
+        <mat-error *ngIf="poDate.hasError('required')">
+          {{'common.entryError.required' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div flex>
+      <olive-lookup-host #vendor formControlName="vendorFk" required [placeholder]="'Vendor'" [isEditMode]="canAssignPurchaseOrder"></olive-lookup-host>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+    <div flex>
+      <olive-lookup-host #warehouse formControlName="warehouseFk" required [placeholder]="'Warehouse'" [isEditMode]="canAssignPurchaseOrder"></olive-lookup-host>
+    </div>
+    <div flex>
+      <mat-form-field class="w-100-p">
+        <mat-select name="currency" formControlName="currency" placeholder="Currency" required>
+          <mat-option *ngFor="let item of currencies" [value]="item.id">{{item.name}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="currency.hasError('required')">
+          {{'common.entryError.needToSelect' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+    <div flex>
+      <mat-form-field class="w-100-p" [floatLabel]="floatLabels" fxFlex>
+        <input matInput name="vendorOrderId" formControlName="vendorOrderId" placeholder="Vendor Order Id" maxlength="100">
+        <mat-hint align="end">{{vendorOrderId.value?.length || 0}}/100</mat-hint>
+      </mat-form-field>
+    </div>
+    <div flex>
+      <mat-form-field *ngIf="!isMasterCurrency" class="w-100-p">
+        <input matInput name="currencyExchangeRate" formControlName="currencyExchangeRate" placeholder="Currency Exchange Rate"
+          type="number" class="right">
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+    <div flex>
+      <mat-form-field class="w-100-p">
+        <input matInput name="freightAmount" formControlName="freightAmount" placeholder="Freight Amount" required type="number"
+          class="right">
+        <mat-error *ngIf="freightAmount.hasError('required')">
+          {{'common.entryError.required' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div flex>
+      <mat-form-field class="w-100-p">
+        <input matInput name="addedDiscountAmount" formControlName="addedDiscountAmount" placeholder="Added Discount Amount"
+          required type="number" class="right">
+        <mat-error *ngIf="addedDiscountAmount.hasError('required')">
+          {{'common.entryError.required' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div flex>
+      <mat-form-field class="w-100-p">
+        <input matInput name="taxAmount" formControlName="taxAmount" placeholder="Tax Amount" required type="number"
+          class="right">
+        <mat-error *ngIf="taxAmount.hasError('required')">
+          {{'common.entryError.required' | translate}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div flex class="top-pad">
+    <mat-form-field class="w-100-p">
+      <textarea matInput name="memo" formControlName="memo" placeholder="Memo" rows="3"></textarea>
+    </mat-form-field>
+  </div>
+
+  <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+</form>

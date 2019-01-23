@@ -1,0 +1,4 @@
+<span [ngClass]="{'mat-error': hasError}" matTooltip="{{hasError ? ('tab.error.entryTooltip' | translate) : ''}}">
+  <mat-icon *ngIf="hasError">error_outline</mat-icon>
+  <span [ngClass]="{'aligned-with-icon': hasError}">{{tabTitleId | translate}}</span>
+</span>

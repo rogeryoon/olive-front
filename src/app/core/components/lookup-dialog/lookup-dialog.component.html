@@ -1,0 +1,34 @@
+<h1 mat-dialog-title>
+  <mat-icon>check_circle</mat-icon> {{setting.dialogTitle}}
+</h1>
+<div mat-dialog-content>
+  <table id="{{setting.dataTableId}}" datatable [dtOptions]="dtOptions" class="row-border hover olive-datatable">
+    <thead>
+      <tr>
+        <th class="nosort" *ngIf="checkBoxEnable" style="width:20px;text-align:center">
+          <input type="checkbox" [(ngModel)]="selectedAll" (change)="selectAll();" /> 
+        </th>
+        <th *ngFor="let column of dataColumns" [style.width]="renderStyle(column.width)">{{column.name}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items" (click)="clickItem(item, $event)">
+        <td *ngIf="checkBoxEnable">
+          <input class="select" name="select" type="checkbox" [(ngModel)]="item.selected" (change)="checkAllSelected(item)" style="text-align:center">
+        </td>
+        <td *ngFor="let column of dataColumns" [ngStyle]="{'text-align':renderStyle(column.align)}">{{renderItem(item, column.data)}}</td>
+      </tr>
+      <tr *ngIf="items?.length == 0">
+        <td colspan="setting.columns.length" class="no-data-available">{{'common.message.noRecordsFound' | translate}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div mat-dialog-actions>
+  <button *ngIf="checkBoxEnable" mat-raised-button (click)="select()" color="primary" [disabled]="!itemsSelected">
+    <mat-icon>check_circle</mat-icon> {{'common.button.select' | translate}}</button>
+  <button *ngIf="setting.newComponent" mat-raised-button (click)="newItem()">
+      <mat-icon>add_box</mat-icon> {{'common.button.new' | translate}}</button>
+  <button mat-raised-button (click)="cancel()">
+    <mat-icon>close</mat-icon> {{'common.button.cancel' | translate}}</button>
+</div>

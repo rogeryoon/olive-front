@@ -1,0 +1,23 @@
+<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
+  <mat-form-field class="w-100-p" *ngIf="isIdVisible">
+    <input matInput name="id" formControlName="id" placeholder="Id" readonly="readonly">
+  </mat-form-field>
+
+  <mat-form-field class="w-100-p">
+    <mat-select name="productWeightType" formControlName="productWeightType" placeholder="Type of Product Weight" required>
+      <mat-option>---</mat-option>
+      <mat-option *ngFor="let unit of weightTypes" [value]="unit.code">{{unit.name}} {{unit.code}}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="productWeightType.hasError('required')">
+      {{'common.entryError.needToSelect' | translate}}
+    </mat-error>
+  </mat-form-field>
+
+  <div class="w-100-p top-pad">
+    <mat-checkbox formControlName="purchasingEnabled">구매 업무</mat-checkbox>&nbsp;
+    <mat-checkbox formControlName="thirdpartyEnabled">Thirdparty</mat-checkbox>&nbsp;
+    <mat-checkbox formControlName="shippingAgentEnabled">배송대행</mat-checkbox>
+  </div>
+
+  <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+</form>

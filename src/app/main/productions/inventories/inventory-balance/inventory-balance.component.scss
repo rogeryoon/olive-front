@@ -1,0 +1,65 @@
+@import "src/@fuse/scss/fuse";
+:host {
+  .header {
+    position: relative;
+    .search-input-wrapper {
+      max-width: 480px;
+    }
+    @include media-breakpoint(xs) {
+      margin: 24px 0;
+      height: 128px !important;
+      min-height: 128px !important;
+      max-height: 128px !important;
+    }
+    .add-item-button {
+      position: absolute;
+      bottom: -28px;
+      left: -10px;
+      z-index: 999;
+    }
+  }
+  table {
+    th:nth-child(1) {
+      width: 20px;
+    }
+    th:nth-child(2) {
+      width: 50px;
+    }
+    th:nth-child(4) {
+      width: 100px;
+    }
+    th:nth-child(5) {
+      width: 70px;
+    }
+    th:nth-child(6) {
+      width: 70px;
+    }
+    th:nth-child(7) {
+      width: 70px;
+    }
+    th:nth-child(8) {
+      width: 90px;
+    }
+    td:nth-child(2) {
+      text-transform: uppercase;
+    }
+    td:nth-child(3) {
+      text-align: justify;
+    }
+    td:nth-child(4) {
+      text-align: justify;
+    }
+    td:nth-child(5) {
+      text-align: right;
+    }
+    td:nth-child(6) {
+      text-align: right;
+    }
+    td:nth-child(7) {
+      text-align: right;
+    }
+    td:nth-child(8) {
+      text-align: right;
+    }    
+  }
+}

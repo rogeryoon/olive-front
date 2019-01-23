@@ -1,0 +1,48 @@
+﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
+      <mat-form-field class="w-100-p" *ngIf="isIdVisible">
+        <input matInput name="id" formControlName="id" placeholder="Id" readonly="readonly">
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="address1" formControlName="address1" placeholder="Address" required maxlength="1000">
+        <mat-hint align="end">{{address1.value?.length || 0}}/1000</mat-hint>
+        <mat-error *ngIf="address1.hasError('required')">
+           {{'common.entryError.required' | translate}}
+         </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="address2" formControlName="address2" placeholder="Address" maxlength="400">
+        <mat-hint align="end">{{address2.value?.length || 0}}/400</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="city" formControlName="city" placeholder="City" maxlength="100">
+        <mat-hint align="end">{{city.value?.length || 0}}/100</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="stateProvince" formControlName="stateProvince" placeholder="State Province" maxlength="100">
+        <mat-hint align="end">{{stateProvince.value?.length || 0}}/100</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <input matInput name="postalCode" formControlName="postalCode" placeholder="Postal Code" required maxlength="100" class="to-uppercase">
+        <mat-hint align="end">{{postalCode.value?.length || 0}}/100</mat-hint>
+        <mat-error *ngIf="postalCode.hasError('required')">
+           {{'common.entryError.required' | translate}}
+         </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-100-p">
+        <mat-select name="country" formControlName="country" placeholder="Select a country" required>
+          <mat-option>---</mat-option>
+          <mat-option *ngFor="let country of countries" [value]="country.id">{{country.name}}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="country.hasError('required')">
+          {{'common.entryError.needToSelect' | translate}}
+        </mat-error>
+      </mat-form-field>
+
+      <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+</form>

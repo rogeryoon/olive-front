@@ -1,0 +1,58 @@
+<div class="page-layout blank p-24" fusePerfectScrollbar>
+<div [@fadeInOut] class="page-content">
+
+  <div class="search-box">
+      <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{'management.Search' | translate}}">
+      </mat-form-field>
+  </div>
+
+  <div class="mat-elevation-z8">
+      <mat-progress-bar *ngIf="loadingIndicator" mode="query"></mat-progress-bar>
+      <mat-table [dataSource]="dataSource" matSort>
+
+          <ng-container matColumnDef="companyGroupName">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> {{'management.CompanyGroup' | translate}} </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.companyGroupName}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="userName">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> {{'management.UserName' | translate}} </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.userName}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="fullName">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> {{'management.FullName' | translate}} </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.fullName}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="email">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> {{'management.Email' | translate}} </mat-header-cell>
+              <mat-cell *matCellDef="let row"> {{row.email}} </mat-cell>
+          </ng-container>
+
+          <ng-container *ngIf="canManageUsers" matColumnDef="actions">
+              <mat-header-cell *matHeaderCellDef fxFlex="140px">
+                  <button *ngIf="canAssignRoles" mat-button color="primary" matTooltip="{{'management.NewUser' | translate}}" (click)="editUser()">
+                      <mat-icon class="mat-button-icon">person_add</mat-icon>{{'management.NewUser' | translate}}
+                  </button>
+              </mat-header-cell>
+              <mat-cell *matCellDef="let user" fxFlex="140px">
+                  <button mat-icon-button matTooltip="{{'management.Edit' | translate}}" (click)="editUser(user)">
+                      <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button matTooltip="{{'management.Delete' | translate}}" (click)="confirmDelete(user)">
+                      <mat-icon color="warn">delete</mat-icon>
+                  </button>
+              </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;">
+          </mat-row>
+      </mat-table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  </div>
+</div>
+</div>

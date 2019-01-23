@@ -1,0 +1,20 @@
+﻿<form #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()" class="w-100-p" fxLayout="column" fxFlex>
+    <mat-tab-group>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <olive-tab-label [hasError]="main.hasError" [tabTitleId]="'tab.title.main'"></olive-tab-label>
+            </ng-template>
+            <div class="tab-content p-24" fusePerfectScrollbar>
+                <olive-branch-editor #main [item]="item"></olive-branch-editor>
+            </div>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <olive-tab-label [hasError]="address.hasError" [tabTitleId]="'tab.title.address'"></olive-tab-label>
+            </ng-template>
+            <div class="tab-content p-24" fusePerfectScrollbar>
+                <olive-address-editor #address [item]="item.addressFk"></olive-address-editor>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</form>
