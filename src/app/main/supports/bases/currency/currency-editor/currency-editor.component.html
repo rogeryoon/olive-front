@@ -1,41 +1,45 @@
 ﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-      <mat-form-field class="w-100-p" *ngIf="isIdVisible">
-        <input matInput name="id" formControlName="id" placeholder="Id" readonly="readonly">
+      <mat-form-field appearance="outline" class="w-100-p" *ngIf="isIdVisible">
+        <mat-label>Id</mat-label>
+        <input matInput name="id" formControlName="id" readonly="readonly">
       </mat-form-field>
 
-      <mat-form-field class="w-100-p">
-        <input matInput name="code" formControlName="code" placeholder="Code" required maxlength="3" class="to-uppercase">
+      <mat-form-field appearance="outline" class="w-100-p">
+        <mat-label>Code</mat-label>
+        <input matInput name="code" formControlName="code" required maxlength="3" class="to-uppercase">
         <mat-hint align="end">{{code.value?.length || 0}}/3</mat-hint>
         <mat-error *ngIf="code.hasError('required')">
            {{'common.entryError.required' | translate}}
          </mat-error>
       </mat-form-field>
 
-      <mat-form-field class="w-100-p">
-        <input matInput name="name" formControlName="name" placeholder="Name" required maxlength="200">
+      <mat-form-field appearance="outline" class="w-100-p">
+        <mat-label>Name</mat-label>
+        <input matInput name="name" formControlName="name" required maxlength="200">
         <mat-hint align="end">{{name.value?.length || 0}}/200</mat-hint>
         <mat-error *ngIf="name.hasError('required')">
            {{'common.entryError.required' | translate}}
          </mat-error>
       </mat-form-field>
 
-      <mat-form-field class="w-100-p">
-        <input matInput name="symbol" formControlName="symbol" placeholder="Symbol" required maxlength="200">
+      <mat-form-field appearance="outline" class="w-100-p">
+        <mat-label>Symbol</mat-label>
+        <input matInput name="symbol" formControlName="symbol" required maxlength="200">
         <mat-hint align="end">{{symbol.value?.length || 0}}/200</mat-hint>
         <mat-error *ngIf="symbol.hasError('required')">
            {{'common.entryError.required' | translate}}
          </mat-error>
       </mat-form-field>
 
-      <mat-form-field class="w-100-p">
-        <input matInput name="decimalPoint" formControlName="decimalPoint" placeholder="Decimal Point" required type="number">
+      <mat-form-field appearance="outline" class="w-100-p">
+        <mat-label>Decimal Point</mat-label>
+        <input matInput name="decimalPoint" formControlName="decimalPoint" required type="number">
         <mat-error *ngIf="decimalPoint.hasError('required')">
            {{'common.entryError.required' | translate}}
          </mat-error>
       </mat-form-field>
 
       <mat-checkbox formControlName="activated">Activated</mat-checkbox>
-
 
       <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
 </form>

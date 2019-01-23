@@ -119,7 +119,7 @@ export const locale = {
                 'items': '상품'
             },
             'error' : {
-                'entryTooltip' : '해당 탭 입력정보 오류가 있습니다.'
+                'entryTooltip' : '입력오류가 있습니다.'
             }
         },
         'production' : {

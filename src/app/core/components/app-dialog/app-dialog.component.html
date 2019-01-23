@@ -3,7 +3,7 @@
 
     <p *ngIf="!isPrompt">{{message}}</p>
 
-    <mat-form-field *ngIf="isPrompt" style="width: 100%;">
+    <mat-form-field appearance="outline" *ngIf="isPrompt" style="width: 100%;">
         <mat-label>{{message}}</mat-label>
         <input matInput [(ngModel)]="result" />
     </mat-form-field>

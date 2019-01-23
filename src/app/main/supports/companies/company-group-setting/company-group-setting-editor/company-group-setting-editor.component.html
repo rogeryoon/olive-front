@@ -1,10 +1,12 @@
 <form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-  <mat-form-field class="w-100-p" *ngIf="isIdVisible">
-    <input matInput name="id" formControlName="id" placeholder="Id" readonly="readonly">
+  <mat-form-field appearance="outline" class="w-100-p" *ngIf="isIdVisible">
+    <mat-label>Id</mat-label>
+    <input matInput name="id" formControlName="id" readonly="readonly">
   </mat-form-field>
 
-  <mat-form-field class="w-100-p">
-    <mat-select name="productWeightType" formControlName="productWeightType" placeholder="Type of Product Weight" required>
+  <mat-form-field appearance="outline" class="w-100-p">
+    <mat-label>Type of Product Weight</mat-label>
+    <mat-select name="productWeightType" formControlName="productWeightType" required>
       <mat-option>---</mat-option>
       <mat-option *ngFor="let unit of weightTypes" [value]="unit.code">{{unit.name}} {{unit.code}}</mat-option>
     </mat-select>

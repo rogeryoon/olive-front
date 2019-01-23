@@ -1,8 +1,9 @@
 ﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutGap="1em" autocomplete="off" class="maxwidth">
   <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
     <div flex>
-      <mat-form-field fxFlex class="w-100-p">
-        <input matInput [matDatepicker]="dateCtrl" placeholder="Date" formControlName="poDate" readonly>
+      <mat-form-field appearance="outline" fxFlex class="w-100-p">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="dateCtrl" formControlName="poDate" readonly>
         <mat-datepicker-toggle matSuffix [for]="dateCtrl"></mat-datepicker-toggle>
         <mat-datepicker #dateCtrl></mat-datepicker>
         <mat-error *ngIf="poDate.hasError('required')">
@@ -21,8 +22,9 @@
       <olive-lookup-host #warehouse formControlName="warehouseFk" required [placeholder]="'Warehouse'" [isEditMode]="canAssignPurchaseOrder"></olive-lookup-host>
     </div>
     <div flex>
-      <mat-form-field class="w-100-p">
-        <mat-select name="currency" formControlName="currency" placeholder="Currency" required>
+      <mat-form-field appearance="outline" class="w-100-p">
+        <mat-label>Currency</mat-label>
+        <mat-select name="currency" formControlName="currency" required>
           <mat-option *ngFor="let item of currencies" [value]="item.id">{{item.name}}</mat-option>
         </mat-select>
         <mat-error *ngIf="currency.hasError('required')">
@@ -34,14 +36,16 @@
 
   <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
     <div flex>
-      <mat-form-field class="w-100-p" [floatLabel]="floatLabels" fxFlex>
-        <input matInput name="vendorOrderId" formControlName="vendorOrderId" placeholder="Vendor Order Id" maxlength="100">
+      <mat-form-field appearance="outline" class="w-100-p" [floatLabel]="floatLabels" fxFlex>
+        <mat-label>Vendor Order #</mat-label>
+        <input matInput name="vendorOrderId" formControlName="vendorOrderId" maxlength="100">
         <mat-hint align="end">{{vendorOrderId.value?.length || 0}}/100</mat-hint>
       </mat-form-field>
     </div>
     <div flex>
-      <mat-form-field *ngIf="!isMasterCurrency" class="w-100-p">
-        <input matInput name="currencyExchangeRate" formControlName="currencyExchangeRate" placeholder="Currency Exchange Rate"
+      <mat-form-field *ngIf="!isMasterCurrency" appearance="outline" class="w-100-p">
+        <mat-label>Currency Exchange Rate</mat-label>
+        <input matInput name="currencyExchangeRate" formControlName="currencyExchangeRate" 
           type="number" class="right">
       </mat-form-field>
     </div>
@@ -49,8 +53,9 @@
 
   <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
     <div flex>
-      <mat-form-field class="w-100-p">
-        <input matInput name="freightAmount" formControlName="freightAmount" placeholder="Freight Amount" required type="number"
+      <mat-form-field appearance="outline" class="w-100-p">
+        <mat-label>Freight</mat-label>
+        <input matInput name="freightAmount" formControlName="freightAmount" required type="number"
           class="right">
         <mat-error *ngIf="freightAmount.hasError('required')">
           {{'common.entryError.required' | translate}}
@@ -58,8 +63,9 @@
       </mat-form-field>
     </div>
     <div flex>
-      <mat-form-field class="w-100-p">
-        <input matInput name="addedDiscountAmount" formControlName="addedDiscountAmount" placeholder="Added Discount Amount"
+      <mat-form-field appearance="outline" class="w-100-p">
+        <mat-label>Added Discount</mat-label>
+        <input matInput name="addedDiscountAmount" formControlName="addedDiscountAmount" 
           required type="number" class="right">
         <mat-error *ngIf="addedDiscountAmount.hasError('required')">
           {{'common.entryError.required' | translate}}
@@ -67,8 +73,9 @@
       </mat-form-field>
     </div>
     <div flex>
-      <mat-form-field class="w-100-p">
-        <input matInput name="taxAmount" formControlName="taxAmount" placeholder="Tax Amount" required type="number"
+      <mat-form-field appearance="outline" class="w-100-p">
+        <mat-label>Tax</mat-label>
+        <input matInput name="taxAmount" formControlName="taxAmount" required type="number"
           class="right">
         <mat-error *ngIf="taxAmount.hasError('required')">
           {{'common.entryError.required' | translate}}
@@ -77,9 +84,10 @@
     </div>
   </div>
 
-  <div flex class="top-pad">
-    <mat-form-field class="w-100-p">
-      <textarea matInput name="memo" formControlName="memo" placeholder="Memo" rows="3"></textarea>
+  <div flex>
+    <mat-form-field appearance="outline" class="w-100-p">
+      <mat-label>Memo</mat-label>
+      <textarea matInput name="memo" formControlName="memo" rows="3"></textarea>
     </mat-form-field>
   </div>
 

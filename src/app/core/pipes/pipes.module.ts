@@ -4,16 +4,22 @@ import { DecimalPipe } from '@angular/common';
 import { GroupByPipe } from './groupBy.pipe';
 import { ShortenPipe } from './shorten.pipe';
 import { OliveMoneyPipe } from './money.pipe';
-// import { OliveNoCommaPipe } from './NoComma.pipe';
-
-const PIPES = [
-  GroupByPipe, ShortenPipe, OliveMoneyPipe /*, OliveNoCommaPipe */
-];
+import { OliveNoCommaPipe } from './noComma.pipe';
 
 @NgModule({
    imports: [],
-   declarations: PIPES,
-   exports: PIPES,
+   declarations: [
+      GroupByPipe, 
+      ShortenPipe, 
+      OliveMoneyPipe,
+      OliveNoCommaPipe
+   ],
+   exports: [
+      GroupByPipe, 
+      ShortenPipe, 
+      OliveMoneyPipe,
+      OliveNoCommaPipe
+   ],
    providers: [
       DecimalPipe
    ]

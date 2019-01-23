@@ -1,28 +1,33 @@
 ﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-      <mat-form-field class="w-100-p" *ngIf="isIdVisible">
-        <input matInput name="id" formControlName="id" placeholder="Id" readonly="readonly">
+      <mat-form-field appearance="outline" class="w-100-p" *ngIf="isIdVisible">
+        <mat-label>Id</mat-label>        
+        <input matInput name="id" formControlName="id" readonly="readonly">
       </mat-form-field>
 
-      <mat-form-field class="w-100-p">
-        <input matInput name="code" formControlName="code" placeholder="Code" maxlength="100" class="to-uppercase">
+      <mat-form-field appearance="outline" class="w-100-p">
+        <mat-label>Code</mat-label>        
+        <input matInput name="code" formControlName="code" maxlength="100" class="to-uppercase">
         <mat-hint align="end">{{code.value?.length || 0}}/100</mat-hint>
       </mat-form-field>
 
-      <mat-form-field class="w-100-p">
-        <input matInput name="name" formControlName="name" placeholder="Name" required maxlength="400">
+      <mat-form-field appearance="outline" class="w-100-p">
+        <mat-label>Name</mat-label>
+        <input matInput name="name" formControlName="name" required maxlength="400">
         <mat-hint align="end">{{name.value?.length || 0}}/400</mat-hint>
         <mat-error *ngIf="name.hasError('required')">
            {{'common.entryError.required' | translate}}
          </mat-error>
       </mat-form-field>
 
-      <mat-form-field class="w-100-p">
-        <input matInput name="hsCode" formControlName="hsCode" placeholder="HS Code" maxlength="100">
+      <mat-form-field appearance="outline" class="w-100-p">
+        <mat-label>HS Code</mat-label>
+        <input matInput name="hsCode" formControlName="hsCode" maxlength="100">
         <mat-hint align="end">{{hsCode.value?.length || 0}}/100</mat-hint>
       </mat-form-field>      
 
-      <mat-form-field class="w-100-p">
-        <textarea matInput name="memo" formControlName="memo" placeholder="Memo" rows="5">
+      <mat-form-field appearance="outline" class="w-100-p">
+        <mat-label>Memo</mat-label>
+        <textarea matInput name="memo" formControlName="memo" rows="5">
         </textarea>
       </mat-form-field>
 

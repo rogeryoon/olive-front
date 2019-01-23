@@ -1,29 +1,31 @@
 ﻿<form #form="ngForm" [formGroup]="searchForm" novalidate fxLayout="column" fxLayoutGap="1em" autocomplete="off">
     <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1em">
-        <mat-form-field fxFlex>
+        <mat-form-field appearance="outline" fxFlex>
             <mat-label>ID</mat-label>
             <input matInput formControlName="id" />
         </mat-form-field>
 
-        <mat-form-field fxFlex>
+        <mat-form-field appearance="outline" fxFlex>
             <mat-label>Name</mat-label>
             <input matInput formControlName="name" />
         </mat-form-field>
 
-        <mat-form-field fxFlex>
+        <mat-form-field appearance="outline" fxFlex>
             <mat-label>Memo</mat-label>
             <input matInput formControlName="memo" />
         </mat-form-field>
     </div>
     <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1em">
-        <mat-form-field>
-            <input matInput [matDatepicker]="dateStart" placeholder="{{'common.form.createdDateFrom' | translate}}" formControlName="dateStart" readonly>
+        <mat-form-field appearance="outline">
+            <mat-label>{{'common.form.createdDateFrom' | translate}}</mat-label>
+            <input matInput [matDatepicker]="dateStart" formControlName="dateStart" readonly>
             <mat-datepicker-toggle matSuffix [for]="dateStart"></mat-datepicker-toggle>
             <mat-datepicker #dateStart disabled="false"></mat-datepicker>
         </mat-form-field>
     
-        <mat-form-field>
-            <input matInput [matDatepicker]="dateEnd" placeholder="{{'common.form.createdDateTo' | translate}}" formControlName="dateEnd" readonly>
+        <mat-form-field appearance="outline">
+            <mat-label>{{'common.form.createdDateTo' | translate}}</mat-label>
+            <input matInput [matDatepicker]="dateEnd" formControlName="dateEnd" readonly>
             <mat-datepicker-toggle matSuffix [for]="dateEnd"></mat-datepicker-toggle>
             <mat-datepicker #dateEnd disabled="false"></mat-datepicker>
         </mat-form-field>

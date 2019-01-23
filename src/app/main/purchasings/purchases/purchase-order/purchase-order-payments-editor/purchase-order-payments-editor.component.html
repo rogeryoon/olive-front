@@ -27,7 +27,7 @@
       <mat-header-cell *matHeaderCellDef>금액</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
-          <input name="inputAmount{{row.ObjId}}" type="number" matInput class="right" [value]="row.Obj.amount|money"
+          <input name="inputAmount{{row.ObjId}}" type="number" matInput class="right" [value]="row.Obj.amount|money|noComma"
             formControlName="amount" (focus)="currentRow=row" (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)">
           <mat-error *ngIf="hasRequiredError('amount',i)">
             {{'common.entryError.required' | translate}}

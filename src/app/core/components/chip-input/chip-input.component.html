@@ -1,4 +1,5 @@
-<mat-form-field class="w-100-p">
+<mat-form-field appearance="outline" class="w-100-p">
+  <mat-label>{{placeholder}}</mat-label>
   <mat-chip-list #chipList>
     <mat-chip *ngFor="let chip of value">
       {{chip.name}}
@@ -6,7 +7,7 @@
         <mat-icon matChipRemove>cancel</mat-icon>
       </span>
     </mat-chip>
-    <input [placeholder]="placeholder" #chipInput [formControl]="chipCtrl" [matChipInputFor]="chipList"
+    <input #chipInput [formControl]="chipCtrl" [matChipInputFor]="chipList"
       [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="add($event)" [matAutocomplete]="autoCategory" />
     <mat-autocomplete #autoCategory="matAutocomplete" (optionSelected)="selected($event)">
       <mat-option *ngFor="let chip of filteredChips | async" [value]="chip">

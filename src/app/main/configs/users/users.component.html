@@ -2,8 +2,9 @@
 <div [@fadeInOut] class="page-content">
 
   <div class="search-box">
-      <mat-form-field>
-          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{'management.Search' | translate}}">
+      <mat-form-field appearance="outline">
+          <mat-label>{{'management.Search' | translate}}</mat-label>
+          <input matInput (keyup)="applyFilter($event.target.value)">
       </mat-form-field>
   </div>
 
