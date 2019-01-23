@@ -1,9 +1,11 @@
 <div class="navbar-header" [ngClass]="fuseConfig.layout.navbar.secondaryBackground">
 
+    <a [routerLink]="'/'" style="text-decoration: none; color: white;">
     <div class="logo">
         <img class="logo-icon" src="assets/images/logos/fuse.svg">
-        <span class="logo-text">FUSE</span>
+        <span class="logo-text secondary-text">GPS Logix</span>
     </div>
+    </a>
 
     <button mat-icon-button class="toggle-sidebar-folded"
             (click)="toggleSidebarFolded()" fxHide.lt-lg>
