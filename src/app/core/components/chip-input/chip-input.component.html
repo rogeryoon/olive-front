@@ -3,9 +3,7 @@
   <mat-chip-list #chipList>
     <mat-chip *ngFor="let chip of value">
       {{chip.name}}
-      <span (click)="remove(chip)">
-        <mat-icon matChipRemove>cancel</mat-icon>
-      </span>
+      <mat-icon matChipRemove (click)="remove(chip)">cancel</mat-icon>
     </mat-chip>
     <input #chipInput [formControl]="chipCtrl" [matChipInputFor]="chipList"
       [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="add($event)" [matAutocomplete]="autoCategory" />

@@ -1,4 +1,4 @@
-<form [formGroup]="oForm" class="maxwidth">
+<form [formGroup]="oForm" (keydown.enter)="false">
   <mat-table [dataSource]="itemsDataSource" formArrayName="formarray">
     <mat-header-row *matHeaderRowDef="displayedColumns">
     </mat-header-row>
@@ -13,7 +13,7 @@
     <ng-container matColumnDef="productVariantId">
       <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
       <mat-cell *matCellDef="let row" class="center">{{Id36(row.Obj.id)}}</mat-cell>
-      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="name">
@@ -27,21 +27,21 @@
           </mat-error>
         </mat-form-field>
       </mat-cell>
-      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="quantity">
       <mat-header-cell *matHeaderCellDef>수량</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
-          <input name="inputQuantity{{row.ObjId}}" type="number" matInput class="right" formControlName="quantity"
+          <input name="inputQuantity{{row.ObjId}}" type="number" class="right" pattern="\d*" matInput formControlName="quantity"
             (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)">
           <mat-error *ngIf="hasRequiredError('quantity',i)">
             {{'common.entryError.required' | translate}}
           </mat-error>
         </mat-form-field>
       </mat-cell>
-      <mat-footer-cell *matFooterCellDef>{{totalQuantity}}</mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef class="justify-end pr-20">{{totalQuantity|number:'1.0-0'}}</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="price">
@@ -55,15 +55,15 @@
           </mat-error>
         </mat-form-field>
       </mat-cell>
-      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="amount">
       <mat-header-cell *matHeaderCellDef>소계</mat-header-cell>
-      <mat-cell *matCellDef="let row" class="end pr-16">
+      <mat-cell *matCellDef="let row" class="justify-end pr-16">
         {{row.Obj.price * row.Obj.quantity | money}}
       </mat-cell>
-      <mat-footer-cell *matFooterCellDef>{{totalQuantity}}</mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef class="justify-end pr-16">{{totalQuantity|money}}</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="remark">
@@ -74,21 +74,21 @@
             (keyup)="onKeyup($event)" (blur)="onBlur($event)">
         </mat-form-field>
       </mat-cell>
-      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="actions">
-      <mat-header-cell *matHeaderCellDef fxFlex="100px">
+      <mat-header-cell *matHeaderCellDef>
         <button mat-button color="primary" matTooltip="신규" (click)="newItem()">
           <mat-icon class="mat-button-icon">add</mat-icon>신규
         </button>
       </mat-header-cell>
-      <mat-cell *matCellDef="let row" fxFlex="100px">
+      <mat-cell *matCellDef="let row"class="justify-center">
         <button mat-icon-button matTooltip="{{'management.Delete' | translate}}" (click)="deleteItem(row)">
           <mat-icon color="warn">delete</mat-icon>
         </button>
       </mat-cell>
-      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>
 
   </mat-table>

@@ -2,4 +2,13 @@
   .right {
     text-align: right;
   }
+
+  .mat-column-actions {
+    flex: 0 1 70px;
+  }
+
+  .mat-table {
+    min-width: 700px;
+    max-width: 1000px;
+  }
 }

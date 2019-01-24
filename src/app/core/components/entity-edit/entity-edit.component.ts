@@ -144,34 +144,34 @@ export class OliveEntityEditComponent implements OnChanges, AfterViewInit, OnIni
 
     const editedItem = this.getEditedItem();
 
-    // if (this.isNewItem) {
-    //   this.dataService.newItem(editedItem).subscribe(
-    //     response => {
-    //       const result = response.model;
+    if (this.isNewItem) {
+      this.dataService.newItem(editedItem).subscribe(
+        response => {
+          const result = response.model;
 
-    //       this.messageHelper.showSavedSuccess(
-    //         this.isNewItem,
-    //         result.name
-    //       );
+          this.messageHelper.showSavedSuccess(
+            this.isNewItem,
+            result.name
+          );
 
-    //       this.onItemSaved.next(result);
-    //     },
-    //     error => this.messageHelper.showSaveFailed(error));
-    // }
-    // else {
-    //   this.dataService.updateItem(editedItem, editedItem.id).subscribe(
-    //     response => {
-    //       const result = response.model;
+          this.onItemSaved.next(result);
+        },
+        error => this.messageHelper.showSaveFailed(error));
+    }
+    else {
+      this.dataService.updateItem(editedItem, editedItem.id).subscribe(
+        response => {
+          const result = response.model;
 
-    //       this.messageHelper.showSavedSuccess(
-    //         this.isNewItem,
-    //         result.name
-    //       );
+          this.messageHelper.showSavedSuccess(
+            this.isNewItem,
+            result.name
+          );
 
-    //       this.onItemSaved.next(result);
-    //     },
-    //     error => this.messageHelper.showSaveFailed(error));
-    // }
+          this.onItemSaved.next(result);
+        },
+        error => this.messageHelper.showSaveFailed(error));
+    }
   }
 
   public delete() {

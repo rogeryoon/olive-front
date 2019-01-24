@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit, forwardRef, Renderer2, OnChanges } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit, 
+  forwardRef, Renderer2, OnChanges, EventEmitter, Output } from '@angular/core';
 import { FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, ValidationErrors } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
 import { Observable } from 'rxjs';

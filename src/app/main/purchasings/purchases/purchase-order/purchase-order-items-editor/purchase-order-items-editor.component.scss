@@ -3,20 +3,25 @@
     text-align: right;
   }
 
+  .justify-end {
+    justify-content: flex-end;
+  }
+
+  .justify-center {
+    justify-content: center;
+  }  
+
+  .mat-table {
+    min-width: 700px;
+    max-width: 1000px;
+  }
+
   .mat-column-productVariantId {
     flex: 0 1 75px;
   }
 
-  .end {
-    justify-content: flex-end;
-  }
-
-  .center {
-    justify-content: center;
-  }  
-
   .mat-column-quantity {
-    flex: 0 1 75px;
+    flex: 0 1 94px;
   }
 
   .mat-column-price {
@@ -32,11 +37,10 @@
   }
 
   .mat-column-actions {
-    flex: 0 1 75px;
+    flex: 0 1 70px;
   }
 
   .small-font {
     font-size: 10px;
   }
- 
 }

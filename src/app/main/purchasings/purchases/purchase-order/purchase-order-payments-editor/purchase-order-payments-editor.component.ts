@@ -122,6 +122,12 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     }
   }
 
+  blockEnterKey(event) {
+    if (event.keyCode === 13) {
+      return;
+    }
+  }
+
   private _onChange = (_: any) => { };
   private _onTouched = () => {};
 

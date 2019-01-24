@@ -7,7 +7,6 @@ import { String } from 'typescript-string-operations';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
-import { OliveContants } from 'app/core/classes/contants';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OlivePaymentMethodService } from 'app/main/supports/companies/services/payment-method.service';
 import { OliveCacheService } from 'app/core/services/cache.service';
@@ -104,6 +103,13 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     });
 
     return quantity;
+  }
+
+  blockEnterKey(event) {
+    if (event.keyCode === 13) {
+      console.log(event);
+      return;
+    }
   }
 
   private _onChange = (_: any) => { };

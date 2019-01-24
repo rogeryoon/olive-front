@@ -4,7 +4,7 @@
     <button mat-raised-button (click)="excelfile.click()" color="primary"><mat-icon>ballot</mat-icon> {{translate('common.button.exelFile')}}</button>
     <input #excelfile type="file" id="excelfile" (change)="onUpload($event)" style="display:none;"/> 
 
-    <div class="top-pad bottom-pad">
+    <div class="mt-15 mt-10">
         <mat-progress-bar *ngIf="showLoadingBar" class="loading-bar" color="accent" mode="indeterminate"></mat-progress-bar>
         <table id="import-table" class="display" style="width:100%"></table>
     </div>

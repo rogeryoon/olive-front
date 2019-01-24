@@ -1,4 +1,4 @@
-<form [formGroup]="oForm" class="maxwidth">
+<form [formGroup]="oForm" (keydown.enter)="false">
   <mat-table [dataSource]="paymentsDataSource" formArrayName="formarray">
     <mat-header-row *matHeaderRowDef="displayedColumns">
     </mat-header-row>
