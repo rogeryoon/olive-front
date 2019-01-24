@@ -56,7 +56,9 @@ export const locale = {
                 'addNewItem' : 'Add New Item',
                 'exportExcelFile' : 'Export Excel File',
                 'printList' : 'Print List',
-                'upload' : 'Upload'
+                'upload' : 'Upload',
+                'productLookUp' : '상품 조회',
+                'purchaseOrderLookup' : '발주 조회'
             },
             'form': {
                 'createdDateFrom' : '등록일 시작',

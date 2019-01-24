@@ -24,6 +24,8 @@ export class OliveEditDialogComponent implements OnInit, OnDestroy, AfterViewIni
   onEdit: OliveOnEdit;
   createdComponent: OliveOnEdit;
 
+  readonly maxDialogTitleLength = 60;
+
   get name(): any {
     let idString = '';
 
@@ -81,6 +83,11 @@ export class OliveEditDialogComponent implements OnInit, OnDestroy, AfterViewIni
     this.createdComponent.item = this.onEdit.item;
     this.createdComponent.managePermission = this.onEdit.managePermission;
     this.createdComponent.itemType = this.onEdit.itemType;
+    this.createdComponent.customTitle = this.onEdit.customTitle;
+  }
+
+  get customTitle() {
+    return this.createdComponent.customTitle;
   }
 
   cancel(): void {

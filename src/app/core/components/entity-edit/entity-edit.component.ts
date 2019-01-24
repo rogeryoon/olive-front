@@ -37,6 +37,7 @@ export class OliveEntityEditComponent implements OnChanges, AfterViewInit, OnIni
   item: any = null;
   itemType: any;
   managePermission: PermissionValues;
+  customTitle: string;
   itemSaved$ = this.onItemSaved.asObservable();
   itemDeleted$ = this.onItemDeleted.asObservable();
 

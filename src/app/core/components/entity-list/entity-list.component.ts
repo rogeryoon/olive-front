@@ -63,7 +63,7 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
     this.initializeChildComponent();
   }
 
-  get setting() {
+  get setting(): ListerSetting {
     return this._setting;
   }
   set setting(theSetting: ListerSetting) {
@@ -77,6 +77,7 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
   icon(item: any, columnName: string) { return false; }
   iconName(item: any, columnName: string) { return ''; }
   onTdClick(event: any, item: any, columnName: string): boolean { return false; }
+  getEditorCustomTitle(item: any): string { return null; }
   
   setTdId(id: number, columnName: string) {
     this.tdId = id.toString() + columnName;
@@ -219,6 +220,8 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
     }
   }
 
+  
+
   openDialog() {
     const setting = new OliveDialogSetting(
       this.setting.editComponent, 
@@ -226,7 +229,8 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
         item: this.sourceItem,
         itemType: this.setting.itemType,
         managePermission: this.setting.managePermission,
-        translateTitleId: this.setting.translateTitleId
+        translateTitleId: this.setting.translateTitleId,
+        customTitle: this.getEditorCustomTitle(this.sourceItem)
       }
     );
 

@@ -97,7 +97,7 @@
                                     </td>
                                 </tr>
                                 <tr *ngIf="items?.length == 0">
-                                    <td colspan="setting.columns.length" class="no-data-available">{{'common.message.noRecordsFound'
+                                    <td [attr.colspan]="setting.columns.length" class="no-data-available">{{'common.message.noRecordsFound'
                                         | translate}}</td>
                                 </tr>
                             </tbody>

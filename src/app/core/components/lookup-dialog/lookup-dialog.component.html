@@ -19,7 +19,7 @@
         <td *ngFor="let column of dataColumns" [ngStyle]="{'text-align':renderStyle(column.align)}">{{renderItem(item, column.data)}}</td>
       </tr>
       <tr *ngIf="items?.length == 0">
-        <td colspan="setting.columns.length" class="no-data-available">{{'common.message.noRecordsFound' | translate}}</td>
+        <td [attr.colspan]="setting.columns.length" class="no-data-available">{{'common.message.noRecordsFound' | translate}}</td>
       </tr>
     </tbody>
   </table>

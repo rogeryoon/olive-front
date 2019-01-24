@@ -76,9 +76,9 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         // 7
         { data: StatusLink, orderable: false, thName: 'Status', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 8
-        { data: FinishLink, orderable: false, thName: 'Finish', tdClass: 'print left -ex-type-text blue', thClass: 'print -ex-type-text' },
+        { data: FinishLink, orderable: false, thName: 'Finish', tdClass: 'print left -ex-type-text foreground-blue', thClass: 'print -ex-type-text' },
         // 9
-        { data: PrintLink, orderable: false, thName: 'Print', tdClass: 'print left -ex-type-text blue', thClass: 'print -ex-type-text' },
+        { data: PrintLink, orderable: false, thName: 'Print', tdClass: 'print left -ex-type-text foreground-blue', thClass: 'print -ex-type-text' },
         // 10
         { data: PODate, thName: 'Date', tdClass: '', thClass: '' },
       ],
@@ -86,6 +86,15 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       searchComponent: OliveSearchPurchaseOrderComponent,
       itemType: PurchaseOrder
     };
+  }
+
+  getEditorCustomTitle(item: PurchaseOrder) {
+    if (item) {
+      return `PO # ${OliveUtilities.convertToBase36(item.id)} : ${item.vendorFk.name}`;
+    }
+    else {
+      return this.translater.get(NavTranslates.Purchase.PurchaseEntry);
+    }
   }
 
   renderItem(item: PurchaseOrder, columnName: string): string {
@@ -195,7 +204,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
   renderTDClass(item: PurchaseOrder, column: any) {
     let addedClass = '';
     if (column.data === StatusLink) {
-      addedClass = item.closedDate ? 'blue' : 'orange';
+      addedClass = item.closedDate ? 'foreground-blue' : 'foreground-orange';
     }
     return super.renderTDClass(item, column, addedClass);
   }

@@ -63,7 +63,7 @@
       <mat-cell *matCellDef="let row" class="justify-end pr-16">
         {{row.Obj.price * row.Obj.quantity | money}}
       </mat-cell>
-      <mat-footer-cell *matFooterCellDef class="justify-end pr-16">{{totalQuantity|money}}</mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef class="justify-end pr-16">{{totalAmount|money}}</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="remark">
@@ -79,11 +79,21 @@
 
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef>
-        <button mat-button color="primary" matTooltip="신규" (click)="newItem()">
-          <mat-icon class="mat-button-icon">add</mat-icon>신규
+        <button [matMenuTriggerFor]="ctxmenu" mat-button color="primary" matTooltip="추가">
+          <mat-icon class="mat-button-icon">add</mat-icon>추가
         </button>
+        <mat-menu #ctxmenu="matMenu">
+            <button mat-menu-item (click)="lookUpProductVariant()">
+                <mat-icon>{{productVariantIcon}}</mat-icon>
+                <span>{{'common.menu.productLookUp' | translate}}</span>
+            </button>
+            <button mat-menu-item (click)="lookupPurchaseOrder()">
+                <mat-icon>{{purchaseOrderIcon}}</mat-icon>
+                <span>{{'common.menu.purchaseOrderLookup' | translate}}</span>
+            </button>
+        </mat-menu>        
       </mat-header-cell>
-      <mat-cell *matCellDef="let row"class="justify-center">
+      <mat-cell *matCellDef="let row" class="justify-center">
         <button mat-icon-button matTooltip="{{'management.Delete' | translate}}" (click)="deleteItem(row)">
           <mat-icon color="warn">delete</mat-icon>
         </button>

@@ -19,6 +19,7 @@ import { OliveWarehouseService } from '../../supports/companies/services/warehou
 import { OlivePaymentMethodService } from '../../supports/companies/services/payment-method.service';
 import { OlivePurchaseOrderPaymentsEditorComponent } from './purchase-order/purchase-order-payments-editor/purchase-order-payments-editor.component';
 import { OlivePurchaseOrderItemsEditorComponent } from './purchase-order/purchase-order-items-editor/purchase-order-items-editor.component';
+import { OliveProductVariantService } from 'app/main/productions/products/services/product-variant.service';
 
 const routes = [
   {
@@ -56,7 +57,8 @@ const routes = [
     OlivePurchaseOrderEditorPageResolver,
     OliveVendorService,
     OliveWarehouseService,
-    OlivePaymentMethodService
+    OlivePaymentMethodService,
+    OliveProductVariantService
   ],
   entryComponents: [
     OlivePurchaseOrderManagerComponent,    

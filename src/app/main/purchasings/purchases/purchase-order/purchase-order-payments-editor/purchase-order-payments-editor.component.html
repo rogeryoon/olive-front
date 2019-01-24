@@ -3,6 +3,9 @@
     <mat-header-row *matHeaderRowDef="displayedColumns">
     </mat-header-row>
 
+    <mat-footer-row *matFooterRowDef="displayedColumns">
+    </mat-footer-row>
+
     <mat-row *matRowDef="let row; columns: displayedColumns; let i=index" #cdkrow [ngClass]="{'highlightrow': (currentRow) && row.ObjId == currentRow.ObjId}"
       (click)="currentRow=row;">
     </mat-row>
@@ -21,6 +24,7 @@
           </mat-error>
         </mat-form-field>
       </mat-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="amount">
@@ -34,6 +38,7 @@
           </mat-error>
         </mat-form-field>
       </mat-cell>
+      <mat-footer-cell *matFooterCellDef class="justify-end pr-40">{{totalAmount|money}}</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="remarkId">
@@ -44,19 +49,21 @@
           (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)">
         </mat-form-field>
       </mat-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="actions">
-      <mat-header-cell *matHeaderCellDef fxFlex="100px">
+      <mat-header-cell *matHeaderCellDef>
         <button mat-button color="primary" matTooltip="신규" (click)="newItem()">
           <mat-icon class="mat-button-icon">add</mat-icon>신규
         </button>
       </mat-header-cell>
-      <mat-cell *matCellDef="let row" fxFlex="100px">
+      <mat-cell *matCellDef="let row" class="justify-center">
         <button mat-icon-button matTooltip="{{'management.Delete' | translate}}" (click)="deleteItem(row)">
           <mat-icon color="warn">delete</mat-icon>
         </button>
       </mat-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>
 
   </mat-table>

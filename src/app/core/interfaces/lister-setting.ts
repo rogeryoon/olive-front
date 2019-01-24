@@ -32,6 +32,8 @@ export class ListerSetting implements IListerSetting {
     itemType: any;
 
     loadDetail?: boolean;
+
+    editCustomTitle?: string;
 }
 
 export class LookupListerSetting implements IListerSetting {

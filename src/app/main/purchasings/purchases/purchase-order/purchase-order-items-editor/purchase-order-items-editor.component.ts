@@ -1,7 +1,7 @@
 import { Component, forwardRef } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup, FormControl, ValidationErrors, 
   NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
 import { String } from 'typescript-string-operations';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -13,6 +13,14 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { PurchaseOrder } from '../../models/purchase-order.model';
 import { PaymentMethod } from 'app/main/supports/companies/models/payment-method.model';
 import { OlivePurchaseOrderItemDatasource } from './purchase-order-item-datasource';
+import { NavIcons } from 'app/core/navigations/nav-icons';
+import { OliveLookupDialogComponent } from 'app/core/components/lookup-dialog/lookup-dialog.component';
+import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { NavTranslates } from 'app/core/navigations/nav-translates';
+import { OliveProductVariantService } from 'app/main/productions/products/services/product-variant.service';
+import { OliveProductVariantManagerComponent } from 'app/main/productions/products/product-variant/product-variant-manager/product-variant-manager.component';
+import { ProductVariant } from 'app/main/productions/products/models/product-variant.model';
+import { Permission } from '@quick/models/permission.model';
 
 @Component({
   selector: 'olive-purchase-order-items-editor',
@@ -42,11 +50,10 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
 
   constructor(
     formBuilder: FormBuilder,
-    private cacheService: OliveCacheService,
-    private messageHelper: OliveMessageHelperService,
-    private paymentMethodService: OlivePaymentMethodService,
+    private productVariantService: OliveProductVariantService,
     private snackBar: MatSnackBar,
     private translater: FuseTranslationLoaderService,
+    private dialog: MatDialog
   ) {
     super(
       formBuilder
@@ -105,11 +112,55 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     return quantity;
   }
 
-  blockEnterKey(event) {
-    if (event.keyCode === 13) {
-      console.log(event);
-      return;
-    }
+  get totalAmount(): number {
+    let amount = 0;
+
+    this.itemsDataSource.items.forEach(item => {
+      if (item.quantity && item.price) {
+        amount += item.quantity * item.price;
+      }
+    });
+
+    return amount;
+  }  
+
+  lookUpProductVariant() {
+    const dialogRef = this.dialog.open(
+      OliveLookupDialogComponent,
+      {
+        disableClose: true,
+        panelClass: 'mat-dialog-md',
+        data: {
+          name: 'ProductVariant',
+          columns: 'id',
+          dialogTitle: this.translater.get(NavTranslates.Product.ProductVariant),
+          dataService: this.productVariantService,
+          maxSelectItems: 10,
+          newComponent: OliveProductVariantManagerComponent,
+          itemType: ProductVariant,
+          managePermission: Permission.manageProductsPermission,
+          translateTitleId: NavTranslates.Product.ProductVariant
+        } as LookupListerSetting
+      });
+
+    dialogRef.afterClosed().subscribe(items => {
+      if (items && items.length > 0) {
+        this.writeValue(items[0]);
+        this._onChange(items[0]);
+      }
+    });
+  }
+
+  lookupPurchaseOrder() {
+
+  }
+
+  get productVariantIcon() {
+    return NavIcons.Product.ProductVariant;
+  }
+
+  get purchaseOrderIcon() {
+    return NavIcons.Purchase.Purchase;
   }
 
   private _onChange = (_: any) => { };

@@ -122,10 +122,16 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     }
   }
 
-  blockEnterKey(event) {
-    if (event.keyCode === 13) {
-      return;
-    }
+  get totalAmount(): number {
+    let amount = 0;
+
+    this.paymentsDataSource.items.forEach(item => {
+      if (item.amount) {
+        amount += item.amount;
+      }
+    });
+
+    return amount;
   }
 
   private _onChange = (_: any) => { };

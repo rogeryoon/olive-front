@@ -18,8 +18,7 @@ import { Currency } from 'app/main/supports/bases/models/currency.model';
 import { Warehouse } from 'app/main/supports/companies/models/warehouse.model';
 import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/warehouse/warehouse-manager/warehouse-manager.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { OlivePurchaseOrderPaymentsEditorComponent } from '../purchase-order-payments-editor/purchase-order-payments-editor.component';
-import { OlivePurchaseOrderItemsEditorComponent } from '../purchase-order-items-editor/purchase-order-items-editor.component';
+import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 
 @Component({
   selector: 'olive-purchase-order-editor',
@@ -185,7 +184,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       itemType: Vendor,
       managePermission: Permission.assignCompanyGroups,
       translateTitleId: NavTranslates.Company.Vendor
-    };
+    } as LookupListerSetting;
 
     this.lookupWarehouse.setting = {
       name: 'Warehouse',
@@ -197,7 +196,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       itemType: Warehouse,
       managePermission: Permission.assignCompanyGroups,
       translateTitleId: NavTranslates.Company.Warehouse
-    };
+    } as LookupListerSetting;
   }
 
   markCustomControlsTouched() {
