@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { DataTableDirective } from 'angular-datatables';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
@@ -6,18 +7,23 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
+import { Utilities } from '@quick/services/utilities';
+import { AlertService } from '@quick/services/alert.service';
+
 import { locale as english } from '../../../core/i18n/en';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
-import { AlertService } from '@quick/services/alert.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { Utilities } from '@quick/services/utilities';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OliveEditDialogComponent } from '../edit-dialog/edit-dialog.component';
+import { OliveChipInputComponent } from '../chip-input/chip-input.component';
+import { IIDName } from 'app/core/models/id-name';
+import { NameValue } from 'app/core/models/name-value';
 
 const Id = 'id';
 const Code = 'code';
 const Name = 'name';
+const Custom = 'custom';
 
 @Component({
   selector: 'olive-lookup-dialog',
@@ -25,7 +31,9 @@ const Name = 'name';
   styleUrls: ['./lookup-dialog.component.scss']
 })
 export class OliveLookupDialogComponent implements OnInit {
-  
+  @ViewChild(OliveChipInputComponent)
+  chipInput: OliveChipInputComponent;
+
   @ViewChild(DataTableDirective)
   dtElement: DataTableDirective;
   dtOptions: DataTables.Settings = {};
@@ -33,23 +41,27 @@ export class OliveLookupDialogComponent implements OnInit {
   items: any;
 
   loadingIndicator: boolean;
-  selectedAll: any;
   searhKeyword = '';
 
   selectedItems: any = [];
 
-  defaultCodeColumns: any = [
+  oForm: FormGroup;
+
+  codeColumns: any = [
     { data: Code, name: 'Code', width: '50px', align: 'center' },
-    { data: Name, name: 'Name', width: '100%', align: 'justify' }
+    { data: Name, name: 'Name', orderable: false, align: 'justify' }
   ];
 
-  defaultIdColumns: any = [
+  idColumns: any = [
     { data: Id, name: 'ID', width: '50px', align: 'center' },
-    { data: Name, name: 'Name', width: '100%', align: 'justify' }
+    { data: Name, name: 'Name', orderable: false, align: 'justify' }
   ];
+
+  tableColumns: any;
 
   constructor(
     protected dialog: MatDialog,
+    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<OliveLookupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public setting: LookupListerSetting,
     private translater: FuseTranslationLoaderService,
@@ -61,7 +73,25 @@ export class OliveLookupDialogComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initTable();
+    this.initChip();
+  }
+
+  initChip() {
+    this.oForm = this.formBuilder.group({
+      chips: null
+    });
+  }
+
+  initTable() {
+    this.setTableColumns();
+
+    if (this.checkBoxEnable) {
+      this.tableColumns.unshift({ data: 'selected' });
+    }
+
     this.dtOptions = {
+      pageLength: 5,
       pagingType: 'full_numbers',
       serverSide: true,
       processing: true,
@@ -70,12 +100,15 @@ export class OliveLookupDialogComponent implements OnInit {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
+        dataTablesParameters['extsearch'] = this.getExtraSearch();
+
         this.setting.dataService.getItems(dataTablesParameters)
           .subscribe(response => {
             this.alertService.stopLoadingMessage();
             this.loadingIndicator = false;
 
             this.items = response.model;
+            this.setItemsSelected();
 
             callback({
               recordsTotal: response.itemsCount,
@@ -91,7 +124,7 @@ export class OliveLookupDialogComponent implements OnInit {
             });
       },
       columns: this.tableColumns,
-      dom: 'lftip',
+      dom: 'ftip',
       columnDefs: [
         { targets: 'nosort', orderable: false }
       ],
@@ -100,7 +133,7 @@ export class OliveLookupDialogComponent implements OnInit {
 
     const filterInputId = `#${this.setting.dataTableId}_filter input`;
 
-    $('.olive-datatable').css('width', '100%');
+    $('.olive-datatable').css('min-width', '700px'); // .css('width', '100%');
 
     setTimeout(() => {
       $(filterInputId).unbind();
@@ -112,27 +145,49 @@ export class OliveLookupDialogComponent implements OnInit {
 
       $(filterInputId).bind('keyup', params, this.onSearch);
       $(filterInputId).bind('blur', params, this.onSearch);
-    }, 10);
+    }, 100);
   }
 
   onSearch(event: any) {
     const param = event.data;
-    if ( (param.deviceService.isDesktop() && event.key === 'Enter') ||
-        param.deviceService.isMobile() || event.type === 'blur') {
-          $('#' + param.dataTableId).DataTable().search(event.target.value).draw();
+    if ((param.deviceService.isDesktop() && event.key === 'Enter') ||
+      param.deviceService.isMobile() || event.type === 'blur') {
+      $('#' + param.dataTableId).DataTable().search(event.target.value).draw();
     }
   }
 
-  initializeComponent() {
+  protected getExtraSearch(): NameValue[] { 
+    if (!this.setting.extraSearches) { return []; }
+    return this.setting.extraSearches; 
+  }
+  protected createChip(item: any) { return item; }
+
+  private initializeComponent() {
     this.translater.loadTranslations(english);
 
     this.setting.dataTableId = OliveUtilities
       .splitStickyWords(this.setting.name, '-')
       .toLowerCase() + '-table';
+  }
 
-    if (this.checkBoxEnable) {
-      this.tableColumns.unshift({ data: 'selected' });
+  chipRemoved(chip: IIDName) {
+    const found = this.items.find(i => i.id === chip.id);
+
+    if (found) {
+      found.selected = false;
     }
+
+    this.removeItemOnSelectedItems(chip, false);    
+  }
+
+  private setItemsSelected() {
+    this.items.forEach(item => {
+      this.selectedItems.forEach(sItem => {
+        if (item.id === sItem.id) {
+          item.selected = true;
+        }
+      });
+    });
   }
 
   get checkBoxEnable() {
@@ -143,15 +198,28 @@ export class OliveLookupDialogComponent implements OnInit {
     return this.checkBoxEnable && this.selectedItems.length > 0;
   }
 
-  private get tableColumns(): any {
-    let returnColumns = this.setting.columns;
-    if (this.setting.columns === Code) {
-      returnColumns = this.defaultCodeColumns;
+  protected getCustomTableColumns(): any {
+    return null;
+  }
+
+  private setTableColumns() {
+    switch (this.setting.columnType) {
+      case Code:
+        this.tableColumns = this.codeColumns;
+        break;
+
+      case Id:
+        this.tableColumns = this.idColumns;
+        break;
+
+      default:
+        this.tableColumns = this.getCustomTableColumns();
+        break;
     }
-    else if (this.setting.columns === Id) {
-      returnColumns = this.defaultIdColumns;
-    }
-    return returnColumns;
+  }
+
+  select(): void {
+    this.dialogRef.close(this.selectedItems);
   }
 
   private clickItem(item?: any, event?: Event) {
@@ -159,9 +227,24 @@ export class OliveLookupDialogComponent implements OnInit {
 
     item.selected = !item.selected;
     this.saveToSelectedItems(item);
+    this.closeDialogMaxItemsIsOneItem();
+  }
 
+  private closeDialogMaxItemsIsOneItem() {
     if (this.setting.maxSelectItems === 1) {
-      this.select();
+      this.dialogRef.close(this.selectedItems);
+    }
+  }
+
+  private removeItemOnSelectedItems(item: any, chipRemove: boolean) {
+    for (let i = 0; i < this.selectedItems.length; i++) {
+      if (this.selectedItems[i].id === item.id) {
+        this.selectedItems.splice(i, 1);
+
+        if (chipRemove) {
+          this.chipInput.remove(item, true);
+        }
+      }
     }
   }
 
@@ -172,20 +255,16 @@ export class OliveLookupDialogComponent implements OnInit {
       });
 
       if (notExists) {
-        this.selectedItems.push(item);
-      }
-    }
-    else {
-      for (let i = 0; i < this.selectedItems.length; i++) {
-        if (this.selectedItems[i].id === item.id) {
-          this.selectedItems.splice(i, 1);
+        this.selectedItems.push(Object.assign(item));
+
+        if (this.chipInput) {
+          this.chipInput.addChip(this.createChip(item));
         }
       }
     }
-  }
-
-  select(): void {
-    this.dialogRef.close(this.selectedItems);
+    else {
+      this.removeItemOnSelectedItems(item, true);
+    }
   }
 
   cancel(): void {
@@ -213,8 +292,8 @@ export class OliveLookupDialogComponent implements OnInit {
     dialogRef.afterClosed().subscribe(item => {
       if (item) {
         this.items.push(item);
-        this.selectedItems.push(item);
-        this.select();
+        this.selectedItems.push(Object.assign(item));
+        this.closeDialogMaxItemsIsOneItem();
       }
     });
   }
@@ -240,21 +319,6 @@ export class OliveLookupDialogComponent implements OnInit {
       }
       return retValue;
     }
-  }
-
-  selectAll() {
-    for (let i = 0; i < this.items.length; i++) {
-      this.items[i].selected = this.selectedAll;
-      this.saveToSelectedItems(this.items[i]);
-    }
-  }
-
-  checkAllSelected(checkItem: any) {
-    this.saveToSelectedItems(checkItem);
-
-    this.selectedAll = this.items.every(function (item: any) {
-      return item.selected === true;
-    });
   }
 
   renderStyle(styleString: any) {

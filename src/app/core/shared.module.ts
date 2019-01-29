@@ -13,11 +13,9 @@ import { OliveDocumentService } from './services/document.service';
 import { OliveMessageHelperService } from './services/message-helper.service';
 import { OliveCacheService } from './services/cache.service';
 import { OliveSearchDialogComponent } from './components/search-dialog/search-dialog.component';
-import { OliveSearchFormDirective } from './directives/search-form.directive';
 import { OliveEntityListComponent } from './components/entity-list/entity-list.component';
 import { OliveLookupDialogComponent } from './components/lookup-dialog/lookup-dialog.component';
 import { OliveEditDialogComponent } from './components/edit-dialog/edit-dialog.component';
-import { OliveEditFormDirective } from './directives/edit-form.directive';
 import { OliveEntityEditComponent } from './components/entity-edit/entity-edit.component';
 import { OliveEntityDateComponent } from './components/entity-date/entity-date.component';
 import { OliveUserNameService } from './services/user-name.service';
@@ -26,7 +24,6 @@ import { OliveEntityFormBaseComponent } from './components/entity-edit/entity-fo
 import { OliveTabLabelComponent } from './components/tab-label/tab-label.component';
 import { OliveEntityEndpointService } from './services/entity-endpoint.service';
 import { OliveAddressEditorComponent } from './components/editor/address-editor/address-editor.component';
-import { OliveLookUpDirective } from './directives/lookup.directive';
 import { OliveLookupHostComponent } from './components/lookup-host/lookup-host.component';
 import { OliveChipInputComponent } from './components/chip-input/chip-input.component';
 import { OliveChunkDataEndpointService, OliveChunkDataService } from './services/chunk-data.service';
@@ -35,6 +32,9 @@ import { OliveQueryParameterService } from './services/query-parameter.service';
 import { OliveCompanyGroupSettingService } from './services/company-group-setting.service';
 import { OliveCompanyMasterService } from './services/company-master.service';
 import { OliveCurrencyService } from 'app/main/supports/bases/services/currency.service';
+import { OliveEditPageComponent } from './components/edit-page/edit-page.component';
+import { OliveOnlyNumberDirective } from './directives/only-number.directive';
+import { OlivePlaceHolderDirective } from './directives/place-holder.directive';
 
 @NgModule({
   imports: [
@@ -70,8 +70,12 @@ import { OliveCurrencyService } from 'app/main/supports/bases/services/currency.
     OliveSearchDialogComponent,
     OliveLookupDialogComponent,
     OliveEditDialogComponent,
+  
+    OliveAddressEditorComponent,
+    OliveEditPageComponent,
 
-    OliveAddressEditorComponent
+    OlivePlaceHolderDirective,
+    OliveOnlyNumberDirective
   ],
   declarations: [
     OliveEntityListComponent,
@@ -91,10 +95,10 @@ import { OliveCurrencyService } from 'app/main/supports/bases/services/currency.
     OliveEditDialogComponent,
 
     OliveAddressEditorComponent,
+    OliveEditPageComponent,
 
-    OliveSearchFormDirective,
-    OliveEditFormDirective,
-    OliveLookUpDirective
+    OlivePlaceHolderDirective,
+    OliveOnlyNumberDirective
   ],
   providers: [
     OliveDocumentService,

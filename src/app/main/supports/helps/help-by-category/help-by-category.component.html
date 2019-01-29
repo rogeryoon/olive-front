@@ -9,7 +9,7 @@
                    (click)="readArticle(help.helpId)">
                     <mat-icon class="secondary-text mr-8">note</mat-icon>
                     <span *ngIf="help.title.length > maxShortenLength" matTooltip="{{help.title}}" matTooltipShowDelay="500">
-                        {{ help.title | shorten: maxShortenLength: '...' }}
+                        {{ help.title | shorten: maxShortenLength }}
                     </span>
                     <span *ngIf="help.title.length <= maxShortenLength">
                         {{ help.title}}

@@ -5,10 +5,10 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { AccountService } from '@quick/services/account.service';
 
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
-import { OliveEditFormDirective } from 'app/core/directives/edit-form.directive';
 import { locale as english } from '../../../core/i18n/en';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OliveUtilities } from 'app/core/classes/utilities';
+import { OlivePlaceHolderDirective } from 'app/core/directives/place-holder.directive';
 
 // https://angular.io/guide/dynamic-component-loader
 
@@ -18,10 +18,9 @@ import { OliveUtilities } from 'app/core/classes/utilities';
   styleUrls: ['./edit-dialog.component.scss']
 })
 export class OliveEditDialogComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(OliveEditFormDirective) oliveSearchForm: OliveEditFormDirective;
+  @ViewChild(OlivePlaceHolderDirective) placeHolder: OlivePlaceHolderDirective;
   componentRef: any;
 
-  onEdit: OliveOnEdit;
   createdComponent: OliveOnEdit;
 
   readonly maxDialogTitleLength = 60;
@@ -54,7 +53,6 @@ export class OliveEditDialogComponent implements OnInit, OnDestroy, AfterViewIni
     private accountService: AccountService
   ) {
     this.translater.loadTranslations(english);
-    this.onEdit = setting.data;
   }
 
   ngOnInit() {
@@ -73,17 +71,17 @@ export class OliveEditDialogComponent implements OnInit, OnDestroy, AfterViewIni
   loadComponent() {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.setting.component);
 
-    const viewContainerRef = this.oliveSearchForm.viewContainerRef;
+    const viewContainerRef = this.placeHolder.viewContainerRef;
     viewContainerRef.clear();
 
     this.componentRef = viewContainerRef.createComponent(componentFactory);
 
     this.createdComponent = (<OliveOnEdit>this.componentRef.instance);
 
-    this.createdComponent.item = this.onEdit.item;
-    this.createdComponent.managePermission = this.onEdit.managePermission;
-    this.createdComponent.itemType = this.onEdit.itemType;
-    this.createdComponent.customTitle = this.onEdit.customTitle;
+    this.createdComponent.item = this.setting.data.item;
+    this.createdComponent.managePermission = this.setting.data.managePermission;
+    this.createdComponent.itemType = this.setting.data.itemType;
+    this.createdComponent.customTitle = this.setting.data.customTitle;
   }
 
   get customTitle() {
@@ -107,6 +105,6 @@ export class OliveEditDialogComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   get canManageItems() {
-    return this.accountService.userHasPermission(this.onEdit.managePermission);
+    return this.accountService.userHasPermission(this.setting.data.managePermission);
   }
 }

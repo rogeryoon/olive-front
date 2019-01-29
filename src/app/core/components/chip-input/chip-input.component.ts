@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit, 
-  forwardRef, Renderer2, OnChanges, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit, forwardRef, Renderer2, Output, EventEmitter } from '@angular/core';
 import { FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, ValidationErrors } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
 import { Observable } from 'rxjs';
@@ -7,6 +6,8 @@ import { startWith, map } from 'rxjs/operators';
 
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { IIDName } from 'app/core/models/id-name';
+import { ShortenPipe } from 'app/core/pipes/shorten.pipe';
+import { OliveUtilities } from 'app/core/classes/utilities';
 
 @Component({
   selector: 'olive-chip-input',
@@ -25,7 +26,7 @@ import { IIDName } from 'app/core/models/id-name';
     }
   ]
 })
-export class OliveChipInputComponent implements OnInit, OnChanges, AfterViewInit, ControlValueAccessor, Validator {
+export class OliveChipInputComponent implements OnInit, AfterViewInit, ControlValueAccessor, Validator {
   @ViewChild('chipInput') 
   private chipInput: ElementRef;
 
@@ -38,6 +39,10 @@ export class OliveChipInputComponent implements OnInit, OnChanges, AfterViewInit
   @Input() id: string;
   @Input() placeholder = '';
   @Input() datakey: string;
+  @Input() readonly: boolean;
+  @Input() maxNameLength?: number;
+  @Input() showId: boolean;
+  @Output() chipRemoved = new EventEmitter<IIDName>();
 
   companyGroup: string;
 
@@ -50,9 +55,6 @@ export class OliveChipInputComponent implements OnInit, OnChanges, AfterViewInit
 
   ngOnInit() {
     this.initChiper();
-  }
-
-  ngOnChanges() {
   }
 
   ngAfterViewInit(): void {
@@ -83,6 +85,8 @@ export class OliveChipInputComponent implements OnInit, OnChanges, AfterViewInit
   }
 
   private setCacheValues() {
+    if (!this.datakey) { return; }
+
     this.cacheService.GetChunkItems(this.datakey)
       .then(items => {
         setTimeout(() => {
@@ -111,10 +115,17 @@ export class OliveChipInputComponent implements OnInit, OnChanges, AfterViewInit
     }
   }
 
-  remove(chip: IIDName): void {
+  remove(chip: IIDName, callFromExternal: boolean = false): void {
+    if (callFromExternal) {
+      chip = this.value.find(i => i.id === chip.id);
+    }
+
     const index = this.value.indexOf(chip);
 
     if (index >= 0) {
+      if (!callFromExternal) {
+        this.chipRemoved.emit(chip);      
+      }
       this.value.splice(index, 1);
       this._onChange(chip);
     }
@@ -127,12 +138,38 @@ export class OliveChipInputComponent implements OnInit, OnChanges, AfterViewInit
   }
 
   addChip(chip: IIDName): void {
-    const lower = chip.name.toLowerCase();
-    if (!(this.value.find(t => t.name.toLowerCase() === lower))) {
-      chip.name = lower.replace(/^\w/, c => c.toUpperCase());
+    let needToAdd = false;
+    const lowerChipName = chip.name.toLowerCase();
+
+    if (this.readonly) {
+      if (!this.value.find(t => t.id === chip.id)) {
+        needToAdd = true;
+      }
+    }
+    else if (!this.value.find(t => t.name.toLowerCase() === lowerChipName)) {
+      chip.name = lowerChipName.replace(/^\w/, c => c.toUpperCase());
+      needToAdd = true;
+    }
+
+    if (needToAdd) {
       this.value.push(chip);
       this._onChange(chip);
     }
+  }
+
+  getChipName(chip: IIDName): string {
+    let name =  '';
+    if (this.showId) {
+      name = `${OliveUtilities.convertToBase36(chip.id)} : `;
+    }
+
+    name += chip.name;
+
+    if (this.maxNameLength) {
+      name = new ShortenPipe().transform(name, this.maxNameLength);
+    }
+
+    return name;
   }
 
   //#endregion Chip

@@ -14,6 +14,7 @@ import { OliveRoleEditorComponent } from '../role-editor/role-editor.component';
   styleUrls: ['./edit-role-dialog.component.scss']
 })
 export class OliveEditRoleDialogComponent implements AfterViewInit {
+  
   @ViewChild(OliveRoleEditorComponent)
   roleEditor: OliveRoleEditorComponent;
 

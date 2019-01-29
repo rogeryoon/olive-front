@@ -90,10 +90,10 @@
                                             (change)="checkIfAllSelected();">
                                     </td>
                                     <td *ngFor="let column of dataColumns" [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}"
-                                        [class]="renderTDClass(item, column)" (click)="onTdClick($event, item, column.data)">
+                                        [class]="renderTDClass(item, column)" (click)="onTdClick($event, item, column.data)" [matTooltip]="renderTdTooltip(item, column.data)">
                                         <mat-icon *ngIf="icon(item, column.data)" [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}">{{iconName(item,
                                             column.data)}}</mat-icon>
-                                        {{renderItem(item, column.data)}}
+                                        <span [innerHTML]="renderItem(item, column.data)" [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}"></span>
                                     </td>
                                 </tr>
                                 <tr *ngIf="items?.length == 0">

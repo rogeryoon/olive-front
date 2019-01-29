@@ -91,7 +91,7 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
   initializeChildComponent() {
     this.lookupCompany.setting = {
       name: 'Company',
-      columns: 'code',
+      columnType: 'code',
       dialogTitle: this.translater.get(NavTranslates.Company.List),
       dataService: this.companyService,
       maxSelectItems: 1,
@@ -103,7 +103,7 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
 
     this.lookupBranch.setting = {
       name: 'Branch',
-      columns: 'code',
+      columnType: 'code',
       dialogTitle: this.translater.get(NavTranslates.Company.Branch),
       dataService: this.branchService,
       maxSelectItems: 1,

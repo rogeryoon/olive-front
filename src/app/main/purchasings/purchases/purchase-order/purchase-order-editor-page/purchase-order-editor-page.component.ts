@@ -1,44 +1,50 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ComponentFactoryResolver } from '@angular/core';
 
 import { fuseAnimations } from '@fuse/animations';
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { NavIcons } from 'app/core/navigations/nav-icons';
-import { NavTranslates } from 'app/core/navigations/nav-translates';
+import { AccountService } from '@quick/services/account.service';
+
+import { OliveEditPageComponent } from 'app/core/components/edit-page/edit-page.component';
 import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/purchase-order-manager.component';
 import { PurchaseOrder } from '../../models/purchase-order.model';
+import { NavIcons } from 'app/core/navigations/nav-icons';
+import { NavTranslates } from 'app/core/navigations/nav-translates';
 
 @Component({
   selector: 'olive-purchase-order-editor-page',
-  templateUrl: './purchase-order-editor-page.component.html',
-  styleUrls: ['./purchase-order-editor-page.component.scss'],
+  templateUrl: '../../../../../core/components/edit-page/edit-page.component.html',
+  styleUrls: ['../../../../../core/components/edit-page/edit-page.component.html'],
   animations: fuseAnimations
 })
-export class OlivePurchaseOrderEditorPageComponent implements OnInit {
-  @ViewChild(OlivePurchaseOrderManagerComponent)
-  private manager: OlivePurchaseOrderManagerComponent;
-
-  constructor(private route: ActivatedRoute) { }
-
-  ngOnInit() {
-    this.setComponent();
+export class OlivePurchaseOrderEditorPageComponent extends OliveEditPageComponent {
+  constructor(
+    private route: ActivatedRoute, componentFactoryResolver: ComponentFactoryResolver,
+    translater: FuseTranslationLoaderService, accountService: AccountService
+  ) {
+    super(
+      componentFactoryResolver, translater,
+      accountService
+    );
   }
 
-  get pageIcon() {
-    return NavIcons.Purchase.PurchaseEntry;
-  }
+  initializeChildComponent() {
+    this.setting = {
+      component: OlivePurchaseOrderManagerComponent,
+      itemType: PurchaseOrder,
+      managePermission: null,
+      iconName: NavIcons.Purchase.PurchaseEntry,
+      translateTitleId: NavTranslates.Purchase.PurchaseEntry,
+      newItemPath: 'purchases/orders/0',
+      itemListPath: 'purchases/purchase-orders'
+    };
 
-  get pageTitleId() {
-    return NavTranslates.Purchase.PurchaseEntry;
-  }
-  
-  setComponent() {
     this.route.data.subscribe(({ item }) => {
       if (item) {
-        this.manager.item = item.model;
+        this.setting.item = item;
       }
     });
-    this.manager.managePermission = null;
-    this.manager.itemType = PurchaseOrder;
   }
 }

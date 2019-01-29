@@ -20,6 +20,10 @@ import { OlivePaymentMethodService } from '../../supports/companies/services/pay
 import { OlivePurchaseOrderPaymentsEditorComponent } from './purchase-order/purchase-order-payments-editor/purchase-order-payments-editor.component';
 import { OlivePurchaseOrderItemsEditorComponent } from './purchase-order/purchase-order-items-editor/purchase-order-items-editor.component';
 import { OliveProductVariantService } from 'app/main/productions/products/services/product-variant.service';
+import { OliveProductVariantLookupDialogModule } from 'app/main/productions/products/product-variant/product-variant-lookup-dialog/product-variant-lookup-dialog.module';
+import { OlivePurchaseOrderLookupDialogModule } from './purchase-order/purchase-order-lookup-dialog/purchase-order-lookup-dialog.module';
+import { OliveProductVariantManagerModule } from 'app/main/productions/products/product-variant/product-variant-manager/product-variant-manager.module';
+import { OliveProductManagerModule } from 'app/main/productions/products/product/product-manager/product-manager.module';
 
 const routes = [
   {
@@ -41,7 +45,12 @@ const routes = [
     FuseSharedModule,
     TranslateModule.forChild(),
 
-    OliveSharedModule
+    OliveSharedModule,
+
+    OliveProductVariantLookupDialogModule,
+    OlivePurchaseOrderLookupDialogModule,
+    OliveProductVariantManagerModule,
+    OliveProductManagerModule
   ],
   declarations: [
     OlivePurchaseOrdersComponent,
@@ -61,7 +70,7 @@ const routes = [
     OliveProductVariantService
   ],
   entryComponents: [
-    OlivePurchaseOrderManagerComponent,    
+    OlivePurchaseOrderManagerComponent,
     OliveSearchPurchaseOrderComponent
   ]
 })

@@ -1,9 +1,10 @@
 import { Directive, ViewContainerRef } from '@angular/core';
 
 @Directive({
-  selector: '[oliveSearchForm]'
+  selector: '[olivePlaceHolder]'
 })
-export class OliveSearchFormDirective {
+export class OlivePlaceHolderDirective {
 
   constructor(public viewContainerRef: ViewContainerRef) { }
+
 }

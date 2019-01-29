@@ -1,26 +1,33 @@
 import { Component, forwardRef } from '@angular/core';
-import { FormBuilder, FormArray, FormGroup, FormControl, ValidationErrors, 
-  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator } from '@angular/forms';
+import {
+  FormBuilder, FormArray, FormGroup, FormControl, ValidationErrors,
+  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator
+} from '@angular/forms';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { String } from 'typescript-string-operations';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
-import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { OlivePaymentMethodService } from 'app/main/supports/companies/services/payment-method.service';
-import { OliveCacheService } from 'app/core/services/cache.service';
+import { Permission } from '@quick/models/permission.model';
+import { AlertService, MessageSeverity } from '@quick/services/alert.service';
+
 import { PurchaseOrder } from '../../models/purchase-order.model';
+import { PurchaseOrderItem } from '../../models/purchase-order-item.model';
 import { PaymentMethod } from 'app/main/supports/companies/models/payment-method.model';
 import { OlivePurchaseOrderItemDatasource } from './purchase-order-item-datasource';
 import { NavIcons } from 'app/core/navigations/nav-icons';
-import { OliveLookupDialogComponent } from 'app/core/components/lookup-dialog/lookup-dialog.component';
+import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveProductVariantService } from 'app/main/productions/products/services/product-variant.service';
 import { OliveProductVariantManagerComponent } from 'app/main/productions/products/product-variant/product-variant-manager/product-variant-manager.component';
 import { ProductVariant } from 'app/main/productions/products/models/product-variant.model';
-import { Permission } from '@quick/models/permission.model';
+import { OliveProductVariantLookupDialogComponent } from 'app/main/productions/products/product-variant/product-variant-lookup-dialog/product-variant-lookup-dialog.component';
+import { OliveUtilities } from 'app/core/classes/utilities';
+import { OlivePurchaseOrderService } from '../../services/purchase-order.service';
+import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/purchase-order-manager.component';
+import { NameValue } from 'app/core/models/name-value';
+import { OlivePurchaseOrderLookupDialogComponent } from '../purchase-order-lookup-dialog/purchase-order-lookup-dialog.component';
 
 @Component({
   selector: 'olive-purchase-order-items-editor',
@@ -46,14 +53,16 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
 
   oFormArray: FormArray;
 
-  value: any = null;  
+  value: PurchaseOrderItem[] = null;
 
   constructor(
     formBuilder: FormBuilder,
     private productVariantService: OliveProductVariantService,
+    private purchaseOrderService: OlivePurchaseOrderService,
     private snackBar: MatSnackBar,
     private translater: FuseTranslationLoaderService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private alertService: AlertService
   ) {
     super(
       formBuilder
@@ -80,10 +89,10 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     return control.touched && control.hasError('required');
   }
 
-  private newItem() {
-    this.itemsDataSource.addNewItem(null);
+  private addNewItem(item: PurchaseOrderItem) {
+    this.itemsDataSource.addNewItem(item);
   }
-  
+
   private deleteItem(item: any) {
     if (item.Obj.id || item.Obj.name || item.Obj.quantity || item.Obj.price || item.Obj.remark) {
       this.snackBar.open(
@@ -122,37 +131,119 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     });
 
     return amount;
-  }  
+  }
 
   lookUpProductVariant() {
     const dialogRef = this.dialog.open(
-      OliveLookupDialogComponent,
+      OliveProductVariantLookupDialogComponent,
       {
         disableClose: true,
         panelClass: 'mat-dialog-md',
         data: {
           name: 'ProductVariant',
-          columns: 'id',
+          columnType: 'id',
           dialogTitle: this.translater.get(NavTranslates.Product.ProductVariant),
           dataService: this.productVariantService,
           maxSelectItems: 10,
           newComponent: OliveProductVariantManagerComponent,
           itemType: ProductVariant,
           managePermission: Permission.manageProductsPermission,
-          translateTitleId: NavTranslates.Product.ProductVariant
+          translateTitleId: NavTranslates.Product.ProductVariant,
+          maxNameLength: 10
         } as LookupListerSetting
       });
 
-    dialogRef.afterClosed().subscribe(items => {
-      if (items && items.length > 0) {
-        this.writeValue(items[0]);
-        this._onChange(items[0]);
-      }
+    dialogRef.afterClosed().subscribe(pvItems => {
+      if (!pvItems || pvItems.length === 0) { return; }
+
+      const duplicatedIdStrings: string[] = [];
+      const dupCheckset = new Set();
+
+      this.itemsDataSource.items.forEach((dsItem: PurchaseOrderItem) => {
+        pvItems
+          .filter((pvItem: ProductVariant) => dsItem.productVariantId === pvItem.id)
+          .forEach((pvItem: ProductVariant) => {
+            dupCheckset.add(pvItem.id);
+            duplicatedIdStrings.push(
+              `${OliveUtilities.convertToBase36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trimRight());
+          });
+      });
+
+      pvItems
+        .filter((pvItem: ProductVariant) => !dupCheckset.has(pvItem.id))
+        .forEach((pvItem: ProductVariant) => {
+          this.addNewItem({
+            price: pvItem.standPrice,
+            productVariantId: pvItem.id,
+            name: `${pvItem.productFk.name} ${pvItem.name}`.trimRight()
+          } as PurchaseOrderItem);
+        });
+
+      this.showDuplicatedItems(duplicatedIdStrings);
     });
   }
 
   lookupPurchaseOrder() {
+    const dialogRef = this.dialog.open(
+      OlivePurchaseOrderLookupDialogComponent,
+      {
+        disableClose: true,
+        panelClass: 'mat-dialog-md',
+        data: {
+          name: 'PurchaseOrder',
+          columnType: 'custom',
+          dialogTitle: this.translater.get(NavTranslates.Purchase.PurchaseOrderList),
+          dataService: this.purchaseOrderService,
+          maxSelectItems: 10,
+          newComponent: OlivePurchaseOrderManagerComponent,
+          itemType: PurchaseOrder,
+          managePermission: Permission.manageProductsPermission,
+          translateTitleId: NavTranslates.Purchase.PurchaseOrderList,
+          maxNameLength: 10,
+          extraSearches: [{ name: 'ItemsExists', value: 'true' }] as NameValue[]
+        } as LookupListerSetting
+      });
 
+    dialogRef.afterClosed().subscribe(pItems => {
+      if (!pItems || pItems.length === 0) { return; }
+
+      const duplicatedIdStrings: string[] = [];
+      const dupCheckset = new Set();
+
+      this.itemsDataSource.items.forEach((dsItem: PurchaseOrderItem) => {
+        pItems.forEach((fItem: PurchaseOrder) => {
+          fItem.purchaseOrderItems
+            .filter((sItem: PurchaseOrderItem) => dsItem.productVariantId === sItem.productVariantId)
+            .forEach((sItem: PurchaseOrderItem) => {
+              dupCheckset.add(sItem.productVariantId);
+              duplicatedIdStrings.push(`${OliveUtilities.convertToBase36(sItem.id)}: ${sItem.name}`);
+            });
+        });
+      });
+
+      pItems
+        .forEach((fItem: PurchaseOrder) => {
+          fItem.purchaseOrderItems
+          .filter((sItem: PurchaseOrderItem) => !dupCheckset.has(sItem.productVariantId))
+          .forEach((sItem: PurchaseOrderItem) => {
+            const newItem = Object.assign(sItem);
+            newItem.id = null;
+            this.addNewItem(newItem);
+          });
+        });
+
+      this.showDuplicatedItems(duplicatedIdStrings);
+    });
+  }
+
+  showDuplicatedItems(idStrings: string[]) {
+    if (idStrings.length === 0) { return; }
+
+    this.alertService.showMessage(
+      this.translater.get('common.title.duplicated'),
+      String.Format(this.translater.get('common.message.duplicated'), idStrings.join()),
+      MessageSeverity.warn
+    );
   }
 
   get productVariantIcon() {
@@ -164,7 +255,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   }
 
   private _onChange = (_: any) => { };
-  private _onTouched = () => {};
+  private _onTouched = () => { };
 
   writeValue(obj: any): void {
     this.value = obj;

@@ -1,9 +1,5 @@
 @import "src/@fuse/scss/fuse";
 
-// Page Title Header 높이
-$carded-header-height: 180px !default;
-$carded-header-height-sm: 140px !default;
-
 .olive-header {
     position: relative;
 
@@ -160,4 +156,10 @@ input[type=search]::-webkit-search-cancel-button {
     position: sticky !important;
     top: 0px;
     background-color: white !important;
+}
+
+.added-count {
+    color: navy;
+    font-size: 10px;
+    font-weight: bold;
 }

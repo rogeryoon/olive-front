@@ -109,7 +109,7 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
   initializeChildComponent() {
     this.lookupProduct.setting = {
       name: 'Product',
-      columns: 'id',
+      columnType: 'id',
       dialogTitle: this.translater.get(NavTranslates.Product.ProductGroup),
       dataService: this.productService,
       maxSelectItems: 1,

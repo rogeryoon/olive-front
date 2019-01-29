@@ -20,7 +20,6 @@ import { OliveSearchPurchaseOrderComponent } from './search-purchase-order/searc
 import { OlivePurchaseOrderService } from '../services/purchase-order.service';
 import { PurchaseOrder } from '../models/purchase-order.model';
 import { OlivePurchaseOrderManagerComponent } from './purchase-order-manager/purchase-order-manager.component';
-import { PurchaseOrderItem } from '../models/purchase-order-item.model';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -28,7 +27,7 @@ const VendorName = 'vendorName';
 const ItemsName = 'itemsName';
 const TotalDueAmount = 'totalDueAmount';
 const PaymentsName = 'paymentsName';
-const StatusLink = 'statusLink';
+const InWarehouseStatusLink = 'statusLink';
 const FinishLink = 'finishLink';
 const PrintLink = 'printLink';
 const PODate = 'date';
@@ -74,7 +73,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         // 6
         { data: PaymentsName, orderable: false, thName: 'Payment', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 7
-        { data: StatusLink, orderable: false, thName: 'Status', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: InWarehouseStatusLink, orderable: false, thName: 'Status', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 8
         { data: FinishLink, orderable: false, thName: 'Finish', tdClass: 'print left -ex-type-text foreground-blue', thClass: 'print -ex-type-text' },
         // 9
@@ -110,15 +109,15 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         break;
 
       case ItemsName:
-        retValue = this.getItemsName(item.purchaseOrderItems);
+        retValue = OliveUtilities.getItemsFirstName(item.purchaseOrderItems);
         break;
 
       case TotalDueAmount:
-        retValue = OliveUtilities.ShowMoney(item.totalDueAmount);
+        retValue = this.getTotalDueAmount(item);
         break;
 
       case PaymentsName:
-        retValue = 'payment';
+        retValue = OliveUtilities.getItemsFirstCode(item.purchaseOrderPayments);
         break;
 
       case FinishLink:
@@ -137,15 +136,15 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     return retValue;
   }
 
-  getItemsName(items: PurchaseOrderItem[]) {
-    let returnValue = '-';
-    if (items && items.length > 0) {
-      returnValue = items[0].name;
-      if (items.length > 1) {
-        returnValue += ` + (${items.length - 1})`;
-      }
-    }
-    return returnValue;
+  getTotalDueAmount(item: PurchaseOrder): string  {
+    let totalItemDue = 0;
+    item.purchaseOrderItems.forEach(unit => totalItemDue += unit.price * unit.quantity);
+
+    const totalDue = 
+    totalItemDue + Math.abs(item.freightAmount) + 
+      Math.abs(item.taxAmount) - Math.abs(item.addedDiscountAmount);
+
+    return OliveUtilities.showMoney(totalDue);
   }
 
   icon(item: PurchaseOrder, columnName: string): boolean {
@@ -153,7 +152,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     let retValue = false;
 
     switch (columnName) {
-      case StatusLink:
+      case InWarehouseStatusLink:
         retValue = true;
         break;
     }
@@ -165,8 +164,22 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
     let retValue = '';
     switch (columnName) {
-      case StatusLink:
+      case InWarehouseStatusLink:
         retValue = item.closedDate ? 'check' : 'access_time';
+        break;
+    }
+
+    return retValue;
+  }
+
+  renderTdTooltip(item: PurchaseOrder, columnName: string): string {
+
+    let retValue = '';
+    switch (columnName) {
+      case InWarehouseStatusLink:
+        retValue = item.inWareHouseCompletedDate ? 
+        this.translater.get('common.status.inWarehouseComplete') :
+        this.translater.get('common.status.inWarehousePending');
         break;
     }
 
@@ -178,7 +191,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
     if (
       columnName === FinishLink ||
-      columnName === StatusLink ||
+      columnName === InWarehouseStatusLink ||
       columnName === PrintLink) {
       this.setTdId(item.id, columnName);
       retValue = true;
@@ -189,8 +202,8 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         this.onFinish();
         break;
 
-      case StatusLink:
-        this.onStatus();
+      case InWarehouseStatusLink:
+        this.onInWarehouseStatus();
         break;
 
       case PrintLink:
@@ -203,18 +216,21 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
   renderTDClass(item: PurchaseOrder, column: any) {
     let addedClass = '';
-    if (column.data === StatusLink) {
+    if (column.data === InWarehouseStatusLink) {
       addedClass = item.closedDate ? 'foreground-blue' : 'foreground-orange';
     }
     return super.renderTDClass(item, column, addedClass);
   }
 
   onFinish() {
+    console.log('onFinish');
   }
 
-  onStatus() {
+  onInWarehouseStatus() {
+    console.log('onInWarehouseStatus');
   }
 
   onPrint() {
+    console.log('onPrint');
   }
 }

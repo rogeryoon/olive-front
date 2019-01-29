@@ -46,7 +46,7 @@
       <mat-form-field *ngIf="!isMasterCurrency" appearance="outline" class="w-100-p">
         <mat-label>Currency Exchange Rate</mat-label>
         <input matInput name="currencyExchangeRate" formControlName="currencyExchangeRate" 
-          type="number" class="right">
+          type="number" min="0" class="right">
       </mat-form-field>
     </div>
   </div>
@@ -56,7 +56,7 @@
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Freight</mat-label>
         <input matInput name="freightAmount" formControlName="freightAmount" required type="number"
-          class="right">
+          class="right" oliveOnlyNumber="true">
         <mat-error *ngIf="freightAmount.hasError('required')">
           {{'common.entryError.required' | translate}}
         </mat-error>
@@ -66,7 +66,7 @@
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Added Discount</mat-label>
         <input matInput name="addedDiscountAmount" formControlName="addedDiscountAmount" 
-          required type="number" class="right">
+          required type="number" class="right" min="0">
         <mat-error *ngIf="addedDiscountAmount.hasError('required')">
           {{'common.entryError.required' | translate}}
         </mat-error>
@@ -76,7 +76,7 @@
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Tax</mat-label>
         <input matInput name="taxAmount" formControlName="taxAmount" required type="number"
-          class="right">
+          class="right" min="0">
         <mat-error *ngIf="taxAmount.hasError('required')">
           {{'common.entryError.required' | translate}}
         </mat-error>

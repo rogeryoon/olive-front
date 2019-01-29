@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';

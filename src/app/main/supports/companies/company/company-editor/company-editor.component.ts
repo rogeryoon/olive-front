@@ -100,7 +100,7 @@ export class OliveCompanyEditorComponent extends OliveEntityFormComponent {
   initializeChildComponent() {
     this.lookupCompanyGroup.setting = {
       name: 'CompanyGroup',
-      columns: 'id',
+      columnType: 'id',
       dialogTitle: this.translater.get(NavTranslates.Company.List),
       dataService: this.companyGroupService,
       maxSelectItems: 1,

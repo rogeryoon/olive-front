@@ -92,10 +92,10 @@ export class OliveProductsComponent extends OliveEntityListComponent {
         retValue = item.name;
         break;
       case MinPrice:
-        retValue = item.variants ? OliveUtilities.MinNumber(item.variants.map(x => x.standPrice)) : '';
+        retValue = item.variants ? OliveUtilities.minNumber(item.variants.map(x => x.standPrice)) : '';
         break;
       case MaxPrice:
-        retValue = item.variants ? OliveUtilities.MaxNumber(item.variants.map(x => x.standPrice)) : '';
+        retValue = item.variants ? OliveUtilities.maxNumber(item.variants.map(x => x.standPrice)) : '';
         break;
       case VariantCount:
         retValue = item.variants ? item.variants.length.toString() : '';

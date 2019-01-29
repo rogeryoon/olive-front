@@ -17,6 +17,7 @@ export class PurchaseOrder extends OliveTrackingAttribute {
     totalDueAmount?: number;
     currencyExchangeRate?: number;
     closedDate?: any;
+    inWareHouseCompletedDate?: any;
     printOutCount?: number;
     lastPrintOutUser: string;
 

@@ -2,6 +2,10 @@ export const locale = {
     lang: 'en',
     data: {
         'common' : {
+            'status': {
+                'inWarehousePending' : '입고 대기',
+                'inWarehouseComplete' : '입고 완료'
+            },
             'message' : {
                 'noRecordsFound' : 'No matching records found',
                 'savingChanges' : 'Saving changes...',
@@ -19,7 +23,8 @@ export const locale = {
                 'errorDeleteting' : 'An error occured while deleting the item.\r\nError: "{0}"',
                 'deleting' : 'Deleting...',
                 'errorLoading' : 'Unable to retrieve data from the server.\r\n Please contact your system administrator',
-                'sessionExpired' : 'The session expired. please login to continue.'
+                'sessionExpired' : 'The session expired. please login to continue.',
+                'duplicated' : '아래건(들)이 이미 존재하여 추가되지 않았습니다.\r\n{0}'
             },
             'entryError' : {
                 'required' : '필수 입력 항목입니다.',
@@ -38,7 +43,9 @@ export const locale = {
                 'deleteError' : 'Delete Error',
                 'loadError' : 'Load Error',
                 'advancedSearch' : 'Advanced Search',
-                'sessionExpired' : 'Session Expired'
+                'sessionExpired' : 'Session Expired',
+                'confirm' : '확인',
+                'duplicated' : '중복 오류 알림'
             },
             'button': {
                 'save' : '저장',

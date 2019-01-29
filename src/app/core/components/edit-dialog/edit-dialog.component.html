@@ -1,8 +1,8 @@
-<h1 *ngIf="!customTitle && canManageItems" mat-dialog-title>{{(name ? ('common.title.editItem' | translate:name) : ('common.title.addNewItem' | translate:title)) | shorten: maxDialogTitleLength: '...'}}</h1>
-<h1 *ngIf="!customTitle && !canManageItems" mat-dialog-title>{{'common.title.itemDetails' | translate:name | shorten: maxDialogTitleLength: '...'}}</h1>
-<h1 *ngIf="customTitle" mat-dialog-title>{{customTitle | shorten: maxDialogTitleLength: '...'}}</h1>
+<h1 *ngIf="!customTitle && canManageItems" mat-dialog-title>{{(name ? ('common.title.editItem' | translate:name) : ('common.title.addNewItem' | translate:title)) | shorten: maxDialogTitleLength}}</h1>
+<h1 *ngIf="!customTitle && !canManageItems" mat-dialog-title>{{'common.title.itemDetails' | translate:name | shorten: maxDialogTitleLength}}</h1>
+<h1 *ngIf="customTitle" mat-dialog-title>{{customTitle | shorten: maxDialogTitleLength}}</h1>
 <div mat-dialog-content>
-    <ng-template oliveEditForm></ng-template>
+    <ng-template olivePlaceHolder></ng-template>
 </div>
 <div mat-dialog-actions>
     <button *ngIf="canManageItems" [disabled]="!canSave" mat-raised-button (click)="save()" color="accent"><mat-icon>save</mat-icon> {{'common.button.save' | translate}}</button>

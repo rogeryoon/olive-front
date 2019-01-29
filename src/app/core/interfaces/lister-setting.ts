@@ -1,6 +1,6 @@
 import { PermissionValues } from '@quick/models/permission.model';
 import { OliveDataService } from './data-service';
-import { DeviceDetectorService } from 'ngx-device-detector';
+import { NameValue } from '../models/name-value';
 
 export interface IListerSetting {
 
@@ -8,7 +8,7 @@ export interface IListerSetting {
 
     name: string;
 
-    columns?: any;
+    extraSearches?: NameValue[];
 }
 
 export class ListerSetting implements IListerSetting {
@@ -18,6 +18,8 @@ export class ListerSetting implements IListerSetting {
     name: string;
 
     columns?: any;
+
+    extraSearches?: NameValue[];
 
     translateTitleId: string;
 
@@ -42,7 +44,9 @@ export class LookupListerSetting implements IListerSetting {
 
     name: string;
 
-    columns?: any;
+    columnType?: string;
+
+    extraSearches?: NameValue[];
 
     dialogTitle: string;
 
@@ -51,6 +55,8 @@ export class LookupListerSetting implements IListerSetting {
     renderCallback?: any;
 
     maxSelectItems: number;
+
+    maxNameLength?: number;
 
     // For New Item Support - Start
     newComponent?: any;

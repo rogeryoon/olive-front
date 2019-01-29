@@ -34,19 +34,19 @@ export const defaultNavigation: FuseNavigation[] = [
                         icon: NavIcons.Purchase.PurchaseEntry,
                         url: '/purchases/orders/0'
                     },                    
-                    {
-                        id: 'purchaseStats',
-                        title: '발주서 현황',
-                        translate: 'navi.purchase.stats',
-                        type: 'item',
-                        icon: NavIcons.Purchase.PurchaseStats,
-                        url: '/purchases/stats',
-                        badge: {
-                            title: '25',
-                            bg: '#F44336',
-                            fg: '#FFFFFF'
-                        }
-                    },
+                    // {
+                    //     id: 'purchaseStats',
+                    //     title: '발주서 현황',
+                    //     translate: 'navi.purchase.stats',
+                    //     type: 'item',
+                    //     icon: NavIcons.Purchase.PurchaseStats,
+                    //     url: '/purchases/stats',
+                    //     badge: {
+                    //         title: '25',
+                    //         bg: '#F44336',
+                    //         fg: '#FFFFFF'
+                    //     }
+                    // },
                     {
                         id: 'purchasePending',
                         title: '미입고 현황',

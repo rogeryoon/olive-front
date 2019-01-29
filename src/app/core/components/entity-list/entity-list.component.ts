@@ -46,7 +46,6 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
   selectedAll: any;
   savedFilterValue = '';
   searhKeyword = '';
-  extraSearches: NameValue[] = [];
 
   _setting: ListerSetting;
 
@@ -116,7 +115,7 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
-        dataTablesParameters['extsearch'] = this.extraSearches;
+        dataTablesParameters['extsearch'] = this.getExtraSearch();
 
         this.dataService.getItems(dataTablesParameters)
           .subscribe(response => {
@@ -149,6 +148,11 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
     $(document).ready(function () {
       $('.olive-datatable').css('width', '100%');
     });
+  }
+
+  protected getExtraSearch(): NameValue[] { 
+    if (!this.setting.extraSearches) { return []; }
+    return this.setting.extraSearches; 
   }
 
   dataTable(): any {
@@ -267,9 +271,9 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
     this.searhKeyword = '';
     this.savedFilterValue = '';
 
-    dialogRef.afterClosed().subscribe(item => {
-      if (item != null) {
-        this.extraSearches = item;
+    dialogRef.afterClosed().subscribe(searches => {
+      if (searches != null) {
+        this.setting.extraSearches = searches;
         this.dataTable().search('').draw();
       }
     });
@@ -328,6 +332,8 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
       );
     });
   }
+
+  renderTdTooltip(item: any, column: any) { return null; }
 
   renderTDClass(item: any, column: any, addedClass: string) {
     let classString = Utilities.TestIsUndefined(column.tdClass) ? '' : column.tdClass;

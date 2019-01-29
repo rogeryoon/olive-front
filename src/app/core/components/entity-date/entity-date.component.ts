@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { OliveUserNameService } from 'app/core/services/user-name.service';
 import { OliveUtilities } from 'app/core/classes/utilities';

@@ -3,10 +3,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { OliveSearchFormDirective } from '../../../core/directives/search-form.directive';
 import { OliveDialogSetting } from '../../classes/dialog-setting';
 import { OliveOnSearch } from '../../interfaces/on-search';
 import { locale as english } from '../../../core/i18n/en';
+import { OlivePlaceHolderDirective } from 'app/core/directives/place-holder.directive';
 
 // https://angular.io/guide/dynamic-component-loader
 
@@ -16,7 +16,7 @@ import { locale as english } from '../../../core/i18n/en';
   styleUrls: ['./search-dialog.component.scss']
 })
 export class OliveSearchDialogComponent implements OnInit, OnDestroy {
-  @ViewChild(OliveSearchFormDirective) oliveSearchForm: OliveSearchFormDirective;
+  @ViewChild(OlivePlaceHolderDirective) placeHolder: OlivePlaceHolderDirective;
   componentRef: any;
 
   constructor(
@@ -38,7 +38,7 @@ export class OliveSearchDialogComponent implements OnInit, OnDestroy {
   loadComponent() {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.dialog.component);
 
-    const viewContainerRef = this.oliveSearchForm.viewContainerRef;
+    const viewContainerRef = this.placeHolder.viewContainerRef;
     viewContainerRef.clear();
 
     this.componentRef = viewContainerRef.createComponent(componentFactory);

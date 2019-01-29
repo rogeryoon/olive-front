@@ -2,6 +2,8 @@ import { NameValue } from '../models/name-value';
 import * as moment from 'moment';
 import { FormGroup } from '@angular/forms';
 import { OliveContants } from './contants';
+import { OliveMoneyPipe } from '../pipes/money.pipe';
+import { DecimalPipe } from '@angular/common';
 
 export class OliveUtilities {
     public static isNullOrWhitespace(input): boolean {
@@ -135,8 +137,7 @@ export class OliveUtilities {
         return text;
     }
 
-    public static isValid36Id(id: string): boolean
-    {
+    public static isValid36Id(id: string): boolean {
         if (this.TestIsUndefined(id)) { return false; }
         return new RegExp('^[A-Za-z0-9]{1,6}$').test(id);
     }
@@ -151,7 +152,7 @@ export class OliveUtilities {
         return parseInt(input, 36);
     }
 
-    public static MinNumber(array: number[]): string {
+    public static minNumber(array: number[]): string {
         let returnValue = '';
 
         array = array.filter(a => a !== null);
@@ -163,7 +164,7 @@ export class OliveUtilities {
         return returnValue;
     }
 
-    public static MaxNumber(array: number[]): string {
+    public static maxNumber(array: number[]): string {
         let returnValue = '';
 
         array = array.filter(a => a !== null);
@@ -175,8 +176,30 @@ export class OliveUtilities {
         return returnValue;
     }
 
-    public static ShowMoney(amount: number): string {
-        return amount.toString();
+    public static showMoney(amount: number): string {
+        return new OliveMoneyPipe(new DecimalPipe('en-us')).transform(amount);
     }
+
+    public static getItemsFirstName(items: any) {
+        let returnValue = '-';
+        if (items && items.length > 0) {
+            returnValue = items[0].name;
+            if (items.length > 1) {
+                returnValue += `<span class="added-count">+${items.length - 1}</span>`;
+            }
+        }
+        return returnValue;
+    }
+
+    public static getItemsFirstCode(items: any) {
+        let returnValue = '-';
+        if (items && items.length > 0) {
+            returnValue = items[0].code;
+            if (items.length > 1) {
+                returnValue += `<span class="added-count">+${items.length - 1}</span>`;
+            }
+        }
+        return returnValue;
+    }    
 }
 

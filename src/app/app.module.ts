@@ -14,7 +14,7 @@ import { FuseProgressBarModule, FuseSidebarModule, FuseThemeOptionsModule } from
 
 import { fuseConfig } from 'app/fuse-config';
 
-import {ToastyModule} from 'ng2-toasty';
+import { ToastyModule} from 'ng2-toasty';
 
 import { AppComponent } from 'app/app.component';
 import { LayoutModule } from 'app/layout/layout.module';

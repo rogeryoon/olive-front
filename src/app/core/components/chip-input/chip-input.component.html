@@ -1,12 +1,12 @@
 <mat-form-field appearance="outline" class="w-100-p">
   <mat-label>{{placeholder}}</mat-label>
   <mat-chip-list #chipList>
-    <mat-chip *ngFor="let chip of value">
-      {{chip.name}}
+    <mat-chip *ngFor="let chip of value" [matTooltip]="maxNameLength ? chip.name : ''">
+      {{getChipName(chip)}}
       <mat-icon matChipRemove (click)="remove(chip)">cancel</mat-icon>
     </mat-chip>
     <input #chipInput [formControl]="chipCtrl" [matChipInputFor]="chipList"
-      [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="add($event)" [matAutocomplete]="autoCategory" />
+      [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="add($event)" [matAutocomplete]="autoCategory" [readOnly]="readonly" />
     <mat-autocomplete #autoCategory="matAutocomplete" (optionSelected)="selected($event)">
       <mat-option *ngFor="let chip of filteredChips | async" [value]="chip">
         {{chip.name}}
