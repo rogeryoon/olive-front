@@ -37,17 +37,15 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   paymentsDataSource: OlivePurchaseOrderPaymentDatasource = new OlivePurchaseOrderPaymentDatasource();
   paymentMethods: PaymentMethod[];
 
-  oFormArray: FormArray;
-
   value: any = null;  
 
   constructor(
-    formBuilder: FormBuilder,
-    private cacheService: OliveCacheService,
+    formBuilder: FormBuilder, 
     private messageHelper: OliveMessageHelperService,
     private paymentMethodService: OlivePaymentMethodService,
     private snackBar: MatSnackBar,
     private translater: FuseTranslationLoaderService,
+    private cacheService: OliveCacheService
   ) {
     super(
       formBuilder
@@ -94,12 +92,6 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
 
   createEmptyObject() {
     return new PurchaseOrder();
-  }
-
-  hasRequiredError(name: string, index: number) {
-    const formGroup = (<FormArray>this.oForm.get('formarray')).controls[index] as FormGroup;
-    const control = formGroup.get(name);
-    return control.touched && control.hasError('required');
   }
 
   private newItem() {

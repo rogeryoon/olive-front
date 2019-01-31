@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
 import { Product } from '../../models/product.model';
 import { OliveChipInputComponent } from 'app/core/components/chip-input/chip-input.component';
+import { OliveCacheService } from 'app/core/services/cache.service';
 
 @Component({
   selector: 'olive-product-class-editor',

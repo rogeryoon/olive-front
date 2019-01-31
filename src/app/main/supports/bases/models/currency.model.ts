@@ -6,5 +6,6 @@ export class Currency extends OliveTrackingAttribute {
     name: string;
     symbol: string;
     decimalPoint?: number;
+    primary?: boolean;
     activated?: boolean;
 }

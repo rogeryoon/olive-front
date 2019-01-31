@@ -10,7 +10,7 @@ export const locale = {
                 'noRecordsFound' : 'No matching records found',
                 'savingChanges' : 'Saving changes...',
                 'newItemCreated': '"{0}" was created successfully',
-                'uploadSaved': '업로드 데이터 저장을 성공적으로 완료하였습니다.',
+                'uploadSaved': '업로드 데이터 저장을 완료하였습니다.',
                 'deleted' : '"{0}" was deleted successfully',
                 'updated' : '"{0}" was saved successfully',
                 'saveError' : 'The below errors occured whilst saving your changes:',
@@ -24,18 +24,23 @@ export const locale = {
                 'deleting' : 'Deleting...',
                 'errorLoading' : 'Unable to retrieve data from the server.\r\n Please contact your system administrator',
                 'sessionExpired' : 'The session expired. please login to continue.',
-                'duplicated' : '아래건(들)이 이미 존재하여 추가되지 않았습니다.\r\n{0}'
+                'relogin' : 'Your Session has expired. Please log in again',
+                'renewSession' : 'Your Session has expired. Please log in again to renew your session',
+                'duplicated' : '아래건(들)이 이미 존재하여 추가되지 않았습니다.\r\n{0}',
+                'requestFinished': '요청한 작업을 완료하였습니다.'
             },
             'entryError' : {
                 'required' : '필수 입력 항목입니다.',
                 'needToSelect' : '필수 선택 항목입니다.',
-                'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.'
+                'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
+                'minNumber' : '{{min}}이상의 값을 입력하십시오.',
+                'minNumberShort' : '{{min}}이상 입력'
             },
             'title' : {
                 'addNewItem' : '{{title}} 등록',
                 'editItem' : '{{name}}',
                 'itemDetails' : '{{name}}',
-                'success' : '작업 성공',
+                'success' : '작업 완료',
                 'saveError' : '저장 오류 발생',
                 'notSelected' : '선택 항목 없음',
                 'errorOccurred' : '오류 안내',
@@ -70,6 +75,11 @@ export const locale = {
             'form': {
                 'createdDateFrom' : '등록일 시작',
                 'createdDateTo' : '등록일 종료'
+            }
+        },
+        'page': {
+            'title': {
+                'login': 'LOGIN TO YOUR ACCOUNT'
             }
         },
         'naviTitle' : {

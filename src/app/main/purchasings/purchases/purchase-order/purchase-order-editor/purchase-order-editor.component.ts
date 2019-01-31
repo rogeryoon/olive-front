@@ -34,15 +34,15 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
 
   currencies: Currency[] = [];
 
-  masterCurrencyCode: string;
+  primaryCurrencyCode: string;
 
   constructor(
-    formBuilder: FormBuilder,
+    formBuilder: FormBuilder, 
     private translater: FuseTranslationLoaderService,
     private vendorService: OliveVendorService,
     private warehouseService: OliveWarehouseService,
-    private accountService: AccountService,
-    private cacheService: OliveCacheService
+    private accountService: AccountService, 
+    private cacheService: OliveCacheService,
   ) {
     super(
       formBuilder
@@ -96,7 +96,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   get isMasterCurrency(): boolean {
     const it = this.currencies.find(item => item.id === this.currency.value);
     if (it) {
-      return it.code === this.masterCurrencyCode;
+      return it.code === this.primaryCurrencyCode;
     }
     return false;
   }
@@ -108,17 +108,15 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       vendorOrderId: formModel.vendorOrderId,
       date: formModel.poDate,
       memo: formModel.memo,
-      totalItemsAmount: formModel.totalItemsAmount,
       addedDiscountAmount: formModel.addedDiscountAmount,
       freightAmount: formModel.freightAmount,
       taxAmount: formModel.taxAmount,
-      totalDueAmount: formModel.totalDueAmount,
       currencyExchangeRate: formModel.currencyExchangeRate,
       closedDate: this.item.closedDate,
       printOutCount: this.item.printOutCount,
       lastPrintOutUser: this.item.lastPrintOutUser,
       vendorId: formModel.vendorFk.id,
-      warehouseId: formModel.warehouseFk.Id,
+      warehouseId: formModel.warehouseFk.id,
       currencyId: formModel.currency
     });
   }
@@ -128,12 +126,10 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       vendorOrderId: '',
       poDate: ['', Validators.required],
       memo: '',
-      totalItemsAmount: ['', Validators.required],
-      addedDiscountAmount: ['', Validators.required],
-      freightAmount: ['', Validators.required],
-      taxAmount: ['', Validators.required],
-      totalDueAmount: ['', Validators.required],
-      currencyExchangeRate: '',
+      addedDiscountAmount: ['', [Validators.required, Validators.min(0)]],
+      freightAmount: ['', [Validators.required, Validators.min(0)]],
+      taxAmount: ['', [Validators.required, Validators.min(0)]],
+      currencyExchangeRate: ['', Validators.min(0)],
       vendorFk: null,
       warehouseFk: null,
       currency: ''
@@ -145,27 +141,24 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       vendorOrderId: this.item.vendorOrderId || '',
       poDate: this.item.date || '',
       memo: this.item.memo || '',
-      totalItemsAmount: this.item.totalItemsAmount || 0,
       addedDiscountAmount: this.item.addedDiscountAmount || 0,
       freightAmount: this.item.freightAmount || 0,
       taxAmount: this.item.taxAmount || 0,
-      totalDueAmount: this.item.totalDueAmount || 0,
       currencyExchangeRate: this.item.currencyExchangeRate || 1.00,
       vendorFk: this.item.vendorFk,
       warehouseFk: this.item.warehouseFk,
       currency: this.item.currencyFk ? this.item.currencyFk.id : ''
     });
 
-    this.cacheService.GetCompanyMaster()
-      .then(master => {
-        this.masterCurrencyCode = master.currencyCode;
-        this.cacheService.GetCurrencies()
-          .then(currencies => {
-            this.currencies = currencies;
-            if (!this.item.currencyFk) {
-              this.oForm.patchValue({ currency: currencies.find(currency => currency.code === master.currencyCode).id });
-            }
-          });
+
+    this.cacheService.GetCurrencies()
+      .then(currencies => {
+        const currency = currencies.find(item => item.primary);        
+        this.primaryCurrencyCode = currency.code;
+        this.currencies = currencies;
+        if (!this.item.currencyFk) {
+          this.oForm.patchValue({ currency: currencies.find(item => item.primary).id });
+        }
       });
   }
 

@@ -57,11 +57,13 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
       vendorOrderId: purchaseOrder.vendorOrderId,
       date: purchaseOrder.date,
       memo: purchaseOrder.memo,
-      totalItemsAmount: purchaseOrder.totalItemsAmount,
+      totalItemsAmount: this.purchaseOrderItems.totalAmount,
       addedDiscountAmount: purchaseOrder.addedDiscountAmount,
       freightAmount: purchaseOrder.freightAmount,
       taxAmount: purchaseOrder.taxAmount,
-      totalDueAmount: purchaseOrder.totalDueAmount,
+      totalDueAmount: (
+        this.purchaseOrderItems.totalAmount + purchaseOrder.freightAmount 
+        + purchaseOrder.taxAmount - purchaseOrder.addedDiscountAmount),
       currencyExchangeRate: purchaseOrder.currencyExchangeRate,
       closedDate: purchaseOrder.closedDate,
       printOutCount: purchaseOrder.printOutCount,

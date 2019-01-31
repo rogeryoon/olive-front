@@ -35,6 +35,7 @@ import { OliveCurrencyService } from 'app/main/supports/bases/services/currency.
 import { OliveEditPageComponent } from './components/edit-page/edit-page.component';
 import { OliveOnlyNumberDirective } from './directives/only-number.directive';
 import { OlivePlaceHolderDirective } from './directives/place-holder.directive';
+import { OliveBaseComponent } from './components/base/base.component';
 
 @NgModule({
   imports: [
@@ -55,6 +56,7 @@ import { OlivePlaceHolderDirective } from './directives/place-holder.directive';
     OlivePipesModule,
     OliveMaterialModule,
 
+    OliveBaseComponent,
     OliveEntityListComponent,
     OliveEntityEditComponent,
     OliveEntityDateComponent,
@@ -65,7 +67,6 @@ import { OlivePlaceHolderDirective } from './directives/place-holder.directive';
     OliveChipInputComponent,
     OliveEntityListEditComponent,
     
-    OliveAppDialogComponent,
     OliveImportFileDialogComponent,
     OliveSearchDialogComponent,
     OliveLookupDialogComponent,
@@ -78,6 +79,7 @@ import { OlivePlaceHolderDirective } from './directives/place-holder.directive';
     OliveOnlyNumberDirective
   ],
   declarations: [
+    OliveBaseComponent,
     OliveEntityListComponent,
     OliveEntityEditComponent,
     OliveEntityDateComponent,

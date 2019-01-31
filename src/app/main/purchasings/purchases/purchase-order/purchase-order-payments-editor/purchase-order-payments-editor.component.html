@@ -18,9 +18,8 @@
             <mat-option value="">Choose an option</mat-option>
             <mat-option *ngFor="let method of paymentMethods" [value]="method.id">{{method.name}}</mat-option>
           </mat-select>
-          <mat-error *ngIf="hasRequiredError('paymentMethodId',i)">
+          <mat-error *ngIf="hasFormArrayError('paymentMethodId','required',i)">
             {{'common.entryError.needToSelect' | translate}}
-            required
           </mat-error>
         </mat-form-field>
       </mat-cell>
@@ -31,11 +30,14 @@
       <mat-header-cell *matHeaderCellDef>금액</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
-          <input name="inputAmount{{row.ObjId}}" type="number" matInput class="right" [value]="row.Obj.amount|money|noComma"
-            formControlName="amount" (focus)="currentRow=row" (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)">
-          <mat-error *ngIf="hasRequiredError('amount',i)">
+          <input name="inputAmount{{row.ObjId}}" type="number" matInput class="right" 
+            formControlName="amount" (focus)="currentRow=row" (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" min="0.01">
+          <mat-error *ngIf="hasFormArrayError('amount','required',i)">
             {{'common.entryError.required' | translate}}
           </mat-error>
+          <mat-error *ngIf="hasFormArrayError('amount','min',i)">
+            {{'common.entryError.minNumberShort' | translate : {min:0.01} }}
+          </mat-error>          
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef class="justify-end pr-40">{{totalAmount|money}}</mat-footer-cell>
@@ -46,7 +48,7 @@
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <input name="inputRemark{{row.ObjId}}" matInput type="text" formControlName="remarkId"
-          (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)">
+          (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" maxlength="200">
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
@@ -54,8 +56,8 @@
 
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef>
-        <button mat-button color="primary" matTooltip="신규" (click)="newItem()">
-          <mat-icon class="mat-button-icon">add</mat-icon>신규
+        <button mat-button color="primary" matTooltip="추가" (click)="newItem()">
+          <mat-icon class="mat-button-icon">add</mat-icon>추가
         </button>
       </mat-header-cell>
       <mat-cell *matCellDef="let row" class="justify-center">

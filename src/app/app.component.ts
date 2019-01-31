@@ -214,7 +214,7 @@ export class AppComponent implements OnInit, OnDestroy
         this.alertService.getMessageEvent().subscribe(message => this.showToast(message, false));
         this.alertService.getStickyMessageEvent().subscribe(message => this.showToast(message, true));
 
-        // this.authService.reLoginDelegate = () => this.showLoginDialog();
+        this.authService.reLoginDelegate = () => this.showLoginDialog();
         // 2019.1.9 PopUp Login 문제로 Disable 한다.        
         //#endregion Roger
     }
@@ -263,7 +263,8 @@ export class AppComponent implements OnInit, OnDestroy
     }
 
     showLoginDialog(): void {
-        this.alertService.showStickyMessage('Session Expired', 'Your Session has expired. Please log in again', MessageSeverity.info);
+        const title = this._fuseTranslationLoaderService.get('common.title.sessionExpired');
+        this.alertService.showStickyMessage(title, this._fuseTranslationLoaderService.get('common.message.relogin'), MessageSeverity.info);
 
         const dialogRef = this.dialog.open(OliveLoginDialogComponent);
 
@@ -271,9 +272,10 @@ export class AppComponent implements OnInit, OnDestroy
             this.alertService.resetStickyMessage();
 
             if (!result || this.authService.isSessionExpired) {
+                console.log('showLoginDialog -> this.authService.logout();');
                 this.authService.logout();
                 this.router.navigateByUrl('/pages/auth/login');
-                this.alertService.showStickyMessage('Session Expired', 'Your Session has expired. Please log in again to renew your session', MessageSeverity.warn);
+                this.alertService.showStickyMessage(title, this._fuseTranslationLoaderService.get('common.message.renewSession'), MessageSeverity.warn);
             }
         });
     }

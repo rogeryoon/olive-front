@@ -1,4 +1,4 @@
-import { Component, ViewChild, Inject } from '@angular/core';
+import { Component, ViewChild, Inject, AfterViewInit } from '@angular/core';
 import { OliveLoginControlComponent } from '../login-control/login-control.component';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
@@ -7,7 +7,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
   templateUrl: './login-dialog.component.html',
   styleUrls: ['./login-dialog.component.scss']
 })
-export class OliveLoginDialogComponent {
+export class OliveLoginDialogComponent implements AfterViewInit {
   @ViewChild(OliveLoginControlComponent)
   loginControl: OliveLoginControlComponent;
 
@@ -15,6 +15,10 @@ export class OliveLoginDialogComponent {
     public dialogRef: MatDialogRef<OliveLoginDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
+
+  ngAfterViewInit(): void {
+    this.loginControl.modalClosedCallback = () => this.dialogRef.close(true);
+  }
 
   onCancel(): void {
     this.dialogRef.close(false);

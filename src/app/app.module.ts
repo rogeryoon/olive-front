@@ -32,6 +32,8 @@ import { AccountService } from '@quick/services/account.service';
 import { AccountEndpoint } from '@quick/services/account-endpoint.service';
 import { OliveNavigationSelectorService } from './core/services/navigation-selector.service';
 import { Error404Module } from './main/pages/errors/404/error-404.module';
+import { OliveSharedModule } from './core/shared.module';
+import { LoginModule } from './main/pages/authentication/login/login.module';
 
 const appRoutes: Routes = [
     {
@@ -116,7 +118,10 @@ const appInitializerFn = (appConfig: OliveAppConfigService) => {
 
         Error404Module,
 
-        ToastyModule.forRoot()
+        ToastyModule.forRoot(),
+
+        OliveSharedModule,
+        LoginModule
     ],
     providers: [
         AuthService,

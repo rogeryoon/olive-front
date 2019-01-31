@@ -62,7 +62,12 @@ export class TableDatasource extends DataSource<any> {
         this._ObjectsSubject$.next(this._objectStore);
     }
 
+    createNewFormContorl(r: any, propName: string, validators: any[]): FormControl {
+        const m = new FormControl(r.Obj[propName], validators.length ? validators : null);
+        m.valueChanges.subscribe(val => { r.Obj[propName] = val; });
+        return m;
+    }
+
     createRowFormGroup(r: DatasourceObject): FormGroup { return null; }
-    createNewFormContorl(r: DatasourceObject, propName: string, required: boolean): FormControl { return null; }
     public createNewItem(): any { return null; }
 }

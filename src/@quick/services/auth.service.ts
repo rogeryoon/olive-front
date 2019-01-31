@@ -96,7 +96,6 @@ export class AuthService {
     }
 
     login(user: UserLogin) {
-
         if (this.isLoggedIn)
             this.logout();
 

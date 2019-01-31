@@ -9,17 +9,16 @@ export class OlivePurchaseOrderPaymentDatasource extends TableDatasource {
 
     createRowFormGroup(r: any): FormGroup {
         const f = new FormGroup({
-            paymentMethodId: this.createNewFormContorl(r, 'paymentMethodId', true),
-            amount: this.createNewFormContorl(r, 'amount', true),
-            remarkId: this.createNewFormContorl(r, 'remarkId', false)
+            paymentMethodId: this.createNewFormContorl(r, 'paymentMethodId', [Validators.required]),
+            amount: this.createNewFormContorl(r, 'amount', [Validators.required, Validators.min(0.01)]),
+            remarkId: this.createNewFormContorl(r, 'remarkId', [])
         });
         return f;
     }
 
-    createNewFormContorl(r: any, propName: string, required: boolean): FormControl {
-        const m = new FormControl(r.Obj[propName], required ? Validators.required : null);
+    createNewFormContorl(r: any, propName: string, validators: any[]): FormControl {
+        const m = super.createNewFormContorl(r, propName, validators);
         if (r.Obj.paymentMethodId && propName === 'paymentMethodId') { m.setValue(r.Obj.paymentMethodId); }
-        m.valueChanges.subscribe(val => { r.Obj[propName] = val; });
         return m;
     }
 

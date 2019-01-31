@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ComponentFactoryResolver } from '@angular/core';
 
 import { fuseAnimations } from '@fuse/animations';
@@ -12,6 +12,7 @@ import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/pu
 import { PurchaseOrder } from '../../models/purchase-order.model';
 import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
+import { AlertService } from '@quick/services/alert.service';
 
 @Component({
   selector: 'olive-purchase-order-editor-page',
@@ -22,11 +23,12 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 export class OlivePurchaseOrderEditorPageComponent extends OliveEditPageComponent {
   constructor(
     private route: ActivatedRoute, componentFactoryResolver: ComponentFactoryResolver,
-    translater: FuseTranslationLoaderService, accountService: AccountService
+    translater: FuseTranslationLoaderService, accountService: AccountService,
+    alertService: AlertService, router: Router
   ) {
     super(
       componentFactoryResolver, translater,
-      accountService
+      accountService, alertService, router
     );
   }
 
@@ -37,7 +39,6 @@ export class OlivePurchaseOrderEditorPageComponent extends OliveEditPageComponen
       managePermission: null,
       iconName: NavIcons.Purchase.PurchaseEntry,
       translateTitleId: NavTranslates.Purchase.PurchaseEntry,
-      newItemPath: 'purchases/orders/0',
       itemListPath: 'purchases/purchase-orders'
     };
 

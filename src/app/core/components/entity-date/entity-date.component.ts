@@ -12,7 +12,7 @@ import { OliveEntityFormBaseComponent } from '../entity-edit/entity-form-base.co
 export class OliveEntityDateComponent extends OliveEntityFormBaseComponent {
   
   constructor(
-    formBuilder: FormBuilder,
+    formBuilder: FormBuilder, 
     private userNameService: OliveUserNameService
   ) { 
     super(formBuilder);

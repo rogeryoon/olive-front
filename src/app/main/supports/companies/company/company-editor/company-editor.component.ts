@@ -24,7 +24,7 @@ export class OliveCompanyEditorComponent extends OliveEntityFormComponent {
   lookupCompanyGroup: OliveLookupHostComponent;
 
   constructor(
-    formBuilder: FormBuilder, 
+    formBuilder: FormBuilder,
     private accountService: AccountService,
     private translater: FuseTranslationLoaderService,
     private companyGroupService: OliveCompanyGroupService

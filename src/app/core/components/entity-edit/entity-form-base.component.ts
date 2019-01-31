@@ -1,13 +1,14 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnChanges, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 
 import { OliveUtilities } from 'app/core/classes/utilities';
+import { OliveBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'olive-entity-form-base',
   template: ''
 })
-export class OliveEntityFormBaseComponent implements OnInit, OnChanges, OnDestroy {
+export class OliveEntityFormBaseComponent extends OliveBaseComponent implements OnInit, OnChanges, OnDestroy {
   private _item: any;
   get item(): any {
     return this._item;
@@ -24,17 +25,16 @@ export class OliveEntityFormBaseComponent implements OnInit, OnChanges, OnDestro
   oForm: FormGroup; 
   
   isNewItem: boolean;
+
+  oFormArray: FormArray;
   
   constructor(protected formBuilder: FormBuilder) 
   { 
-    this.initializeComponent();
+    super();
   }
 
   get isIdVisible(): boolean {
     return this.idVisible && !this.isNewItem;
-  }
-
-  private initializeComponent() {
   }
 
   initializeChildComponent() {}
@@ -47,6 +47,8 @@ export class OliveEntityFormBaseComponent implements OnInit, OnChanges, OnDestro
   cleanUpChildComponent() {}
 
   ngOnInit() {
+    super.ngOnInit();
+
     this.initializeChildComponent();
 
     this.buildForm();
@@ -112,5 +114,11 @@ export class OliveEntityFormBaseComponent implements OnInit, OnChanges, OnDestro
 
   Id36(id: number): string {
     return OliveUtilities.convertToBase36(id);
+  }
+
+  protected hasFormArrayError(name: string, errorType: string, index: number) {
+    const formGroup = (<FormArray>this.oForm.get('formarray')).controls[index] as FormGroup;
+    const control = formGroup.get(name);
+    return control.touched && control.hasError(errorType);
   }
 }

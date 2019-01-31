@@ -31,7 +31,7 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
   lookupBranch: OliveLookupHostComponent;
 
   constructor(
-    formBuilder: FormBuilder, 
+    formBuilder: FormBuilder,
     private translater: FuseTranslationLoaderService,
     private companyService: OliveCompanyService,
     private branchService: OliveBranchService,

@@ -8,5 +8,4 @@ export class CompanyMaster extends OliveTrackingAttribute {
     thirdpartyEnabled?: boolean;
     shippingAgentEnabled?: boolean;
     shippingEnabled?: boolean;
-    currencyCode: string;
 }

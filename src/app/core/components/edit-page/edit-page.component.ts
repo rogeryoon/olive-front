@@ -1,25 +1,27 @@
 import { Component, OnInit, ViewChild, ComponentFactoryResolver, OnDestroy, AfterViewInit, Type, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 
+import { fuseAnimations } from '@fuse/animations';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
+
 import { AccountService } from '@quick/services/account.service';
+import { AlertService, DialogType } from '@quick/services/alert.service';
 
 import { locale as english } from '../../../core/i18n/en';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OliveUtilities } from 'app/core/classes/utilities';
-import { fuseAnimations } from '@fuse/animations';
 import { OlivePlaceHolderDirective } from 'app/core/directives/place-holder.directive';
 
 // https://angular.io/guide/dynamic-component-loader
 
 export class EditPageSetting {
-  component: Type<any>; 
-  item?: any; 
+  component: Type<any>;
+  item?: any;
   itemType: Type<any>;
-  managePermission: any; 
+  managePermission: any;
   iconName: string;
-  translateTitleId?: string; 
+  translateTitleId?: string;
   customTitle?: string;
-  newItemPath: string;
   itemListPath: string;
 }
 
@@ -38,16 +40,16 @@ export class OliveEditPageComponent implements OnInit, OnDestroy, AfterViewInit 
   createdComponent: OliveOnEdit;
 
   constructor(
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private translater: FuseTranslationLoaderService,
-    private accountService: AccountService
-  ) { 
+    private componentFactoryResolver: ComponentFactoryResolver, private translater: FuseTranslationLoaderService,
+    private accountService: AccountService, private alertService: AlertService,
+    private router: Router
+  ) {
     this.translater.loadTranslations(english);
   }
 
   ngOnInit() {
     this.initializeChildComponent();
-    this.loadComponent();    
+    this.loadComponent();
   }
 
   ngAfterViewInit() {
@@ -56,11 +58,16 @@ export class OliveEditPageComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngOnDestroy() {
-    this.componentRef.destroy(); 
+    this.componentRef.destroy();
   }
 
   showEditCompleted() {
-    
+    this.alertService.showDialog(
+      this.translater.get('common.title.success'),
+      this.translater.get('common.message.requestFinished'),
+      DialogType.alert,
+      () => this.router.navigate([this.setting.itemListPath])
+    );
   }
 
   get name(): any {
@@ -70,17 +77,16 @@ export class OliveEditPageComponent implements OnInit, OnDestroy, AfterViewInit 
       if (this.setting.item.code) {
         idString = this.setting.item.code;
       }
-      else
-      {
+      else {
         idString = OliveUtilities.convertToBase36(this.setting.item.id);
       }
     }
 
-    return this.setting.item ? { name : `[${idString}] ${this.setting.item.name}` } : null;
+    return this.setting.item ? { name: `[${idString}] ${this.setting.item.name}` } : null;
   }
 
   get title(): any {
-    return { title : this.translater.get(this.setting.translateTitleId) } ;
+    return { title: this.translater.get(this.setting.translateTitleId) };
   }
 
   get pageIcon() {
@@ -91,8 +97,8 @@ export class OliveEditPageComponent implements OnInit, OnDestroy, AfterViewInit 
     return this.setting.translateTitleId;
   }
 
-  initializeChildComponent() {}
-  
+  initializeChildComponent() { }
+
   loadComponent() {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.setting.component);
 

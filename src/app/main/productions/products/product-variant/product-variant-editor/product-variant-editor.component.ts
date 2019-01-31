@@ -28,11 +28,11 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
   weightTypes: any[] = OliveContants.weightTypes;
 
   constructor(
-    formBuilder: FormBuilder,
-    private cacheService: OliveCacheService,
+    formBuilder: FormBuilder, 
     private translater: FuseTranslationLoaderService,
     private accountService: AccountService,
-    private productService: OliveProductService
+    private productService: OliveProductService,
+    private cacheService: OliveCacheService
   ) 
   {
     super(

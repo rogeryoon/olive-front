@@ -22,7 +22,7 @@
         <mat-form-field fxFlex='95%'>
           <input matInput name="inputName{{row.ObjId}}" formControlName="name" (change)="onChange($event)" (keyup)="onKeyup($event)"
             (blur)="onBlur($event)" class="small-font">
-          <mat-error *ngIf="hasRequiredError('name',i)">
+          <mat-error *ngIf="hasFormArrayError('name','required',i)">
             {{'common.entryError.required' | translate}}
           </mat-error>
         </mat-form-field>
@@ -35,10 +35,13 @@
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <input name="inputQuantity{{row.ObjId}}" type="number" class="right" pattern="\d*" matInput formControlName="quantity"
-            (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)">
-          <mat-error *ngIf="hasRequiredError('quantity',i)">
+            (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" min="1">
+          <mat-error *ngIf="hasFormArrayError('quantity','required',i)">
             {{'common.entryError.required' | translate}}
           </mat-error>
+          <mat-error *ngIf="hasFormArrayError('quantity','min',i)">
+            {{'common.entryError.minNumberShort' | translate : {min:1} }}
+          </mat-error>          
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef class="justify-end pr-20">{{totalQuantity|number:'1.0-0'}}</mat-footer-cell>
@@ -49,10 +52,13 @@
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <input name="inputPrice{{row.ObjId}}" type="number" matInput class="right" formControlName="price" (change)="onChange($event)"
-            (keyup)="onKeyup($event)" (blur)="onBlur($event)">
-          <mat-error *ngIf="hasRequiredError('price',i)">
+            (keyup)="onKeyup($event)" (blur)="onBlur($event)" min="0.01">
+          <mat-error *ngIf="hasFormArrayError('price','required',i)">
             {{'common.entryError.required' | translate}}
           </mat-error>
+          <mat-error *ngIf="hasFormArrayError('price','min',i)">
+            {{'common.entryError.minNumberShort' | translate : {min:0.01} }}
+          </mat-error>          
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>

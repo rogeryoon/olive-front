@@ -222,9 +222,8 @@ export class OliveLookupDialogComponent implements OnInit {
     this.dialogRef.close(this.selectedItems);
   }
 
-  private clickItem(item?: any, event?: Event) {
+  clickItem(item?: any, event?: Event) {
     if (event && event.srcElement.getAttribute('type') === 'checkbox') { return; }
-
     item.selected = !item.selected;
     this.saveToSelectedItems(item);
     this.closeDialogMaxItemsIsOneItem();

@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 
+import * as fs from 'fs';
+import Mutex from 'await-mutex';
+
 import { CompanyGroupSetting } from 'app/core/models/company-group-setting.model';
 import { CompanyMaster } from '../models/company-master.model';
 
@@ -16,10 +19,16 @@ interface CacheContent {
   value: any;
 }
 
+
 @Injectable()
 export class OliveCacheService {
   private cache = new Map<string, CacheContent>();
   readonly DEFAULT_MAX_AGE: number = 600000; // 10 Minutes
+
+  private currecyMutex = new Mutex();
+  private companyMasterMutex = new Mutex();
+  private companyGroupMutex = new Mutex();
+  private chunkItemsMutexes = new Map<string, Mutex>();
 
   constructor(
     private companyMasterService: OliveCompanyMasterService,
@@ -67,18 +76,20 @@ export class OliveCacheService {
 
     let setting: CompanyGroupSetting = null;
 
-    if (!this.exist(key)) {
-      try {
-        const response = await this.companyGroupSettingService.getItem(companyGroupId).toPromise();
-        setting = this.set(key, response.model);
+    const unlock = await this.companyGroupMutex.lock();
+      if (!this.exist(key)) {
+        try {
+          const response = await this.companyGroupSettingService.getItem(companyGroupId).toPromise();
+          setting = this.set(key, response.model);
+        }
+        catch (error) {
+          this.messageHelper.showLoadFaild(error);
+        }
       }
-      catch (error) {
-        this.messageHelper.showLoadFaild(error);
+      else {
+        setting = this.get(key);
       }
-    }
-    else {
-      setting = this.get(key);
-    }
+    unlock();
 
     return setting;
   }
@@ -88,18 +99,20 @@ export class OliveCacheService {
 
     let item: CompanyMaster = null;
 
-    if (!this.exist(key)) {
-      try {
-        const response = await this.companyMasterService.getItem(0).toPromise();
-        item = this.set(key, response.model);
+    const unlock = await this.companyMasterMutex.lock();
+      if (!this.exist(key)) {
+        try {
+          const response = await this.companyMasterService.getItem(0).toPromise();
+          item = this.set(key, response.model);
+        }
+        catch (error) {
+          this.messageHelper.showLoadFaild(error);
+        }
       }
-      catch (error) {
-        this.messageHelper.showLoadFaild(error);
+      else {
+        item = this.get(key);
       }
-    }
-    else {
-      item = this.get(key);
-    }
+    unlock();
 
     return item;
   }
@@ -109,18 +122,20 @@ export class OliveCacheService {
 
     const key = 'Currency';
 
-    if (!this.exist(key)) {
-      try {
-        const response = await this.currencyService.getItems(null).toPromise();
-        items = this.set(key, response.model);
+    const unlock = await this.currecyMutex.lock();
+      if (!this.exist(key)) {
+        try {
+          const response = await this.currencyService.getItems(null).toPromise();
+          items = this.set(key, response.model);
+        }
+        catch (error) {
+          this.messageHelper.showLoadFaild(error);
+        }
       }
-      catch (error) {
-        this.messageHelper.showLoadFaild(error);
+      else {
+        items = this.get(key);
       }
-    }
-    else {
-      items = this.get(key);
-    }
+    unlock();
 
     return items;
   }
@@ -130,18 +145,24 @@ export class OliveCacheService {
 
     const cacheKey = key + this.queryParams.CompanyGroupId;
 
-    if (!this.exist(key)) {
-      try {
-        const response = await this.chunkDataService.getItems(null, key).toPromise();
-        items = this.set(cacheKey, response.model);
-      }
-      catch (error) {
-        this.messageHelper.showLoadFaild(error);
-      }
+    if (!this.chunkItemsMutexes.has(cacheKey)) {
+      this.chunkItemsMutexes.set(cacheKey, new Mutex());
     }
-    else {
-      items = this.get(cacheKey);
-    }
+
+    const unlock = this.chunkItemsMutexes.get(cacheKey).lock();
+      if (!this.exist(cacheKey)) {
+        try {
+          const response = await this.chunkDataService.getItems(null, key).toPromise();
+          items = this.set(cacheKey, response.model);
+        }
+        catch (error) {
+          this.messageHelper.showLoadFaild(error);
+        }
+      }
+      else {
+        items = this.get(cacheKey);
+      }
+    unlock();
 
     return items;
   }
