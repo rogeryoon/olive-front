@@ -17,6 +17,8 @@ import { LoginResponse, AccessToken } from '../models/login-response.model';
 import { User } from '../models/user.model';
 import { UserLogin } from '../models/user-login.model';
 import { PermissionValues } from '../models/permission.model';
+import { CompanyMaster } from 'app/core/models/company-master.model';
+import { Currency } from 'app/main/supports/bases/models/currency.model';
 
 @Injectable()
 export class AuthService {
@@ -46,7 +48,6 @@ export class AuthService {
         let navigationExtras: NavigationExtras = {
             queryParamsHandling: preserveParams ? "merge" : "", preserveFragment: preserveParams
         };
-
 
         this.router.navigate([page], navigationExtras);
     }
@@ -167,12 +168,30 @@ export class AuthService {
         this.localStorage.savePermanentData(rememberMe, DBkeys.REMEMBER_ME);
     }
 
+    // roger start
+    public saveConfigs(companyMaster: CompanyMaster, currencies: Currency[]) {
+        if (this.rememberMe) {
+            this.localStorage.savePermanentData(companyMaster, DBkeys.COMPANY_MASTER);
+            this.localStorage.savePermanentData(currencies, DBkeys.CURRENCIES);
+        }
+        else {
+            this.localStorage.saveSyncedSessionData(companyMaster, DBkeys.COMPANY_MASTER);
+            this.localStorage.saveSyncedSessionData(currencies, DBkeys.CURRENCIES);
+        }
+    }
+    // roger end
+
     logout(): void {
         this.localStorage.deleteData(DBkeys.ACCESS_TOKEN);
         this.localStorage.deleteData(DBkeys.REFRESH_TOKEN);
         this.localStorage.deleteData(DBkeys.TOKEN_EXPIRES_IN);
         this.localStorage.deleteData(DBkeys.USER_PERMISSIONS);
         this.localStorage.deleteData(DBkeys.CURRENT_USER);
+
+        // roger start
+        this.localStorage.deleteData(DBkeys.COMPANY_MASTER);
+        this.localStorage.deleteData(DBkeys.CURRENCIES);
+        // roger end
 
         this.configurations.clearLocalChanges();
 
@@ -240,4 +259,19 @@ export class AuthService {
     get rememberMe(): boolean {
         return this.localStorage.getDataObject<boolean>(DBkeys.REMEMBER_ME) == true;
     }
+
+    // roger start
+    get companyMaster(): CompanyMaster {
+        return this.localStorage.getDataObject<CompanyMaster>(DBkeys.COMPANY_MASTER);
+    }
+
+    get currencies(): Currency[] {
+        return this.localStorage.getDataObject<Currency[]>(DBkeys.CURRENCIES) || [];
+    }
+
+    get standCurrency(): Currency {
+        if (!this.currencies) { return null; }
+        return this.currencies.find(c => c.primary);
+    }
+    // roger end
 }

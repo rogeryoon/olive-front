@@ -5,12 +5,14 @@ import { TableDatasource } from 'app/core/classes/table-datasource';
 
 export class OlivePurchaseOrderPaymentDatasource extends TableDatasource {
 
+    amountRegexPattern: string;
+
     constructor() { super(); }
 
     createRowFormGroup(r: any): FormGroup {
         const f = new FormGroup({
             paymentMethodId: this.createNewFormContorl(r, 'paymentMethodId', [Validators.required]),
-            amount: this.createNewFormContorl(r, 'amount', [Validators.required, Validators.min(0.01)]),
+            amount: this.createNewFormContorl(r, 'amount', [Validators.required, Validators.min(0.01), Validators.pattern(this.amountRegexPattern)]),
             remarkId: this.createNewFormContorl(r, 'remarkId', [])
         });
         return f;

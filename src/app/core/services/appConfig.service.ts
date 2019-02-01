@@ -8,7 +8,7 @@ export interface AppConfig {
 
 @Injectable()
 export class OliveAppConfigService {
-  private appConfig: AppConfig;
+  private _appConfig: AppConfig;
 
   constructor(private http: HttpClient) { }
 
@@ -16,11 +16,11 @@ export class OliveAppConfigService {
     return this.http.get('/assets/data/appConfig.json')
       .toPromise()
       .then(data => {
-        this.appConfig = <AppConfig>data;
+        this._appConfig = <AppConfig>data;
       });
   }
 
   getConfig() {
-    return this.appConfig;
+    return this._appConfig;
   }
 }

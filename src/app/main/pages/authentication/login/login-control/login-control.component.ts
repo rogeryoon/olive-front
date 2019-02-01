@@ -8,6 +8,16 @@ import { AuthService } from '@quick/services/auth.service';
 import { Utilities } from '@quick/services/utilities';
 import { UserLogin } from '@quick/models/user-login.model';
 
+import { OliveAppConfigService } from 'app/core/services/AppConfig.service';
+import { OliveCompanyMasterService } from 'app/core/services/company-master.service';
+import { OliveCompanyGroupSettingService } from 'app/core/services/company-group-setting.service';
+import { OliveCurrencyService } from 'app/main/supports/bases/services/currency.service';
+import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
+import { forkJoin } from 'rxjs';
+import { CompanyMaster } from 'app/core/models/company-master.model';
+import { Currency } from 'app/main/supports/bases/models/currency.model';
+import { User } from '@quick/models/user.model';
+
 @Component({
   selector: 'olive-login-control',
   templateUrl: './login-control.component.html',
@@ -26,10 +36,13 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
   isModal = false;
 
   constructor(
-    private alertService: AlertService,
-    private authService: AuthService,
-    private fuseConfig: FuseConfigService,
-    private formBuilder: FormBuilder
+    private alertService: AlertService, private authService: AuthService,
+    private fuseConfig: FuseConfigService, private formBuilder: FormBuilder,
+    private appConfig: OliveAppConfigService,
+    private companyMasterService: OliveCompanyMasterService,
+    private companyGroupSettingService: OliveCompanyGroupSettingService,
+    private currencyService: OliveCurrencyService,
+    private queryParams: OliveQueryParameterService
   ) {
     this.fuseConfig.setConfig({
       layout: {
@@ -118,49 +131,65 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
 
     this.authService.login(this.getUserLogin())
       .subscribe(
-        user => {
-          setTimeout(() => {
-            this.alertService.stopLoadingMessage();
-            this.isLoading = false;
-            this.reset();
+        user => this.loadConfigs(user),
+        error => this.showLoginError(error)
+      );
+  }
 
-            if (!this.isModal) {
-              this.alertService.showMessage('Login', `Welcome ${user.userName}!`, MessageSeverity.success);
-            }
-            else {
-              this.alertService.showMessage('Login', `Session for ${user.userName} restored!`, MessageSeverity.success);
-              setTimeout(() => {
-                this.alertService.showStickyMessage('Session Restored', 'Please try your last operation again', MessageSeverity.default);
-              }, 500);
+  loadConfigs(user: User) {
+    forkJoin(
+      this.companyMasterService.getItem(0),
+      this.currencyService.getItems(null)
+    ).subscribe(
+      results => this.onConfigsLoadSuccessful(user, results[0].model, results[1].model),
+      error => this.showLoginError(error)
+    );
+  }
 
-              this.closeModal();
-            }
-          }, 500);
-        },
-        error => {
-          this.alertService.stopLoadingMessage();
+  showLoginError(error: any) {
+    this.alertService.stopLoadingMessage();
 
-          if (Utilities.checkNoNetwork(error)) {
-            this.alertService.showStickyMessage(Utilities.noNetworkMessageCaption, Utilities.noNetworkMessageDetail, MessageSeverity.error, error);
-          }
-          else {
-            const errorMessage = Utilities.findHttpResponseMessage('error_description', error) || Utilities.findHttpResponseMessage('error', error);
+    if (Utilities.checkNoNetwork(error)) {
+      this.alertService.showStickyMessage(Utilities.noNetworkMessageCaption, Utilities.noNetworkMessageDetail, MessageSeverity.error, error);
+    }
+    else {
+      const errorMessage = Utilities.findHttpResponseMessage('error_description', error) || Utilities.findHttpResponseMessage('error', error);
 
-            if (errorMessage) {
-              this.alertService.showStickyMessage('Unable to login', this.mapLoginErrorMessage(errorMessage), MessageSeverity.error, error);
-            }
-            else {
-              this.alertService.showStickyMessage(
-                'Unable to login', 'An error occured, please try again later.\nError: ' + 
-                error.statusText || error.status, MessageSeverity.error, error
-              );
-            }
-          }
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 500);
-        });
+      if (errorMessage) {
+        this.alertService.showStickyMessage('Unable to login', this.mapLoginErrorMessage(errorMessage), MessageSeverity.error, error);
+      }
+      else {
+        this.alertService.showStickyMessage(
+          'Unable to login', 'An error occured, please try again later.\nError: ' +
+          error.statusText || error.status, MessageSeverity.error, error
+        );
+      }
+    }
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 500);
+  }
 
+  private onConfigsLoadSuccessful(user: User, companyMaster: CompanyMaster, currencies: Currency[]) {
+    this.authService.saveConfigs(companyMaster, currencies);
+
+    setTimeout(() => {
+      this.alertService.stopLoadingMessage();
+      this.isLoading = false;
+      this.reset();
+
+      if (!this.isModal) {
+        this.alertService.showMessage('Login', `Welcome ${user.userName}!`, MessageSeverity.success);
+      }
+      else {
+        this.alertService.showMessage('Login', `Session for ${user.userName} restored!`, MessageSeverity.success);
+        setTimeout(() => {
+          this.alertService.showStickyMessage('Session Restored', 'Please try your last operation again', MessageSeverity.default);
+        }, 500);
+
+        this.closeModal();
+      }
+    }, 500);
   }
 
   mapLoginErrorMessage(error: string) {

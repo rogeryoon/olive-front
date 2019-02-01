@@ -200,6 +200,23 @@ export class OliveUtilities {
             }
         }
         return returnValue;
-    }    
+    }
+
+    public static getMoneyRegexPattern(maxDigits: number): string {
+        let decimalPattern = '';
+
+        if (maxDigits > 0) {
+            decimalPattern = `(\\.\\d{1,${maxDigits}})?`;
+        }
+
+        const test =  `^\\s*[1-9]\\d*${decimalPattern}\\s*$`;
+
+        return test;
+    }
+
+    public static get numberRegexPattern(): string {
+        return this.getMoneyRegexPattern(0);
+    }
+   
 }
 

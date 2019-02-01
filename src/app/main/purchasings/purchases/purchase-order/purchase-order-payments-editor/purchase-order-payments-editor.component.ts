@@ -96,6 +96,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
 
   private newItem() {
     this.paymentsDataSource.addNewItem(null);
+    this.oForm.markAsDirty();
   }
   
   private deleteItem(item: any) {
@@ -107,10 +108,12 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
       )
         .onAction().subscribe(() => {
           this.paymentsDataSource.deleteItem(item);
+          this.oForm.markAsDirty();
         });
     }
     else {
       this.paymentsDataSource.deleteItem(item);
+      this.oForm.markAsDirty();
     }
   }
 

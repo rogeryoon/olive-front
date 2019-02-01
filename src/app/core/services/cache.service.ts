@@ -1,42 +1,41 @@
 import { Injectable } from '@angular/core';
 
-import * as fs from 'fs';
 import Mutex from 'await-mutex';
 
+import { AuthService } from '@quick/services/auth.service';
+
 import { CompanyGroupSetting } from 'app/core/models/company-group-setting.model';
-import { CompanyMaster } from '../models/company-master.model';
 
 import { OliveCompanyGroupSettingService } from './company-group-setting.service';
 import { OliveQueryParameterService } from './query-parameter.service';
 import { OliveMessageHelperService } from './message-helper.service';
 import { OliveChunkDataService } from './chunk-data.service';
-import { OliveCompanyMasterService } from './company-master.service';
+import { CompanyMaster } from '../models/company-master.model';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
-import { OliveCurrencyService } from 'app/main/supports/bases/services/currency.service';
 
 interface CacheContent {
   expiry: number;
   value: any;
 }
 
-
 @Injectable()
 export class OliveCacheService {
   private cache = new Map<string, CacheContent>();
   readonly DEFAULT_MAX_AGE: number = 600000; // 10 Minutes
 
-  private currecyMutex = new Mutex();
-  private companyMasterMutex = new Mutex();
   private companyGroupMutex = new Mutex();
   private chunkItemsMutexes = new Map<string, Mutex>();
 
+  private _companyMaster: CompanyMaster;
+  private _currencies: Currency[];
+  private _standCurrency: Currency;
+
   constructor(
-    private companyMasterService: OliveCompanyMasterService,
     private companyGroupSettingService: OliveCompanyGroupSettingService,
     private chunkDataService: OliveChunkDataService,
-    private currencyService: OliveCurrencyService,
     private queryParams: OliveQueryParameterService,
     private messageHelper: OliveMessageHelperService,
+    private authService: AuthService
   ) 
   {
   }
@@ -94,53 +93,7 @@ export class OliveCacheService {
     return setting;
   }
 
-  async GetCompanyMaster(): Promise<CompanyMaster> {
-    const key = `CompanyMaster`;
-
-    let item: CompanyMaster = null;
-
-    const unlock = await this.companyMasterMutex.lock();
-      if (!this.exist(key)) {
-        try {
-          const response = await this.companyMasterService.getItem(0).toPromise();
-          item = this.set(key, response.model);
-        }
-        catch (error) {
-          this.messageHelper.showLoadFaild(error);
-        }
-      }
-      else {
-        item = this.get(key);
-      }
-    unlock();
-
-    return item;
-  }
-
-  async GetCurrencies(): Promise<Currency[]> {
-    let items: any = null;
-
-    const key = 'Currency';
-
-    const unlock = await this.currecyMutex.lock();
-      if (!this.exist(key)) {
-        try {
-          const response = await this.currencyService.getItems(null).toPromise();
-          items = this.set(key, response.model);
-        }
-        catch (error) {
-          this.messageHelper.showLoadFaild(error);
-        }
-      }
-      else {
-        items = this.get(key);
-      }
-    unlock();
-
-    return items;
-  }
-
-  async GetChunkItems(key: string): Promise<any> {
+  async getChunkItems(key: string): Promise<any> {
     let items: any = null;
 
     const cacheKey = key + this.queryParams.CompanyGroupId;
@@ -165,5 +118,26 @@ export class OliveCacheService {
     unlock();
 
     return items;
+  }
+
+  get companyMaster() {
+    if (!this._companyMaster) { 
+      this._companyMaster = this.authService.companyMaster; 
+    }
+    return this._companyMaster;
+  }
+
+  get currencies() {
+    if (!this._currencies) { 
+      this._currencies = this.authService.currencies; 
+    }    
+    return this._currencies;
+  }
+
+  get standCurrency() {
+    if (!this._standCurrency) { 
+      this._standCurrency = this.authService.standCurrency; 
+    }     
+    return this._standCurrency;
   }
 }

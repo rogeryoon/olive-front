@@ -18,11 +18,7 @@ export class OliveEntityEndpointService extends EndpointFactory {
   }
 
   get companyGroupParam(): string {
-    const companyGroupIdQueryString = 'cgroup';
-
-    const param = `?cgroup=${this.queryParams.CompanyGroupId}`;
-
-    return param;
+    return `?cgroup=${this.queryParams.CompanyGroupId}`;
   }
 
   getItemEndpoint<T>(id: number, apiUrl: string): Observable<T> {

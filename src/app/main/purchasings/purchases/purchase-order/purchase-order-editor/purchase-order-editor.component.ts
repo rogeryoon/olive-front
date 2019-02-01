@@ -3,7 +3,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { AccountService } from '@quick/services/account.service';
 import { Permission } from '@quick/models/permission.model';
 
 import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
@@ -14,11 +13,10 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveVendorManagerComponent } from 'app/main/supports/companies/vendor/vendor-manager/vendor-manager.component';
 import { Vendor } from 'app/main/supports/companies/models/vendor.model';
 import { OliveWarehouseService } from 'app/main/supports/companies/services/warehouse.service';
-import { Currency } from 'app/main/supports/bases/models/currency.model';
 import { Warehouse } from 'app/main/supports/companies/models/warehouse.model';
 import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/warehouse/warehouse-manager/warehouse-manager.component';
-import { OliveCacheService } from 'app/core/services/cache.service';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { OliveCacheService } from 'app/core/services/cache.service';
 
 @Component({
   selector: 'olive-purchase-order-editor',
@@ -32,17 +30,14 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   @ViewChild('warehouse')
   lookupWarehouse: OliveLookupHostComponent;
 
-  currencies: Currency[] = [];
-
-  primaryCurrencyCode: string;
+  standCurrencyCode: string;
 
   constructor(
     formBuilder: FormBuilder, 
     private translater: FuseTranslationLoaderService,
     private vendorService: OliveVendorService,
     private warehouseService: OliveWarehouseService,
-    private accountService: AccountService, 
-    private cacheService: OliveCacheService,
+    private cacheService: OliveCacheService
   ) {
     super(
       formBuilder
@@ -96,7 +91,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   get isMasterCurrency(): boolean {
     const it = this.currencies.find(item => item.id === this.currency.value);
     if (it) {
-      return it.code === this.primaryCurrencyCode;
+      return it.code === this.standCurrencyCode;
     }
     return false;
   }
@@ -147,19 +142,8 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       currencyExchangeRate: this.item.currencyExchangeRate || 1.00,
       vendorFk: this.item.vendorFk,
       warehouseFk: this.item.warehouseFk,
-      currency: this.item.currencyFk ? this.item.currencyFk.id : ''
+      currency: this.item.currencyFk ? this.item.currencyFk.id : this.standCurrency.id
     });
-
-
-    this.cacheService.GetCurrencies()
-      .then(currencies => {
-        const currency = currencies.find(item => item.primary);        
-        this.primaryCurrencyCode = currency.code;
-        this.currencies = currencies;
-        if (!this.item.currencyFk) {
-          this.oForm.patchValue({ currency: currencies.find(item => item.primary).id });
-        }
-      });
   }
 
   createEmptyObject() {
@@ -167,6 +151,10 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   }
 
   initializeChildComponent() {
+    this.standCurrency = this.cacheService.standCurrency;
+    this.currencies = this.cacheService.currencies;
+    this.standCurrencyCode = this.standCurrency.code;
+
     this.lookupVendor.setting = {
       name: 'Vendor',
       columnType: 'code',

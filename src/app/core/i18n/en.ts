@@ -34,7 +34,8 @@ export const locale = {
                 'needToSelect' : '필수 선택 항목입니다.',
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
                 'minNumber' : '{{min}}이상의 값을 입력하십시오.',
-                'minNumberShort' : '{{min}}이상 입력'
+                'minNumberShort' : '{{min}}이상 입력',
+                'pattern' : '입력형식 오류'
             },
             'title' : {
                 'addNewItem' : '{{title}} 등록',

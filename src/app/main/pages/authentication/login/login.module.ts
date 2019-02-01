@@ -40,7 +40,8 @@ const routes = [
     exports: [
         OliveLoginDialogComponent
     ],
-    providers: [],
+    providers: [
+    ],
     entryComponents : [
         OliveLoginDialogComponent
     ]

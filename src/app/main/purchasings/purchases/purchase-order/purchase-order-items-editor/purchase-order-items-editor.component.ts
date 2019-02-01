@@ -28,6 +28,8 @@ import { OlivePurchaseOrderService } from '../../services/purchase-order.service
 import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/purchase-order-manager.component';
 import { NameValue } from 'app/core/models/name-value';
 import { OlivePurchaseOrderLookupDialogComponent } from '../purchase-order-lookup-dialog/purchase-order-lookup-dialog.component';
+import { OliveCacheService } from 'app/core/services/cache.service';
+
 
 @Component({
   selector: 'olive-purchase-order-items-editor',
@@ -60,7 +62,8 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     private snackBar: MatSnackBar,
     private translater: FuseTranslationLoaderService,
     private dialog: MatDialog,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private cacheService: OliveCacheService
   ) {
     super(
       formBuilder
@@ -69,6 +72,11 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
 
   get items(): any {
     return this.itemsDataSource.items;
+  }
+
+  initializeChildComponent() {
+    this.standCurrency = this.cacheService.standCurrency;
+    this.itemsDataSource.priceRegexPattern = OliveUtilities.getMoneyRegexPattern(this.standCurrency.decimalPoint);
   }
 
   buildForm() {
@@ -83,6 +91,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
 
   private addNewItem(item: PurchaseOrderItem) {
     this.itemsDataSource.addNewItem(item);
+    this.oForm.markAsDirty();
   }
 
   private deleteItem(item: any) {
@@ -94,10 +103,12 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       )
         .onAction().subscribe(() => {
           this.itemsDataSource.deleteItem(item);
+          this.oForm.markAsDirty();
         });
     }
     else {
       this.itemsDataSource.deleteItem(item);
+      this.oForm.markAsDirty();
     }
   }
 
@@ -270,10 +281,11 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     this._onChange(event.value);
   }
   onChange(event: any) {
-    this._onChange(event.target.value);
+    this._onChange(6);
+    console.log(event);
   }
   onKeyup(event: any) {
-    this._onChange(event.target.value);
+    this._onChange(6);
   }
   onBlur(event: any) {
     this._onTouched();

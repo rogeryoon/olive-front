@@ -87,7 +87,7 @@ export class OliveChipInputComponent implements OnInit, AfterViewInit, ControlVa
   private setCacheValues() {
     if (!this.datakey) { return; }
 
-    this.cacheService.GetChunkItems(this.datakey)
+    this.cacheService.getChunkItems(this.datakey)
       .then(items => {
         setTimeout(() => {
           this.initChipHelper(items);  

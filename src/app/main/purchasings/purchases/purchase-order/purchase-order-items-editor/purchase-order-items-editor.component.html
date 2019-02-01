@@ -34,13 +34,16 @@
       <mat-header-cell *matHeaderCellDef>수량</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
-          <input name="inputQuantity{{row.ObjId}}" type="number" class="right" pattern="\d*" matInput formControlName="quantity"
+          <input name="inputQuantity{{row.ObjId}}" type="number" class="right" matInput formControlName="quantity"
             (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" min="1">
           <mat-error *ngIf="hasFormArrayError('quantity','required',i)">
             {{'common.entryError.required' | translate}}
           </mat-error>
           <mat-error *ngIf="hasFormArrayError('quantity','min',i)">
             {{'common.entryError.minNumberShort' | translate : {min:1} }}
+          </mat-error>
+          <mat-error *ngIf="hasFormArrayError('quantity','pattern',i)">
+            {{'common.entryError.pattern' | translate }}
           </mat-error>          
         </mat-form-field>
       </mat-cell>
@@ -58,7 +61,10 @@
           </mat-error>
           <mat-error *ngIf="hasFormArrayError('price','min',i)">
             {{'common.entryError.minNumberShort' | translate : {min:0.01} }}
-          </mat-error>          
+          </mat-error>
+          <mat-error *ngIf="hasFormArrayError('price','pattern',i)">
+            {{'common.entryError.pattern' | translate }}
+          </mat-error>                    
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>

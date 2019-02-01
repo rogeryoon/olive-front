@@ -39,9 +39,9 @@ export class TableDatasource extends DataSource<any> {
         return array;
     }
 
-    loadItems(payments: any[]) {
+    loadItems(items: any[]) {
         this._objectStore = []; // clear current stored data
-        payments.forEach(m => this._objectStore.push(new DatasourceObject(m)));
+        items.forEach(m => this._objectStore.push(new DatasourceObject(m)));
         this._ObjectsSubject$.next(this._objectStore);
     }
 
