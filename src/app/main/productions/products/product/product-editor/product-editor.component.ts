@@ -1,5 +1,7 @@
-﻿import { Component, ViewChild } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
 import { OliveUtilities } from 'app/core/classes/utilities';
@@ -12,26 +14,10 @@ import { Product } from '../../models/product.model';
 })
 export class OliveProductEditorComponent extends OliveEntityFormComponent {
 
-  constructor(formBuilder: FormBuilder) {
+  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
     super(
-      formBuilder
+      formBuilder, translater
     );
-  }
-
-  get code() {
-    return this.oForm.get('code');
-  }
-
-  get activated() {
-    return this.oForm.get('activated');
-  }
-
-  get memo() {
-    return this.oForm.get('memo');
-  }
-
-  get hsCode() {
-    return this.oForm.get('hsCode');
   }
 
   getEditedItem(): any {

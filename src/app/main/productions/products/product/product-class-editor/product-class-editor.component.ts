@@ -1,10 +1,11 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
+
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
 import { Product } from '../../models/product.model';
 import { OliveChipInputComponent } from 'app/core/components/chip-input/chip-input.component';
-import { OliveCacheService } from 'app/core/services/cache.service';
 
 @Component({
   selector: 'olive-product-class-editor',
@@ -21,9 +22,9 @@ export class OliveProductClassEditorComponent extends OliveEntityFormComponent {
   @ViewChild('tags') 
   tags: OliveChipInputComponent;
 
-  constructor(formBuilder: FormBuilder) {
+  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
     super(
-      formBuilder
+      formBuilder, translater
     );
   }
 

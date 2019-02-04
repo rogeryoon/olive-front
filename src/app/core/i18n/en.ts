@@ -20,7 +20,7 @@ export const locale = {
                 'invalidSelectedFiles' : '선택한 파일이 없습니다.',
                 'clickFileButton' : '파일열기 버튼을 눌러 업로드 파일을 선택해 주십시오.',
                 'confirmDelete' : 'Delete {0}?',
-                'errorDeleteting' : 'An error occured while deleting the item.\r\nError: "{0}"',
+                'errorDeleteting' : 'The below errors occured whilst sdeleting the item:',
                 'deleting' : 'Deleting...',
                 'errorLoading' : 'Unable to retrieve data from the server.\r\n Please contact your system administrator',
                 'sessionExpired' : 'The session expired. please login to continue.',
@@ -30,12 +30,16 @@ export const locale = {
                 'requestFinished': '요청한 작업을 완료하였습니다.'
             },
             'entryError' : {
-                'required' : '필수 입력 항목입니다.',
-                'needToSelect' : '필수 선택 항목입니다.',
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
-                'minNumber' : '{{min}}이상의 값을 입력하십시오.',
-                'minNumberShort' : '{{min}}이상 입력',
-                'pattern' : '입력형식 오류'
+                'deleteByConcurrency' : '해당 데이터를 참조하고 있는 관련 데이터가 존재해서 삭제를 할 수 없습니다. '
+            },
+            'validate' : {
+                'required' : '필수 입력(선택) 항목입니다.',
+                'minNumber' : '{0}이상 입력하십시오.',
+                'maxNumber' : '{0}이하 입력하십시오.',
+                'pattern' : '입력형식 오류입니다.',
+                'number' : '숫자 오류입니다. {0}',
+                'decimal' : '(소숫점 최대{0}자리)',
             },
             'title' : {
                 'addNewItem' : '{{title}} 등록',
@@ -46,7 +50,7 @@ export const locale = {
                 'notSelected' : '선택 항목 없음',
                 'errorOccurred' : '오류 안내',
                 'importDialog' : '파일 업로드',
-                'deleteError' : 'Delete Error',
+                'deleteError' : '삭제 오류', // 'Delete Error',
                 'loadError' : 'Load Error',
                 'advancedSearch' : 'Advanced Search',
                 'sessionExpired' : 'Session Expired',

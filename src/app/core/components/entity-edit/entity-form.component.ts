@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { OliveEntityDateComponent } from '../entity-date/entity-date.component';
 import { OliveEntityFormBaseComponent } from './entity-form-base.component';
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 @Component({
   selector: 'olive-entity-form',
@@ -11,12 +12,8 @@ export class OliveEntityFormComponent extends OliveEntityFormBaseComponent {
   @ViewChild(OliveEntityDateComponent)
   private dateComponent: OliveEntityDateComponent;
 
-  constructor(formBuilder: FormBuilder) {
-    super(formBuilder);
-  }
-
-  get name() {
-    return this.oForm.get('name');
+  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
+    super(formBuilder, translater);
   }
 
   get hasError() {

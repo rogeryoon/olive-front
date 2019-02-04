@@ -1,6 +1,8 @@
 ﻿import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
+
 import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { Country } from '../../models/country.model';
@@ -12,14 +14,10 @@ import { Country } from '../../models/country.model';
 })
 export class OliveCountryEditorComponent extends OliveEntityFormComponent {
 
-  constructor(formBuilder: FormBuilder) {
+  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
     super(
-      formBuilder
+      formBuilder, translater
     );
-  }
-
-  get code() {
-    return this.oForm.get('code');
   }
 
   getEditedItem(): any {

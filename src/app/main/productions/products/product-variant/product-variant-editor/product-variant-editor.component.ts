@@ -15,6 +15,7 @@ import { OliveProductService } from '../../services/product.service';
 import { OliveProductManagerComponent } from '../../product/product-manager/product-manager.component';
 import { Product } from '../../models/product.model';
 import { Permission } from '@quick/models/permission.model';
+import { numberValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-product-variant-editor',
@@ -28,32 +29,16 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
   weightTypes: any[] = OliveContants.weightTypes;
 
   constructor(
-    formBuilder: FormBuilder, 
-    private translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder,
+    translater: FuseTranslationLoaderService,
     private accountService: AccountService,
     private productService: OliveProductService,
     private cacheService: OliveCacheService
   ) 
   {
     super(
-      formBuilder
+      formBuilder, translater
     );
-  }
-
-  get code() {
-    return this.oForm.get('code');
-  }
-
-  get standPrice() {
-    return this.oForm.get('standPrice');
-  }
-
-  get weight() {
-    return this.oForm.get('weight');
-  }
-
-  get weightTypeCode() {
-    return this.oForm.get('weightTypeCode');
   }
 
   getEditedItem(): any {
@@ -74,8 +59,8 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
       id: '',
       code: '',
       name: '',
-      standPrice: '',
-      weight: '',
+      standPrice: ['', [numberValidator(this.standCurrency.decimalPoint, false)]],
+      weight: ['', [numberValidator(2, false)]],
       weightTypeCode: ['', Validators.required],
       productFk: null
     });
@@ -107,6 +92,8 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
   }
 
   initializeChildComponent() {
+    this.standCurrency = this.cacheService.standCurrency;
+
     this.lookupProduct.setting = {
       name: 'Product',
       columnType: 'id',

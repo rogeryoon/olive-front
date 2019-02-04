@@ -9,23 +9,25 @@
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Type Name</mat-label>
         <input matInput name="name" formControlName="name" maxlength="200">
-        <mat-hint align="end">{{name.value?.length || 0}}/200</mat-hint>
+        <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Code</mat-label>
         <input matInput name="code" formControlName="code" maxlength="100" class="to-uppercase">
-        <mat-hint align="end">{{code.value?.length || 0}}/100</mat-hint>
+        <mat-hint align="end">{{getControl('code').value?.length || 0}}/100</mat-hint>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Stand Price</mat-label>
         <input matInput name="standPrice" formControlName="standPrice" type="number">
+        <mat-error *ngIf="hasEntryError('standPrice')">{{errorMessage('standPrice')}}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Weight</mat-label>        
         <input matInput name="weight" formControlName="weight" type="number">
+        <mat-error *ngIf="hasEntryError('weight')">{{errorMessage('weight')}}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
@@ -33,9 +35,7 @@
         <mat-select name="weightTypeCode" formControlName="weightTypeCode" required>
           <mat-option *ngFor="let unit of weightTypes" [value]="unit.code">{{unit.name}} ({{unit.symbol}})</mat-option>
         </mat-select>
-        <mat-error *ngIf="weightTypeCode.hasError('required')">
-          {{'common.entryError.needToSelect' | translate}}
-        </mat-error>
+        <mat-error *ngIf="hasEntryError('weightTypeCode')">{{errorMessage('weightTypeCode')}}</mat-error>
       </mat-form-field>
 
       <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>

@@ -46,7 +46,7 @@ export class OliveMessageHelperService {
       this.translater.get('common.message.uploadSaved'), MessageSeverity.success);
   }
 
-  translateError(error: any) {
+  translateError(error: any, isDelete: boolean = false) {
     const errorMessage = new UserMessage();
 
     if (typeof error === 'string' && error.indexOf('session expired') !== -1)
@@ -59,7 +59,7 @@ export class OliveMessageHelperService {
     if (error.error !== null && error.error.errorCode !== null) {
       switch (error.error.errorCode) {
         case 'CONCURRENCY_ERROR':
-          errorMessage.message = this.translater.get('common.entryError.concurrency');
+          errorMessage.message = this.translater.get(isDelete ? 'common.entryError.deleteByConcurrency' : 'common.entryError.concurrency');
           errorMessage.messageSeverity = MessageSeverity.error;        
           break;
       }
@@ -88,17 +88,17 @@ export class OliveMessageHelperService {
     );
   }
 
-  showSaveFailed(error: any) {
+  showSaveFailed(error: any, isDelete: boolean) {
     this.alertService.stopLoadingMessage();
 
-    const errorMessage = this.translateError(error);
+    const errorMessage = this.translateError(error, isDelete);
 
     if (errorMessage.title == null) {
-      errorMessage.title = this.translater.get('common.title.saveError');
+      errorMessage.title = this.translater.get(isDelete ? 'common.title.deleteError' : 'common.title.saveError');
     }    
 
     if (errorMessage.messageSeverity == null) {
-      errorMessage.message = this.translater.get('common.message.saveError');
+      errorMessage.message = this.translater.get(isDelete ? 'common.message.errorDeleteting' : 'common.message.saveError');
       errorMessage.messageSeverity = MessageSeverity.error;
     }
 

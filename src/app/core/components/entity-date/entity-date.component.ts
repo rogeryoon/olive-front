@@ -3,6 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { OliveUserNameService } from 'app/core/services/user-name.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveEntityFormBaseComponent } from '../entity-edit/entity-form-base.component';
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 @Component({
   selector: 'olive-entity-date',
@@ -12,10 +13,10 @@ import { OliveEntityFormBaseComponent } from '../entity-edit/entity-form-base.co
 export class OliveEntityDateComponent extends OliveEntityFormBaseComponent {
   
   constructor(
-    formBuilder: FormBuilder, 
+    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
     private userNameService: OliveUserNameService
   ) { 
-    super(formBuilder);
+    super(formBuilder, translater);
   }
 
   get createdDatesExists() {

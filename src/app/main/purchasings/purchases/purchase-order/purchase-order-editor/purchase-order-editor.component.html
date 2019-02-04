@@ -6,9 +6,7 @@
         <input matInput [matDatepicker]="dateCtrl" formControlName="poDate" readonly>
         <mat-datepicker-toggle matSuffix [for]="dateCtrl"></mat-datepicker-toggle>
         <mat-datepicker #dateCtrl></mat-datepicker>
-        <mat-error *ngIf="poDate.hasError('required')">
-          {{'common.entryError.required' | translate}}
-        </mat-error>
+        <mat-error *ngIf="hasEntryError('poDate')">{{errorMessage('poDate')}}</mat-error>
       </mat-form-field>
     </div>
 
@@ -24,12 +22,10 @@
     <div flex>
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Currency</mat-label>
-        <mat-select name="currency" formControlName="currency" required>
+        <mat-select name="currency" formControlName="currency" required (valueChange)="onCurrencyValueChanged($event)">
           <mat-option *ngFor="let item of currencies" [value]="item.id">{{item.name}}</mat-option>
         </mat-select>
-        <mat-error *ngIf="currency.hasError('required')">
-          {{'common.entryError.needToSelect' | translate}}
-        </mat-error>
+        <mat-error *ngIf="hasEntryError('currency')">{{errorMessage('currency')}}</mat-error>
       </mat-form-field>
     </div>
   </div>
@@ -39,17 +35,14 @@
       <mat-form-field appearance="outline" class="w-100-p" [floatLabel]="floatLabels" fxFlex>
         <mat-label>Vendor Order #</mat-label>
         <input matInput name="vendorOrderId" formControlName="vendorOrderId" maxlength="100">
-        <mat-hint align="end">{{vendorOrderId.value?.length || 0}}/100</mat-hint>
+        <mat-hint align="end">{{getControl('vendorOrderId').value?.length || 0}}/100</mat-hint>
       </mat-form-field>
     </div>
     <div flex>
       <mat-form-field *ngIf="!isMasterCurrency" appearance="outline" class="w-100-p">
         <mat-label>Currency Exchange Rate</mat-label>
-        <input matInput name="currencyExchangeRate" formControlName="currencyExchangeRate" 
-          type="number" min="0" class="right">
-        <mat-error *ngIf="currencyExchangeRate.hasError('min')">
-          {{'common.entryError.minNumber' | translate : {min:0} }}
-        </mat-error>
+        <input matInput name="currencyExchangeRate" formControlName="currencyExchangeRate" class="right">
+        <mat-error *ngIf="hasEntryError('currencyExchangeRate')">{{errorMessage('currencyExchangeRate')}}</mat-error>
       </mat-form-field>
     </div>
   </div>
@@ -58,40 +51,22 @@
     <div flex>
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Freight</mat-label>
-        <input matInput name="freightAmount" formControlName="freightAmount" required type="number"
-          class="right" min="0">
-        <mat-error *ngIf="freightAmount.hasError('required')">
-          {{'common.entryError.required' | translate }}
-        </mat-error>
-        <mat-error *ngIf="freightAmount.hasError('min')">
-          {{'common.entryError.minNumber' | translate : {min:0} }}
-        </mat-error>
+        <input matInput name="freightAmount" formControlName="freightAmount" required class="right">
+        <mat-error *ngIf="hasEntryError('freightAmount')">{{errorMessage('freightAmount')}}</mat-error>
       </mat-form-field>
     </div>
     <div flex>
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Added Discount</mat-label>
-        <input matInput name="addedDiscountAmount" formControlName="addedDiscountAmount" 
-          required type="number" class="right" min="0">
-        <mat-error *ngIf="addedDiscountAmount.hasError('required')">
-          {{'common.entryError.required' | translate}}
-        </mat-error>
-        <mat-error *ngIf="addedDiscountAmount.hasError('min')">
-          {{'common.entryError.minNumber' | translate : {min:0} }}
-        </mat-error>
+        <input matInput name="addedDiscountAmount" formControlName="addedDiscountAmount" required class="right">
+        <mat-error *ngIf="hasEntryError('addedDiscountAmount')">{{errorMessage('addedDiscountAmount')}}</mat-error>
       </mat-form-field>
     </div>
     <div flex>
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Tax</mat-label>
-        <input matInput name="taxAmount" formControlName="taxAmount" required type="number"
-          class="right" min="0">
-        <mat-error *ngIf="taxAmount.hasError('required')">
-          {{'common.entryError.required' | translate}}
-        </mat-error>
-        <mat-error *ngIf="taxAmount.hasError('min')">
-          {{'common.entryError.minNumber' | translate : {min:0} }}
-        </mat-error>
+        <input matInput name="taxAmount" formControlName="taxAmount" required class="right">
+        <mat-error *ngIf="hasEntryError('taxAmount')">{{errorMessage('taxAmount')}}</mat-error>
       </mat-form-field>
     </div>
   </div>

@@ -1,6 +1,8 @@
 ﻿import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
+
 import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { PaymentMethod } from '../../models/payment-method.model';
@@ -12,22 +14,10 @@ import { PaymentMethod } from '../../models/payment-method.model';
 })
 export class OlivePaymentMethodEditorComponent extends OliveEntityFormComponent {
 
-  constructor(formBuilder: FormBuilder) {
+  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
     super(
-      formBuilder
+      formBuilder, translater
     );
-  }
-
-  get code() {
-    return this.oForm.get('code');
-  }
-
-  get memo() {
-    return this.oForm.get('memo');
-  }
-
-  get activated() {
-    return this.oForm.get('activated');
   }
 
   getEditedItem(): any {

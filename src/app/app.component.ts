@@ -272,7 +272,6 @@ export class AppComponent implements OnInit, OnDestroy
             this.alertService.resetStickyMessage();
 
             if (!result || this.authService.isSessionExpired) {
-                console.log('showLoginDialog -> this.authService.logout();');
                 this.authService.logout();
                 this.router.navigateByUrl('/pages/auth/login');
                 this.alertService.showStickyMessage(title, this._fuseTranslationLoaderService.get('common.message.renewSession'), MessageSeverity.warn);

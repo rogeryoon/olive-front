@@ -6,8 +6,8 @@ import { Currency } from 'app/main/supports/bases/models/currency.model';
   template: ''
 })
 export class OliveBaseComponent implements OnInit {
-  protected standCurrency: Currency;
-  protected currencies: Currency[];
+  standCurrency: Currency;
+  currencies: Currency[];
 
   constructor() { }
 

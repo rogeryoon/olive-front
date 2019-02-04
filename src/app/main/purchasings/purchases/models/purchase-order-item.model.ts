@@ -5,6 +5,7 @@ export class PurchaseOrderItem extends OliveTrackingAttribute {
     id?: number;
     quantity?: number;
     price?: number;
+    otherCurrencyPrice?: number;
     remarks: string;
     productVariantId?: number;
     name: string;

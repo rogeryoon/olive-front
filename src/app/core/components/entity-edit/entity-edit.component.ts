@@ -5,10 +5,9 @@ import { String } from 'typescript-string-operations';
 import { Subject } from 'rxjs';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-import { AlertService, MessageSeverity } from '@quick/services/alert.service';
+import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
-import { PermissionValues, Permission } from '@quick/models/permission.model';
-import { Utilities } from '@quick/services/utilities';
+import { PermissionValues } from '@quick/models/permission.model';
 
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDataService } from 'app/core/interfaces/data-service';
@@ -57,10 +56,6 @@ export class OliveEntityEditComponent implements OnChanges, AfterViewInit, OnIni
   ) {
     this.initializeComponent();
     this.initializeChildComponent();
-  }
-
-  get name() {
-    return this.oForm.get('name');
   }
 
   private initializeComponent() {
@@ -157,7 +152,7 @@ export class OliveEntityEditComponent implements OnChanges, AfterViewInit, OnIni
 
           this.onItemSaved.next(result);
         },
-        error => this.messageHelper.showSaveFailed(error));
+        error => this.messageHelper.showSaveFailed(error, false));
     }
     else {
       this.dataService.updateItem(editedItem, editedItem.id).subscribe(
@@ -171,7 +166,7 @@ export class OliveEntityEditComponent implements OnChanges, AfterViewInit, OnIni
 
           this.onItemSaved.next(result);
         },
-        error => this.messageHelper.showSaveFailed(error));
+        error => this.messageHelper.showSaveFailed(error, false));
     }
   }
 
@@ -193,15 +188,7 @@ export class OliveEntityEditComponent implements OnChanges, AfterViewInit, OnIni
             );
             this.onItemDeleted.next(itemToDelete);
           },
-            error => {
-              this.alertService.stopLoadingMessage();
-
-              this.alertService.showStickyMessage(
-                this.translater.get('common.title.deleteError'),
-                String.Format(this.translater.get('common.message.errorDeleteting'), Utilities.getHttpResponseMessage(error)),
-                MessageSeverity.error, error
-              );
-            });
+            error => this.messageHelper.showSaveFailed(error, true));
       });
   }
 

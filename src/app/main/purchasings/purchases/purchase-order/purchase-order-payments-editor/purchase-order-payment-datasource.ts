@@ -2,17 +2,18 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { PurchaseOrderPayment } from '../../models/purchase-order-payment.model';
 import { TableDatasource } from 'app/core/classes/table-datasource';
-
+import { OliveCacheService } from 'app/core/services/cache.service';
+import { numberValidator } from 'app/core/classes/validators';
 export class OlivePurchaseOrderPaymentDatasource extends TableDatasource {
 
     amountRegexPattern: string;
 
-    constructor() { super(); }
+    constructor(cacheService: OliveCacheService) { super(cacheService); }
 
     createRowFormGroup(r: any): FormGroup {
         const f = new FormGroup({
             paymentMethodId: this.createNewFormContorl(r, 'paymentMethodId', [Validators.required]),
-            amount: this.createNewFormContorl(r, 'amount', [Validators.required, Validators.min(0.01), Validators.pattern(this.amountRegexPattern)]),
+            amount: this.createNewFormContorl(r, 'amount', [numberValidator(this.standCurrency.decimalPoint, true)]),
             remarkId: this.createNewFormContorl(r, 'remarkId', [])
         });
         return f;

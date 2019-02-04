@@ -199,15 +199,15 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
     switch (columnName) {
       case FinishLink:
-        this.onFinish();
+        this.onFinish(item);
         break;
 
       case InWarehouseStatusLink:
-        this.onInWarehouseStatus();
+        this.onInWarehouseStatus(item);
         break;
 
       case PrintLink:
-        this.onPrint();
+        this.onPOPrint(item);
         break;
     }
 
@@ -222,15 +222,15 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     return super.renderTDClass(item, column, addedClass);
   }
 
-  onFinish() {
-    console.log('onFinish');
+  onFinish(item: PurchaseOrder) {
+    
   }
 
-  onInWarehouseStatus() {
+  onInWarehouseStatus(item: PurchaseOrder) {
     console.log('onInWarehouseStatus');
   }
 
-  onPrint() {
+  onPOPrint(item: PurchaseOrder) {
     console.log('onPrint');
   }
 }

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
+
 import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
 import { OliveContants } from 'app/core/classes/contants';
 import { OliveUtilities } from 'app/core/classes/utilities';
@@ -15,14 +17,10 @@ export class OliveCompanyGroupSettingEditorComponent extends OliveEntityFormComp
 
   weightTypes: any[] = OliveContants.weightTypes;
 
-  constructor(formBuilder: FormBuilder) {
+  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
     super(
-      formBuilder
+      formBuilder, translater
     );
-  }
-
-  get productWeightType() {
-    return this.oForm.get('productWeightType');
   }
 
   getEditedItem(): any {

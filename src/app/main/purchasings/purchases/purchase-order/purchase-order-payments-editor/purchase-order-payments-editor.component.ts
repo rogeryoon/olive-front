@@ -34,7 +34,7 @@ import { PaymentMethod } from 'app/main/supports/companies/models/payment-method
 })
 export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
   displayedColumns = ['paymentMethodId', 'amount', 'remarkId', 'actions'];
-  paymentsDataSource: OlivePurchaseOrderPaymentDatasource = new OlivePurchaseOrderPaymentDatasource();
+  paymentsDataSource: OlivePurchaseOrderPaymentDatasource = new OlivePurchaseOrderPaymentDatasource(this.cacheService);
   paymentMethods: PaymentMethod[];
 
   value: any = null;  
@@ -44,11 +44,11 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     private messageHelper: OliveMessageHelperService,
     private paymentMethodService: OlivePaymentMethodService,
     private snackBar: MatSnackBar,
-    private translater: FuseTranslationLoaderService,
+    translater: FuseTranslationLoaderService,
     private cacheService: OliveCacheService
   ) {
     super(
-      formBuilder
+      formBuilder, translater
     );
   }
 
@@ -73,6 +73,18 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   }
 
   get totalPaidAmount(): number {
+    let amount = 0;
+
+    this.paymentsDataSource.items.forEach(item => {
+      if (item.amount) {
+        amount += item.amount;
+      }
+    });
+
+    return amount;
+  }
+
+  get totalAmount(): number {
     let amount = 0;
 
     this.paymentsDataSource.items.forEach(item => {
@@ -115,18 +127,6 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
       this.paymentsDataSource.deleteItem(item);
       this.oForm.markAsDirty();
     }
-  }
-
-  get totalAmount(): number {
-    let amount = 0;
-
-    this.paymentsDataSource.items.forEach(item => {
-      if (item.amount) {
-        amount += item.amount;
-      }
-    });
-
-    return amount;
   }
 
   private _onChange = (_: any) => { };

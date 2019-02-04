@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild } from '@angular/core';
+﻿import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -17,6 +17,7 @@ import { Warehouse } from 'app/main/supports/companies/models/warehouse.model';
 import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/warehouse/warehouse-manager/warehouse-manager.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveCacheService } from 'app/core/services/cache.service';
+import { numberValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-purchase-order-editor',
@@ -30,58 +31,20 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   @ViewChild('warehouse')
   lookupWarehouse: OliveLookupHostComponent;
 
+  @Output() currencyChanged = new EventEmitter();
+
   standCurrencyCode: string;
 
+
   constructor(
-    formBuilder: FormBuilder, 
-    private translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
     private vendorService: OliveVendorService,
     private warehouseService: OliveWarehouseService,
     private cacheService: OliveCacheService
   ) {
     super(
-      formBuilder
+      formBuilder, translater
     );
-  }
-
-  get vendorOrderId() {
-    return this.oForm.get('vendorOrderId');
-  }
-
-  get poDate() {
-    return this.oForm.get('poDate');
-  }
-
-  get memo() {
-    return this.oForm.get('memo');
-  }
-
-  get addedDiscountAmount() {
-    return this.oForm.get('addedDiscountAmount');
-  }
-
-  get freightAmount() {
-    return this.oForm.get('freightAmount');
-  }
-
-  get taxAmount() {
-    return this.oForm.get('taxAmount');
-  }
-
-  get currencyExchangeRate() {
-    return this.oForm.get('currencyExchangeRate');
-  }
-
-  get vendorFk() {
-    return this.oForm.get('vendorFk');
-  }
-
-  get warehouseFk() {
-    return this.oForm.get('warehouseFk');
-  }
-
-  get currency() {
-    return this.oForm.get('currency');
   }
 
   get floatLabels(): string {
@@ -89,7 +52,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   }
 
   get isMasterCurrency(): boolean {
-    const it = this.currencies.find(item => item.id === this.currency.value);
+    const it = this.currencies.find(item => item.id === this.getControl('currency').value);
     if (it) {
       return it.code === this.standCurrencyCode;
     }
@@ -121,10 +84,10 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       vendorOrderId: '',
       poDate: ['', Validators.required],
       memo: '',
-      addedDiscountAmount: ['', [Validators.required, Validators.min(0)]],
-      freightAmount: ['', [Validators.required, Validators.min(0)]],
-      taxAmount: ['', [Validators.required, Validators.min(0)]],
-      currencyExchangeRate: ['', Validators.min(0)],
+      addedDiscountAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
+      freightAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
+      taxAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
+      currencyExchangeRate: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
       vendorFk: null,
       warehouseFk: null,
       currency: ''
@@ -132,18 +95,22 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   }
 
   resetForm() {
+    const currency = this.item.currencyFk ? this.item.currencyFk : this.standCurrency;
+
     this.oForm.reset({
       vendorOrderId: this.item.vendorOrderId || '',
       poDate: this.item.date || '',
       memo: this.item.memo || '',
-      addedDiscountAmount: this.item.addedDiscountAmount || 0,
-      freightAmount: this.item.freightAmount || 0,
-      taxAmount: this.item.taxAmount || 0,
-      currencyExchangeRate: this.item.currencyExchangeRate || 1.00,
+      addedDiscountAmount: this.item.addedDiscountAmount || '0',
+      freightAmount: this.item.freightAmount || '0',
+      taxAmount: this.item.taxAmount || '0',
+      currencyExchangeRate: this.item.currencyExchangeRate || '0.00',
       vendorFk: this.item.vendorFk,
       warehouseFk: this.item.warehouseFk,
-      currency: this.item.currencyFk ? this.item.currencyFk.id : this.standCurrency.id
+      currency: currency.id
     });
+
+    this.onCurrencyValueChanged(currency.id);
   }
 
   createEmptyObject() {
@@ -196,5 +163,9 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
 
   get canAssignPurchaseOrder() {
     return true;
+  }
+
+  onCurrencyValueChanged(event: any) {
+    this.currencyChanged.emit(event);
   }
 }

@@ -71,10 +71,10 @@
         <div class="content-card mat-white-bg">
             <mat-progress-bar *ngIf="loadingIndicator" mode="query"></mat-progress-bar>
             <div class="content p-24">
-                <div layout="column" layout-xs="column" style="width: 100%;">
+                <div layout="column" layout-xs="column" style="width: 100%; min-width: 800px;">
                     <div>
                         <table id="{{setting.dataTableId}}" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
-                            class="row-border hover olive-datatable">
+                            class="row-border hover olive-datatable"> <!--display nowrap 해도 안됨 https://stackoverflow.com/questions/47063834/jquery-datatables-with-scrollx-true-initially-does-not-render-columns-->
                             <thead>
                                 <tr>
                                     <th class="nosort">

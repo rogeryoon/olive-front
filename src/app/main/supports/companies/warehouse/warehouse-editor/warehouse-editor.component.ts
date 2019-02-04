@@ -31,23 +31,14 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
   lookupBranch: OliveLookupHostComponent;
 
   constructor(
-    formBuilder: FormBuilder,
-    private translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
     private companyService: OliveCompanyService,
     private branchService: OliveBranchService,
     private accountService: AccountService
   ) {
     super(
-      formBuilder
+      formBuilder, translater
     );
-  }
-
-  get code() {
-    return this.oForm.get('code');
-  }
-
-  get activated() {
-    return this.oForm.get('activated');
   }
 
   getEditedItem(): any {

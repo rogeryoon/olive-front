@@ -7,36 +7,27 @@
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Code</mat-label>
         <input matInput name="code" formControlName="code" required maxlength="3" class="to-uppercase">
-        <mat-hint align="end">{{code.value?.length || 0}}/3</mat-hint>
-        <mat-error *ngIf="code.hasError('required')">
-           {{'common.entryError.required' | translate}}
-         </mat-error>
+        <mat-error *ngIf="hasEntryError('code')">{{errorMessage('code')}}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Name</mat-label>
         <input matInput name="name" formControlName="name" required maxlength="200">
-        <mat-hint align="end">{{name.value?.length || 0}}/200</mat-hint>
-        <mat-error *ngIf="name.hasError('required')">
-           {{'common.entryError.required' | translate}}
-         </mat-error>
+        <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
+        <mat-error *ngIf="hasEntryError('name')">{{errorMessage('name')}}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Symbol</mat-label>
-        <input matInput name="symbol" formControlName="symbol" required maxlength="200">
-        <mat-hint align="end">{{symbol.value?.length || 0}}/200</mat-hint>
-        <mat-error *ngIf="symbol.hasError('required')">
-           {{'common.entryError.required' | translate}}
-         </mat-error>
+        <input matInput name="symbol" formControlName="symbol" required maxlength="10">
+        <mat-hint align="end">{{getControl('symbol').value?.length || 0}}/10</mat-hint>
+        <mat-error *ngIf="hasEntryError('symbol')">{{errorMessage('symbol')}}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Decimal Point</mat-label>
-        <input matInput name="decimalPoint" formControlName="decimalPoint" required type="number">
-        <mat-error *ngIf="decimalPoint.hasError('required')">
-           {{'common.entryError.required' | translate}}
-         </mat-error>
+        <input matInput name="decimalPoint" formControlName="decimalPoint" required>
+        <mat-error *ngIf="hasEntryError('decimalPoint')">{{errorMessage('decimalPoint')}}</mat-error>        
       </mat-form-field>
 
       <mat-checkbox formControlName="activated">Activated</mat-checkbox>

@@ -1,6 +1,8 @@
 ﻿import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
+
 import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { Vendor } from '../../models/vendor.model';
@@ -12,38 +14,10 @@ import { Vendor } from '../../models/vendor.model';
 })
 export class OliveVendorEditorComponent extends OliveEntityFormComponent {
 
-  constructor(formBuilder: FormBuilder) {
+  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
     super(
-      formBuilder
+      formBuilder, translater
     );
-  }
-
-  get code() {
-    return this.oForm.get('code');
-  }
-
-  get phoneNumber() {
-    return this.oForm.get('phoneNumber');
-  }
-
-  get email() {
-    return this.oForm.get('email');
-  }
-
-  get webSite() {
-    return this.oForm.get('webSite');
-  }
-
-  get address() {
-    return this.oForm.get('address');
-  }
-
-  get memo() {
-    return this.oForm.get('memo');
-  }
-
-  get activated() {
-    return this.oForm.get('activated');
   }
 
   getEditedItem(): any {
@@ -65,7 +39,7 @@ export class OliveVendorEditorComponent extends OliveEntityFormComponent {
     this.oForm = this.formBuilder.group({
       id: '',
       code: ['', Validators.required],
-      name: '',
+      name: ['', Validators.required],
       phoneNumber: '',
       email: '',
       webSite: '',

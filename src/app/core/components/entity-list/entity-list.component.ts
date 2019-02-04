@@ -24,6 +24,7 @@ import { ListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { locale as english } from '../../../core/i18n/en';
 import { OliveEditDialogComponent } from '../edit-dialog/edit-dialog.component';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'olive-entity-list',
@@ -224,13 +225,11 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
     }
   }
 
-  
-
   openDialog() {
     const setting = new OliveDialogSetting(
       this.setting.editComponent, 
       {
-        item: this.sourceItem,
+        item: _.cloneDeep(this.sourceItem),
         itemType: this.setting.itemType,
         managePermission: this.setting.managePermission,
         translateTitleId: this.setting.translateTitleId,
@@ -326,7 +325,7 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
             );
         },
         error => {
-          this.messageHelper.showSaveFailed(error);
+          this.messageHelper.showSaveFailed(error, false);
           dialogRef.componentInstance.showError(error.error.errorMessage);
         }
       );

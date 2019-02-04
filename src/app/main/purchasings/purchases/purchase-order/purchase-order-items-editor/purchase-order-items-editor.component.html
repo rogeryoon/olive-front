@@ -22,9 +22,7 @@
         <mat-form-field fxFlex='95%'>
           <input matInput name="inputName{{row.ObjId}}" formControlName="name" (change)="onChange($event)" (keyup)="onKeyup($event)"
             (blur)="onBlur($event)" class="small-font">
-          <mat-error *ngIf="hasFormArrayError('name','required',i)">
-            {{'common.entryError.required' | translate}}
-          </mat-error>
+          <mat-error *ngIf="hasArrayEntryError('name',i)">{{arrayErrorMessage('name',i)}}</mat-error>
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
@@ -34,37 +32,21 @@
       <mat-header-cell *matHeaderCellDef>수량</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
-          <input name="inputQuantity{{row.ObjId}}" type="number" class="right" matInput formControlName="quantity"
-            (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" min="1">
-          <mat-error *ngIf="hasFormArrayError('quantity','required',i)">
-            {{'common.entryError.required' | translate}}
-          </mat-error>
-          <mat-error *ngIf="hasFormArrayError('quantity','min',i)">
-            {{'common.entryError.minNumberShort' | translate : {min:1} }}
-          </mat-error>
-          <mat-error *ngIf="hasFormArrayError('quantity','pattern',i)">
-            {{'common.entryError.pattern' | translate }}
-          </mat-error>          
+          <input name="inputQuantity{{row.ObjId}}" class="right" matInput formControlName="quantity"
+            (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)">
+          <mat-error *ngIf="hasArrayEntryError('quantity',i)">{{arrayErrorMessage('quantity',i)}}</mat-error>
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef class="justify-end pr-20">{{totalQuantity|number:'1.0-0'}}</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="price">
-      <mat-header-cell *matHeaderCellDef>가격</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>단가</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
-          <input name="inputPrice{{row.ObjId}}" type="number" matInput class="right" formControlName="price" (change)="onChange($event)"
-            (keyup)="onKeyup($event)" (blur)="onBlur($event)" min="0.01">
-          <mat-error *ngIf="hasFormArrayError('price','required',i)">
-            {{'common.entryError.required' | translate}}
-          </mat-error>
-          <mat-error *ngIf="hasFormArrayError('price','min',i)">
-            {{'common.entryError.minNumberShort' | translate : {min:0.01} }}
-          </mat-error>
-          <mat-error *ngIf="hasFormArrayError('price','pattern',i)">
-            {{'common.entryError.pattern' | translate }}
-          </mat-error>                    
+          <input name="inputPrice{{row.ObjId}}" matInput class="right" formControlName="price" (change)="onChange($event)"
+            (keyup)="onKeyup($event)" (blur)="onBlur($event)">
+          <mat-error *ngIf="hasArrayEntryError('price',i)">{{arrayErrorMessage('price',i)}}</mat-error>
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
@@ -77,6 +59,18 @@
       </mat-cell>
       <mat-footer-cell *matFooterCellDef class="justify-end pr-16">{{totalAmount|money}}</mat-footer-cell>
     </ng-container>
+
+    <ng-container matColumnDef="otherCurrencyPrice">
+      <mat-header-cell [style.display]="otherCurrencyDisplay" *matHeaderCellDef [matTooltip]="poCurrency.name">단가 {{poCurrency.code}}</mat-header-cell>
+      <mat-cell [style.display]="otherCurrencyDisplay" *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('otherCurrencyPrice',i)">
+        <mat-form-field fxFlex='95%'>
+          <input name="inputOtherCurrencyPrice{{row.ObjId}}" matInput class="right" formControlName="otherCurrencyPrice" (change)="onChange($event)"
+            (keyup)="onKeyup($event)" (blur)="onBlur($event)">
+          <mat-error *ngIf="hasArrayEntryError('otherCurrencyPrice',i)">{{arrayErrorMessage('otherCurrencyPrice',i)}}</mat-error>
+        </mat-form-field>
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
+    </ng-container>    
 
     <ng-container matColumnDef="remark">
       <mat-header-cell *matHeaderCellDef>Remark</mat-header-cell>

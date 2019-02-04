@@ -10,9 +10,7 @@
       <mat-option>---</mat-option>
       <mat-option *ngFor="let unit of weightTypes" [value]="unit.code">{{unit.name}} {{unit.code}}</mat-option>
     </mat-select>
-    <mat-error *ngIf="productWeightType.hasError('required')">
-      {{'common.entryError.needToSelect' | translate}}
-    </mat-error>
+    <mat-error *ngIf="hasEntryError('productWeightType')">{{errorMessage('productWeightType')}}</mat-error>
   </mat-form-field>
 
   <div class="w-100-p mt-15">

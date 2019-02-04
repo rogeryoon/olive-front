@@ -10,6 +10,7 @@ import { Country } from 'app/main/supports/bases/models/country.model';
 import { OliveCountryService } from 'app/main/supports/bases/services/country.service';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 @Component({
   selector: 'olive-address-editor',
@@ -22,38 +23,14 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
   countries: Country[];
 
   constructor(
-    formBuilder: FormBuilder,
+    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
     private dictionaryService: OliveCacheService,
     private messageHelper: OliveMessageHelperService,
     private countryService: OliveCountryService
   ) {
     super(
-      formBuilder
+      formBuilder, translater
     );
-  }
-
-  get address1() {
-    return this.oForm.get('address1');
-  }
-
-  get address2() {
-    return this.oForm.get('address2');
-  }
-
-  get city() {
-    return this.oForm.get('city');
-  }
-
-  get stateProvince() {
-    return this.oForm.get('stateProvince');
-  }
-
-  get postalCode() {
-    return this.oForm.get('postalCode');
-  }
-
-  get country() {
-    return this.oForm.get('country');
   }
 
   getEditedItem(): any {

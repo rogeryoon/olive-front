@@ -1,7 +1,10 @@
 import { DataSource } from '@angular/cdk/collections';
+import { FormGroup, FormArray, FormControl } from '@angular/forms';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { FormGroup, FormArray, FormControl } from '@angular/forms';
+
+import { Currency } from 'app/main/supports/bases/models/currency.model';
+import { OliveCacheService } from '../services/cache.service';
 
 export class DatasourceObject {
     public readonly ObjId: number;
@@ -16,8 +19,18 @@ export class TableDatasource extends DataSource<any> {
     private _objectStore: DatasourceObject[] = [];
     private _ObjectsSubject$ = new BehaviorSubject<DatasourceObject[]>([]);
     public formGroup: FormGroup;
+    protected standCurrency: Currency;
+    protected currencies: Currency[];
 
-    constructor() { super(); }
+    constructor(protected cacheService: OliveCacheService) { 
+        super(); 
+        this.init();
+    }
+
+    init() {
+        this.currencies = this.cacheService.currencies;
+        this.standCurrency = this.cacheService.standCurrency;
+    }
 
     connect(): Observable<DatasourceObject[]> {
         return this._ObjectsSubject$.asObservable().pipe(

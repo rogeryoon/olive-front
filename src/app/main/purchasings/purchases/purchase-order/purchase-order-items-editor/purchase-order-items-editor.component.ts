@@ -1,7 +1,7 @@
 import { Component, forwardRef } from '@angular/core';
 import {
-  FormBuilder, FormArray, FormGroup, FormControl, ValidationErrors,
-  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator
+  FormBuilder, FormControl, ValidationErrors,
+  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, AbstractControl, FormArray
 } from '@angular/forms';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { String } from 'typescript-string-operations';
@@ -29,7 +29,8 @@ import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/pu
 import { NameValue } from 'app/core/models/name-value';
 import { OlivePurchaseOrderLookupDialogComponent } from '../purchase-order-lookup-dialog/purchase-order-lookup-dialog.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
-
+import { Currency } from 'app/main/supports/bases/models/currency.model';
+import { numberValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-purchase-order-items-editor',
@@ -49,25 +50,45 @@ import { OliveCacheService } from 'app/core/services/cache.service';
   ]
 })
 export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
-  displayedColumns = ['productVariantId', 'name', 'quantity', 'price', 'amount', 'remark', 'actions'];
-  itemsDataSource: OlivePurchaseOrderItemDatasource = new OlivePurchaseOrderItemDatasource();
+  displayedColumns = ['productVariantId', 'name', 'quantity', 'price', 'amount', 'otherCurrencyPrice', 'remark', 'actions'];
+  itemsDataSource: OlivePurchaseOrderItemDatasource = new OlivePurchaseOrderItemDatasource(this.cacheService);
   paymentMethods: PaymentMethod[];
 
   value: PurchaseOrderItem[] = null;
+
+  otherCurrencyDisplay = 'none';
+  poCurrency: Currency;
 
   constructor(
     formBuilder: FormBuilder,
     private productVariantService: OliveProductVariantService,
     private purchaseOrderService: OlivePurchaseOrderService,
     private snackBar: MatSnackBar,
-    private translater: FuseTranslationLoaderService,
+    translater: FuseTranslationLoaderService,
     private dialog: MatDialog,
     private alertService: AlertService,
     private cacheService: OliveCacheService
   ) {
     super(
-      formBuilder
+      formBuilder, translater
     );
+  }
+
+  onCurrencyChanged(id) {
+    this.poCurrency = this.cacheService.currencies.find(c => c.id === id);
+    this.otherCurrencyDisplay = this.poCurrency.primary ? 'none' : '';
+
+    this.updateOtherCurrencyValidators();
+  }
+
+  updateOtherCurrencyValidators() {
+    if (!this.oForm) { return; }
+
+    (<FormArray>this.getControl('formarray')).controls.forEach(formGroup => {
+      const control = formGroup.get('otherCurrencyPrice');
+      control.clearValidators();
+      control.setValidators([numberValidator(this.poCurrency.decimalPoint, !this.poCurrency.primary)]);
+    });
   }
 
   get items(): any {
@@ -75,8 +96,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   }
 
   initializeChildComponent() {
-    this.standCurrency = this.cacheService.standCurrency;
-    this.itemsDataSource.priceRegexPattern = OliveUtilities.getMoneyRegexPattern(this.standCurrency.decimalPoint);
+    this.poCurrency = this.standCurrency = this.cacheService.standCurrency;
   }
 
   buildForm() {
@@ -227,12 +247,12 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       pItems
         .forEach((fItem: PurchaseOrder) => {
           fItem.purchaseOrderItems
-          .filter((sItem: PurchaseOrderItem) => !dupCheckset.has(sItem.productVariantId))
-          .forEach((sItem: PurchaseOrderItem) => {
-            const newItem = Object.assign(sItem);
-            newItem.id = null;
-            this.addNewItem(newItem);
-          });
+            .filter((sItem: PurchaseOrderItem) => !dupCheckset.has(sItem.productVariantId))
+            .forEach((sItem: PurchaseOrderItem) => {
+              const newItem = Object.assign(sItem);
+              newItem.id = null;
+              this.addNewItem(newItem);
+            });
         });
 
       this.showDuplicatedItems(duplicatedIdStrings);
@@ -281,11 +301,10 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     this._onChange(event.value);
   }
   onChange(event: any) {
-    this._onChange(6);
-    console.log(event);
+    this._onChange(event.target.value);
   }
   onKeyup(event: any) {
-    this._onChange(6);
+    this._onChange(event.target.value);
   }
   onBlur(event: any) {
     this._onTouched();

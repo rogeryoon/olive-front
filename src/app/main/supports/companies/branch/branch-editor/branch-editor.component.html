@@ -6,17 +6,16 @@
 
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Code</mat-label>
-        <input matInput name="code" formControlName="code" maxlength="20" class="to-uppercase">
-        <mat-hint align="end">{{code.value?.length || 0}}/20</mat-hint>
+        <input matInput name="code" formControlName="code" required maxlength="20" class="to-uppercase">
+        <mat-hint align="end">{{getControl('code').value?.length || 0}}/20</mat-hint>
+        <mat-error *ngIf="hasEntryError('code')">{{errorMessage('code')}}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Name</mat-label>
         <input matInput name="name" formControlName="name" required maxlength="200">
-        <mat-hint align="end">{{name.value?.length || 0}}/200</mat-hint>
-        <mat-error *ngIf="name.hasError('required')">
-           {{'common.entryError.required' | translate}}
-         </mat-error>
+        <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
+        <mat-error *ngIf="hasEntryError('name')">{{errorMessage('name')}}</mat-error>
       </mat-form-field>
 
       <mat-checkbox formControlName="outsourcing">Outsourcing</mat-checkbox>
@@ -28,31 +27,31 @@
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Phone Number</mat-label>
         <input matInput name="phoneNumber" formControlName="phoneNumber" maxlength="100">
-        <mat-hint align="end">{{phoneNumber.value?.length || 0}}/100</mat-hint>
+        <mat-hint align="end">{{getControl('phoneNumber').value?.length || 0}}/100</mat-hint>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Fax Number</mat-label>
         <input matInput name="faxNumber" formControlName="faxNumber" maxlength="100">
-        <mat-hint align="end">{{faxNumber.value?.length || 0}}/100</mat-hint>
+        <mat-hint align="end">{{getControl('faxNumber').value?.length || 0}}/100</mat-hint>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Email</mat-label>
         <input matInput name="email" formControlName="email" maxlength="200">
-        <mat-hint align="end">{{email.value?.length || 0}}/200</mat-hint>
+        <mat-hint align="end">{{getControl('email').value?.length || 0}}/200</mat-hint>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Weekday Business Hours</mat-label>
         <input matInput name="weekdayBusinessHours" formControlName="weekdayBusinessHours" maxlength="200">
-        <mat-hint align="end">{{weekdayBusinessHours.value?.length || 0}}/200</mat-hint>
+        <mat-hint align="end">{{getControl('weekdayBusinessHours').value?.length || 0}}/200</mat-hint>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Weekend Business Hours</mat-label>
         <input matInput name="weekendBusinessHours" formControlName="weekendBusinessHours" maxlength="200">
-        <mat-hint align="end">{{weekendBusinessHours.value?.length || 0}}/200</mat-hint>
+        <mat-hint align="end">{{getControl('weekendBusinessHours').value?.length || 0}}/200</mat-hint>
       </mat-form-field>
 
 

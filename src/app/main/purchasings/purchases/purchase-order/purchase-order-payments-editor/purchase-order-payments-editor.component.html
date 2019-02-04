@@ -18,9 +18,7 @@
             <mat-option value="">Choose an option</mat-option>
             <mat-option *ngFor="let method of paymentMethods" [value]="method.id">{{method.name}}</mat-option>
           </mat-select>
-          <mat-error *ngIf="hasFormArrayError('paymentMethodId','required',i)">
-            {{'common.entryError.needToSelect' | translate}}
-          </mat-error>
+          <mat-error *ngIf="hasArrayEntryError('paymentMethodId',i)">{{arrayErrorMessage('paymentMethodId',i)}}</mat-error>
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
@@ -30,14 +28,9 @@
       <mat-header-cell *matHeaderCellDef>금액</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
-          <input name="inputAmount{{row.ObjId}}" type="number" matInput class="right" 
-            formControlName="amount" (focus)="currentRow=row" (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" min="0.01">
-          <mat-error *ngIf="hasFormArrayError('amount','required',i)">
-            {{'common.entryError.required' | translate}}
-          </mat-error>
-          <mat-error *ngIf="hasFormArrayError('amount','min',i)">
-            {{'common.entryError.minNumberShort' | translate : {min:0.01} }}
-          </mat-error>          
+          <input name="inputAmount{{row.ObjId}}" matInput class="right" formControlName="amount" 
+            (focus)="currentRow=row" (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)">
+          <mat-error *ngIf="hasArrayEntryError('amount',i)">{{arrayErrorMessage('amount',i)}}</mat-error>
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef class="justify-end pr-40">{{totalAmount|money}}</mat-footer-cell>

@@ -65,6 +65,8 @@ export class AuthService {
             queryParamsHandling: "merge"
         };
 
+        console.log('redirectLoginUser', urlAndParams.firstPart);
+
         this.router.navigate([urlAndParams.firstPart], navigationExtras);
     }
 
@@ -72,11 +74,13 @@ export class AuthService {
         let redirect = this.logoutRedirectUrl ? this.logoutRedirectUrl : this.loginUrl;
         this.logoutRedirectUrl = null;
 
+        console.log('redirectLogoutUser', redirect);
         this.router.navigate([redirect]);
     }
 
     redirectForLogin() {
         this.loginRedirectUrl = this.router.url;
+        console.log('redirectForLogin', this.loginRedirectUrl);
         this.router.navigate([this.loginUrl]);
     }
 

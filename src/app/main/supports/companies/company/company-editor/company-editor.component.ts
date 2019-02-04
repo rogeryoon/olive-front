@@ -24,31 +24,18 @@ export class OliveCompanyEditorComponent extends OliveEntityFormComponent {
   lookupCompanyGroup: OliveLookupHostComponent;
 
   constructor(
-    formBuilder: FormBuilder,
+    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
     private accountService: AccountService,
-    private translater: FuseTranslationLoaderService,
     private companyGroupService: OliveCompanyGroupService
   ) 
   {
     super(
-      formBuilder
+      formBuilder, translater
     );
   }
 
   get companyGroupTitle() {
     return NavTranslates.Company.Group;
-  }
-
-  get code() {
-    return this.oForm.get('code');
-  }
-
-  get memo() {
-    return this.oForm.get('memo');
-  }
-
-  get activated() {
-    return this.oForm.get('activated');
   }
 
   getEditedItem(): any {

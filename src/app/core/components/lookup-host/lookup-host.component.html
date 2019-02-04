@@ -4,7 +4,7 @@
     (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" (dblclick)="lookUp()"/>
     <span matPrefix *ngIf="isEditMode"><mat-icon class="secondary-text link-cursor" (click)="lookUp()">zoom_in</mat-icon>&nbsp;&nbsp;</span>
     <mat-error *ngIf="lookupName.hasError('required')">
-      {{'common.entryError.needToSelect' | translate}}
+      {{'common.validate.required' | translate}}
     </mat-error>
   </mat-form-field>
 
