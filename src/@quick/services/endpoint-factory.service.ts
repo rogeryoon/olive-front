@@ -1,6 +1,3 @@
-// ebenmonney
-/* tslint:disable */
-
 import { Injectable, Injector } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
@@ -19,9 +16,9 @@ import 'rxjs/add/operator/switchMap';
 
 @Injectable()
 export class EndpointFactory {
-    static readonly apiVersion: string = "1";
+    static readonly apiVersion: string = '1';
 
-    private readonly _loginUrl: string = "/connect/token";
+    private readonly _loginUrl: string = '/connect/token';
 
     private get loginUrl() { return this.configurations.baseUrl + this._loginUrl; }
 
@@ -42,9 +39,9 @@ export class EndpointFactory {
 
     getLoginEndpoint<T>(userName: string, password: string): Observable<T> {
 
-        let header = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+        const header = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
 
-        let params = new HttpParams()
+        const params = new HttpParams()
             .append('username', userName)
             .append('password', password)
             .append('client_id', 'oliveapp_spa')
@@ -55,9 +52,9 @@ export class EndpointFactory {
     }
 
     getRefreshLoginEndpoint<T>(): Observable<T> {
-        let header = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+        const header = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
 
-        let params = new HttpParams()
+        const params = new HttpParams()
             .append('refresh_token', this.authService.refreshToken)
             .append('client_id', 'oliveapp_spa')
             .append('grant_type', 'refresh_token');
@@ -70,14 +67,14 @@ export class EndpointFactory {
             });
         */
 
-        return <any> this.http.post<T>(this.loginUrl, params, { headers: header })
+        return <any>this.http.post<T>(this.loginUrl, params, { headers: header })
             .catch(error => {
                 return this.handleError(error, () => this.getRefreshLoginEndpoint());
             });
     }
 
     protected getRequestHeaders(): { headers: HttpHeaders | { [header: string]: string | string[]; } } {
-        let headers = new HttpHeaders({
+        const headers = new HttpHeaders({
             'Authorization': 'Bearer ' + this.authService.accessToken,
             'Content-Type': 'application/json',
             'Accept': `application/vnd.iman.v${EndpointFactory.apiVersion}+json, application/json, text/plain, */*`,
@@ -88,7 +85,7 @@ export class EndpointFactory {
     }
 
     protected handleError(error, continuation: () => Observable<any>) {
-        if (error.status == 401) {
+        if (error.status === 401) {
             if (this.isRefreshingLogin) {
                 return this.pauseTask(continuation);
             }
@@ -106,7 +103,7 @@ export class EndpointFactory {
                     this.isRefreshingLogin = false;
                     this.resumeTasks(false);
 
-                    if (refreshLoginError.status == 401 || (refreshLoginError.url && refreshLoginError.url.toLowerCase().includes(this.loginUrl.toLowerCase()))) {
+                    if (refreshLoginError.status === 401 || (refreshLoginError.url && refreshLoginError.url.toLowerCase().includes(this.loginUrl.toLowerCase()))) {
                         this.authService.reLogin();
                         return throwError('session expired');
                     }

@@ -36,6 +36,7 @@ import { OliveEditPageComponent } from './components/edit-page/edit-page.compone
 import { OliveOnlyNumberDirective } from './directives/only-number.directive';
 import { OlivePlaceHolderDirective } from './directives/place-holder.directive';
 import { OliveBaseComponent } from './components/base/base.component';
+import { OliveEndpointBaseService } from './services/endpoint-base.service';
 
 @NgModule({
   imports: [
@@ -107,6 +108,7 @@ import { OliveBaseComponent } from './components/base/base.component';
     OliveMessageHelperService,
     OliveCacheService,
     OliveUserNameService,
+    OliveEndpointBaseService,
     OliveEntityEndpointService,
     OliveChunkDataEndpointService,
     OliveChunkDataService,

@@ -4,10 +4,11 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
 import { ConfigurationService } from '@quick/services/configuration.service';
-import { EndpointFactory } from '@quick/services/endpoint-factory.service';
+import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
+import { OliveEndpointBaseService } from 'app/core/services/endpoint-base.service';
 
 @Injectable()
-export class OliveHelpEndpointService extends EndpointFactory {
+export class OliveHelpEndpointService extends OliveEndpointBaseService {
 
   private readonly _helpsUrl: string = '/api/helps';
   private readonly _helpUrl: string = '/api/helps/';
@@ -17,8 +18,10 @@ export class OliveHelpEndpointService extends EndpointFactory {
   get helpUrl() { return this.configurations.baseUrl + this._helpUrl; }
   get topHelpsByCategoryUrl() { return this.configurations.baseUrl + this._topHelpsByCategoryUrl; }
 
-  constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
-    super(http, configurations, injector);
+  constructor(
+    http: HttpClient, configurations: ConfigurationService, 
+    injector: Injector, queryParams: OliveQueryParameterService) {
+    super(http, configurations, injector, queryParams);
   }
 
   getHelpsEndPoint<T>(helpCategoryCode?: string): Observable<T> {

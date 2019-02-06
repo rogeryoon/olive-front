@@ -4,21 +4,21 @@ import { Observable } from 'rxjs';
 
 import { ConfigurationService } from '@quick/services/configuration.service';
 
-import { EndpointFactory } from '@quick/services/endpoint-factory.service';
 import { OliveQueryParameterService } from './query-parameter.service';
+import { OliveEndpointBaseService } from './endpoint-base.service';
 
 @Injectable()
-export class OliveChunkDataEndpointService extends EndpointFactory {
+export class OliveChunkDataEndpointService extends OliveEndpointBaseService {
   private readonly _url: string = '/api/chunkdatas';
 
   get url() { return this.configurations.baseUrl + this._url; }
 
   constructor(
     http: HttpClient, configurations: ConfigurationService, 
-    injector: Injector, private queryParams: OliveQueryParameterService
+    injector: Injector, queryParams: OliveQueryParameterService
   ) 
   { 
-    super(http, configurations, injector); 
+    super(http, configurations, injector, queryParams); 
   }
 
   getItemsEndpoint<T>(parameter: any, type: string): Observable<T> {

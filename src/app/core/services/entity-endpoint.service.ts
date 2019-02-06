@@ -4,21 +4,17 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
 import { ConfigurationService } from '@quick/services/configuration.service';
-import { EndpointFactory } from '@quick/services/endpoint-factory.service';
 import { OliveQueryParameterService } from './query-parameter.service';
+import { OliveEndpointBaseService } from './endpoint-base.service';
 
 @Injectable()
-export class OliveEntityEndpointService extends EndpointFactory {
+export class OliveEntityEndpointService extends OliveEndpointBaseService {
   constructor(
     http: HttpClient, configurations: ConfigurationService, 
-    injector: Injector, private queryParams: OliveQueryParameterService
+    injector: Injector, queryParams: OliveQueryParameterService
   ) 
   {
-    super(http, configurations, injector);
-  }
-
-  get companyGroupParam(): string {
-    return `?cgroup=${this.queryParams.CompanyGroupId}`;
+    super(http, configurations, injector, queryParams);
   }
 
   getItemEndpoint<T>(id: number, apiUrl: string): Observable<T> {

@@ -187,8 +187,8 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
     }
   }
 
-  private editItem(item?: any, event?: Event) {
-    if (event && event.srcElement.getAttribute('type') === 'checkbox') { return; }
+  protected editItem(item?: any, event?: Event) {
+    if (event && event.srcElement && event.srcElement.getAttribute('type') === 'checkbox') { return; }
 
     if 
     (
@@ -196,7 +196,9 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
       (!item && !event) ||
       // TD Click과 TR Click이 이중으로 Fire되어서 TD Click 'ov-td-click' Class를 추가
       // TD Click을 Custom Function으로 사용했을 경우 TR Click은 Fire하지 않는다.
-      (event && event.srcElement && !event.srcElement.classList.contains('ov-td-click'))
+      (event && event.srcElement && !event.srcElement.classList.contains('ov-td-click')) ||
+      // Manula Event / Custom Event
+      item && event && event.type && event.type === 'custom'
     ) {
       this.sourceItem = item;
 
@@ -214,6 +216,7 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
             this.openDialog();
           },
           error => {
+            this.loadingIndicator = false;            
             this.messageHelper.showLoadFaild(error);
           }
         );

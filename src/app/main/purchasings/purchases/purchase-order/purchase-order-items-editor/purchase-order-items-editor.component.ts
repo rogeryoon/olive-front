@@ -82,13 +82,13 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   }
 
   updateOtherCurrencyValidators() {
-    if (!this.oForm) { return; }
-
-    (<FormArray>this.getControl('formarray')).controls.forEach(formGroup => {
-      const control = formGroup.get('otherCurrencyPrice');
-      control.clearValidators();
-      control.setValidators([numberValidator(this.poCurrency.decimalPoint, !this.poCurrency.primary)]);
-    });
+    setTimeout(() => {
+      (<FormArray>this.getControl('formarray')).controls.forEach(formGroup => {
+        const control = formGroup.get('otherCurrencyPrice');
+        control.clearValidators();
+        control.setValidators([numberValidator(this.poCurrency.decimalPoint, !this.poCurrency.primary)]);
+      });
+    });    
   }
 
   get items(): any {
@@ -96,7 +96,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   }
 
   initializeChildComponent() {
-    this.poCurrency = this.standCurrency = this.cacheService.standCurrency;
+    this.standCurrency = this.cacheService.standCurrency;
   }
 
   buildForm() {

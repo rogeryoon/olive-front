@@ -24,6 +24,7 @@ import { OliveProductVariantLookupDialogModule } from 'app/main/productions/prod
 import { OlivePurchaseOrderLookupDialogModule } from './purchase-order/purchase-order-lookup-dialog/purchase-order-lookup-dialog.module';
 import { OliveProductVariantManagerModule } from 'app/main/productions/products/product-variant/product-variant-manager/product-variant-manager.module';
 import { OliveProductManagerModule } from 'app/main/productions/products/product/product-manager/product-manager.module';
+import { OlivePurchasingMiscEndpointService, OlivePurchasingMiscService } from './services/purchasing-misc.service';
 
 const routes = [
   {
@@ -67,7 +68,9 @@ const routes = [
     OliveVendorService,
     OliveWarehouseService,
     OlivePaymentMethodService,
-    OliveProductVariantService
+    OliveProductVariantService,
+    OlivePurchasingMiscEndpointService,
+    OlivePurchasingMiscService
   ],
   entryComponents: [
     OlivePurchaseOrderManagerComponent,

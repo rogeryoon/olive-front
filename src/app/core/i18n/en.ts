@@ -4,7 +4,8 @@ export const locale = {
         'common' : {
             'status': {
                 'inWarehousePending' : '입고 대기',
-                'inWarehouseComplete' : '입고 완료'
+                'inWarehouseComplete' : '입고 완료',
+                'inItemEntry' : '상품 등록'
             },
             'message' : {
                 'noRecordsFound' : 'No matching records found',
@@ -55,6 +56,7 @@ export const locale = {
                 'advancedSearch' : 'Advanced Search',
                 'sessionExpired' : 'Session Expired',
                 'confirm' : '확인',
+                'errorConfirm' : '오류 알림',
                 'duplicated' : '중복 오류 알림'
             },
             'button': {
@@ -146,13 +148,6 @@ export const locale = {
                 'entryTooltip' : '입력오류가 있습니다.'
             }
         },
-        'production' : {
-            'productEditor': {
-                'tabBasicInfo' : 'Basic Info',
-                'tabClass' : '분류',
-                'tabInventory' : 'Inventory'
-            }
-        },
         'management': {
             'Search': 'Search for role...',
             'NewRole': 'New Role',
@@ -175,6 +170,23 @@ export const locale = {
             'Cancel': 'Cancel',
             'Save': 'Save',
             'Saving': 'Saving...'
+        },
+        'production' : {
+            'productEditor': {
+                'tabBasicInfo' : 'Basic Info',
+                'tabClass' : '분류',
+                'tabInventory' : 'Inventory'
+            }
+        },
+        'purchasing': {
+            'purchaseOrder': {
+                'noItem' : '발주서 상품등록을 하지 않아 입고 및 종결처리를 할 수 없습니다.',
+                'noPayment' : '발주서 결제정보를 입력하지 않아 종결처리를 할 수 없습니다.',
+                'closed' : '발주서 종결처리를 완료 하였습니다.',
+                'pendingInWarehouse' : '입고처리가 완료되지 않아 종결처리를 할 수 없습니다.',
+                'close' : '발주서 종결처리를 완료 하였습니다.',
+                'open' : '발주서 종결처리를 취소 하였습니다.'
+            }
         }
     }
 };

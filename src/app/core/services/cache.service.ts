@@ -102,7 +102,7 @@ export class OliveCacheService {
       this.chunkItemsMutexes.set(cacheKey, new Mutex());
     }
 
-    const unlock = this.chunkItemsMutexes.get(cacheKey).lock();
+    const unlock = await this.chunkItemsMutexes.get(cacheKey).lock();
       if (!this.exist(cacheKey)) {
         try {
           const response = await this.chunkDataService.getItems(null, key).toPromise();
