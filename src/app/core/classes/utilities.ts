@@ -201,5 +201,13 @@ export class OliveUtilities {
         }
         return returnValue;
     }
+
+    public static toTrimString(input: any) {
+        let returnValue = '';
+        if (!this.TestIsUndefined(input)) {
+            returnValue = input.toString().trim();
+        }
+        return returnValue;
+    }
 }
 

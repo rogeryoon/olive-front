@@ -76,7 +76,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     let amount = 0;
 
     this.paymentsDataSource.items.forEach(item => {
-      if (item.amount) {
+      if (!isNaN(item.amount)) {
         amount += item.amount;
       }
     });
@@ -88,7 +88,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     let amount = 0;
 
     this.paymentsDataSource.items.forEach(item => {
-      if (item.amount) {
+      if (!isNaN(item.amount)) {
         amount += item.amount;
       }
     });
@@ -119,14 +119,20 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
         { duration: 5000 }
       )
         .onAction().subscribe(() => {
-          this.paymentsDataSource.deleteItem(item);
-          this.oForm.markAsDirty();
+          this.deleteUnit(item);
         });
     }
     else {
-      this.paymentsDataSource.deleteItem(item);
-      this.oForm.markAsDirty();
+      this.deleteUnit(item);
     }
+  }
+
+  private deleteUnit(item: any) {
+    this.paymentsDataSource.deleteItem(item);
+    if (this.paymentsDataSource.items.length === 0) {
+      const fa = <FormArray>this.oForm.get('formarray');
+      fa.removeAt(0);
+    }    
   }
 
   private _onChange = (_: any) => { };

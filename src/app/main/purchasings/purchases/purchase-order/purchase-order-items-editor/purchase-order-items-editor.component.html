@@ -30,23 +30,35 @@
 
     <ng-container matColumnDef="quantity">
       <mat-header-cell *matHeaderCellDef>수량</mat-header-cell>
-      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
+      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('quantity',i)">
         <mat-form-field fxFlex='95%'>
           <input name="inputQuantity{{row.ObjId}}" class="right" matInput formControlName="quantity"
             (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)">
-          <mat-error *ngIf="hasArrayEntryError('quantity',i)">{{arrayErrorMessage('quantity',i)}}</mat-error>
+          <mat-error *ngIf="hasArrayEntryError('quantity',i)">{{'common.validate.error' | translate}}</mat-error>
         </mat-form-field>
       </mat-cell>
-      <mat-footer-cell *matFooterCellDef class="justify-end pr-20">{{totalQuantity|number:'1.0-0'}}</mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef class="justify-end pr-4">{{totalQuantity|number:'1.0-0'}}</mat-footer-cell>
     </ng-container>
 
-    <ng-container matColumnDef="price">
-      <mat-header-cell *matHeaderCellDef>단가</mat-header-cell>
-      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
+    <ng-container matColumnDef="appliedCost">
+      <mat-header-cell *matHeaderCellDef>적용가</mat-header-cell>
+      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('appliedCost',i)">
         <mat-form-field fxFlex='95%'>
-          <input name="inputPrice{{row.ObjId}}" matInput class="right" formControlName="price" (change)="onChange($event)"
+          <input name="inputAppliedCost{{row.ObjId}}" matInput class="right" formControlName="appliedCost" (change)="onChange($event)"
             (keyup)="onKeyup($event)" (blur)="onBlur($event)">
-          <mat-error *ngIf="hasArrayEntryError('price',i)">{{arrayErrorMessage('price',i)}}</mat-error>
+          <mat-error *ngIf="hasArrayEntryError('appliedCost',i)">{{'common.validate.error' | translate}}</mat-error>
+        </mat-form-field>
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
+    </ng-container>    
+
+    <ng-container matColumnDef="price">
+      <mat-header-cell *matHeaderCellDef>가격</mat-header-cell>
+      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('price',i)">
+        <mat-form-field fxFlex='95%'>
+          <input name="inputPrice{{row.ObjId}}" matInput class="right" formControlName="price" (change)="onChange($event)" (input)="onInput($event,i)"
+            (keyup)="onKeyup($event)" (blur)="onBlur($event)">
+          <mat-error *ngIf="hasArrayEntryError('price',i)">{{'common.validate.error' | translate}}</mat-error>
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
@@ -64,12 +76,12 @@
       <mat-header-cell [style.display]="otherCurrencyDisplay" *matHeaderCellDef [matTooltip]="poCurrency.name">단가 {{poCurrency.code}}</mat-header-cell>
       <mat-cell [style.display]="otherCurrencyDisplay" *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('otherCurrencyPrice',i)">
         <mat-form-field fxFlex='95%'>
-          <input name="inputOtherCurrencyPrice{{row.ObjId}}" matInput class="right" formControlName="otherCurrencyPrice" (change)="onChange($event)"
+          <input name="inputOtherCurrencyPrice{{row.ObjId}}" matInput class="right" formControlName="otherCurrencyPrice" (change)="onChange($event)" (input)="onInput($event,i)"
             (keyup)="onKeyup($event)" (blur)="onBlur($event)">
-          <mat-error *ngIf="hasArrayEntryError('otherCurrencyPrice',i)">{{arrayErrorMessage('otherCurrencyPrice',i)}}</mat-error>
+          <mat-error *ngIf="hasArrayEntryError('otherCurrencyPrice',i)">{{'common.validate.error' | translate}}</mat-error>
         </mat-form-field>
       </mat-cell>
-      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
+      <mat-footer-cell [style.display]="otherCurrencyDisplay" *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>    
 
     <ng-container matColumnDef="remark">

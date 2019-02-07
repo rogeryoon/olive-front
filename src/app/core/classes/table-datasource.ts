@@ -70,7 +70,9 @@ export class TableDatasource extends DataSource<any> {
         if (!res || !res.Obj) { return; }
         const d = res.ObjId;
         this._objectStore.forEach((m, i) => {
-            if (m.ObjId === d) { this._objectStore.splice(i, 1); }
+            if (m.ObjId === d) { 
+                this._objectStore.splice(i, 1); 
+            }
         });
         this._ObjectsSubject$.next(this._objectStore);
     }

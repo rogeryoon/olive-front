@@ -58,6 +58,10 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
     this.purchaseOrderItems.onCurrencyChanged(id);
   }
 
+  onCurrencyExchangeRateChanged(exchangeRate) {
+    this.purchaseOrderItems.onCurrencyExchangeRateChanged(exchangeRate);
+  }
+
   getEditedItem(): any {
     const purchaseOrder = this.purchaseOrderEditor.getEditedItem();
 

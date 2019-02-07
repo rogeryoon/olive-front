@@ -13,7 +13,7 @@ import { OliveCompanyMasterService } from 'app/core/services/company-master.serv
 import { OliveCompanyGroupSettingService } from 'app/core/services/company-group-setting.service';
 import { OliveCurrencyService } from 'app/main/supports/bases/services/currency.service';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, concat } from 'rxjs';
 import { CompanyMaster } from 'app/core/models/company-master.model';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
 import { User } from '@quick/models/user.model';
@@ -38,11 +38,8 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
   constructor(
     private alertService: AlertService, private authService: AuthService,
     private fuseConfig: FuseConfigService, private formBuilder: FormBuilder,
-    private appConfig: OliveAppConfigService,
     private companyMasterService: OliveCompanyMasterService,
-    private companyGroupSettingService: OliveCompanyGroupSettingService,
-    private currencyService: OliveCurrencyService,
-    private queryParams: OliveQueryParameterService
+    private currencyService: OliveCurrencyService
   ) {
     this.fuseConfig.setConfig({
       layout: {
@@ -71,9 +68,19 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
     else {
       this.loginStatusSubscription = this.authService.getLoginStatusEvent()
         .subscribe(isLoggedIn => {
-          if (this.getShouldRedirect()) {
-            this.authService.redirectLoginUser();
-          }
+          forkJoin(
+            this.companyMasterService.getItem(0),
+            this.currencyService.getItems(null)
+          ).subscribe(
+            results => { 
+              this.onConfigsLoadSuccessful(results[0].model, results[1].model); 
+
+              if (this.getShouldRedirect()) {
+                this.authService.redirectLoginUser();
+              }
+            },
+            error => this.showLoginError(error)
+          );
         });
     }
   }
@@ -131,19 +138,9 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
 
     this.authService.login(this.getUserLogin())
       .subscribe(
-        user => this.loadConfigs(user),
+        () => null,
         error => this.showLoginError(error)
       );
-  }
-
-  loadConfigs(user: User) {
-    forkJoin(
-      this.companyMasterService.getItem(0),
-      this.currencyService.getItems(null)
-    ).subscribe(
-      results => this.onConfigsLoadSuccessful(user, results[0].model, results[1].model),
-      error => this.showLoginError(error)
-    );
   }
 
   showLoginError(error: any) {
@@ -170,8 +167,9 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
     }, 500);
   }
 
-  private onConfigsLoadSuccessful(user: User, companyMaster: CompanyMaster, currencies: Currency[]) {
+  private onConfigsLoadSuccessful(companyMaster: CompanyMaster, currencies: Currency[]) {
     this.authService.saveConfigs(companyMaster, currencies);
+    const user = this.authService.currentUser;
 
     setTimeout(() => {
       this.alertService.stopLoadingMessage();

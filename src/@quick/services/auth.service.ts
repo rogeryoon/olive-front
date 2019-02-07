@@ -19,6 +19,7 @@ import { UserLogin } from '../models/user-login.model';
 import { PermissionValues } from '../models/permission.model';
 import { CompanyMaster } from 'app/core/models/company-master.model';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
+import { forkJoin } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -65,7 +66,7 @@ export class AuthService {
             queryParamsHandling: "merge"
         };
 
-        console.log('redirectLoginUser', urlAndParams.firstPart);
+        console.log('redirectLoginUser', urlAndParams.firstPart, redirect);
 
         this.router.navigate([urlAndParams.firstPart], navigationExtras);
     }
@@ -114,7 +115,6 @@ export class AuthService {
 
         if (accessToken == null) {
             throw new Error("Received accessToken was empty");
-
         }
 
         let refreshToken = response.refresh_token || this.refreshToken;
@@ -182,6 +182,8 @@ export class AuthService {
             this.localStorage.saveSyncedSessionData(companyMaster, DBkeys.COMPANY_MASTER);
             this.localStorage.saveSyncedSessionData(currencies, DBkeys.CURRENCIES);
         }
+
+        console.log('save configs');
     }
     // roger end
 

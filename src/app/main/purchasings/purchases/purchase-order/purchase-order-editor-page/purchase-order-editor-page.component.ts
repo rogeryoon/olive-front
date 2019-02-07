@@ -17,7 +17,7 @@ import { AlertService } from '@quick/services/alert.service';
 @Component({
   selector: 'olive-purchase-order-editor-page',
   templateUrl: '../../../../../core/components/edit-page/edit-page.component.html',
-  styleUrls: ['../../../../../core/components/edit-page/edit-page.component.html'],
+  styleUrls: ['../../../../../core/components/edit-page/edit-page.component.scss'],
   animations: fuseAnimations
 })
 export class OlivePurchaseOrderEditorPageComponent extends OliveEditPageComponent {

@@ -5,7 +5,7 @@
         <olive-tab-label [hasError]="main.hasError" [tabTitleId]="'tab.title.main'"></olive-tab-label>
       </ng-template>
       <div class="tab-content p-24" fusePerfectScrollbar>
-        <olive-purchase-order-editor #main [item]="item" (currencyChanged)="onCurrencyChanged($event)"></olive-purchase-order-editor>
+        <olive-purchase-order-editor #main [item]="item" (currencyChanged)="onCurrencyChanged($event)" (exchangeRateChanged)="onCurrencyExchangeRateChanged($event)"></olive-purchase-order-editor>
       </div>
     </mat-tab>
     <mat-tab>

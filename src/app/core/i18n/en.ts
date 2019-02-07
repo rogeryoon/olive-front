@@ -32,7 +32,7 @@ export const locale = {
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
-                'deleteByConcurrency' : '해당 데이터를 참조하고 있는 관련 데이터가 존재해서 삭제를 할 수 없습니다. '
+                'deleteByConcurrency' : '해당 데이터를 참조하고 있는 관련 데이터가 존재해서 삭제를 할 수 없습니다. ',
             },
             'validate' : {
                 'required' : '필수 입력(선택) 항목입니다.',
@@ -41,6 +41,7 @@ export const locale = {
                 'pattern' : '입력형식 오류입니다.',
                 'number' : '숫자 오류입니다. {0}',
                 'decimal' : '(소숫점 최대{0}자리)',
+                'error' : '오류'
             },
             'title' : {
                 'addNewItem' : '{{title}} 등록',

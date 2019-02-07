@@ -1,6 +1,3 @@
-// ebenmonney
-/* tslint:disable */
-
 import { Injectable } from '@angular/core';
 
 import { Subject } from 'rxjs/Subject';
@@ -11,31 +8,38 @@ import { DBkeys } from './db-Keys';
 import { Utilities } from './utilities';
 import { OliveAppConfigService } from 'app/core/services/AppConfig.service';
 
-type UserConfiguration = {
-    language: string,
-    homeUrl: string,
-    themeId: number,
-    showDashboardStatistics: boolean,
-    showDashboardNotifications: boolean,
-    showDashboardTodo: boolean,
-    showDashboardBanner: boolean
-};
+interface UserConfiguration {
+    language: string;
+    homeUrl: string;
+    themeId: number;
+    showDashboardStatistics: boolean;
+    showDashboardNotifications: boolean;
+    showDashboardTodo: boolean;
+    showDashboardBanner: boolean;
+}
 
 @Injectable()
 export class ConfigurationService
 {
-    public static readonly appVersion: string = "1.0.0";
+    public static readonly appVersion: string = '1.0.0';
 
     // Set baseUrl to the address of the backend server. Or set to Utilities.baseUrl() if both are hosted on the same address
     public baseUrl: string = this.appConfigService.getConfig().baseUrl;
-    public loginUrl: string = "/pages/auth/login";
+    public loginUrl = '/pages/auth/login';
 
-    public static readonly defaultLanguage: string = "en";
-    public static readonly defaultHomeUrl: string = "/";
+    // tslint:disable-next-line:member-ordering
+    public static readonly defaultLanguage: string = 'en';
+    // tslint:disable-next-line:member-ordering
+    public static readonly defaultHomeUrl: string = '/';
+    // tslint:disable-next-line:member-ordering
     public static readonly defaultThemeId: number = 1;
+    // tslint:disable-next-line:member-ordering
     public static readonly defaultShowDashboardStatistics: boolean = true;
+    // tslint:disable-next-line:member-ordering
     public static readonly defaultShowDashboardNotifications: boolean = true;
+    // tslint:disable-next-line:member-ordering
     public static readonly defaultShowDashboardTodo: boolean = false;
+    // tslint:disable-next-line:member-ordering
     public static readonly defaultShowDashboardBanner: boolean = true;
 
     private _language: string = null;
@@ -114,9 +118,7 @@ export class ConfigurationService
 
         if (jsonValue)
         {
-
-
-            let importValue: UserConfiguration = Utilities.JsonTryParse(jsonValue);
+            const importValue: UserConfiguration = Utilities.JsonTryParse(jsonValue);
 
             if (importValue.language != null)
             {
@@ -159,7 +161,7 @@ export class ConfigurationService
 
     public export(changesOnly = true): string
     {
-        let exportValue: UserConfiguration =
+        const exportValue: UserConfiguration =
             {
                 language: changesOnly ? this._language : this.language,
                 homeUrl: changesOnly ? this._homeUrl : this.homeUrl,
@@ -196,7 +198,7 @@ export class ConfigurationService
 
     private resetLanguage()
     {
-        let language = this.translationService.useBrowserLanguage();
+        const language = this.translationService.useBrowserLanguage();
 
         if (language)
         {
@@ -204,7 +206,7 @@ export class ConfigurationService
         }
         else
         {
-            this._language = this.translationService.changeLanguage()
+            this._language = this.translationService.changeLanguage();
         }
     }
 

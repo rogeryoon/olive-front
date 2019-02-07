@@ -126,8 +126,12 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
     return this.oForm.get(name);
   }
 
+  get oFArray(): FormArray {
+    return <FormArray>this.getControl('formarray');
+  }
+
   protected arrayErrorMessage(name: string, index: number): string {
-    const formGroup = (<FormArray>this.getControl('formarray')).controls[index] as FormGroup;
+    const formGroup = this.oFArray.controls[index] as FormGroup;
     return this.controlErrorMessage(formGroup.get(name));
   }
   

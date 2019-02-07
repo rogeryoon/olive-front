@@ -18,6 +18,7 @@ import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/ware
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator } from 'app/core/classes/validators';
+import { OliveUtilities } from 'app/core/classes/utilities';
 
 @Component({
   selector: 'olive-purchase-order-editor',
@@ -32,6 +33,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   lookupWarehouse: OliveLookupHostComponent;
 
   @Output() currencyChanged = new EventEmitter();
+  @Output() exchangeRateChanged = new EventEmitter();
 
   standCurrencyCode: string;
 
@@ -87,7 +89,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       addedDiscountAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
       freightAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
       taxAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
-      currencyExchangeRate: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
+      currencyExchangeRate: ['', [numberValidator(2, false)]],
       vendorFk: null,
       warehouseFk: null,
       currency: ''
@@ -104,13 +106,17 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       addedDiscountAmount: this.item.addedDiscountAmount || '0',
       freightAmount: this.item.freightAmount || '0',
       taxAmount: this.item.taxAmount || '0',
-      currencyExchangeRate: this.item.currencyExchangeRate || '0.00',
+      currencyExchangeRate: this.item.currencyExchangeRate,
       vendorFk: this.item.vendorFk,
       warehouseFk: this.item.warehouseFk,
       currency: currency.id
     });
 
     this.onCurrencyValueChanged(currency.id);
+
+    if (!this.isNewItem) {
+      this.onCurrencyExchangeRateChanged(this.item.currencyExchangeRate);
+    }
   }
 
   createEmptyObject() {
@@ -152,20 +158,18 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     this.lookupWarehouse.markAsTouched();
   }
 
-  // hasOtherError(): boolean {
-  //   const isMatchedAmount = 
-  //     this.purchaseOrderPayments.totalPaidAmount === this.item.totalDueAmount;
-  //   if (!isMatchedAmount) {
-
-  //   }
-  //   return !isMatchedAmount;
-  // }
-
   get canAssignPurchaseOrder() {
     return true;
   }
 
   onCurrencyValueChanged(event: any) {
     this.currencyChanged.emit(event);
+  }
+
+  onCurrencyExchangeRateChanged(input: any) {
+    const value = OliveUtilities.toTrimString(input);
+    if (/^\s*\d*(\.\d{1,2})?\s*$/.test(value)) {
+      this.exchangeRateChanged.emit(value);
+    }
   }
 }

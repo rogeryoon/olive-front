@@ -41,7 +41,7 @@
     <div flex>
       <mat-form-field *ngIf="!isMasterCurrency" appearance="outline" class="w-100-p">
         <mat-label>Currency Exchange Rate</mat-label>
-        <input matInput name="currencyExchangeRate" formControlName="currencyExchangeRate" class="right">
+        <input matInput name="currencyExchangeRate" formControlName="currencyExchangeRate" class="right" (change)="onCurrencyExchangeRateChanged($event.target.value)">
         <mat-error *ngIf="hasEntryError('currencyExchangeRate')">{{errorMessage('currencyExchangeRate')}}</mat-error>
       </mat-form-field>
     </div>

@@ -1,7 +1,7 @@
 import { Component, forwardRef } from '@angular/core';
 import {
   FormBuilder, FormControl, ValidationErrors,
-  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, AbstractControl, FormArray
+  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, AbstractControl, FormArray, FormGroup
 } from '@angular/forms';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { String } from 'typescript-string-operations';
@@ -50,14 +50,13 @@ import { numberValidator } from 'app/core/classes/validators';
   ]
 })
 export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
-  displayedColumns = ['productVariantId', 'name', 'quantity', 'price', 'amount', 'otherCurrencyPrice', 'remark', 'actions'];
+  displayedColumns = ['productVariantId', 'name', 'quantity', 'appliedCost', 'price', 'amount', 'otherCurrencyPrice', 'remark', 'actions'];
   itemsDataSource: OlivePurchaseOrderItemDatasource = new OlivePurchaseOrderItemDatasource(this.cacheService);
   paymentMethods: PaymentMethod[];
 
   value: PurchaseOrderItem[] = null;
 
   otherCurrencyDisplay = 'none';
-  poCurrency: Currency;
 
   constructor(
     formBuilder: FormBuilder,
@@ -74,6 +73,24 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     );
   }
 
+  get poCurrency() {
+    return this.itemsDataSource.poCurrency;
+  }
+  set poCurrency(value: Currency) {
+    this.itemsDataSource.poCurrency = value;
+  }
+
+  get exchangeRate() {
+    return this.itemsDataSource.exchangeRate;
+  }
+  set exchangeRate(value: number) {
+    this.itemsDataSource.exchangeRate = value;
+  }
+
+  get otherCurrencyPriceRequired() {
+    return this.itemsDataSource.otherCurrencyPriceRequired;
+  }
+
   onCurrencyChanged(id) {
     this.poCurrency = this.cacheService.currencies.find(c => c.id === id);
     this.otherCurrencyDisplay = this.poCurrency.primary ? 'none' : '';
@@ -81,14 +98,19 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     this.updateOtherCurrencyValidators();
   }
 
+  onCurrencyExchangeRateChanged(exchangeRate) {
+    this.exchangeRate = exchangeRate.length === 0 ? 0 : +exchangeRate;
+    this.updateOtherCurrencyValidators();
+  }
+
   updateOtherCurrencyValidators() {
     setTimeout(() => {
-      (<FormArray>this.getControl('formarray')).controls.forEach(formGroup => {
+      this.oFArray.controls.forEach(formGroup => {
         const control = formGroup.get('otherCurrencyPrice');
         control.clearValidators();
-        control.setValidators([numberValidator(this.poCurrency.decimalPoint, !this.poCurrency.primary)]);
+        control.setValidators([numberValidator(this.poCurrency.decimalPoint, this.otherCurrencyPriceRequired)]);
       });
-    });    
+    });
   }
 
   get items(): any {
@@ -123,20 +145,25 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       )
         .onAction().subscribe(() => {
           this.itemsDataSource.deleteItem(item);
-          this.oForm.markAsDirty();
         });
     }
     else {
       this.itemsDataSource.deleteItem(item);
-      this.oForm.markAsDirty();
     }
+  }
+
+  private deleteUnit(item: any) {
+    this.itemsDataSource.deleteItem(item);
+    if (this.itemsDataSource.items.length === 0) {
+      this.oFArray.removeAt(0);
+    }    
   }
 
   get totalQuantity(): number {
     let quantity = 0;
 
     this.itemsDataSource.items.forEach(item => {
-      if (item.quantity) {
+      if (!isNaN(item.quantity)) {
         quantity += item.quantity;
       }
     });
@@ -148,7 +175,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     let amount = 0;
 
     this.itemsDataSource.items.forEach(item => {
-      if (item.quantity && item.price) {
+      if (!isNaN(item.quantity) && !isNaN(item.price)) {
         amount += item.quantity * item.price;
       }
     });
@@ -197,6 +224,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
         .forEach((pvItem: ProductVariant) => {
           this.addNewItem({
             price: pvItem.standPrice,
+            appliedCost: pvItem.standPrice,
             productVariantId: pvItem.id,
             name: `${pvItem.productFk.name} ${pvItem.name}`.trimRight()
           } as PurchaseOrderItem);
@@ -249,9 +277,12 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
           fItem.purchaseOrderItems
             .filter((sItem: PurchaseOrderItem) => !dupCheckset.has(sItem.productVariantId))
             .forEach((sItem: PurchaseOrderItem) => {
-              const newItem = Object.assign(sItem);
-              newItem.id = null;
-              this.addNewItem(newItem);
+              this.addNewItem({
+                price: sItem.price,
+                appliedCost: sItem.price,
+                productVariantId: sItem.productVariantId,
+                name: sItem.name
+              } as PurchaseOrderItem);              
             });
         });
 
@@ -277,6 +308,35 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     return NavIcons.Purchase.Purchase;
   }
 
+  copyPriceToAppliedCost(price: number, index: number) {
+    const formGroup = this.oFArray.controls[index] as FormGroup;
+    formGroup.patchValue({appliedCost: price });
+  }
+
+  calculateOtherCurrencyToPrice(otherCurrencyPrice: number, index: number) {
+    const formGroup = this.oFArray.controls[index] as FormGroup;
+    const calculatedPrcie = otherCurrencyPrice / this.exchangeRate;
+
+    formGroup.patchValue(
+      {
+        price: calculatedPrcie.toFixed(this.standCurrency.decimalPoint),
+        appliedCost: calculatedPrcie.toFixed(this.standCurrency.decimalPoint)
+      }
+    );
+  }
+
+  processInputEvent(event: any, index: number) {
+    const inputName = event.target.name;
+    const inputValue = OliveUtilities.toTrimString(event.target.value);
+
+    if (/^inputOtherCurrencyPrice/g.test(inputName) && this.otherCurrencyPriceRequired && /^\s*\d*(\.\d{1,2})?\s*$/.test(inputValue)) {
+      this.calculateOtherCurrencyToPrice(+inputValue, index);
+    }
+    else if (/^inputPrice/g.test(inputName) && /^\s*\d*(\.\d{1,2})?\s*$/.test(inputValue)) {
+      this.copyPriceToAppliedCost(+inputValue, index);
+    }    
+  }
+
   private _onChange = (_: any) => { };
   private _onTouched = () => { };
 
@@ -297,9 +357,10 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   setDisabledState?(isDisabled: boolean): void {
   }
 
-  onSelectionChange(event: any) {
-    this._onChange(event.value);
+  onInput(event: any, index: number) {
+    this.processInputEvent(event, index);
   }
+
   onChange(event: any) {
     this._onChange(event.target.value);
   }
