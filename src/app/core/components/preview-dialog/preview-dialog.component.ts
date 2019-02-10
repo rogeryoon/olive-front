@@ -1,21 +1,20 @@
-import { Component, OnInit, ComponentFactoryResolver, ViewChild, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ComponentFactoryResolver, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { OliveDialogSetting } from '../../classes/dialog-setting';
-import { OliveOnSearch } from '../../interfaces/on-search';
-import { locale as english } from '../../../core/i18n/en';
+import { locale as english } from '../../i18n/en';
+import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
+import { OliveSearchDialogComponent } from '../search-dialog/search-dialog.component';
 import { OlivePlaceHolderDirective } from 'app/core/directives/place-holder.directive';
-
-// https://angular.io/guide/dynamic-component-loader
+import { OliveOnPreview } from 'app/core/interfaces/on-preview';
 
 @Component({
-  selector: 'olive-search-dialog',
-  templateUrl: './search-dialog.component.html',
-  styleUrls: ['./search-dialog.component.scss']
+  selector: 'olive-preview-dialog',
+  templateUrl: './preview-dialog.component.html',
+  styleUrls: ['./preview-dialog.component.scss']
 })
-export class OliveSearchDialogComponent implements OnInit, OnDestroy {
+export class OlivePreviewDialogComponent implements OnInit, OnDestroy {
   @ViewChild(OlivePlaceHolderDirective) placeHolder: OlivePlaceHolderDirective;
   componentRef: any;
 
@@ -24,7 +23,7 @@ export class OliveSearchDialogComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<OliveSearchDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public dialog: OliveDialogSetting,
     private translater: FuseTranslationLoaderService
-  ) {
+  ) { 
     this.translater.loadTranslations(english);
   }
 
@@ -43,19 +42,14 @@ export class OliveSearchDialogComponent implements OnInit, OnDestroy {
     viewContainerRef.clear();
 
     this.componentRef = viewContainerRef.createComponent(componentFactory);
-    (<OliveOnSearch>this.componentRef.instance).data = this.dialog.data;
+    (<OliveOnPreview>this.componentRef.instance).data = this.dialog.data;
   }
 
-  search(): void {
-    const result =
-      (<OliveOnSearch>this.componentRef.instance).onSearch();
+  print() {
 
-    if (result != null) {
-      this.dialogRef.close(result);
-    }
   }
 
-  cancel(): void {
-    this.dialogRef.close(null);
+  cancel() {
+    
   }
 }

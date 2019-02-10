@@ -25,6 +25,7 @@ import { OlivePurchaseOrderLookupDialogModule } from './purchase-order/purchase-
 import { OliveProductVariantManagerModule } from 'app/main/productions/products/product-variant/product-variant-manager/product-variant-manager.module';
 import { OliveProductManagerModule } from 'app/main/productions/products/product/product-manager/product-manager.module';
 import { OlivePurchasingMiscEndpointService, OlivePurchasingMiscService } from './services/purchasing-misc.service';
+import { OlivePreviewPurchaseOrderComponent } from './purchase-order/preview-purchase-order/preview-purchase-order.component';
 
 const routes = [
   {
@@ -60,7 +61,8 @@ const routes = [
     OliveSearchPurchaseOrderComponent,
     OlivePurchaseOrderEditorPageComponent,
     OlivePurchaseOrderPaymentsEditorComponent,
-    OlivePurchaseOrderItemsEditorComponent
+    OlivePurchaseOrderItemsEditorComponent,
+    OlivePreviewPurchaseOrderComponent
   ],
   providers: [
     OlivePurchaseOrderService,
@@ -74,7 +76,8 @@ const routes = [
   ],
   entryComponents: [
     OlivePurchaseOrderManagerComponent,
-    OliveSearchPurchaseOrderComponent
+    OliveSearchPurchaseOrderComponent,
+    OlivePreviewPurchaseOrderComponent
   ]
 })
 export class OlivePurchasesModule { }

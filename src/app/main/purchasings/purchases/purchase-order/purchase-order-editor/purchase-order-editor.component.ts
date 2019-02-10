@@ -86,9 +86,6 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       vendorOrderId: '',
       poDate: ['', Validators.required],
       memo: '',
-      addedDiscountAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
-      freightAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
-      taxAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
       currencyExchangeRate: ['', [numberValidator(2, false)]],
       vendorFk: null,
       warehouseFk: null,
@@ -103,9 +100,6 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       vendorOrderId: this.item.vendorOrderId || '',
       poDate: this.item.date || '',
       memo: this.item.memo || '',
-      addedDiscountAmount: this.item.addedDiscountAmount || '0',
-      freightAmount: this.item.freightAmount || '0',
-      taxAmount: this.item.taxAmount || '0',
       currencyExchangeRate: this.item.currencyExchangeRate,
       vendorFk: this.item.vendorFk,
       warehouseFk: this.item.warehouseFk,
@@ -168,7 +162,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
 
   onCurrencyExchangeRateChanged(input: any) {
     const value = OliveUtilities.toTrimString(input);
-    if (/^\s*\d*(\.\d{1,2})?\s*$/.test(value)) {
+    if (OliveUtilities.isMoneyPattern(value)) {
       this.exchangeRateChanged.emit(value);
     }
   }

@@ -47,30 +47,6 @@
     </div>
   </div>
 
-  <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
-    <div flex>
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Freight</mat-label>
-        <input matInput name="freightAmount" formControlName="freightAmount" required class="right">
-        <mat-error *ngIf="hasEntryError('freightAmount')">{{errorMessage('freightAmount')}}</mat-error>
-      </mat-form-field>
-    </div>
-    <div flex>
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Added Discount</mat-label>
-        <input matInput name="addedDiscountAmount" formControlName="addedDiscountAmount" required class="right">
-        <mat-error *ngIf="hasEntryError('addedDiscountAmount')">{{errorMessage('addedDiscountAmount')}}</mat-error>
-      </mat-form-field>
-    </div>
-    <div flex>
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Tax</mat-label>
-        <input matInput name="taxAmount" formControlName="taxAmount" required class="right">
-        <mat-error *ngIf="hasEntryError('taxAmount')">{{errorMessage('taxAmount')}}</mat-error>
-      </mat-form-field>
-    </div>
-  </div>
-
   <div flex>
     <mat-form-field appearance="outline" class="w-100-p">
       <mat-label>Memo</mat-label>

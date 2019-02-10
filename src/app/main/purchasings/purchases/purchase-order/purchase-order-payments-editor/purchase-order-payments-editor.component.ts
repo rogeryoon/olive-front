@@ -1,5 +1,5 @@
 import { Component, forwardRef } from '@angular/core';
-import { FormBuilder, FormArray, FormGroup, FormControl, ValidationErrors, 
+import { FormBuilder, FormArray, FormControl, ValidationErrors, 
   NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { String } from 'typescript-string-operations';
@@ -14,6 +14,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { OlivePurchaseOrderPaymentDatasource } from './purchase-order-payment-datasource';
 import { PurchaseOrder } from '../../models/purchase-order.model';
 import { PaymentMethod } from 'app/main/supports/companies/models/payment-method.model';
+import { locale as english } from '../../i18n/en';
 
 @Component({
   selector: 'olive-purchase-order-payments-editor',
@@ -50,6 +51,8 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     super(
       formBuilder, translater
     );
+
+    this.translater.loadTranslations(english);
   }
 
   initializeChildComponent() {
@@ -72,24 +75,12 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     return this.paymentsDataSource.items;
   }
 
-  get totalPaidAmount(): number {
-    let amount = 0;
-
-    this.paymentsDataSource.items.forEach(item => {
-      if (!isNaN(item.amount)) {
-        amount += item.amount;
-      }
-    });
-
-    return amount;
-  }
-
   get totalAmount(): number {
     let amount = 0;
 
     this.paymentsDataSource.items.forEach(item => {
       if (!isNaN(item.amount)) {
-        amount += item.amount;
+        amount += +item.amount;
       }
     });
 

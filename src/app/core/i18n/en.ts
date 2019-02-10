@@ -58,7 +58,8 @@ export const locale = {
                 'sessionExpired' : 'Session Expired',
                 'confirm' : '확인',
                 'errorConfirm' : '오류 알림',
-                'duplicated' : '중복 오류 알림'
+                'duplicated' : '중복 오류 알림',
+                'preview' : '미리보기'
             },
             'button': {
                 'save' : '저장',
@@ -69,7 +70,9 @@ export const locale = {
                 'refresh' : '새로고침',
                 'confirmDelete' : '삭제알림',
                 'select' : '선택',
-                'new' : '신규'
+                'new' : '신규',
+                'print' : '인쇄',
+                'add' : '추가'
             },
             'menu': {
                 'menuButton' : '부가 기능',
@@ -177,16 +180,6 @@ export const locale = {
                 'tabBasicInfo' : 'Basic Info',
                 'tabClass' : '분류',
                 'tabInventory' : 'Inventory'
-            }
-        },
-        'purchasing': {
-            'purchaseOrder': {
-                'noItem' : '발주서 상품등록을 하지 않아 입고 및 종결처리를 할 수 없습니다.',
-                'noPayment' : '발주서 결제정보를 입력하지 않아 종결처리를 할 수 없습니다.',
-                'closed' : '발주서 종결처리를 완료 하였습니다.',
-                'pendingInWarehouse' : '입고처리가 완료되지 않아 종결처리를 할 수 없습니다.',
-                'close' : '발주서 종결처리를 완료 하였습니다.',
-                'open' : '발주서 종결처리를 취소 하였습니다.'
             }
         }
     }

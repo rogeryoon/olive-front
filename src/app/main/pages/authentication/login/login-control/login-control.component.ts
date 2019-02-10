@@ -8,15 +8,11 @@ import { AuthService } from '@quick/services/auth.service';
 import { Utilities } from '@quick/services/utilities';
 import { UserLogin } from '@quick/models/user-login.model';
 
-import { OliveAppConfigService } from 'app/core/services/AppConfig.service';
 import { OliveCompanyMasterService } from 'app/core/services/company-master.service';
-import { OliveCompanyGroupSettingService } from 'app/core/services/company-group-setting.service';
 import { OliveCurrencyService } from 'app/main/supports/bases/services/currency.service';
-import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
-import { forkJoin, concat } from 'rxjs';
+import { forkJoin } from 'rxjs';
 import { CompanyMaster } from 'app/core/models/company-master.model';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
-import { User } from '@quick/models/user.model';
 
 @Component({
   selector: 'olive-login-control',
@@ -68,19 +64,21 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
     else {
       this.loginStatusSubscription = this.authService.getLoginStatusEvent()
         .subscribe(isLoggedIn => {
-          forkJoin(
-            this.companyMasterService.getItem(0),
-            this.currencyService.getItems(null)
-          ).subscribe(
-            results => { 
-              this.onConfigsLoadSuccessful(results[0].model, results[1].model); 
-
-              if (this.getShouldRedirect()) {
-                this.authService.redirectLoginUser();
-              }
-            },
-            error => this.showLoginError(error)
-          );
+          setTimeout(() => {
+            forkJoin(
+              this.companyMasterService.getItem(0),
+              this.currencyService.getItems(null)
+            ).subscribe(
+              results => { 
+                this.onConfigsLoadSuccessful(results[0].model, results[1].model); 
+  
+                if (this.getShouldRedirect()) {
+                  this.authService.redirectLoginUser();
+                }
+              },
+              error => this.showLoginError(error)
+            );
+          }, 200);
         });
     }
   }

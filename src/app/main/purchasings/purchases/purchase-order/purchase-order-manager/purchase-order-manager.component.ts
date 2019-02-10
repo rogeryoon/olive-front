@@ -64,15 +64,16 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
 
   getEditedItem(): any {
     const purchaseOrder = this.purchaseOrderEditor.getEditedItem();
+    const itemsEditor = this.purchaseOrderItems.getEditedItem();
 
     return this.itemWithIdNAudit({
       vendorOrderId: purchaseOrder.vendorOrderId,
       date: purchaseOrder.date,
       memo: purchaseOrder.memo,
       totalItemsAmount: this.purchaseOrderItems.totalAmount,
-      addedDiscountAmount: purchaseOrder.addedDiscountAmount,
-      freightAmount: purchaseOrder.freightAmount,
-      taxAmount: purchaseOrder.taxAmount,
+      addedDiscountAmount: itemsEditor.addedDiscountAmount,
+      freightAmount: itemsEditor.freightAmount,
+      taxAmount: itemsEditor.taxAmount,
       totalDueAmount: (
         this.purchaseOrderItems.totalAmount + purchaseOrder.freightAmount 
         + purchaseOrder.taxAmount - purchaseOrder.addedDiscountAmount),
@@ -84,7 +85,7 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
       warehouseId: purchaseOrder.warehouseId,
       currencyId: purchaseOrder.currencyId,
       purchaseOrderPayments: this.purchaseOrderPayments.items,
-      purchaseOrderItems: this.purchaseOrderItems.items
+      purchaseOrderItems: itemsEditor.items
     });
   }
 
@@ -99,11 +100,6 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
     this.oForm.reset({
     });
 
-    if (this.item) {
-      this.oForm.patchValue({
-        purchaseOrderPayments: this.item.purchaseOrderPayments,
-        purchaseOrderItems: this.item.purchaseOrderItems
-      });
-    }
+    this.purchaseOrderItems.setParentItem(this.item);
   }
 }

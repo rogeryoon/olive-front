@@ -214,7 +214,7 @@ export class AppComponent implements OnInit, OnDestroy
         this.alertService.getMessageEvent().subscribe(message => this.showToast(message, false));
         this.alertService.getStickyMessageEvent().subscribe(message => this.showToast(message, true));
 
-        this.authService.reLoginDelegate = () => this.showLoginDialog();
+        // this.authService.reLoginDelegate = () => this.showLoginDialog();
         // 2019.1.9 PopUp Login 문제로 Disable 한다.        
         //#endregion Roger
     }

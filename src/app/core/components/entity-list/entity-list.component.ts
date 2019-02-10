@@ -294,11 +294,11 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
   }
 
   onExcel() {
-    this.documentService.exportExcel(this.translater.get(this.setting.translateTitleId), this.setting.name);
+    this.documentService.exportExcel(this.translater.get(this.setting.translateTitleId), this.setting.dataTableId);
   }
 
   onPrint() {
-    this.documentService.printTable(this.translater.get(this.setting.translateTitleId), this.setting.name);
+    this.documentService.printTable(this.translater.get(this.setting.translateTitleId), this.setting.dataTableId);
   }
 
   onUpload() {

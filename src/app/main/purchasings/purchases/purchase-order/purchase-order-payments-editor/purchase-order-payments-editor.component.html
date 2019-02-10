@@ -11,7 +11,7 @@
     </mat-row>
 
     <ng-container matColumnDef="paymentMethodId">
-      <mat-header-cell *matHeaderCellDef>결제</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{'purchaseOrderPayments.paymentMethodId' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <mat-select name="paymentMethodId" formControlName="paymentMethodId" required (selectionChange)="onSelectionChange($event)" (blur)="onBlur($event)">
@@ -25,7 +25,7 @@
     </ng-container>
 
     <ng-container matColumnDef="amount">
-      <mat-header-cell *matHeaderCellDef>금액</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{'purchaseOrderPayments.amount' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <input name="inputAmount{{row.ObjId}}" matInput class="right" formControlName="amount" 
@@ -37,7 +37,7 @@
     </ng-container>
 
     <ng-container matColumnDef="remarkId">
-      <mat-header-cell *matHeaderCellDef>승인번호</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{'purchaseOrderPayments.remarkId' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <input name="inputRemark{{row.ObjId}}" matInput type="text" formControlName="remarkId"
@@ -49,12 +49,12 @@
 
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef>
-        <button mat-button color="primary" matTooltip="추가" (click)="newItem()">
-          <mat-icon class="mat-button-icon">add</mat-icon>추가
+        <button mat-button color="primary" matTooltip="{{'common.button.add' | translate}}" (click)="newItem()">
+          <mat-icon class="mat-button-icon">add</mat-icon>{{'common.button.add' | translate}}
         </button>
       </mat-header-cell>
       <mat-cell *matCellDef="let row" class="justify-center">
-        <button mat-icon-button matTooltip="{{'management.Delete' | translate}}" (click)="deleteItem(row)">
+        <button mat-icon-button matTooltip="{{'common.button.delete' | translate}}" (click)="deleteItem(row)">
           <mat-icon color="warn">delete</mat-icon>
         </button>
       </mat-cell>

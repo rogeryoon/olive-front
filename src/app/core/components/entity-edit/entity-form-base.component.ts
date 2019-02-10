@@ -209,4 +209,20 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
 
     return control.touched && hasError;
   }
+
+  getMoney(value: any) {
+    let amount = 0;
+    if (OliveUtilities.isMoneyPattern(value)) {
+      amount = +value;
+    }
+    return amount;
+  }
+
+  getNumber(value: any) {
+    let amount = 0;
+    if (OliveUtilities.isNumberPattern(value)) {
+      amount = +value;
+    }
+    return amount;
+  }
 }

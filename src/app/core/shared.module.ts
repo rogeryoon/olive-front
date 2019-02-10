@@ -37,6 +37,7 @@ import { OliveOnlyNumberDirective } from './directives/only-number.directive';
 import { OlivePlaceHolderDirective } from './directives/place-holder.directive';
 import { OliveBaseComponent } from './components/base/base.component';
 import { OliveEndpointBaseService } from './services/endpoint-base.service';
+import { OlivePreviewDialogComponent } from './components/preview-dialog/preview-dialog.component';
 
 @NgModule({
   imports: [
@@ -72,6 +73,7 @@ import { OliveEndpointBaseService } from './services/endpoint-base.service';
     OliveSearchDialogComponent,
     OliveLookupDialogComponent,
     OliveEditDialogComponent,
+    OlivePreviewDialogComponent,
   
     OliveAddressEditorComponent,
     OliveEditPageComponent,
@@ -96,6 +98,7 @@ import { OliveEndpointBaseService } from './services/endpoint-base.service';
     OliveSearchDialogComponent,
     OliveLookupDialogComponent,
     OliveEditDialogComponent,
+    OlivePreviewDialogComponent,
 
     OliveAddressEditorComponent,
     OliveEditPageComponent,
@@ -122,7 +125,8 @@ import { OliveEndpointBaseService } from './services/endpoint-base.service';
     OliveImportFileDialogComponent,
     OliveSearchDialogComponent,
     OliveLookupDialogComponent,
-    OliveEditDialogComponent
+    OliveEditDialogComponent,
+    OlivePreviewDialogComponent
   ]
 })
 export class OliveSharedModule { }

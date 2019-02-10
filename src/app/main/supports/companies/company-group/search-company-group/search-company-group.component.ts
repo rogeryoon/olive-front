@@ -18,7 +18,7 @@ export class OliveSearchCompanyGroupComponent implements OnInit, OliveOnSearch {
     this.buildForm();
   }
 
-  oliveOnSearch(): any {
+  onSearch(): any {
     if (!this.searchForm.valid) {
       return null;
     }

@@ -209,5 +209,13 @@ export class OliveUtilities {
         }
         return returnValue;
     }
+
+    public static isMoneyPattern(input: string) {
+        return /^\s*\d*(\.\d{1,2})?\s*$/.test(input);
+    }
+
+    public static isNumberPattern(input: string) {
+        return /^\s*\d*\s*$/.test(input);
+    }
 }
 

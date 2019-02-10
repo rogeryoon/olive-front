@@ -5,6 +5,7 @@ import { tap } from 'rxjs/operators';
 
 import { Currency } from 'app/main/supports/bases/models/currency.model';
 import { OliveCacheService } from '../services/cache.service';
+import { OliveUtilities } from './utilities';
 
 export class DatasourceObject {
     public readonly ObjId: number;
@@ -78,7 +79,8 @@ export class TableDatasource extends DataSource<any> {
     }
 
     createNewFormContorl(r: any, propName: string, validators: any[]): FormControl {
-        const m = new FormControl(r.Obj[propName], validators.length ? validators : null);
+        const value = OliveUtilities.TestIsUndefined(r.Obj[propName]) ? '' : r.Obj[propName].toString();
+        const m = new FormControl(value, validators.length ? validators : null);
         m.valueChanges.subscribe(val => { r.Obj[propName] = val; });
         return m;
     }

@@ -22,7 +22,7 @@ export class OliveDocumentService {
     this.translater.loadTranslations(english);
   }
 
-  private css(): string {
+  private get stylesheet(): string {
     return '<style>' +
       '@media print {' +
       'body {' +
@@ -210,7 +210,7 @@ export class OliveDocumentService {
     const pwin = window.open('');
 
     pwin.document.write(`<html><head><title>${documentTitle}</title>`);
-    pwin.document.write(this.css());
+    pwin.document.write(this.stylesheet);
     pwin.document.write('</head><body>');
     pwin.document.write('<table>');
 

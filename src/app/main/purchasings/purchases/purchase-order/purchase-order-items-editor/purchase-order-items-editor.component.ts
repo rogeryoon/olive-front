@@ -31,6 +31,7 @@ import { OlivePurchaseOrderLookupDialogComponent } from '../purchase-order-looku
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
 import { numberValidator } from 'app/core/classes/validators';
+import { locale as english } from '../../i18n/en';
 
 @Component({
   selector: 'olive-purchase-order-items-editor',
@@ -50,10 +51,11 @@ import { numberValidator } from 'app/core/classes/validators';
   ]
 })
 export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
-  displayedColumns = ['productVariantId', 'name', 'quantity', 'appliedCost', 'price', 'amount', 'otherCurrencyPrice', 'remark', 'actions'];
+  displayedColumns = ['productVariantId', 'name', 'quantity', 'price', 'amount', 'discount', 'appliedCost', 'otherCurrencyPrice', 'remark', 'actions'];
   itemsDataSource: OlivePurchaseOrderItemDatasource = new OlivePurchaseOrderItemDatasource(this.cacheService);
   paymentMethods: PaymentMethod[];
 
+  parentItem: PurchaseOrder;
   value: PurchaseOrderItem[] = null;
 
   otherCurrencyDisplay = 'none';
@@ -71,6 +73,8 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     super(
       formBuilder, translater
     );
+
+    this.translater.loadTranslations(english);
   }
 
   get poCurrency() {
@@ -89,6 +93,29 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
 
   get otherCurrencyPriceRequired() {
     return this.itemsDataSource.otherCurrencyPriceRequired;
+  }
+
+  get freight() {
+    return this.getMoney(this.oForm.value.freightAmount);
+  }
+
+  get tax() {
+    return this.getMoney(this.oForm.value.taxAmount);
+  }
+  
+  get addedDiscount() {
+    return this.getMoney(this.oForm.value.addedDiscountAmount);
+  }  
+
+  get extraAmount() {
+    return this.freight - this.addedDiscount + this.tax;
+  }
+
+  get extraCostPerUnit(): number {
+    if (this.totalQuantity === 0) {
+      return 0;
+    }
+    return +(this.extraAmount / this.totalQuantity).toFixed(this.standCurrency.decimalPoint);
   }
 
   onCurrencyChanged(id) {
@@ -113,19 +140,43 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     });
   }
 
-  get items(): any {
-    return this.itemsDataSource.items;
-  }
-
   initializeChildComponent() {
     this.standCurrency = this.cacheService.standCurrency;
   }
 
+  getEditedItem(): any {
+    const formModel = this.oForm.value;
+
+    return {
+      addedDiscountAmount: formModel.addedDiscountAmount,
+      freightAmount: formModel.freightAmount,
+      taxAmount: formModel.taxAmount,
+      items: this.itemsDataSource.items
+    };
+  }
+
   buildForm() {
     this.oFormArray = this.formBuilder.array([]);
-    this.oForm = this.formBuilder.group({ formarray: this.oFormArray });
+    this.oForm = this.formBuilder.group({ 
+      formarray: this.oFormArray,
+      addedDiscountAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
+      freightAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
+      taxAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]]
+    });
     this.itemsDataSource.formGroup = this.oForm;
   }
+
+  resetForm() {
+    this.oForm.patchValue({
+      addedDiscountAmount: this.parentItem.addedDiscountAmount || '0',
+      freightAmount: this.parentItem.freightAmount || '0',
+      taxAmount: this.parentItem.taxAmount || '0',
+    });
+  }
+
+  setParentItem(parentItem: any) {
+    this.parentItem = parentItem;
+  }  
 
   createEmptyObject() {
     return new PurchaseOrder();
@@ -164,7 +215,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
 
     this.itemsDataSource.items.forEach(item => {
       if (!isNaN(item.quantity)) {
-        quantity += item.quantity;
+        quantity += +item.quantity;
       }
     });
 
@@ -224,11 +275,14 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
         .forEach((pvItem: ProductVariant) => {
           this.addNewItem({
             price: pvItem.standPrice,
+            discount: 0,
             appliedCost: pvItem.standPrice,
             productVariantId: pvItem.id,
             name: `${pvItem.productFk.name} ${pvItem.name}`.trimRight()
           } as PurchaseOrderItem);
         });
+
+      this.updateCosts();
 
       this.showDuplicatedItems(duplicatedIdStrings);
     });
@@ -279,12 +333,15 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
             .forEach((sItem: PurchaseOrderItem) => {
               this.addNewItem({
                 price: sItem.price,
+                discount: 0,                
                 appliedCost: sItem.price,
                 productVariantId: sItem.productVariantId,
                 name: sItem.name
               } as PurchaseOrderItem);              
             });
         });
+
+      this.updateCosts();        
 
       this.showDuplicatedItems(duplicatedIdStrings);
     });
@@ -308,33 +365,27 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     return NavIcons.Purchase.Purchase;
   }
 
-  copyPriceToAppliedCost(price: number, index: number) {
-    const formGroup = this.oFArray.controls[index] as FormGroup;
-    formGroup.patchValue({appliedCost: price });
-  }
+  updateCosts() {
+    this.oFArray.controls.forEach(formGroup => {
+      const lineOtherCurrencyPrice = this.getMoney(formGroup.get('otherCurrencyPrice').value);
 
-  calculateOtherCurrencyToPrice(otherCurrencyPrice: number, index: number) {
-    const formGroup = this.oFArray.controls[index] as FormGroup;
-    const calculatedPrcie = otherCurrencyPrice / this.exchangeRate;
-
-    formGroup.patchValue(
-      {
-        price: calculatedPrcie.toFixed(this.standCurrency.decimalPoint),
-        appliedCost: calculatedPrcie.toFixed(this.standCurrency.decimalPoint)
+      if (lineOtherCurrencyPrice > 0 && this.otherCurrencyPriceRequired) {
+        formGroup.patchValue({price: (lineOtherCurrencyPrice / this.exchangeRate).toFixed(this.standCurrency.decimalPoint)});
       }
-    );
-  }
 
-  processInputEvent(event: any, index: number) {
-    const inputName = event.target.name;
-    const inputValue = OliveUtilities.toTrimString(event.target.value);
+      const lineQuantity = this.getNumber(formGroup.get('quantity').value);
+      const lineDiscount = this.getMoney(formGroup.get('discount').value);
+      const linePrice = this.getMoney(formGroup.get('price').value);
 
-    if (/^inputOtherCurrencyPrice/g.test(inputName) && this.otherCurrencyPriceRequired && /^\s*\d*(\.\d{1,2})?\s*$/.test(inputValue)) {
-      this.calculateOtherCurrencyToPrice(+inputValue, index);
-    }
-    else if (/^inputPrice/g.test(inputName) && /^\s*\d*(\.\d{1,2})?\s*$/.test(inputValue)) {
-      this.copyPriceToAppliedCost(+inputValue, index);
-    }    
+      if (linePrice === 0 || lineQuantity === 0) {
+        formGroup.patchValue({appliedCost: ''});
+      }
+      else
+      {
+        const appliedCost = linePrice - +(lineDiscount / lineQuantity).toFixed(2) + this.extraCostPerUnit;
+        formGroup.patchValue({appliedCost: appliedCost.toFixed(this.standCurrency.decimalPoint)});
+      }
+    });
   }
 
   private _onChange = (_: any) => { };

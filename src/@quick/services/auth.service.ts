@@ -182,8 +182,6 @@ export class AuthService {
             this.localStorage.saveSyncedSessionData(companyMaster, DBkeys.COMPANY_MASTER);
             this.localStorage.saveSyncedSessionData(currencies, DBkeys.CURRENCIES);
         }
-
-        console.log('save configs');
     }
     // roger end
 
