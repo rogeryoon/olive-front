@@ -100,6 +100,13 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
     this.oForm.reset({
     });
 
+    if (this.item) {
+      this.oForm.patchValue({
+        purchaseOrderPayments: this.item.purchaseOrderPayments,
+        purchaseOrderItems: this.item.purchaseOrderItems
+      });
+    }
+
     this.purchaseOrderItems.setParentItem(this.item);
   }
 }

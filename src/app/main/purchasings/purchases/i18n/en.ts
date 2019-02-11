@@ -24,6 +24,14 @@ export const locale = {
             'paymentMethodId' : '결제',
             'amount' : '금액',
             'remarkId': '승인번호'
+        },
+        'previewPurchaseOrder': {
+            'freight' : 'freight',
+            'addedDiscount' : 'Discount',
+            'tax' : 'Tax',
+            'subTotal' : 'Sub Total',
+            'grandTotal' : 'Total',
+            'payments' : 'Payments'
         }
     }
 };

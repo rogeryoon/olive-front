@@ -97,7 +97,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: PurchaseOrder) {
     if (item) {
-      return `PO # ${OliveUtilities.convertToBase36(item.id)} : ${item.vendorFk.name}`;
+      return `PO # ${this.id36(item.id)} : ${item.vendorFk.name}`;
     }
     else {
       return this.translater.get(NavTranslates.Purchase.PurchaseEntry);
@@ -109,7 +109,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = OliveUtilities.convertToBase36(item.id);
+        retValue = this.id36(item.id);
         break;
 
       case VendorName:
@@ -137,7 +137,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         break;
 
       case PODate:
-        retValue = OliveUtilities.getShortDate(item.date);
+        retValue = this.date(item.date);
         break;
     }
 
@@ -152,7 +152,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       totalItemDue + Math.abs(item.freightAmount) +
       Math.abs(item.taxAmount) - Math.abs(item.addedDiscountAmount);
 
-    return OliveUtilities.showMoney(totalDue);
+    return OliveUtilities.numberFormat(totalDue);
   }
 
   icon(item: PurchaseOrder, columnName: string): boolean {
@@ -319,17 +319,19 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
   }
 
   onPOPrint(item: PurchaseOrder) {
-    const dialog = new OliveDialogSetting(OlivePreviewPurchaseOrderComponent, null);
+    const dialogSetting = new OliveDialogSetting(
+      OlivePreviewPurchaseOrderComponent, 
+      {
+        item: item
+      }
+    );
     const dialogRef = this.dialog.open(
       OlivePreviewDialogComponent,
       {
         disableClose: false,
         panelClass: 'mat-dialog-md',
-        data: dialog
+        data: dialogSetting
       });
-
-    this.searhKeyword = '';
-    this.savedFilterValue = '';
 
     dialogRef.afterClosed().subscribe(searches => {
       if (searches != null) {

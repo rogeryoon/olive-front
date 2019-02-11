@@ -12,6 +12,7 @@ import { OliveMessageHelperService } from './message-helper.service';
 import { OliveChunkDataService } from './chunk-data.service';
 import { CompanyMaster } from '../models/company-master.model';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
+import { Branch } from 'app/main/supports/companies/models/branch.model';
 
 interface CacheContent {
   expiry: number;
@@ -29,6 +30,7 @@ export class OliveCacheService {
   private _companyMaster: CompanyMaster;
   private _currencies: Currency[];
   private _standCurrency: Currency;
+  private _branches: Branch[];
 
   constructor(
     private companyGroupSettingService: OliveCompanyGroupSettingService,
@@ -140,4 +142,11 @@ export class OliveCacheService {
     }     
     return this._standCurrency;
   }
+
+  get branches() {
+    if (!this._branches) { 
+      this._branches = this.authService.branches; 
+    }     
+    return this._branches;
+  }  
 }

@@ -2,7 +2,6 @@ import { NameValue } from '../models/name-value';
 import * as moment from 'moment';
 import { FormGroup } from '@angular/forms';
 import { OliveContants } from './contants';
-import { OliveMoneyPipe } from '../pipes/money.pipe';
 import { DecimalPipe } from '@angular/common';
 
 export class OliveUtilities {
@@ -176,8 +175,11 @@ export class OliveUtilities {
         return returnValue;
     }
 
-    public static showMoney(amount: number): string {
-        return new OliveMoneyPipe(new DecimalPipe('en-us')).transform(amount);
+    public static numberFormat(amount: number, digits = 0, zero = null): string {
+        if (zero !== null && amount === 0) {
+            return zero;
+        }
+        return new DecimalPipe('en-us').transform(amount, `1.${digits}-${digits}`);
     }
 
     public static getItemsFirstName(items: any) {

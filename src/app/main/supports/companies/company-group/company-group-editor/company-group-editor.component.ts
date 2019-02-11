@@ -39,7 +39,7 @@ export class OliveCompanyGroupEditorComponent extends OliveEntityFormComponent {
 
   resetForm() {
     this.oForm.reset({
-      id: OliveUtilities.convertToBase36(this.item.id),
+      id: this.id36(this.item.id),
       name: this.item.name || '',
       memo: this.item.memo || '',
       activated: this.boolValue(this.item.activated),

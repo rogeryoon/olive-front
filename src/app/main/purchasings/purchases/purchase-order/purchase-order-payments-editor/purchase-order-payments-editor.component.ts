@@ -56,6 +56,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   }
 
   initializeChildComponent() {
+    this.standCurrency = this.cacheService.standCurrency;
     const key = OliveContants.CacheKeys.PaymentMethod;
     if (!this.cacheService.exist(key)) {
       this.paymentMethodService.getItems(null)

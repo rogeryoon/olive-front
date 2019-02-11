@@ -86,7 +86,7 @@ export class OliveProductsComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = OliveUtilities.convertToBase36(item.id);
+        retValue = this.id36(item.id);
         break;
       case Name:
         retValue = item.name;
@@ -101,7 +101,7 @@ export class OliveProductsComponent extends OliveEntityListComponent {
         retValue = item.variants ? item.variants.length.toString() : '';
         break;
       case CreatedUtc:
-        retValue = OliveUtilities.getShortDate(item.createdUtc);
+        retValue = this.date(item.createdUtc);
         break;
     }
 

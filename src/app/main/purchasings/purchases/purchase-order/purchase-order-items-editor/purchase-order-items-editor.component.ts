@@ -266,7 +266,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
           .forEach((pvItem: ProductVariant) => {
             dupCheckset.add(pvItem.id);
             duplicatedIdStrings.push(
-              `${OliveUtilities.convertToBase36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trimRight());
+              `${this.id36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trimRight());
           });
       });
 
@@ -321,7 +321,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
             .filter((sItem: PurchaseOrderItem) => dsItem.productVariantId === sItem.productVariantId)
             .forEach((sItem: PurchaseOrderItem) => {
               dupCheckset.add(sItem.productVariantId);
-              duplicatedIdStrings.push(`${OliveUtilities.convertToBase36(sItem.id)}: ${sItem.name}`);
+              duplicatedIdStrings.push(`${this.id36(sItem.id)}: ${sItem.name}`);
             });
         });
       });
@@ -406,10 +406,6 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     this._onTouched = fn;
   }
   setDisabledState?(isDisabled: boolean): void {
-  }
-
-  onInput(event: any, index: number) {
-    this.processInputEvent(event, index);
   }
 
   onChange(event: any) {

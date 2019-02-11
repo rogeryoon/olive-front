@@ -52,7 +52,7 @@ export class OlivePurchaseOrderLookupDialogComponent extends OliveLookupDialogCo
       let retValue = '';
       switch (columnName) {
         case Id:
-          retValue = OliveUtilities.convertToBase36(item.id);
+          retValue = this.id36(item.id);
           break;
 
         case Name:
@@ -60,7 +60,7 @@ export class OlivePurchaseOrderLookupDialogComponent extends OliveLookupDialogCo
           break;
 
         case PODate:
-          retValue = OliveUtilities.getShortDate(item.date);
+          retValue = this.date(item.date);
           break;
       }
       return retValue;

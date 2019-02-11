@@ -51,6 +51,15 @@ export class EndpointFactory {
         return this.http.post<T>(this.loginUrl, params, { headers: header });
     }
 
+    getPreLoadDataEndpoint<T>(): Observable<T> {
+        const endpointUrl = this.configurations.baseUrl + '/api/chunkdatas/preload';
+         
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getPreLoadDataEndpoint());
+            });
+    }
+
     getRefreshLoginEndpoint<T>(): Observable<T> {
         const header = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
 

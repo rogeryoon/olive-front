@@ -100,10 +100,6 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
     return OliveUtilities.itemWithIdNAudit(source, this.item);
   }
 
-  boolValue(value?: boolean): boolean {
-    return value == null ? true : value;
-  }
-
   // Invalid Cotrol를 찾아 낸다.
   // How to find the invalid controls in angular 4 reactive form
   // https://stackoverflow.com/questions/45220073/how-to-find-the-invalid-controls-in-angular-4-reactive-form
@@ -116,10 +112,6 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
       }
     }
     return invalid;
-  }
-
-  Id36(id: number): string {
-    return OliveUtilities.convertToBase36(id);
   }
 
   getControl(name) {

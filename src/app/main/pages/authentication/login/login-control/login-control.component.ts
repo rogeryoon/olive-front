@@ -8,12 +8,6 @@ import { AuthService } from '@quick/services/auth.service';
 import { Utilities } from '@quick/services/utilities';
 import { UserLogin } from '@quick/models/user-login.model';
 
-import { OliveCompanyMasterService } from 'app/core/services/company-master.service';
-import { OliveCurrencyService } from 'app/main/supports/bases/services/currency.service';
-import { forkJoin } from 'rxjs';
-import { CompanyMaster } from 'app/core/models/company-master.model';
-import { Currency } from 'app/main/supports/bases/models/currency.model';
-
 @Component({
   selector: 'olive-login-control',
   templateUrl: './login-control.component.html',
@@ -33,9 +27,7 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
 
   constructor(
     private alertService: AlertService, private authService: AuthService,
-    private fuseConfig: FuseConfigService, private formBuilder: FormBuilder,
-    private companyMasterService: OliveCompanyMasterService,
-    private currencyService: OliveCurrencyService
+    private fuseConfig: FuseConfigService, private formBuilder: FormBuilder
   ) {
     this.fuseConfig.setConfig({
       layout: {
@@ -64,21 +56,9 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
     else {
       this.loginStatusSubscription = this.authService.getLoginStatusEvent()
         .subscribe(isLoggedIn => {
-          setTimeout(() => {
-            forkJoin(
-              this.companyMasterService.getItem(0),
-              this.currencyService.getItems(null)
-            ).subscribe(
-              results => { 
-                this.onConfigsLoadSuccessful(results[0].model, results[1].model); 
-  
-                if (this.getShouldRedirect()) {
-                  this.authService.redirectLoginUser();
-                }
-              },
-              error => this.showLoginError(error)
-            );
-          }, 200);
+          if (this.getShouldRedirect()) {
+            this.authService.redirectLoginUser();
+          }
         });
     }
   }
@@ -136,7 +116,7 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
 
     this.authService.login(this.getUserLogin())
       .subscribe(
-        () => null,
+        () => this.onConfigsLoadSuccessful(),
         error => this.showLoginError(error)
       );
   }
@@ -165,10 +145,8 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
     }, 500);
   }
 
-  private onConfigsLoadSuccessful(companyMaster: CompanyMaster, currencies: Currency[]) {
-    this.authService.saveConfigs(companyMaster, currencies);
+  private onConfigsLoadSuccessful() {
     const user = this.authService.currentUser;
-
     setTimeout(() => {
       this.alertService.stopLoadingMessage();
       this.isLoading = false;

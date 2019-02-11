@@ -84,7 +84,7 @@ export class OliveCurrenciesComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = OliveUtilities.convertToBase36(item.id);
+        retValue = this.id36(item.id);
         break;
       case Code:
         retValue = item.code;
@@ -99,7 +99,7 @@ export class OliveCurrenciesComponent extends OliveEntityListComponent {
         retValue = item.decimalPoint.toString();
         break;
       case CreatedUtc:
-        retValue = OliveUtilities.getShortDate(item.createdUtc);
+        retValue = this.date(item.createdUtc);
         break;
     }
 

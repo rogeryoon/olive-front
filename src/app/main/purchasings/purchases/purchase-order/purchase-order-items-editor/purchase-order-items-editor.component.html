@@ -55,9 +55,9 @@
     <ng-container matColumnDef="amount">
       <mat-header-cell *matHeaderCellDef>{{'purchaseOrderItems.amount' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row" class="justify-end pr-16">
-        {{row.Obj.price * row.Obj.quantity | money}}
+        {{numberFormat(row.Obj.price * row.Obj.quantity, standCurrency.decimalPoint)}}
       </mat-cell>
-      <mat-footer-cell *matFooterCellDef class="justify-end pr-16">{{totalAmount|money}}</mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef class="justify-end pr-16">{{numberFormat(totalAmount, standCurrency.decimalPoint)}}</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="discount">

@@ -33,7 +33,6 @@ import { OliveCompanyGroupSettingService } from './services/company-group-settin
 import { OliveCompanyMasterService } from './services/company-master.service';
 import { OliveCurrencyService } from 'app/main/supports/bases/services/currency.service';
 import { OliveEditPageComponent } from './components/edit-page/edit-page.component';
-import { OliveOnlyNumberDirective } from './directives/only-number.directive';
 import { OlivePlaceHolderDirective } from './directives/place-holder.directive';
 import { OliveBaseComponent } from './components/base/base.component';
 import { OliveEndpointBaseService } from './services/endpoint-base.service';
@@ -78,8 +77,7 @@ import { OlivePreviewDialogComponent } from './components/preview-dialog/preview
     OliveAddressEditorComponent,
     OliveEditPageComponent,
 
-    OlivePlaceHolderDirective,
-    OliveOnlyNumberDirective
+    OlivePlaceHolderDirective
   ],
   declarations: [
     OliveBaseComponent,
@@ -103,8 +101,7 @@ import { OlivePreviewDialogComponent } from './components/preview-dialog/preview
     OliveAddressEditorComponent,
     OliveEditPageComponent,
 
-    OlivePlaceHolderDirective,
-    OliveOnlyNumberDirective
+    OlivePlaceHolderDirective
   ],
   providers: [
     OliveDocumentService,

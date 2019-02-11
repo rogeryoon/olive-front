@@ -8,6 +8,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { IIDName } from 'app/core/models/id-name';
 import { ShortenPipe } from 'app/core/pipes/shorten.pipe';
 import { OliveUtilities } from 'app/core/classes/utilities';
+import { OliveBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'olive-chip-input',
@@ -26,7 +27,7 @@ import { OliveUtilities } from 'app/core/classes/utilities';
     }
   ]
 })
-export class OliveChipInputComponent implements OnInit, AfterViewInit, ControlValueAccessor, Validator {
+export class OliveChipInputComponent extends OliveBaseComponent implements OnInit, AfterViewInit, ControlValueAccessor, Validator {
   @ViewChild('chipInput') 
   private chipInput: ElementRef;
 
@@ -51,6 +52,7 @@ export class OliveChipInputComponent implements OnInit, AfterViewInit, ControlVa
     private _renderer: Renderer2
   ) 
   {
+    super();
   }
 
   ngOnInit() {
@@ -160,7 +162,7 @@ export class OliveChipInputComponent implements OnInit, AfterViewInit, ControlVa
   getChipName(chip: IIDName): string {
     let name =  '';
     if (this.showId) {
-      name = `${OliveUtilities.convertToBase36(chip.id)} : `;
+      name = `${this.id36(chip.id)} : `;
     }
 
     name += chip.name;

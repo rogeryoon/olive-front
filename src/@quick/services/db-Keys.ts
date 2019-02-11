@@ -23,5 +23,6 @@ export class DBkeys {
     // roger start
     public static readonly COMPANY_MASTER = 'company_master';
     public static readonly CURRENCIES = 'currencies';
+    public static readonly BRANCHES = 'branches';
     // roger end
 }

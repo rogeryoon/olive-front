@@ -25,6 +25,7 @@ import { OliveUtilities } from 'app/core/classes/utilities';
 import { locale as english } from '../../../core/i18n/en';
 import { OliveEditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import * as _ from 'lodash';
+import { OliveBaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'olive-entity-list',
@@ -32,7 +33,7 @@ import * as _ from 'lodash';
   animations: fuseAnimations,
   encapsulation: ViewEncapsulation.None
 })
-export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnInit {
+export class OliveEntityListComponent extends OliveBaseComponent implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild(DataTableDirective)
   dtElement: DataTableDirective;
   dtOptions: DataTables.Settings = {};
@@ -59,6 +60,7 @@ export class OliveEntityListComponent implements AfterViewInit, OnDestroy, OnIni
     protected dialog: MatDialog,
     protected dataService: OliveDataService)
   {
+    super();
     this.initializeComponent();
     this.initializeChildComponent();
   }

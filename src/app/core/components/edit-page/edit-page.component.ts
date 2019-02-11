@@ -11,6 +11,7 @@ import { locale as english } from '../../../core/i18n/en';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { OlivePlaceHolderDirective } from 'app/core/directives/place-holder.directive';
+import { OliveBaseComponent } from '../base/base.component';
 
 // https://angular.io/guide/dynamic-component-loader
 
@@ -32,7 +33,7 @@ export class EditPageSetting {
   animations: fuseAnimations,
   encapsulation: ViewEncapsulation.None
 })
-export class OliveEditPageComponent implements OnInit, OnDestroy, AfterViewInit {
+export class OliveEditPageComponent extends OliveBaseComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(OlivePlaceHolderDirective) placeHolder: OlivePlaceHolderDirective;
   componentRef: any;
 
@@ -44,6 +45,7 @@ export class OliveEditPageComponent implements OnInit, OnDestroy, AfterViewInit 
     private accountService: AccountService, private alertService: AlertService,
     private router: Router
   ) {
+    super();
     this.translater.loadTranslations(english);
   }
 
@@ -78,7 +80,7 @@ export class OliveEditPageComponent implements OnInit, OnDestroy, AfterViewInit 
         idString = this.setting.item.code;
       }
       else {
-        idString = OliveUtilities.convertToBase36(this.setting.item.id);
+        idString = this.id36(this.setting.item.id);
       }
     }
 

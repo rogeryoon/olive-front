@@ -19,7 +19,8 @@ import { UserLogin } from '../models/user-login.model';
 import { PermissionValues } from '../models/permission.model';
 import { CompanyMaster } from 'app/core/models/company-master.model';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
-import { forkJoin } from 'rxjs';
+import { concat } from 'rxjs';
+import { Branch } from 'app/main/supports/companies/models/branch.model';
 
 @Injectable()
 export class AuthService {
@@ -33,8 +34,14 @@ export class AuthService {
 
     private previousIsLoggedInCheck = false;
     private _loginStatus = new Subject<boolean>();
+    // roger start
+    private _isLoadingPreLoadData = false;
+    // roger end
 
-    constructor(private router: Router, private configurations: ConfigurationService, private endpointFactory: EndpointFactory, private localStorage: LocalStoreManager) {
+    constructor(
+        private router: Router, private configurations: ConfigurationService, 
+        private endpointFactory: EndpointFactory, private localStorage: LocalStoreManager
+    ) {
         this.initializeLoginStatus();
     }
 
@@ -66,8 +73,6 @@ export class AuthService {
             queryParamsHandling: "merge"
         };
 
-        console.log('redirectLoginUser', urlAndParams.firstPart, redirect);
-
         this.router.navigate([urlAndParams.firstPart], navigationExtras);
     }
 
@@ -75,13 +80,11 @@ export class AuthService {
         let redirect = this.logoutRedirectUrl ? this.logoutRedirectUrl : this.loginUrl;
         this.logoutRedirectUrl = null;
 
-        console.log('redirectLogoutUser', redirect);
         this.router.navigate([redirect]);
     }
 
     redirectForLogin() {
         this.loginRedirectUrl = this.router.url;
-        console.log('redirectForLogin', this.loginRedirectUrl);
         this.router.navigate([this.loginUrl]);
     }
 
@@ -106,10 +109,11 @@ export class AuthService {
             this.logout();
 
         return this.endpointFactory.getLoginEndpoint<LoginResponse>(user.userName, user.password)
-            .map(response => this.processLoginResponse(response, user.rememberMe));
+                .map(response => this.processLoginResponse(response, user.rememberMe));
     }
 
     private processLoginResponse(response: LoginResponse, rememberMe: boolean) {
+        this._isLoadingPreLoadData = true;
 
         let accessToken = response.access_token;
 
@@ -150,7 +154,38 @@ export class AuthService {
 
         this.reevaluateLoginStatus(user);
 
+        this.endpointFactory.getPreLoadDataEndpoint<any>()
+        .subscribe(
+            response => this.processPreLoadResponse(response.model),
+            error => console.error(error)
+        );
+
         return user;
+    }
+
+    private processPreLoadResponse(data: any) {
+        const companyMaster = data.companyMaster;
+        const currencies = data.currencies;
+        const branches = data.branches;
+
+        if (this.rememberMe) {
+            this.localStorage.savePermanentData(companyMaster, DBkeys.COMPANY_MASTER);
+            this.localStorage.savePermanentData(currencies, DBkeys.CURRENCIES);
+            this.localStorage.savePermanentData(branches, DBkeys.BRANCHES);
+        }
+        else {
+            this.localStorage.saveSyncedSessionData(companyMaster, DBkeys.COMPANY_MASTER);
+            this.localStorage.saveSyncedSessionData(currencies, DBkeys.CURRENCIES);
+            this.localStorage.saveSyncedSessionData(branches, DBkeys.BRANCHES);
+        }
+
+        this._isLoadingPreLoadData = false;
+
+        this.reevaluateLoginStatus();
+
+        setTimeout(() => {
+            this._loginStatus.next(true);
+        });        
     }
 
     private saveUserDetails(user: User, permissions: PermissionValues[], accessToken: string, refreshToken: string, expiresIn: Date, rememberMe: boolean) {
@@ -173,32 +208,24 @@ export class AuthService {
     }
 
     // roger start
-    public saveConfigs(companyMaster: CompanyMaster, currencies: Currency[]) {
-        if (this.rememberMe) {
-            this.localStorage.savePermanentData(companyMaster, DBkeys.COMPANY_MASTER);
-            this.localStorage.savePermanentData(currencies, DBkeys.CURRENCIES);
-        }
-        else {
-            this.localStorage.saveSyncedSessionData(companyMaster, DBkeys.COMPANY_MASTER);
-            this.localStorage.saveSyncedSessionData(currencies, DBkeys.CURRENCIES);
-        }
-    }
-    // roger end
-
-    logout(): void {
+    clearLoginStatus() {
         this.localStorage.deleteData(DBkeys.ACCESS_TOKEN);
         this.localStorage.deleteData(DBkeys.REFRESH_TOKEN);
         this.localStorage.deleteData(DBkeys.TOKEN_EXPIRES_IN);
         this.localStorage.deleteData(DBkeys.USER_PERMISSIONS);
         this.localStorage.deleteData(DBkeys.CURRENT_USER);
 
-        // roger start
         this.localStorage.deleteData(DBkeys.COMPANY_MASTER);
         this.localStorage.deleteData(DBkeys.CURRENCIES);
-        // roger end
+        this.localStorage.deleteData(DBkeys.BRANCHES);
 
         this.configurations.clearLocalChanges();
+    }
 
+    // roger end
+
+    logout(): void {
+        this.clearLoginStatus();
         this.reevaluateLoginStatus();
     }
 
@@ -206,10 +233,12 @@ export class AuthService {
         let user = currentUser || this.localStorage.getDataObject<User>(DBkeys.CURRENT_USER);
         let isLoggedIn = user != null;
 
-        if (this.previousIsLoggedInCheck != isLoggedIn) {
-            setTimeout(() => {
-                this._loginStatus.next(isLoggedIn);
-            });
+        if (!this._isLoadingPreLoadData) {
+            if (this.previousIsLoggedInCheck != isLoggedIn) {
+                setTimeout(() => {
+                    this._loginStatus.next(isLoggedIn);
+                });
+            }
         }
 
         this.previousIsLoggedInCheck = isLoggedIn;
@@ -237,7 +266,6 @@ export class AuthService {
     }
 
     get accessTokenExpiryDate(): Date {
-
         this.reevaluateLoginStatus();
         return this.localStorage.getDataObject<Date>(DBkeys.TOKEN_EXPIRES_IN, true);
     }
@@ -251,7 +279,6 @@ export class AuthService {
     }
 
     get refreshToken(): string {
-
         this.reevaluateLoginStatus();
         return this.localStorage.getData(DBkeys.REFRESH_TOKEN);
     }
@@ -276,6 +303,10 @@ export class AuthService {
     get standCurrency(): Currency {
         if (!this.currencies) { return null; }
         return this.currencies.find(c => c.primary);
+    }
+
+    get branches(): Branch[] {
+        return this.localStorage.getDataObject<Branch[]>(DBkeys.BRANCHES) || [];
     }
     // roger end
 }

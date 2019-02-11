@@ -52,7 +52,7 @@ export class OliveProductVariantLookupDialogComponent extends OliveLookupDialogC
       let retValue = '';
       switch (columnName) {
         case Id:
-          retValue = OliveUtilities.convertToBase36(item.id);
+          retValue = this.id36(item.id);
           break;
 
         case Name:

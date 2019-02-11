@@ -66,7 +66,7 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
 
   resetForm() {
     this.oForm.reset({
-      id: OliveUtilities.convertToBase36(this.item.id),
+      id: this.id36(this.item.id),
       code: this.item.code || '',
       name: this.item.name || '',
       companyFk: this.item.companyFk || '',

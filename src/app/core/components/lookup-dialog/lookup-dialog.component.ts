@@ -19,6 +19,7 @@ import { OliveEditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { OliveChipInputComponent } from '../chip-input/chip-input.component';
 import { IIDName } from 'app/core/models/id-name';
 import { NameValue } from 'app/core/models/name-value';
+import { OliveBaseComponent } from '../base/base.component';
 
 const Id = 'id';
 const Code = 'code';
@@ -30,7 +31,7 @@ const Custom = 'custom';
   templateUrl: './lookup-dialog.component.html',
   styleUrls: ['./lookup-dialog.component.scss']
 })
-export class OliveLookupDialogComponent implements OnInit {
+export class OliveLookupDialogComponent extends OliveBaseComponent implements OnInit {
   @ViewChild(OliveChipInputComponent)
   chipInput: OliveChipInputComponent;
 
@@ -69,6 +70,7 @@ export class OliveLookupDialogComponent implements OnInit {
     private messageHelper: OliveMessageHelperService,
     private deviceService: DeviceDetectorService
   ) {
+    super();
     this.initializeComponent();
   }
 
@@ -305,7 +307,7 @@ export class OliveLookupDialogComponent implements OnInit {
       let retValue = '';
       switch (columnName) {
         case Id:
-          retValue = OliveUtilities.convertToBase36(item.id);
+          retValue = this.id36(item.id);
           break;
 
         case Code:

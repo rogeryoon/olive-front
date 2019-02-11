@@ -46,7 +46,7 @@ export class OliveCompanyGroupSettingEditorComponent extends OliveEntityFormComp
 
   resetForm() {
     this.oForm.reset({
-      id: OliveUtilities.convertToBase36(this.item.id),
+      id: this.id36(this.item.id),
       purchasingEnabled: this.item.purchasingEnabled || false,
       thirdpartyEnabled: this.item.thirdpartyEnabled || false,
       shippingAgentEnabled: this.item.shippingAgentEnabled || false,

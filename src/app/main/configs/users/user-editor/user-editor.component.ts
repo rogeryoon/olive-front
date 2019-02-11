@@ -21,6 +21,7 @@ import { CompanyGroup } from 'app/main/supports/companies/models/company-group.m
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { locale as english } from '../../../../core/i18n/en';
+import { OliveBaseComponent } from 'app/core/components/base/base.component';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -33,7 +34,7 @@ const CreateUtc = 'createdUtc';
   templateUrl: './user-editor.component.html',
   styleUrls: ['./user-editor.component.scss']
 })
-export class OliveUserEditorComponent implements OnChanges, OnDestroy {
+export class OliveUserEditorComponent extends OliveBaseComponent implements OnChanges, OnDestroy {
 
   @ViewChild('form')
   private form: NgForm;
@@ -114,6 +115,7 @@ export class OliveUserEditorComponent implements OnChanges, OnDestroy {
     private dialog: MatDialog,
     private companyGroupService: OliveCompanyGroupService
   ) {
+    super();
     this.translater.loadTranslations(english);
     this.buildForm();
   }
@@ -288,7 +290,7 @@ export class OliveUserEditorComponent implements OnChanges, OnDestroy {
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = OliveUtilities.convertToBase36(item.id);
+        retValue = this.id36(item.id);
         break;
 
       case Name:

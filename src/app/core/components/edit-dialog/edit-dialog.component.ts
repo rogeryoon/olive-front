@@ -9,6 +9,7 @@ import { locale as english } from '../../../core/i18n/en';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { OlivePlaceHolderDirective } from 'app/core/directives/place-holder.directive';
+import { OliveBaseComponent } from '../base/base.component';
 
 // https://angular.io/guide/dynamic-component-loader
 
@@ -17,7 +18,7 @@ import { OlivePlaceHolderDirective } from 'app/core/directives/place-holder.dire
   templateUrl: './edit-dialog.component.html',
   styleUrls: ['./edit-dialog.component.scss']
 })
-export class OliveEditDialogComponent implements OnInit, OnDestroy, AfterViewInit {
+export class OliveEditDialogComponent extends OliveBaseComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(OlivePlaceHolderDirective) placeHolder: OlivePlaceHolderDirective;
   componentRef: any;
 
@@ -34,7 +35,7 @@ export class OliveEditDialogComponent implements OnInit, OnDestroy, AfterViewIni
       }
       else
       {
-        idString = OliveUtilities.convertToBase36(this.setting.data.item.id);
+        idString = this.id36(this.setting.data.item.id);
       }
     }
 
@@ -52,6 +53,7 @@ export class OliveEditDialogComponent implements OnInit, OnDestroy, AfterViewIni
     @Inject(MAT_DIALOG_DATA) public setting: OliveDialogSetting,
     private accountService: AccountService
   ) {
+    super();
     this.translater.loadTranslations(english);
   }
 

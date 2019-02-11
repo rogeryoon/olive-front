@@ -33,7 +33,7 @@
           <mat-error *ngIf="hasArrayEntryError('amount',i)">{{arrayErrorMessage('amount',i)}}</mat-error>
         </mat-form-field>
       </mat-cell>
-      <mat-footer-cell *matFooterCellDef class="justify-end pr-40">{{totalAmount|money}}</mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef class="justify-end pr-40">{{numberFormat(totalAmount, standCurrency.decimalPoint)}}</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="remarkId">

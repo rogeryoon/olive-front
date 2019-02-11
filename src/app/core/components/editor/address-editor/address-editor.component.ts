@@ -60,7 +60,7 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
 
   resetForm() {
     this.oForm.reset({
-      id: OliveUtilities.convertToBase36(this.item.id),
+      id: this.id36(this.item.id),
       address1: this.item.address1 || '',
       address2: this.item.address2 || '',
       city: this.item.city || '',
