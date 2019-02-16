@@ -62,7 +62,7 @@ export class OliveDocumentService {
       '</style>';
   }
 
-  private noItemSelected(): boolean {
+  private get noItemSelected(): boolean {
     const selectedCheckboxExists = $('input[name="select"]:checked').length > 0;
 
     if (!selectedCheckboxExists) {
@@ -76,20 +76,46 @@ export class OliveDocumentService {
     return false;
   }
 
-  exportExcel(fileName: string, tableId: string): void {
-    if (this.noItemSelected()) { return; }
+  exportExcel(fileName: string, tableId: string, selectable = true, summaries: string[] = []): void {
+    if (selectable && this.noItemSelected) { return; }
 
     const workbook = new Excel.Workbook();
 
     const worksheet = workbook.addWorksheet(fileName);
-    worksheet.views = [
-      { state: 'frozen', xSplit: 0, ySplit: 1 }
-    ];
 
     const table = $(`#${tableId}`);
+    
+    let rowIndex = this.setExcelSummaries(worksheet, summaries);
+
+    rowIndex = this.setExcelColsHeader(table, worksheet, rowIndex);
+
+    this.setExcelTbodyTable(table, worksheet, selectable, rowIndex);
+
+    workbook.xlsx.writeBuffer().then(function (data): void {
+      const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      FileSaver.saveAs(blob, `${fileName}.xlsx`);
+    });
+  }
+
+  private setExcelSummaries(worksheet: any, summaries: string[]) {
+    let rowIndex = 0;
+    summaries.forEach(summary => {
+      rowIndex++;
+      worksheet.mergeCells(`A${rowIndex}:B${rowIndex}`);
+      worksheet.getCell(`A${rowIndex}`).value = summary;
+    });
+    return rowIndex;
+  }
+
+  private setExcelColsHeader(table: any, worksheet: any, rowIndex: number) {
+    if (rowIndex === 0) {
+      worksheet.views = [
+        { state: 'frozen', xSplit: 0, ySplit: 1 }
+      ];
+    }
 
     const columns = [];
-
+    const columnTitles = [];
     let excelColumnCharIndex = '@';
 
     table.children('thead').find('th').each(function (): void {
@@ -97,6 +123,7 @@ export class OliveDocumentService {
         excelColumnCharIndex = String.fromCharCode(excelColumnCharIndex.charCodeAt(0) + 1);
 
         const columnTitle = this.textContent.trim();
+        columnTitles.push(columnTitle);
 
         let colWidth = 10;
         let style;
@@ -108,18 +135,16 @@ export class OliveDocumentService {
               colWidth = 10;
               style = { alignment: { vertical: 'middle', horizontal: 'center' } };
             }
-            else
-              if (columnType === 'money') {
-                colWidth = 10;
-                style = { alignment: { vertical: 'middle', horizontal: 'right' } };
-              }
-              else
-                if (columnType === 'text') {
-                  style = { alignment: { vertical: 'middle', horizontal: 'left', indent: 1 } };
-                }
-                else {
-                  style = { alignment: { vertical: 'middle', horizontal: 'center' } };
-                }
+            else if (columnType === 'number') {
+              colWidth = 10;
+              style = { alignment: { vertical: 'middle', horizontal: 'right' } };
+            }
+            else if (columnType === 'text') {
+              style = { alignment: { vertical: 'middle', horizontal: 'left', indent: 1, wrapText: true } };
+            }
+            else {
+              style = { alignment: { vertical: 'middle', horizontal: 'center' } };
+            }
           }
           else
             if (/-ex-width-.*/.test(this.classList[i])) {
@@ -127,7 +152,7 @@ export class OliveDocumentService {
             }
         }
 
-        const columnDefinition = { header: columnTitle, key: columnTitle, width: colWidth };
+        const columnDefinition = { key: columnTitle, width: colWidth };
 
         if (style) {
           columnDefinition['style'] = style;
@@ -137,36 +162,47 @@ export class OliveDocumentService {
       }
     });
 
-    worksheet.autoFilter = `A1${excelColumnCharIndex}1`;
+    if (rowIndex === 0) {
+      worksheet.autoFilter = `A1${excelColumnCharIndex}1`;
+    }
     worksheet.columns = columns;
 
-    const headerRow = worksheet.getRow(1);
+    rowIndex++;
+
+    worksheet.getRow(rowIndex).values = columnTitles;
+    const headerRow = worksheet.getRow(rowIndex);
     headerRow.font = { name: 'Calibri', family: 4, size: 12, bold: true, color: { argb: 'FF335EFF' } };
     headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
-    headerRow.height = 25;
+    headerRow.height = 30;
 
-    let rowIndex = 1;
-    const rows = [];
+    headerRow.eachCell(function(cell) {
+      cell.border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+    });
+
+    return rowIndex;
+  }
+
+  private setExcelTbodyTable(table: any, worksheet: any, selectable: boolean, rowIndex: number) {
+    let makeRow = false;
 
     table.children('tbody').find('tr').each(function (): void {
       rowIndex++;
       const $this = $(this);
 
       if (this.classList.contains('print')) {
-
         const checkBoxes = $this.children('td').find('input');
 
-        if (
-          checkBoxes.length === 1 &&
-          checkBoxes[0].classList.contains('select') &&
-          (<HTMLInputElement>checkBoxes[0]).checked
-        ) {
+        makeRow = !selectable ||
+          (selectable &&
+            checkBoxes.length === 1 &&
+            checkBoxes[0].classList.contains('select') &&
+            (<HTMLInputElement>checkBoxes[0]).checked
+          );
 
+        if (makeRow) {
           const newRow = worksheet.getRow(rowIndex);
           newRow.font = { name: 'Calibri', family: 4, size: 10 };
-          newRow.height = 20;
-
-          const rowCols = [];
+          newRow.height = 25;
 
           let colIndex = 0;
           $this.children('td').each(function (): void {
@@ -179,33 +215,48 @@ export class OliveDocumentService {
                 if (/-ex-type-.*/.test(this.classList[i])) {
                   const columnType = this.classList[i].replace('-ex-type-', '');
 
-                  if (columnType === 'money') {
+                  if (columnType === 'number') {
                     let amount = parseFloat(columnValue.replace(/,/g, ''));
                     if (isNaN(amount)) { amount = 0.0; }
                     newRow.getCell(colIndex).value = amount;
                   }
                   else {
-                    newRow.getCell(colIndex).value = columnValue;
+                    newRow.getCell(colIndex).value = columnValue.toString();
                   }
                   break;
                 }
               }
             }
           });
+
+          newRow.eachCell(function(cell) {
+            cell.border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+          });
         }
       }
     });
+  }
 
-    worksheet.addRows(rows);
+  printPage(documentTitle: string, styleId: string, bodyId: string) {
+    const pwin = window.open('');
 
-    const buff = workbook.xlsx.writeBuffer().then(function (data): void {
-      const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      FileSaver.saveAs(blob, `${fileName}.xlsx`);
-    });
+    pwin.document.write(`<html><head><title>${documentTitle}</title>`);
+    for (let i = $('style').length - 1; i >= 0; i--) {
+      if ($('style')[i].outerHTML.indexOf(styleId) !== -1) {
+        pwin.document.write($('style')[i].outerHTML);
+        break;
+      }
+    }
+    pwin.document.write('</head><body>');
+    pwin.document.write($(`#${bodyId}`).html());
+    pwin.document.write('</body></html>');
+
+    pwin.print();
+    pwin.close();
   }
 
   printTable(documentTitle: string, tableId: string): void {
-    if (this.noItemSelected()) { return; }
+    if (this.noItemSelected) { return; }
 
     const pwin = window.open('');
 
@@ -305,17 +356,17 @@ export class OliveDocumentService {
             binary += String.fromCharCode(bytes[i]);
           }
 
-          const workbook = XLSX.read(binary, {type: 'binary', cellDates: true, cellStyles: true});
+          const workbook = XLSX.read(binary, { type: 'binary', cellDates: true, cellStyles: true });
 
           const sheetNames = workbook.SheetNames;
 
           const target = document.querySelector('#import-table');
-          
+
           // Browser Thread 동적 Table Append Redering이 끝난후 Datatable을 Render해야 한다.
           // create an observer instance
-          const observer = new MutationObserver(function(mutations): void {
-            $('#import-table').DataTable().destroy(); 
-            $('#import-table').DataTable(); 
+          const observer = new MutationObserver(function (mutations): void {
+            $('#import-table').DataTable().destroy();
+            $('#import-table').DataTable();
 
             $(tableIdExp).show();
 
@@ -323,11 +374,11 @@ export class OliveDocumentService {
 
             outThis.onImportTableRendered.next(exceljson);
           });
-          
+
           // configuration of the observer:
           const config = { attributes: true, childList: true, characterData: true };
           // pass in the target node, as well as the observer options
-          observer.observe(target, config);          
+          observer.observe(target, config);
 
           $(tableIdExp).hide();
 
@@ -393,5 +444,5 @@ export class OliveDocumentService {
     const headerThead$ = $('<thead/>').append(headerTr$);
     $(tableid).append(headerThead$);
     return columnSet;
-  }  
+  }
 }

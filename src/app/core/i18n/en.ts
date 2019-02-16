@@ -58,8 +58,7 @@ export const locale = {
                 'sessionExpired' : 'Session Expired',
                 'confirm' : '확인',
                 'errorConfirm' : '오류 알림',
-                'duplicated' : '중복 오류 알림',
-                'preview' : '미리보기'
+                'duplicated' : '중복 오류 알림'
             },
             'button': {
                 'save' : '저장',

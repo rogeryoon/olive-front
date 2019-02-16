@@ -18,6 +18,8 @@ export class OlivePreviewDialogComponent implements OnInit, OnDestroy {
   @ViewChild(OlivePlaceHolderDirective) placeHolder: OlivePlaceHolderDirective;
   componentRef: any;
 
+  createdComponent: OliveOnPreview;
+
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
     public dialogRef: MatDialogRef<OliveSearchDialogComponent>,
@@ -42,14 +44,20 @@ export class OlivePreviewDialogComponent implements OnInit, OnDestroy {
     viewContainerRef.clear();
 
     this.componentRef = viewContainerRef.createComponent(componentFactory);
-    (<OliveOnPreview>this.componentRef.instance).data = this.dialog.data;
+
+    this.createdComponent = (<OliveOnPreview>this.componentRef.instance);
+    this.createdComponent.data = this.dialog.data;
   }
 
   print() {
-
+    this.createdComponent.onPrint();
   }
 
+  excel() {
+    this.createdComponent.onExcel();
+  }  
+
   cancel() {
-    
+    this.dialogRef.close(null);
   }
 }

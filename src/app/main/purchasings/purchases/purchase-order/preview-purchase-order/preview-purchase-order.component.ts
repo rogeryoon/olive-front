@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
@@ -7,7 +8,9 @@ import { PurchaseOrder } from '../../models/purchase-order.model';
 import { OliveBaseComponent } from 'app/core/components/base/base.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { locale as english } from '../../i18n/en';
-import { ValueConverter } from '@angular/compiler/src/render3/view/template';
+import { OliveCompanyService } from 'app/main/supports/companies/services/company.service';
+import { OliveDocumentService } from 'app/core/services/document.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'olive-preview-purchase-order',
@@ -17,11 +20,13 @@ import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent implements OliveOnPreview, OnInit {
   order: PurchaseOrder;
   digits: number;
+  companyHtml: string;
 
   constructor(
-    private translater: FuseTranslationLoaderService,
-    private cacheService: OliveCacheService
-  ) { 
+    private translater: FuseTranslationLoaderService, private cacheService: OliveCacheService,
+    private companyService: OliveCompanyService, private documentService: OliveDocumentService,
+    private http: HttpClient, protected sanitizer: DomSanitizer
+  ) {
     super();
 
     this.translater.loadTranslations(english);
@@ -31,6 +36,31 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
     super.ngOnInit();
     this.standCurrency = this.cacheService.standCurrency;
     this.digits = this.standCurrency.decimalPoint;
+
+    this.loadCompany();
+  }
+
+  loadCompany() {
+    this.cacheService.getItem(this.companyService, 'company', this.order.warehouseFk.companyId)
+    .then(item => {
+      this.renderCompanyHtml(item);  
+    });  
+  }
+
+  renderCompanyHtml(company: any) {
+    const values = [];
+
+    this.companyHtml = `<strong>${company.name}</strong><br>`;
+
+    if (company.addressFk) {
+      values.push(this.address(company.addressFk));
+    }
+
+    if (company.phoneNumber) {
+      values.push(company.phoneNumber);
+    }
+
+    this.companyHtml += '<p>' + values.join('<br>') + '</p>';
   }
 
   set data(value: any) {
@@ -49,12 +79,18 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
   }
 
   get grandTotal(): number {
-    return this.subTotal + this.order.freightAmount - 
+    return this.subTotal + this.order.freightAmount -
       this.order.addedDiscountAmount + this.order.taxAmount;
   }
-  
+
   get paymentSummary(): string {
-    return 'test';
+    const values = [];
+
+    this.order.purchaseOrderPayments.forEach(payment => {
+      values.push(`${payment.code}: ${this.numberFormat(payment.amount, this.digits)}`);
+    });
+
+    return values.join(' / ');
   }
 
   get vendor(): string {
@@ -82,18 +118,50 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
 
     values.push(`<strong>${fk.name} [${fk.code}]</strong>`);
 
-    if (fk.companyMasterBranchFk) {
-      // values.push(fk.companyMasterBranchFk.a);
-    }
+    if (fk.companyMasterBranchId) {
+      const branch = this.cacheService.branches.find(b => b.id === fk.companyMasterBranchId);
 
-    // if (fk.phoneNumber) {
-    //   values.push(fk.phoneNumber);
-    // }
+      if (branch.addressFk) {
+        values.push(this.address(branch.addressFk));
+      }
+
+      if (branch.phoneNumber) {
+        values.push(branch.phoneNumber);
+      }
+    }
 
     return values.join('<br>');
   }
 
   onPrint() {
+    this.documentService.printPage(
+      `Purchase Order ${this.id36(this.order.id)}`, 
+      'olivestyle', 'olive-container'
+    );
+  }
 
+  onExcel() {
+    const summaries = [];
+
+    summaries.push(`PO # : ${this.id36(this.order.id)}`);
+    summaries.push(`Date : ${this.date(this.order.date)}`);
+
+    const vfk = this.order.vendorFk;
+    summaries.push(`Vendor : ${vfk.name} [${vfk.code}]`);
+
+    const wfk = this.order.warehouseFk;
+    summaries.push(`Warehouse : ${wfk.name} [${wfk.code}]`);
+
+    summaries.push(`${this.translater.get('previewPurchaseOrder.subTotal')} : ${this.numberFormat(this.subTotal, this.digits)}`);
+    summaries.push(`${this.translater.get('previewPurchaseOrder.freight')} : ${this.numberFormat(this.order.freightAmount, this.digits)}`);
+    summaries.push(`${this.translater.get('previewPurchaseOrder.addedDiscount')} : ${this.numberFormat(this.order.addedDiscountAmount * -1, this.digits)}`);
+    summaries.push(`${this.translater.get('previewPurchaseOrder.tax')} : ${this.numberFormat(this.order.taxAmount, this.digits)}`);
+    summaries.push(`${this.translater.get('previewPurchaseOrder.grandTotal')} : ${this.numberFormat(this.grandTotal, this.digits)}`);
+
+    this.documentService.exportExcel(
+      `PO-${this.id36(this.order.id)}`,
+      'olive-table', false,
+      summaries
+    );
   }
 }

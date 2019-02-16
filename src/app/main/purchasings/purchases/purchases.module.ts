@@ -26,6 +26,7 @@ import { OliveProductVariantManagerModule } from 'app/main/productions/products/
 import { OliveProductManagerModule } from 'app/main/productions/products/product/product-manager/product-manager.module';
 import { OlivePurchasingMiscEndpointService, OlivePurchasingMiscService } from './services/purchasing-misc.service';
 import { OlivePreviewPurchaseOrderComponent } from './purchase-order/preview-purchase-order/preview-purchase-order.component';
+import { OliveCompanyService } from 'app/main/supports/companies/services/company.service';
 
 const routes = [
   {
@@ -72,7 +73,8 @@ const routes = [
     OlivePaymentMethodService,
     OliveProductVariantService,
     OlivePurchasingMiscEndpointService,
-    OlivePurchasingMiscService
+    OlivePurchasingMiscService,
+    OliveCompanyService
   ],
   entryComponents: [
     OlivePurchaseOrderManagerComponent,

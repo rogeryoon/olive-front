@@ -64,9 +64,9 @@ export class OliveProductsComponent extends OliveEntityListComponent {
         // 3
         { data: Name, thName: 'Name', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         // 4
-        { data: MinPrice, thName: 'Min', tdClass: 'print right -ex-type-money', thClass: 'print -ex-type-money' },
+        { data: MinPrice, thName: 'Min', tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 5
-        { data: MaxPrice, thName: 'Max', tdClass: 'print right -ex-type-money', thClass: 'print -ex-type-money' },
+        { data: MaxPrice, thName: 'Max', tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 6
         { data: VariantCount, thName: 'Types', tdClass: '', thClass: '' },
         // 7

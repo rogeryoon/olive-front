@@ -77,7 +77,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         // 4
         { data: ItemsName, orderable: false, thName: 'Items', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 5
-        { data: TotalDueAmount, thName: 'Amount', tdClass: 'print right -ex-type-money', thClass: 'print -ex-type-money' },
+        { data: TotalDueAmount, thName: 'Amount', tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 6
         { data: PaymentsName, orderable: false, thName: 'Payment', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 7

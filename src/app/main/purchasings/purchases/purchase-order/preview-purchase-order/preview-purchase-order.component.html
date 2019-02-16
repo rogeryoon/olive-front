@@ -1,6 +1,7 @@
 <style>
     @import "https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700";
 
+    olivestyle,
     html,
     body,
     div,
@@ -143,7 +144,7 @@
         font-weight: 700
     }
 
-    #container {
+    #olive-container {
         position: relative;
         padding: 10px;
     }
@@ -174,9 +175,10 @@
         font-size: 85%
     }
 
-    #header>#logo {
-        width: 50%;
-        float: left
+    #header>#company {
+        width: 45%;
+        float: left;
+        font-size: 85%
     }
 
     #fromto {
@@ -203,8 +205,8 @@
         padding: 1.5%
     }
 
-    #from > div,
-    #to > div {
+    #from>div,
+    #to>div {
         padding-bottom: 5px;
         text-transform: uppercase;
         font-weight: 400;
@@ -233,7 +235,8 @@
 
     #items>table th {
         font-weight: 400;
-        padding: 1px 4px
+        padding: 1px 4px;
+        text-align: center;
     }
 
     #items>table td {
@@ -259,17 +262,24 @@
         padding-right: 1%
     }
 
-    #items>table tr:nth-child(even){background-color: #F5F5F5;}
+    #items>table tr:nth-child(even) {
+        background-color: #F5F5F5;
+    }
+
+    #items>table td:nth-child(1) {
+        text-align: center;
+    }
 
     #items>table td:nth-child(2),
-    #items>table td:nth-child(7)
-    {
+    #items>table td:nth-child(7) {
         text-align: justify;
+        font-size: 9px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     #items table td {
         border-right: solid grey 1px
-    }    
+    }
 
     #items table tr td {
         padding-top: 3px;
@@ -334,10 +344,9 @@
     }
 </style>
 
-<div id="container">
+<div id="olive-container">
     <div id="header">
-        <div id="logo">
-            <img src="http://placehold.it/230x70&text=logo" alt="">
+        <div id="company" [innerHTML]="companyHtml">
         </div>
         <div id="reference">
             <h3><strong>Purchase Order</strong></h3>
@@ -361,25 +370,29 @@
 
     <div id="items">
         <p>{{'previewPurchaseOrder.payments' | translate}} : {{paymentSummary}}</p>
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>QTY</th>
-                <th>Price</th>
-                <th>Discount</th>
-                <th>Due</th>
-                <th>Remark</th>
-            </tr>
-            <tr *ngFor="let item of order.purchaseOrderItems">
-                <td>{{id36(item.id)}}</td>
-                <td>{{item.name}}</td>
-                <td>{{numberFormat(item.quantity)}}</td>
-                <td>{{numberFormat(item.price, digits)}}</td>
-                <td>{{numberFormat(item.discount*-1, digits, '0')}}</td>
-                <td>{{numberFormat(item.quantity*item.price-item.discount, digits)}}</td>
-                <td>{{item.remarks}}</td>
-            </tr>
+        <table id="olive-table">
+            <thead>
+                <tr>
+                    <th class="print -ex-type-id">ID</th>
+                    <th class="print -ex-type-text -ex-width-60">Name</th>
+                    <th class="print -ex-type-number">QTY</th>
+                    <th class="print -ex-type-number">Price</th>
+                    <th class="print -ex-type-number">Discount</th>
+                    <th class="print -ex-type-number">Due</th>
+                    <th class="print -ex-type-text">Remark</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of order.purchaseOrderItems" class="print">
+                    <td class="print -ex-type-id">{{id36(item.id)}}</td>
+                    <td class="print -ex-type-text">{{item.name}}</td>
+                    <td class="print -ex-type-number">{{numberFormat(item.quantity)}}</td>
+                    <td class="print -ex-type-number">{{numberFormat(item.price, digits)}}</td>
+                    <td class="print -ex-type-number">{{numberFormat(item.discount*-1, digits, '0')}}</td>
+                    <td class="print -ex-type-number">{{numberFormat(item.quantity*item.price-item.discount, digits)}}</td>
+                    <td class="print -ex-type-text">{{item.remarks}}</td>
+                </tr>
+            </tbody>
         </table>
     </div>
 
@@ -405,7 +418,7 @@
                 <tr>
                     <td>{{'previewPurchaseOrder.tax' | translate}}</td>
                     <td>{{numberFormat(order.taxAmount, digits)}}</td>
-                </tr>                
+                </tr>
                 <tr>
                     <td>{{'previewPurchaseOrder.grandTotal' | translate}}</td>
                     <td>{{numberFormat(grandTotal, digits)}}</td>

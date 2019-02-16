@@ -13,6 +13,8 @@ import { OliveChunkDataService } from './chunk-data.service';
 import { CompanyMaster } from '../models/company-master.model';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
 import { Branch } from 'app/main/supports/companies/models/branch.model';
+import { OliveDataService } from '../interfaces/data-service';
+import { Observable, of } from 'rxjs';
 
 interface CacheContent {
   expiry: number;
@@ -26,6 +28,7 @@ export class OliveCacheService {
 
   private companyGroupMutex = new Mutex();
   private chunkItemsMutexes = new Map<string, Mutex>();
+  private dataMutexes = new Map<string, Mutex>();
 
   private _companyMaster: CompanyMaster;
   private _currencies: Currency[];
@@ -94,6 +97,33 @@ export class OliveCacheService {
 
     return setting;
   }
+
+  async getItem(dataService: OliveDataService, key: string, id: number): Promise<any> {
+    let item: any = null;
+
+    const cacheKey = key + id;
+
+    if (!this.dataMutexes.has(cacheKey)) {
+      this.dataMutexes.set(cacheKey, new Mutex());
+    }
+
+    const unlock = await this.dataMutexes.get(cacheKey).lock();
+      if (!this.exist(cacheKey)) {
+        try {
+          const response = await dataService.getItem(id).toPromise();
+          item = this.set(cacheKey, response.model);
+        }
+        catch (error) {
+          this.messageHelper.showLoadFaild(error);
+        }
+      }
+      else {
+        item = this.get(cacheKey);
+      }
+    unlock();
+
+    return item;
+  }  
 
   async getChunkItems(key: string): Promise<any> {
     let items: any = null;

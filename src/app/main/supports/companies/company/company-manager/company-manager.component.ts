@@ -52,6 +52,7 @@ export class OliveCompanyManagerComponent extends OliveEntityEditComponent {
       code: company.code,
       name: company.name,
       memo: company.memo,
+      phoneNumber: company.phoneNumber,
       activated: company.activated,
       addressFk: address,
       companyGroupId : company.companyGroupFk.id

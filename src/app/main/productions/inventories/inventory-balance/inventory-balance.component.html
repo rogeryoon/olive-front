@@ -73,10 +73,10 @@
                   <td class="print -ex-type-id">{{ (inventory.productId).toString(36) | uppercase }}</td>
                   <td class="print left -ex-type-text">{{ inventory.productName }}</td>
                   <td class="print left -ex-type-text">{{ inventory.variantName }}</td>
-                  <td class="print -ex-type-money">{{ inventory.totalQty }}</td>
-                  <td class="print -ex-type-money">{{ inventory.orderedQty }}</td>
-                  <td class="print right -ex-type-money">{{ inventory.standPrice ? (inventory.standPrice | number: '1.2-2') : '' }}</td>
-                  <td class="print -ex-type-money">{{ inventory.priceDue ? (inventory.priceDue | number: '1.2-2') : '-' }}</td>
+                  <td class="print -ex-type-number">{{ inventory.totalQty }}</td>
+                  <td class="print -ex-type-number">{{ inventory.orderedQty }}</td>
+                  <td class="print right -ex-type-number">{{ inventory.standPrice ? (inventory.standPrice | number: '1.2-2') : '' }}</td>
+                  <td class="print -ex-type-number">{{ inventory.priceDue ? (inventory.priceDue | number: '1.2-2') : '-' }}</td>
                 </tr>
                 <tr *ngIf="inventories?.length == 0">
                   <td colspan="8" class="no-data-available">{{'common.message.noRecordsFound' | translate}}</td>

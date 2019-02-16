@@ -66,8 +66,8 @@
                   </th>
                   <th class="print -ex-type-id">ID</th>
                   <th class="print -ex-type-text -ex-width-60">Name</th>
-                  <th class="print -ex-type-money">Min</th>
-                  <th class="print -ex-type-money">Max</th>
+                  <th class="print -ex-type-number">Min</th>
+                  <th class="print -ex-type-number">Max</th>
                   <th>Types</th>
                   <th>Date</th>
                 </tr>
@@ -79,8 +79,8 @@
                   </td>
                   <td class="print -ex-type-id">{{ (product.id).toString(36) | uppercase }}</td>
                   <td class="print left -ex-type-text">{{ product.name }}</td>
-                  <td class="print right -ex-type-money">{{ product.minPrice ? (product.minPrice | number: '1.2-2') : '' }}</td>
-                  <td class="print right -ex-type-money">{{ product.maxPrice ? (product.maxPrice | number: '1.2-2') : '' }}</td>
+                  <td class="print right -ex-type-number">{{ product.minPrice ? (product.minPrice | number: '1.2-2') : '' }}</td>
+                  <td class="print right -ex-type-number">{{ product.maxPrice ? (product.maxPrice | number: '1.2-2') : '' }}</td>
                   <td>{{ product.variantCount }}</td>
                   <td>{{ product.createdUtc | date: 'shortDate' }}</td>
                 </tr>

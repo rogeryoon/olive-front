@@ -168,16 +168,16 @@ export class AuthService {
         const currencies = data.currencies;
         const branches = data.branches;
 
-        if (this.rememberMe) {
+        // if (this.rememberMe) {
             this.localStorage.savePermanentData(companyMaster, DBkeys.COMPANY_MASTER);
             this.localStorage.savePermanentData(currencies, DBkeys.CURRENCIES);
             this.localStorage.savePermanentData(branches, DBkeys.BRANCHES);
-        }
-        else {
-            this.localStorage.saveSyncedSessionData(companyMaster, DBkeys.COMPANY_MASTER);
-            this.localStorage.saveSyncedSessionData(currencies, DBkeys.CURRENCIES);
-            this.localStorage.saveSyncedSessionData(branches, DBkeys.BRANCHES);
-        }
+        // }
+        // else {
+        //     this.localStorage.saveSyncedSessionData(companyMaster, DBkeys.COMPANY_MASTER);
+        //     this.localStorage.saveSyncedSessionData(currencies, DBkeys.CURRENCIES);
+        //     this.localStorage.saveSyncedSessionData(branches, DBkeys.BRANCHES);
+        // }
 
         this._isLoadingPreLoadData = false;
 

@@ -6,8 +6,10 @@ export class Company extends OliveTrackingAttribute {
     id?: number;
     code: string;
     name: string;
+    phoneNumber?: string;
     memo: string;
     activated?: boolean;
+    addressId?: number;
     addressFk?: Address;
     companyGroupId?: number;
     companyGroupFk?: CompanyGroup;

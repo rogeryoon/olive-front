@@ -1,5 +1,4 @@
 ﻿import { OliveTrackingAttribute } from 'app/core/classes/tracking-attribute';
-import { Country } from 'app/main/supports/bases/models/country.model';
 
 export class Address extends OliveTrackingAttribute {
     id?: number;

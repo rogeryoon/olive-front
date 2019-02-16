@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import { FormGroup } from '@angular/forms';
 import { OliveContants } from './contants';
 import { DecimalPipe } from '@angular/common';
+import { Address } from '../models/core/address.model';
 
 export class OliveUtilities {
     public static isNullOrWhitespace(input): boolean {
@@ -218,6 +219,30 @@ export class OliveUtilities {
 
     public static isNumberPattern(input: string) {
         return /^\s*\d*\s*$/.test(input);
+    }
+
+    public static showAddress(address: Address) {
+        const values = [];
+
+        values.push(address.address1);
+
+        if (address.address2) {
+            values.push(address.address2);
+        }
+
+        if (address.city) {
+            values.push(address.city);
+        }
+
+        if (address.stateProvince) {
+            values.push(address.stateProvince);
+        }
+
+        if (address.postalCode) {
+            values.push(address.postalCode);
+        }
+        
+        return values.join(' ');
     }
 }
 

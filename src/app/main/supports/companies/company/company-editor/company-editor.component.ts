@@ -44,6 +44,7 @@ export class OliveCompanyEditorComponent extends OliveEntityFormComponent {
     return this.itemWithIdNAudit({
       code: formModel.code,
       name: formModel.name,
+      phoneNumber: formModel.phoneNumber,
       memo: formModel.memo,
       activated: formModel.activated,
       companyGroupFk: formModel.companyGroupFk,
@@ -55,6 +56,7 @@ export class OliveCompanyEditorComponent extends OliveEntityFormComponent {
       id: '',
       code: ['', Validators.required],
       name: ['', Validators.required],
+      phoneNumber: '',
       memo: '',
       activated: false,
       companyGroupFk: null
@@ -66,6 +68,7 @@ export class OliveCompanyEditorComponent extends OliveEntityFormComponent {
       id: this.id36(this.item.id),
       code: this.item.code || '',
       name: this.item.name || '',
+      phoneNumber: this.item.phoneNumber || '',
       memo: this.item.memo || '',
       activated: this.boolValue(this.item.activated),
       companyGroupFk: this.item.companyGroupFk,

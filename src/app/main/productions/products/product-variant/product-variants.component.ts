@@ -62,7 +62,7 @@ export class OliveProductVariantsComponent extends OliveEntityListComponent {
         { data: Code, thName: 'Code', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         { data: GroupName, thName: 'Name', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         { data: Name, thName: 'Type', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
-        { data: StandPrice, thName: 'StandPrice', tdClass: 'print right -ex-type-money', thClass: 'print -ex-type-money' },
+        { data: StandPrice, thName: 'StandPrice', tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         { data: CreatedUtc, thName: 'CreatedUtc', tdClass: '', thClass: '' }
       ],
       editComponent: OliveProductVariantManagerComponent,
