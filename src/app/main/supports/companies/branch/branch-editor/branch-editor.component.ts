@@ -4,7 +4,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { Branch } from '../../models/branch.model';
 
 @Component({

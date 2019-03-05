@@ -14,7 +14,9 @@
         <td *ngIf="checkBoxEnable">
           <input class="select" name="select" type="checkbox" [(ngModel)]="item.selected" (change)="saveToSelectedItems(item)" style="text-align:center">
         </td>
-        <td *ngFor="let column of dataColumns" [ngStyle]="{'text-align':renderStyle(column.align)}">{{renderItem(item, column.data)}}</td>
+        <td *ngFor="let column of dataColumns" [ngStyle]="{'text-align':renderStyle(column.align)}">
+            <span [innerHTML]="renderItem(item, column.data)"></span>
+        </td>
       </tr>
       <tr *ngIf="items?.length == 0">
         <td [attr.colspan]="tableColumns.length" class="no-data-available">{{'common.message.noRecordsFound' | translate}}</td>

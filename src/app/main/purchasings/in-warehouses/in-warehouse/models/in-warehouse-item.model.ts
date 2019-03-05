@@ -1,15 +1,13 @@
 ﻿import { OliveTrackingAttribute } from 'app/core/classes/tracking-attribute';
 import { ProductVariant } from 'app/main/productions/products/models/product-variant.model';
+import { PurchaseOrder } from 'app/main/purchasings/purchases/models/purchase-order.model';
 
-export class PurchaseOrderItem extends OliveTrackingAttribute {
+export class InWarehouseItem extends OliveTrackingAttribute {
     id?: number;
     quantity?: number;
     balance?: number;
-    price?: number;
-    discount?: number;
-    appliedCost?: number;
-    otherCurrencyPrice?: number;
-    remarks: string;
+    name?: string;
     productVariantId?: number;
-    name: string;
+    purchaseOrderFk?: PurchaseOrder;
+    originalBalance?: number;
 }

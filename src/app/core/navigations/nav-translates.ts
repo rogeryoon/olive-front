@@ -9,6 +9,8 @@ export class NavTranslates {
         static PurchaseStats = '';
         static PurchasePending = '';
         static PaymentMethod = 'naviTitle.purchase.paymentMethod';
+
+        static InWarehouseList = 'naviTitle.purchase.inWarehouseList';
     };
 
     static Product = class {

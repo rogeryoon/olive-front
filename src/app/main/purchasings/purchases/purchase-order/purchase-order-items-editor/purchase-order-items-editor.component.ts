@@ -61,14 +61,10 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   otherCurrencyDisplay = 'none';
 
   constructor(
-    formBuilder: FormBuilder,
-    private productVariantService: OliveProductVariantService,
-    private purchaseOrderService: OlivePurchaseOrderService,
-    private snackBar: MatSnackBar,
-    translater: FuseTranslationLoaderService,
-    private dialog: MatDialog,
-    private alertService: AlertService,
-    private cacheService: OliveCacheService
+    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    private snackBar: MatSnackBar, private dialog: MatDialog,
+    private alertService: AlertService, private cacheService: OliveCacheService,
+    private productVariantService: OliveProductVariantService, private purchaseOrderService: OlivePurchaseOrderService
   ) {
     super(
       formBuilder, translater

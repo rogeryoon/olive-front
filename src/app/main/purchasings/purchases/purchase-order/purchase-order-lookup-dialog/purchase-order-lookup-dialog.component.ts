@@ -76,6 +76,9 @@ export class OlivePurchaseOrderLookupDialogComponent extends OliveLookupDialogCo
   }
 
   createChip(item: PurchaseOrder) {
-    return {id: item.id, name: OliveUtilities.getItemsFirstName(item.purchaseOrderItems) } as IIDName;
+    return {
+      id: item.id, 
+      name: OliveUtilities.getItemsFirstName(item.purchaseOrderItems) 
+    } as IIDName;
   }
 }

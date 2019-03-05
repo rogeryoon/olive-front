@@ -26,7 +26,6 @@ export class OlivePurchaseOrderItemDatasource extends TableDatasource {
     }
 
     createRowFormGroup(r: any): FormGroup {
-        console.log(r);
         const f = new FormGroup({
             name: this.createNewFormContorl(r, 'name', [Validators.required]),
             quantity: this.createNewFormContorl(r, 'quantity', [numberValidator(0, true, 1)]),

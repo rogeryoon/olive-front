@@ -1,0 +1,77 @@
+<form [formGroup]="oForm" (keydown.enter)="false">
+  <mat-table [dataSource]="itemsDataSource" formArrayName="formarray">
+    <mat-header-row *matHeaderRowDef="displayedColumns">
+    </mat-header-row>
+
+    <mat-footer-row *matFooterRowDef="displayedColumns">
+    </mat-footer-row>
+
+    <mat-row *matRowDef="let row; columns: displayedColumns; let i=index" #cdkrow [ngClass]="{'highlightrow': (currentRow) && row.ObjId == currentRow.ObjId}"
+      (click)="currentRow=row;">
+    </mat-row>
+
+    <ng-container matColumnDef="viewId">
+      <mat-header-cell *matHeaderCellDef>{{'inWarehouseItems.id' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="justify-center">{{viewId(row.Obj)}}</mat-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="vendor">
+      <mat-header-cell *matHeaderCellDef>{{'inWarehouseItems.vendor' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="justify-center">{{row.Obj.purchaseOrderFk.vendorFk.name}}</mat-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
+    </ng-container>    
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef>{{'inWarehouseItems.name' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{row.Obj.name}}</mat-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="quantity">
+      <mat-header-cell *matHeaderCellDef>{{'inWarehouseItems.quantity' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('quantity',i)">
+        <mat-form-field fxFlex='95%'>
+          <input name="inputQuantity{{row.ObjId}}" class="right olive-error" matInput formControlName="quantity"
+            (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" (input)="updateBalace(i)">
+          <mat-error *ngIf="hasArrayEntryError('quantity',i)">{{'common.validate.error' | translate}}</mat-error>
+        </mat-form-field>
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef class="justify-end pr-4">{{totalQuantity|number:'1.0-0'}}</mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="balance">
+      <mat-header-cell *matHeaderCellDef>{{'inWarehouseItems.balance' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="justify-end pr-4">{{row.Obj.balance|number:'1.0-0'}}</mat-cell>
+      <mat-footer-cell *matFooterCellDef class="justify-end pr-4">{{totalBalance|number:'1.0-0'}}</mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="remark">
+      <mat-header-cell *matHeaderCellDef>{{'inWarehouseItems.remark' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
+        <mat-form-field fxFlex='95%'>
+          <input name="inputRemark{{row.ObjId}}" matInput type="text" formControlName="remark" (change)="onChange($event)"
+            (keyup)="onKeyup($event)" (blur)="onBlur($event)">
+        </mat-form-field>
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef>
+        <button mat-button color="primary" matTooltip="{{'common.button.add' | translate}}" (click)="lookupPurchaseOrder()">
+          <mat-icon class="mat-button-icon">add</mat-icon>{{'common.button.add' | translate}}
+        </button>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row" class="justify-center">
+        <button mat-icon-button matTooltip="{{'common.button.delete' | translate}}" (click)="deleteItem(row)">
+          <mat-icon color="warn">delete</mat-icon>
+        </button>
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
+    </ng-container>
+
+  </mat-table>
+  <mat-error *ngIf="showNoItemCreatedError">{{'common.message.noItemCreated' | translate}}</mat-error>
+  <mat-error *ngIf="showBalanceIsMinusError">{{'common.message.balanceIsMinus' | translate}}</mat-error>
+</form>

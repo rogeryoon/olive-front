@@ -41,12 +41,9 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   value: any = null;  
 
   constructor(
-    formBuilder: FormBuilder, 
-    private messageHelper: OliveMessageHelperService,
-    private paymentMethodService: OlivePaymentMethodService,
-    private snackBar: MatSnackBar,
-    translater: FuseTranslationLoaderService,
-    private cacheService: OliveCacheService
+    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    private messageHelper: OliveMessageHelperService, private snackBar: MatSnackBar,
+    private cacheService: OliveCacheService, private paymentMethodService: OlivePaymentMethodService
   ) {
     super(
       formBuilder, translater

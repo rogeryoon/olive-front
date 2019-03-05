@@ -12,9 +12,8 @@ import { OliveLookupDialogComponent } from 'app/core/components/lookup-dialog/lo
 
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { ProductVariant } from '../../models/product-variant.model';
-import { IdName, IIDName } from 'app/core/models/id-name';
+import { IIDName } from 'app/core/models/id-name';
 
 const Id = 'id';
 const Name = 'name';

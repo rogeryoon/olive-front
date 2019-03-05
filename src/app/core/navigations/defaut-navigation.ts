@@ -34,31 +34,21 @@ export const defaultNavigation: FuseNavigation[] = [
                         icon: NavIcons.Purchase.PurchaseEntry,
                         url: '/purchases/orders/0'
                     },                    
-                    // {
-                    //     id: 'purchaseStats',
-                    //     title: '발주서 현황',
-                    //     translate: 'navi.purchase.stats',
-                    //     type: 'item',
-                    //     icon: NavIcons.Purchase.PurchaseStats,
-                    //     url: '/purchases/stats',
-                    //     badge: {
-                    //         title: '25',
-                    //         bg: '#F44336',
-                    //         fg: '#FFFFFF'
-                    //     }
-                    // },
+                    {
+                        id: 'inWarehouseList',
+                        title: '입고 목록',
+                        translate: NavTranslates.Purchase.InWarehouseList,
+                        type: 'item',
+                        icon: NavIcons.Purchase.InWarehouseList,
+                        url: '/inwarehouses'
+                    },                    
                     {
                         id: 'purchasePending',
                         title: '미입고 현황',
                         translate: 'navi.purchase.pending',
                         type: 'item',
                         icon: NavIcons.Purchase.PurchasePending,
-                        url: '/purchases/peding',
-                        badge: {
-                            title: '13',
-                            bg: '#F44336',
-                            fg: '#FFFFFF'
-                        }
+                        url: '/purchases/pending'
                     }
                 ]
             }

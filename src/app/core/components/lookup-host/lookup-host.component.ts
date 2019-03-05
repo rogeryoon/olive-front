@@ -1,4 +1,4 @@
-import { Component, forwardRef, ViewChild, ElementRef, Renderer2, OnInit, Input } from '@angular/core';
+import { Component, forwardRef, ViewChild, ElementRef, Renderer2, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, Validators, FormControl, Validator, ValidationErrors, NG_VALIDATORS } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 
@@ -34,6 +34,8 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
   @Input() type = 'text';
   @Input() isEditMode = false;
   @Input() classMode = '';
+
+  @Output() changed = new EventEmitter();
 
   lookupName: FormControl;
 
@@ -98,15 +100,17 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
     return this._inputElement;
   }
 
-  private _onChange = (_: any) => { };
+  private _onChange = (item: any) => { console.log(item); };
   private _onTouched = () => {};
 
   writeValue(obj: any): void {
     this.value = obj;
 
     if (obj) {
-      this.lookupName.setValue(obj.name);  
+      this.lookupName.setValue(obj.name);
     }
+
+    this.changed.emit(obj);
   }
   registerOnChange(fn: any): void {
     this._onChange = fn;

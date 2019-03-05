@@ -15,6 +15,7 @@ import { Currency } from 'app/main/supports/bases/models/currency.model';
 import { Branch } from 'app/main/supports/companies/models/branch.model';
 import { OliveDataService } from '../interfaces/data-service';
 import { Observable, of } from 'rxjs';
+import { OliveUtilities } from '../classes/utilities';
 
 interface CacheContent {
   expiry: number;
@@ -176,7 +177,11 @@ export class OliveCacheService {
   get branches() {
     if (!this._branches) { 
       this._branches = this.authService.branches; 
-    }     
+    }
     return this._branches;
-  }  
+  }
+  
+  showMoney(amount: number): string {
+    return OliveUtilities.numberFormat(amount, this.standCurrency.decimalPoint);
+  }
 }

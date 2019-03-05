@@ -1,0 +1,59 @@
+:host {
+    .right {
+        text-align: right;
+    }
+
+    .justify-end {
+        justify-content: flex-end;
+    }
+
+    .justify-center {
+        justify-content: center;
+    }
+
+    .mat-table {
+        width: 1100px;
+    }
+
+    .mat-column-vendor {
+        flex: 0 1 150px;
+    }
+
+    .mat-column-viewId {
+        flex: 0 1 150px;
+    }
+
+    .mat-column-name {
+        flex: 0 1 550px;
+    }
+
+    .mat-column-quantity {
+        flex: 0 1 60px;
+    }
+
+    .mat-column-balance {
+        flex: 0 1 60px;
+    }
+
+    .mat-column-remark {
+        flex: 0 1 75px;
+    }
+
+    .mat-column-actions {
+        flex: 0 1 70px;
+        justify-content: center;
+    }
+
+    .small-font {
+        font-size: 10px;
+    }
+
+    .highlightrow {
+        background: cornsilk;
+    }
+
+    .mat-input-element.ng-invalid.ng-touched.olive-error {
+        border: 1px solid red;
+        color: red;
+    }
+}

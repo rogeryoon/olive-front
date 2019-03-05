@@ -46,13 +46,10 @@ export class OliveEntityEditComponent implements OnChanges, AfterViewInit, OnIni
   oForm: FormGroup;
 
   constructor(
-    protected translater: FuseTranslationLoaderService,
-    protected alertService: AlertService,
-    protected accountService: AccountService,
-    protected messageHelper: OliveMessageHelperService,
-    protected snackBar: MatSnackBar,
-    protected formBuilder: FormBuilder,
-    protected dataService: OliveDataService
+    protected translater: FuseTranslationLoaderService, protected alertService: AlertService,
+    protected accountService: AccountService, protected messageHelper: OliveMessageHelperService,
+    protected snackBar: MatSnackBar, protected formBuilder: FormBuilder,
+    protected dataService: OliveDataService 
   ) {
     this.initializeComponent();
     this.initializeChildComponent();

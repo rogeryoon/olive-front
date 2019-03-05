@@ -327,6 +327,7 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
   }
 
   get dataColumns() {
+    if (this.tableColumns === null) { return null; }
     return this.tableColumns.filter(c => c.data !== 'selected');
   }
 }

@@ -9,6 +9,8 @@ export class NavIcons {
         static PurchaseStats = 'business_center';
         static PurchasePending = 'assistant_photo';
         static PaymentMethod = 'card_membership';
+
+        static InWarehouseList = 'keyboard';
     };
 
     static Product = class {

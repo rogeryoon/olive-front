@@ -1,0 +1,20 @@
+﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutGap="1em" autocomplete="off">
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <div flex *ngIf="isIdVisible">
+            <mat-form-field appearance="outline" class="w-100-p">
+                <input matInput name="id" formControlName="id" readonly="readonly">
+                <mat-label>Id</mat-label>
+            </mat-form-field>
+        </div>
+        <div flex>
+            <olive-lookup-host #warehouse formControlName="warehouseFk" required [placeholder]="'Warehouse'"
+                [isEditMode]="true" (changed)="onWarehouseChanged($event)"></olive-lookup-host>
+        </div>
+        <div flex>
+            <mat-form-field appearance="outline" class="w-100-p">
+                <mat-label>Memo</mat-label>
+                <textarea matInput name="memo" formControlName="memo" rows="1"></textarea>
+            </mat-form-field>
+        </div>        
+    </div>
+</form>

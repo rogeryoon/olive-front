@@ -25,6 +25,7 @@ import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OlivePreviewPurchaseOrderComponent } from './preview-purchase-order/preview-purchase-order.component';
 import { OlivePreviewDialogComponent } from 'app/core/components/preview-dialog/preview-dialog.component';
 import { locale as english } from '../i18n/en';
+import { OliveCacheService } from 'app/core/services/cache.service';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -49,7 +50,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OlivePurchaseOrderService,
-    private miscService: OlivePurchasingMiscService
+    private miscService: OlivePurchasingMiscService, private cacheService: OliveCacheService
   ) {
     super(
       translater, deviceService,
@@ -152,7 +153,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       totalItemDue + Math.abs(item.freightAmount) +
       Math.abs(item.taxAmount) - Math.abs(item.addedDiscountAmount);
 
-    return OliveUtilities.numberFormat(totalDue);
+    return this.cacheService.showMoney(totalDue);
   }
 
   icon(item: PurchaseOrder, columnName: string): boolean {

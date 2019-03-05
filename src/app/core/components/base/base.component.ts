@@ -20,6 +20,10 @@ export class OliveBaseComponent implements OnInit {
     return OliveUtilities.numberFormat(amount, digits, zero);
   }
 
+  isNull(input: any): boolean {
+    return OliveUtilities.TestIsUndefined(input);
+  }
+
   id36(input: number): string {
     return OliveUtilities.convertToBase36(input);
   }

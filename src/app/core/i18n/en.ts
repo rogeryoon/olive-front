@@ -28,7 +28,9 @@ export const locale = {
                 'relogin' : 'Your Session has expired. Please log in again',
                 'renewSession' : 'Your Session has expired. Please log in again to renew your session',
                 'duplicated' : '아래건(들)이 이미 존재하여 추가되지 않았습니다.\r\n{0}',
-                'requestFinished': '요청한 작업을 완료하였습니다.'
+                'requestFinished': '요청한 작업을 완료하였습니다.',
+                'noItemCreated' : '1개 이상의 항목을 등록하십시오.',
+                'balanceIsMinus' : '잔량이 음수인 값이 있습니다.'
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
@@ -96,7 +98,8 @@ export const locale = {
             'purchase' : {
                 'purchaseEntry': '발주서 작성',
                 'purchaseOrderList' : '발주서 조회',
-                'paymentMethod' : '결제 수단'
+                'paymentMethod' : '결제 수단',
+                'inWarehouseList' : '입고 목록'
             },
             'product' : {
                 'home' : '제품',

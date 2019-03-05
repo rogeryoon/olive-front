@@ -16,7 +16,6 @@ import { EqualValidator } from '../../../../core/validators/equal.validator';
 import { OliveLookupDialogComponent } from 'app/core/components/lookup-dialog/lookup-dialog.component';
 import { MatDialog } from '@angular/material';
 import { OliveCompanyGroupService } from 'app/main/supports/companies/services/company-group.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { CompanyGroup } from 'app/main/supports/companies/models/company-group.model';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -260,13 +259,9 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
   lookUpCompanyGroup() {
     const setting = {
       name: 'CompanyGroup',
-      columns: [
-        { data: Id, name: 'ID', width: '50px', align: 'center' },
-        { data: Name, name: 'Name', width: '250px', align: 'justify' }
-      ],
+      columnType: 'id',
       dialogTitle: this.translater.get(NavTranslates.Company.Group),
       dataService: this.companyGroupService,
-      renderCallback: this.renderItem,
       maxSelectItems: 1
     };
 
@@ -284,20 +279,6 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
         this.savedCompanyGroupId = items[0].id;
       }
     });
-  }
-
-  renderItem(item: CompanyGroup, columnName: string): string {
-    let retValue = '';
-    switch (columnName) {
-      case Id:
-        retValue = this.id36(item.id);
-        break;
-
-      case Name:
-        retValue = item.name;
-        break;
-    }
-    return retValue;
   }
 
   private getEditedUser(): UserEdit {
