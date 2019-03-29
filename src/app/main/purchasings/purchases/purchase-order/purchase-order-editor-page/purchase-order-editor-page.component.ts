@@ -7,7 +7,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { AccountService } from '@quick/services/account.service';
 
-import { OliveEditPageComponent } from 'app/core/components/edit-page/edit-page.component';
+import { OliveEditPageComponent } from 'app/core/components/extends/edit-page/edit-page.component';
 import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/purchase-order-manager.component';
 import { PurchaseOrder } from '../../models/purchase-order.model';
 import { NavIcons } from 'app/core/navigations/nav-icons';
@@ -16,8 +16,8 @@ import { AlertService } from '@quick/services/alert.service';
 
 @Component({
   selector: 'olive-purchase-order-editor-page',
-  templateUrl: '../../../../../core/components/edit-page/edit-page.component.html',
-  styleUrls: ['../../../../../core/components/edit-page/edit-page.component.scss'],
+  templateUrl: '../../../../../core/components/extends/edit-page/edit-page.component.html',
+  styleUrls: ['../../../../../core/components/extends/edit-page/edit-page.component.scss'],
   animations: fuseAnimations
 })
 export class OlivePurchaseOrderEditorPageComponent extends OliveEditPageComponent {
@@ -37,9 +37,9 @@ export class OlivePurchaseOrderEditorPageComponent extends OliveEditPageComponen
       component: OlivePurchaseOrderManagerComponent,
       itemType: PurchaseOrder,
       managePermission: null,
-      iconName: NavIcons.Purchase.PurchaseEntry,
-      translateTitleId: NavTranslates.Purchase.PurchaseEntry,
-      itemListPath: 'purchases/purchase-orders'
+      iconName: NavIcons.Purchase.Entry,
+      translateTitleId: NavTranslates.Purchase.Entry,
+      itemListPath: 'purchases/list'
     };
 
     this.route.data.subscribe(({ item }) => {

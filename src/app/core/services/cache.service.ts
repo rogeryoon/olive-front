@@ -14,8 +14,9 @@ import { CompanyMaster } from '../models/company-master.model';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
 import { Branch } from 'app/main/supports/companies/models/branch.model';
 import { OliveDataService } from '../interfaces/data-service';
-import { Observable, of } from 'rxjs';
 import { OliveUtilities } from '../classes/utilities';
+import { UserName } from '../models/user-name';
+import { OliveContants } from '../classes/contants';
 
 interface CacheContent {
   expiry: number;
@@ -138,7 +139,7 @@ export class OliveCacheService {
     const unlock = await this.chunkItemsMutexes.get(cacheKey).lock();
       if (!this.exist(cacheKey)) {
         try {
-          const response = await this.chunkDataService.getItems(null, key).toPromise();
+          const response = await this.chunkDataService.getItems(key).toPromise();
           items = this.set(cacheKey, response.model);
         }
         catch (error) {
@@ -151,6 +152,45 @@ export class OliveCacheService {
     unlock();
 
     return items;
+  }
+
+  async getUserNames(keys: string[]): Promise<any> {
+    const uniqueKeys = new Set();
+    keys.forEach(key => {
+      uniqueKeys.add(key);
+    });
+
+    const queryKeys = new Set();
+    uniqueKeys.forEach(key => {
+      if (!this.exist(OliveContants.CacheKeys.PaymentMethod + '!' + key)) {
+        queryKeys.add(key);
+      }
+    });
+
+    const returnUserNames: UserName[] = [];
+    if (queryKeys.size > 0) {
+      try {
+        const response = await this.chunkDataService.getUserNames(Array.from(queryKeys)).toPromise();
+
+        const userNames = response.model;
+
+        userNames.forEach(user => {
+          this.set(OliveContants.CacheKeys.PaymentMethod + '!' + user.userAuditKey, user);
+        });
+      }
+      catch (error) {
+        this.messageHelper.showLoadFaild(error);
+      }
+    }
+
+    uniqueKeys.forEach(key => {
+      const cacheKey: string = OliveContants.CacheKeys.PaymentMethod + '!' + key;
+      if (this.exist(cacheKey)) {
+        returnUserNames.push(this.get(cacheKey));
+      }
+    });
+
+    return returnUserNames;
   }
 
   get companyMaster() {

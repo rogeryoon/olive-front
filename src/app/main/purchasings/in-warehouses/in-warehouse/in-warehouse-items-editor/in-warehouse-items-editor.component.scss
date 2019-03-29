@@ -19,7 +19,7 @@
         flex: 0 1 150px;
     }
 
-    .mat-column-viewId {
+    .mat-column-productVariantId {
         flex: 0 1 150px;
     }
 
@@ -33,6 +33,14 @@
 
     .mat-column-balance {
         flex: 0 1 60px;
+    }
+
+    .mat-column-price {
+        flex: 0 1 80px;
+    }
+
+    .mat-column-quantityDue {
+        flex: 0 1 100px;
     }
 
     .mat-column-remark {

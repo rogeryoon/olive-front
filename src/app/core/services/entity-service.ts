@@ -9,46 +9,56 @@ import { OliveEntityEndpointService } from './entity-endpoint.service';
 export class OliveEntityService implements OliveDataService {
     private apiUrl: string;
 
-    get itemUrl() { return this.configurations.baseUrl + this.apiUrl; }
+    get endpointUrl() { return this.configurations.baseUrl + this.apiUrl; }
 
-    constructor
-    (
-        private entityEndpoint: OliveEntityEndpointService,
-        private configurations: ConfigurationService
-    ) 
-    { 
-    }
+    constructor(protected endpoint: OliveEntityEndpointService, protected configurations: ConfigurationService) {}
 
     setApiUrl(urlPostfix: string) {
         this.apiUrl = '/api/' + urlPostfix;
     }
 
     getItem(id: number) {
-        return this.entityEndpoint.getItemEndpoint<any>(id, this.itemUrl);
+        const errorCount = {unAuth: 0};
+        return this.endpoint.getItemEndpoint<any>(id, this.endpointUrl, errorCount);
     }
 
     getItems(dataTablesParameters: any) {
-        return this.entityEndpoint.getItemsEndpoint<any>(dataTablesParameters, this.itemUrl);
+        const errorCount = {unAuth: 0};
+        return this.endpoint.getItemsEndpoint<any>(dataTablesParameters, this.endpointUrl, errorCount);
     }
 
     newItem(item: any) {
-        return this.entityEndpoint.newItemEndpoint<any>(item, this.itemUrl);
+        const errorCount = {unAuth: 0};
+        return this.endpoint.newItemEndpoint<any>(item, this.endpointUrl, errorCount);
     }
 
     uploadItems(items: any) {
-        return this.entityEndpoint.uploadItemEndpoint<any>(items, this.itemUrl);
+        const errorCount = {unAuth: 0};
+        return this.endpoint.uploadItemEndpoint<any>(items, this.endpointUrl, errorCount);
     }
 
     updateItem(item: any, id: number) {
-        return this.entityEndpoint.updateItemEndpoint(item, id, this.itemUrl);
+        const errorCount = {unAuth: 0};
+        return this.endpoint.updateItemEndpoint(item, id, this.endpointUrl, errorCount);
     }
 
     deleteItem(id: number | any) {
+        const errorCount = {unAuth: 0};
         if (typeof id === 'number' || id instanceof Number) {
-            return this.entityEndpoint.deleteItemGroupEndpoint<any>(<number>id, this.itemUrl);
+            return this.endpoint.deleteItemGroupEndpoint<any>(<number>id, this.endpointUrl, errorCount);
         }
         else {
             return this.deleteItem(id.id);
         }
     }
+
+    post(subUrl: string, data: any) {
+        const errorCount = {unAuth: 0};
+        return this.endpoint.postEndpoint<any>(subUrl, this.endpointUrl, data, errorCount);
+    }
+
+    put(subUrl: string, data: any) {
+        const errorCount = {unAuth: 0};
+        return this.endpoint.putEndpoint<any>(subUrl, this.endpointUrl, data, errorCount);
+    }    
 }

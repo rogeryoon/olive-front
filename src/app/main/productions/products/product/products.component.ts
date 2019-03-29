@@ -10,7 +10,7 @@ import { AccountService } from '@quick/services/account.service';
 
 import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
-import { OliveEntityListComponent } from 'app/core/components/entity-list/entity-list.component';
+import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
@@ -31,7 +31,7 @@ const CreatedUtc = 'createdUtc';
 
 @Component({
   selector: 'olive-product',
-  templateUrl: '../../../../core/components/entity-list/entity-list.component.html',
+  templateUrl: '../../../../core/components/extends/entity-list/entity-list.component.html',
   styleUrls: ['./products.component.scss'],
   animations: fuseAnimations
 })

@@ -3,9 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
+import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveContants } from 'app/core/classes/contants';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { CompanyGroupSetting } from '../../../../../core/models/company-group-setting.model';
 
 @Component({

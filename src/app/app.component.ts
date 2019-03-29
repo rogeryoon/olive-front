@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 import { OliveNavigationSelectorService } from './core/services/navigation-selector.service';
 import { OliveLoginDialogComponent } from './main/pages/authentication/login/login-dialog/login-dialog.component';
-import { OliveAppDialogComponent } from './core/components/app-dialog/app-dialog.component';
+import { OliveAppDialogComponent } from './core/components/dialogs/app-dialog/app-dialog.component';
 
 @Component({
     selector   : 'app',

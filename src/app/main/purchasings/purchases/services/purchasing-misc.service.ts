@@ -1,42 +1,27 @@
-import { Injectable, Injector } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 import { ConfigurationService } from '@quick/services/configuration.service';
 
-import { OliveEndpointBaseService } from 'app/core/services/endpoint-base.service';
-import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
+import { OliveEntityService } from 'app/core/services/entity-service';
+import { OliveEntityEndpointService } from 'app/core/services/entity-endpoint.service';
 
 @Injectable()
-export class OlivePurchasingMiscEndpointService extends OliveEndpointBaseService {
-  private readonly _url: string = '/api/purchasingmisc';
+export class OlivePurchasingMiscService extends OliveEntityService {
 
-  get url() { return this.configurations.baseUrl + this._url; }
+  constructor
+    (
+    endpoint: OliveEntityEndpointService,
+    configurations: ConfigurationService
+    ) {
+    super(
+      endpoint,
+      configurations
+    );
 
-  constructor(
-    http: HttpClient, configurations: ConfigurationService, 
-    injector: Injector, queryParams: OliveQueryParameterService
-  ) 
-  { 
-    super(http, configurations, injector, queryParams); 
+    this.setApiUrl('purchasingMisc');
   }
 
-  patchPurchaseOrderEndpoint<T>(transactionType: string, id: number): Observable<T> {
-    const endpointUrl = `${this.url}/${transactionType}/${id}${this.companyGroupParam}`;
-    
-    return this.http.post<T>(endpointUrl, this.getRequestHeaders())
-      .catch(error => {
-        return this.handleError(error, () => this.patchPurchaseOrderEndpoint(transactionType, id));
-      });
-  } 
-}
-
-@Injectable()
-export class OlivePurchasingMiscService {
-
-  constructor(private endpoint: OlivePurchasingMiscEndpointService) { }
-
-  patchPurchaseOrder(transactionType: string, id: number) {
-    return this.endpoint.patchPurchaseOrderEndpoint<any>(transactionType, id);
+  patchPurchaseOrder(methodName: string, transactionType: string, id: number) {
+    return this.put(`${methodName}/${transactionType}/${id}`, null);
   }
 }

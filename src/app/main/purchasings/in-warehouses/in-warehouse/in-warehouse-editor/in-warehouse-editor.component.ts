@@ -3,9 +3,9 @@ import { FormBuilder } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
-import { InWarehouse } from '../models/in-warehouse.model';
-import { OliveLookupHostComponent } from 'app/core/components/lookup-host/lookup-host.component';
+import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
+import { InWarehouse } from '../../models/in-warehouse.model';
+import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveWarehouseService } from 'app/main/supports/companies/services/warehouse.service';
 import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/warehouse/warehouse-manager/warehouse-manager.component';
@@ -21,6 +21,8 @@ import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
   @ViewChild('warehouse')
   lookupWarehouse: OliveLookupHostComponent;
+
+  disableWarehouseChangedEvent = false;
 
   @Output() warehouseChanged = new EventEmitter();
 
@@ -51,6 +53,10 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
   }
 
   resetForm() {
+    if (!this.isNull(this.item.warehouseFk)) {
+      this.disableWarehouseChangedEvent = true;
+    }
+
     this.oForm.reset({
       id: this.id36(this.item.id),
       memo: this.item.memo || '',
@@ -81,6 +87,11 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
   }
 
   onWarehouseChanged(input: any) {
-    this.warehouseChanged.emit(input);
+    if (!this.disableWarehouseChangedEvent) {
+      this.warehouseChanged.emit(input);
+    }
+    else {
+      this.disableWarehouseChangedEvent = false;
+    }
   }
 }

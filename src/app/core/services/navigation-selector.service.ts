@@ -3,6 +3,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { defaultNavigation } from '../navigations/defaut-navigation';
 import { adminNavigation } from '../navigations/admin-navigation';
+import { AuthService } from '@quick/services/auth.service';
 
 @Injectable()
 export class OliveNavigationSelectorService {
@@ -11,7 +12,7 @@ export class OliveNavigationSelectorService {
     navigation: any;
     navigationMap: { [name: string]: any; } = {};
 
-    constructor() { 
+    constructor(private authService: AuthService) { 
         this.navigationMap['default'] = defaultNavigation;
         this.navigationMap['admin'] = adminNavigation;
     }
@@ -19,6 +20,10 @@ export class OliveNavigationSelectorService {
     getNavigation() {
         if (!this.navigation) {
             this.navigation = this.navigationMap['default'];
+        }
+
+        if (this.authService.isLoggedIn) {
+            console.log(this.navigation);
         }
 
         return this.navigation;

@@ -1,8 +1,5 @@
-// ebenmonney
-/* tslint:disable */
-
 import { Injectable } from '@angular/core';
-import { Router, NavigationExtras } from "@angular/router";
+import { Router, NavigationExtras } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
@@ -19,7 +16,6 @@ import { UserLogin } from '../models/user-login.model';
 import { PermissionValues } from '../models/permission.model';
 import { CompanyMaster } from 'app/core/models/company-master.model';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
-import { concat } from 'rxjs';
 import { Branch } from 'app/main/supports/companies/models/branch.model';
 
 @Injectable()
@@ -53,31 +49,32 @@ export class AuthService {
 
     gotoPage(page: string, preserveParams = true) {
 
-        let navigationExtras: NavigationExtras = {
-            queryParamsHandling: preserveParams ? "merge" : "", preserveFragment: preserveParams
+        const navigationExtras: NavigationExtras = {
+            queryParamsHandling: preserveParams ? 'merge' : '', preserveFragment: preserveParams
         };
 
         this.router.navigate([page], navigationExtras);
     }
 
     redirectLoginUser() {
-        let redirect = this.loginRedirectUrl && this.loginRedirectUrl != '/' && this.loginRedirectUrl != ConfigurationService.defaultHomeUrl ? this.loginRedirectUrl : this.homeUrl;
+        const redirect = this.loginRedirectUrl && this.loginRedirectUrl !== '/' && 
+            this.loginRedirectUrl !== ConfigurationService.defaultHomeUrl ? this.loginRedirectUrl : this.homeUrl;
         this.loginRedirectUrl = null;
 
-        let urlParamsAndFragment = Utilities.splitInTwo(redirect, '#');
-        let urlAndParams = Utilities.splitInTwo(urlParamsAndFragment.firstPart, '?');
+        const urlParamsAndFragment = Utilities.splitInTwo(redirect, '#');
+        const urlAndParams = Utilities.splitInTwo(urlParamsAndFragment.firstPart, '?');
 
-        let navigationExtras: NavigationExtras = {
+        const navigationExtras: NavigationExtras = {
             fragment: urlParamsAndFragment.secondPart,
             queryParams: Utilities.getQueryParamsFromString(urlAndParams.secondPart),
-            queryParamsHandling: "merge"
+            queryParamsHandling: 'merge'
         };
 
         this.router.navigate([urlAndParams.firstPart], navigationExtras);
     }
 
     redirectLogoutUser() {
-        let redirect = this.logoutRedirectUrl ? this.logoutRedirectUrl : this.loginUrl;
+        const redirect = this.logoutRedirectUrl ? this.logoutRedirectUrl : this.loginUrl;
         this.logoutRedirectUrl = null;
 
         this.router.navigate([redirect]);
@@ -105,8 +102,9 @@ export class AuthService {
     }
 
     login(user: UserLogin) {
-        if (this.isLoggedIn)
+        if (this.isLoggedIn) {
             this.logout();
+        }
 
         return this.endpointFactory.getLoginEndpoint<LoginResponse>(user.userName, user.password)
                 .map(response => this.processLoginResponse(response, user.rememberMe));
@@ -115,30 +113,30 @@ export class AuthService {
     private processLoginResponse(response: LoginResponse, rememberMe: boolean) {
         this._isLoadingPreLoadData = true;
 
-        let accessToken = response.access_token;
+        const accessToken = response.access_token;
 
         if (accessToken == null) {
-            throw new Error("Received accessToken was empty");
+            throw new Error('Received accessToken was empty');
         }
 
-        let refreshToken = response.refresh_token || this.refreshToken;
-        let expiresIn = response.expires_in;
+        const refreshToken = response.refresh_token || this.refreshToken;
+        const expiresIn = response.expires_in;
 
-        let tokenExpiryDate = new Date();
+        const tokenExpiryDate = new Date();
         tokenExpiryDate.setSeconds(tokenExpiryDate.getSeconds() + expiresIn);
 
-        let accessTokenExpiry = tokenExpiryDate;
+        const accessTokenExpiry = tokenExpiryDate;
 
-        let jwtHelper = new JwtHelper();
-        let decodedAccessToken = <AccessToken>jwtHelper.decodeToken(response.access_token);
+        const jwtHelper = new JwtHelper();
+        const decodedAccessToken = <AccessToken>jwtHelper.decodeToken(response.access_token);
 
-        let permissions: PermissionValues[] = Array.isArray(decodedAccessToken.permission) ? decodedAccessToken.permission : [decodedAccessToken.permission];
+        const permissions: PermissionValues[] = Array.isArray(decodedAccessToken.permission) ? decodedAccessToken.permission : [decodedAccessToken.permission];
 
         if (!this.isLoggedIn) {
             this.configurations.import(decodedAccessToken.configuration);
         }
 
-        let user = new User(
+        const user = new User(
             decodedAccessToken.sub,
             decodedAccessToken.name,
             decodedAccessToken.fullname,
@@ -147,7 +145,8 @@ export class AuthService {
             decodedAccessToken.phone_number,
             Array.isArray(decodedAccessToken.role) ? decodedAccessToken.role : [decodedAccessToken.role],
             decodedAccessToken.companymastercode,
-            decodedAccessToken.companygroupid);
+            decodedAccessToken.companygroupid,
+            decodedAccessToken.userauditKey);
         user.isEnabled = true;
 
         this.saveUserDetails(user, permissions, accessToken, refreshToken, accessTokenExpiry, rememberMe);
@@ -156,6 +155,7 @@ export class AuthService {
 
         this.endpointFactory.getPreLoadDataEndpoint<any>()
         .subscribe(
+            // tslint:disable-next-line:no-shadowed-variable
             response => this.processPreLoadResponse(response.model),
             error => console.error(error)
         );
@@ -230,11 +230,11 @@ export class AuthService {
     }
 
     private reevaluateLoginStatus(currentUser?: User) {
-        let user = currentUser || this.localStorage.getDataObject<User>(DBkeys.CURRENT_USER);
-        let isLoggedIn = user != null;
+        const user = currentUser || this.localStorage.getDataObject<User>(DBkeys.CURRENT_USER);
+        const isLoggedIn = user != null;
 
         if (!this._isLoadingPreLoadData) {
-            if (this.previousIsLoggedInCheck != isLoggedIn) {
+            if (this.previousIsLoggedInCheck !== isLoggedIn) {
                 setTimeout(() => {
                     this._loginStatus.next(isLoggedIn);
                 });
@@ -250,7 +250,7 @@ export class AuthService {
 
     get currentUser(): User {
 
-        let user = this.localStorage.getDataObject<User>(DBkeys.CURRENT_USER);
+        const user = this.localStorage.getDataObject<User>(DBkeys.CURRENT_USER);
         this.reevaluateLoginStatus(user);
 
         return user;
@@ -288,7 +288,7 @@ export class AuthService {
     }
 
     get rememberMe(): boolean {
-        return this.localStorage.getDataObject<boolean>(DBkeys.REMEMBER_ME) == true;
+        return this.localStorage.getDataObject<boolean>(DBkeys.REMEMBER_ME) === true;
     }
 
     // roger start

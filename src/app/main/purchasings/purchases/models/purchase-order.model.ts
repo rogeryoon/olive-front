@@ -10,7 +10,7 @@ export class PurchaseOrder extends OliveTrackingAttribute {
     vendorOrderId: string;
     date?: any;
     memo: string;
-    totalItemsAmount?: number;
+    totalAmount?: number;
     addedDiscountAmount?: number;
     freightAmount?: number;
     taxAmount?: number;

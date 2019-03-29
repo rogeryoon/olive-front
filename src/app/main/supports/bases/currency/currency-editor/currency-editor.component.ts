@@ -1,8 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
-import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
-import { OliveUtilities } from 'app/core/classes/utilities';
+import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { Currency } from '../../models/currency.model';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { numberValidator } from 'app/core/classes/validators';

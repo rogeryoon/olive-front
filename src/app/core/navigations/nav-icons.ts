@@ -1,16 +1,24 @@
 export class NavIcons {
+    static Group = class {
+        static Product = 'group_work';
+    };
+
     static Purchase = class {
-        static PurchaseOrderList = 'find_in_page';
+        static Group = 'assessment';
+
+        static List = 'find_in_page';
+        static Entry = 'create';
         
-        static Purchase = 'add_shopping_cart';
-        static PurchaseEntry = 'create';
-        static PurchaseViewGroup = 'assessment';
         static PurchaseView =  'find_in_page';
         static PurchaseStats = 'business_center';
-        static PurchasePending = 'assistant_photo';
-        static PaymentMethod = 'card_membership';
+    };
 
-        static InWarehouseList = 'keyboard';
+    static InWarehouse = class {
+        static Group = 'assessment';
+        
+        static List = 'keyboard';
+        static Entry = 'ballot';
+        static Pending = 'assistant_photo';
     };
 
     static Product = class {
@@ -32,6 +40,7 @@ export class NavIcons {
         static Branch = 'account_balance';
         static Vendor = 'forum';
         static Warehouse = 'store';
+        static PaymentMethod = 'card_membership';        
     };
 
     static Basic = class {

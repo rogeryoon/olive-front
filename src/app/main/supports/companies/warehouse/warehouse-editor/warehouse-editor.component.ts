@@ -1,15 +1,13 @@
-﻿import { Component, ViewChild, AfterViewInit } from '@angular/core';
+﻿import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { NavTranslates } from 'app/core/navigations/nav-translates';
-import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
-import { OliveUtilities } from 'app/core/classes/utilities';
+import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { Warehouse } from '../../models/warehouse.model';
 import { OliveCompanyService } from '../../services/company.service';
-import { OliveLookupHostComponent } from 'app/core/components/lookup-host/lookup-host.component';
+import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
 import { OliveCompanyGroupManagerComponent } from '../../company-group/company-group-manager/company-group-manager.component';
 import { Company } from '../../models/company.model';
 import { Permission } from '@quick/models/permission.model';

@@ -5,8 +5,8 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { Permission } from '@quick/models/permission.model';
 
-import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
-import { OliveLookupHostComponent } from 'app/core/components/lookup-host/lookup-host.component';
+import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
+import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
 import { PurchaseOrder } from '../../models/purchase-order.model';
 import { OliveVendorService } from 'app/main/supports/companies/services/vendor.service';
 import { NavTranslates } from 'app/core/navigations/nav-translates';

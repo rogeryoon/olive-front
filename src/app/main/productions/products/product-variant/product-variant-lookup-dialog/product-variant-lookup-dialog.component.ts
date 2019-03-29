@@ -8,7 +8,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { AlertService } from '@quick/services/alert.service';
 
-import { OliveLookupDialogComponent } from 'app/core/components/lookup-dialog/lookup-dialog.component';
+import { OliveLookupDialogComponent } from 'app/core/components/dialogs/lookup-dialog/lookup-dialog.component';
 
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
@@ -20,8 +20,8 @@ const Name = 'name';
 
 @Component({
   selector: 'olive-product-variant-lookup-dialog',
-  templateUrl: '../../../../../core/components/lookup-dialog/lookup-dialog.component.html',
-  styleUrls: ['../../../../../core/components/lookup-dialog/lookup-dialog.component.scss']
+  templateUrl: '../../../../../core/components/dialogs/lookup-dialog/lookup-dialog.component.html',
+  styleUrls: ['../../../../../core/components/dialogs/lookup-dialog/lookup-dialog.component.scss']
 })
 export class OliveProductVariantLookupDialogComponent extends OliveLookupDialogComponent {
 

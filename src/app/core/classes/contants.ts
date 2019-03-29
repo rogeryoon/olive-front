@@ -12,10 +12,22 @@ export class OliveContants {
         { value: 'CN', name: 'Germany' }
     ];
 
-    static iconChecked = 'check';
-    static iconUnchecked = 'remove';
-
     static CacheKeys = class {
         static PaymentMethod = 'paymentmethod';
+        static UserName = 'usr';
+    };
+
+    static ForegroundColor = class {
+        static Blue = 'foreground-blue';
+        static Orange = 'foreground-orange';
+        static Red = 'foreground-red';
+    };
+
+    static IconStatus = class {
+        static Checked = 'check';
+        static Unchecked = 'remove';
+        static Pending = 'access_time';
+        static Error = 'error_outline';
+        static Completed = 'check';
     };
 }

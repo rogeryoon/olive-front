@@ -1,8 +1,13 @@
-import { NameValue } from '../models/name-value';
-import * as moment from 'moment';
-import { FormGroup } from '@angular/forms';
-import { OliveContants } from './contants';
 import { DecimalPipe } from '@angular/common';
+import { FormGroup } from '@angular/forms';
+
+import { String } from 'typescript-string-operations';
+
+import * as moment from 'moment';
+
+import { NameValue } from '../models/name-value';
+
+import { OliveContants } from './contants';
 import { Address } from '../models/core/address.model';
 
 export class OliveUtilities {
@@ -56,6 +61,11 @@ export class OliveUtilities {
         return moment(date).format('L');
     }
 
+    public static getDateCode(date: any): string {
+        moment.locale();
+        return moment(date).format('YYMMDD');
+    }    
+
     public static getMomentDate(date: any): string {
         if (!date) { return ''; }
 
@@ -63,7 +73,7 @@ export class OliveUtilities {
         return moment(date).format('L');
     }
 
-    public static TestIsUndefined(value: any): boolean {
+    public static testIsUndefined(value: any): boolean {
         return typeof value === 'undefined' || value == null;
     }
 
@@ -87,46 +97,46 @@ export class OliveUtilities {
     }
 
     public static iconName(condition: boolean): string {
-        return condition ? OliveContants.iconChecked : OliveContants.iconUnchecked;
+        return condition ? OliveContants.IconStatus.Checked : OliveContants.IconStatus.Unchecked;
     }
 
-    public static WebSiteHostName(url: string): string {
-        url = this.WebSiteUrl(url);
+    public static webSiteHostName(url: string): string {
+        url = this.webSiteUrl(url);
 
         if (url == null) { return null; }
 
-        return this.GetLocation(url).hostname.replace(/www./gi, '');
+        return this.getLocation(url).hostname.replace(/www./gi, '');
     }
 
-    public static GetLocation(url: string): any {
+    public static getLocation(url: string): any {
         const l = document.createElement('a');
         l.href = url;
         return l;
     }
 
-    private static AdjustUrl(url: string): string {
+    private static adjustUrl(url: string): string {
         // remove prefix
         url = url.replace(/https?:\/\//gi, '');
         // append standard url type
         return 'http://' + url;
     }
 
-    public static WebSiteUrl(url: string): string {
+    public static webSiteUrl(url: string): string {
         if (!url) { return null; }
 
-        url = this.AdjustUrl(url);
-        const valid = this.IsValidWebSiteUrl(url);
+        url = this.adjustUrl(url);
+        const valid = this.isValidWebSiteUrl(url);
 
         if (!valid) { return null; }
 
         return url;
     }
 
-    public static IsValidWebSiteUrl(url: string): boolean {
+    public static isValidWebSiteUrl(url: string): boolean {
         return /^https?:\/\/[^ "]+$/i.test(url);
     }
 
-    public static Make36Id(length: number): string {
+    public static make36Id(length: number): string {
         let text = '';
         const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
@@ -138,12 +148,12 @@ export class OliveUtilities {
     }
 
     public static isValid36Id(id: string): boolean {
-        if (this.TestIsUndefined(id)) { return false; }
+        if (this.testIsUndefined(id)) { return false; }
         return new RegExp('^[A-Za-z0-9]{1,6}$').test(id);
     }
 
     public static convertToBase36(input: number): string {
-        if (this.TestIsUndefined(input)) { return ''; }
+        if (this.testIsUndefined(input)) { return ''; }
         return input.toString(36).toUpperCase();
     }
 
@@ -183,12 +193,17 @@ export class OliveUtilities {
         return new DecimalPipe('en-us').transform(amount, `1.${digits}-${digits}`);
     }
 
+    public static addSpanAddedCount(count: number) {
+        // ov-td-click를 추가해야지 이중 팝업이 되질 않는다.
+        return `<span class="added-count ov-td-click">+${count}</span>`;
+    }
+
     public static getItemsFirstName(items: any) {
         let returnValue = '-';
         if (items && items.length > 0) {
             returnValue = items[0].name;
             if (items.length > 1) {
-                returnValue += `<span class="added-count">+${items.length - 1}</span>`;
+                returnValue += this.addSpanAddedCount(items.length - 1);
             }
         }
         return returnValue;
@@ -199,7 +214,7 @@ export class OliveUtilities {
         if (items && items.length > 0) {
             returnValue = items[0].code;
             if (items.length > 1) {
-                returnValue += `<span class="added-count">+${items.length - 1}</span>`;
+                returnValue += this.addSpanAddedCount(items.length - 1);
             }
         }
         return returnValue;
@@ -207,7 +222,7 @@ export class OliveUtilities {
 
     public static toTrimString(input: any) {
         let returnValue = '';
-        if (!this.TestIsUndefined(input)) {
+        if (!this.testIsUndefined(input)) {
             returnValue = input.toString().trim();
         }
         return returnValue;
@@ -243,6 +258,21 @@ export class OliveUtilities {
         }
         
         return values.join(' ');
+    }
+
+    public static showParamMessage(template: string, firstValue: string, secondValue: string = null): string {
+        let message = null;
+        if (!this.testIsUndefined(firstValue)) {
+            message = String.Format(template, ` [${firstValue}]`);
+        }
+        else if (!this.testIsUndefined(secondValue)) {
+            message = String.Format(template, ` ${secondValue}`);
+        }
+        else {
+            message = String.Format(template, '');
+        }
+
+        return message;
     }
 }
 

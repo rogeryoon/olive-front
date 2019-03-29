@@ -7,6 +7,7 @@ import { AlertService, MessageSeverity } from '@quick/services/alert.service';
 
 import { locale as english } from '../i18n/en';
 import { UserMessage } from '../models/user-message';
+import { Utilities } from '@quick/services/utilities';
 
 @Injectable()
 export class OliveMessageHelperService {
@@ -22,20 +23,35 @@ export class OliveMessageHelperService {
   showDeletedSuccess(itemName: string) {
     this.alertService.stopLoadingMessage();
 
-    this.alertService.showMessage(this.translater.get('common.title.success'),
-      String.Format(this.translater.get('common.message.deleted'), itemName), MessageSeverity.success);
+    this.alertService.showMessage(
+      this.translater.get('common.title.success'),
+      Utilities.TestIsUndefined(itemName) ?
+        this.translater.get('common.message.deletedGeneral') :
+        String.Format(this.translater.get('common.message.deleted'), itemName), 
+      MessageSeverity.success
+    );
   }
 
   showSavedSuccess(isNewItem: boolean, itemName: string) {
     this.alertService.stopLoadingMessage();
 
     if (isNewItem) {
-      this.alertService.showMessage(this.translater.get('common.title.success'),
-        String.Format(this.translater.get('common.message.newItemCreated'), itemName), MessageSeverity.success);
+      this.alertService.showMessage(
+        this.translater.get('common.title.success'),
+        Utilities.TestIsUndefined(itemName) ? 
+          this.translater.get('common.message.newItemCreatedGeneral') :
+          String.Format(this.translater.get('common.message.newItemCreated'), itemName), 
+        MessageSeverity.success
+      );
     }
     else {
-      this.alertService.showMessage(this.translater.get('common.title.success'),
-        String.Format(this.translater.get('common.message.updated'), itemName), MessageSeverity.success);
+      this.alertService.showMessage(
+        this.translater.get('common.title.success'),
+        Utilities.TestIsUndefined(itemName) ? 
+          this.translater.get('common.message.updatedGeneral') :
+          String.Format(this.translater.get('common.message.updated'), itemName), 
+          MessageSeverity.success
+      );
     }
   }
 

@@ -93,8 +93,13 @@ export class EndpointFactory {
         return { headers: headers };
     }
 
-    protected handleError(error, continuation: () => Observable<any>) {
-        if (error.status === 401) {
+    protected handleError(error, continuation: () => Observable<any>, errorCount = null) {
+       
+        if (error.status === 401 && (errorCount == null || errorCount.unAuth === 0) ) {
+            if (errorCount != null) {
+                errorCount.unAuth++;
+            }
+            
             if (this.isRefreshingLogin) {
                 return this.pauseTask(continuation);
             }

@@ -11,10 +11,11 @@ import { Permission } from '@quick/models/permission.model';
 
 import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
-import { OliveEntityListComponent } from 'app/core/components/entity-list/entity-list.component';
+import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
+import { OliveContants } from 'app/core/classes/contants';
 
 import { OliveSearchPurchaseOrderComponent } from './search-purchase-order/search-purchase-order.component';
 import { OlivePurchaseOrderService } from '../services/purchase-order.service';
@@ -23,34 +24,40 @@ import { OlivePurchaseOrderManagerComponent } from './purchase-order-manager/pur
 import { OlivePurchasingMiscService } from '../services/purchasing-misc.service';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OlivePreviewPurchaseOrderComponent } from './preview-purchase-order/preview-purchase-order.component';
-import { OlivePreviewDialogComponent } from 'app/core/components/preview-dialog/preview-dialog.component';
-import { locale as english } from '../i18n/en';
+import { OlivePreviewDialogComponent } from 'app/core/components/dialogs/preview-dialog/preview-dialog.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
+import { OliveInWarehouseStatusComponent } from '../../in-warehouses/in-warehouse/in-warehouse-status/in-warehouse-status.component';
+import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { NameValue } from 'app/core/models/name-value';
+import { OliveInWarehouseItemService } from '../../in-warehouses/services/in-warehouse-items.service';
 
 const Selected = 'selected';
 const Id = 'id';
 const VendorName = 'vendorName';
 const ItemsName = 'itemsName';
-const TotalDueAmount = 'totalDueAmount';
+const Warehouse = 'warehouse';
+const TotalAmount = 'totalAmount';
 const PaymentsName = 'paymentsName';
 const InWarehouseStatusLink = 'statusLink';
 const FinishLink = 'finishLink';
 const PrintLink = 'printLink';
-const PODate = 'date';
 
 @Component({
   selector: 'olive-purchase-order',
-  templateUrl: '../../../../core/components/entity-list/entity-list.component.html',
+  templateUrl: '../../../../core/components/extends/entity-list/entity-list.component.html',
   styleUrls: ['./purchase-orders.component.scss'],
   animations: fuseAnimations
 })
 export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
+  purchaseService: OlivePurchaseOrderService;
+
   constructor(
     translater: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OlivePurchaseOrderService,
-    private miscService: OlivePurchasingMiscService, private cacheService: OliveCacheService
+    private miscService: OlivePurchasingMiscService, private cacheService: OliveCacheService,
+    private inWarehouseItemService: OliveInWarehouseItemService
   ) {
     super(
       translater, deviceService,
@@ -59,36 +66,45 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       dialog, dataService
     );
 
-    this.translater.loadTranslations(english);
+    this.purchaseService = dataService;
   }
 
   initializeChildComponent() {
     this.setting = {
       name: 'PurchaseOrder',
-      icon: NavIcons.Purchase.PurchaseOrderList,
-      translateTitleId: NavTranslates.Purchase.PurchaseOrderList,
+      icon: NavIcons.Purchase.List,
+      translateTitleId: NavTranslates.Purchase.List,
       managePermission: null,
       columns: [
         // 1
         { data: Selected },
         // 2
-        { data: Id, thName: 'Id', tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
+        { data: Id, thName: this.translater.get('purchasing.purchaseOrdersHeader.Id'), 
+          tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: VendorName, orderable: false, thName: 'Vendor', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: VendorName, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.VendorName'), 
+          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 4
-        { data: ItemsName, orderable: false, thName: 'Items', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: ItemsName, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.ItemsName'), 
+          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 5
-        { data: TotalDueAmount, thName: 'Amount', tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
+        { data: Warehouse, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.Warehouse'), 
+          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },        
         // 6
-        { data: PaymentsName, orderable: false, thName: 'Payment', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: TotalAmount, thName: this.translater.get('purchasing.purchaseOrdersHeader.TotalAmount'), 
+          tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 7
-        { data: InWarehouseStatusLink, orderable: false, thName: 'Status', tdClass: 'left -ex-type-text', thClass: '-ex-type-text' },
+        { data: PaymentsName, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.PaymentsName'), 
+          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 8
-        { data: FinishLink, orderable: false, thName: 'Finish', tdClass: 'left -ex-type-text foreground-blue', thClass: '-ex-type-text' },
+        { data: InWarehouseStatusLink, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.InWarehouseStatusLink'), 
+          tdClass: 'left -ex-type-text', thClass: '-ex-type-text' },
         // 9
-        { data: PrintLink, orderable: false, thName: 'Print', tdClass: 'left -ex-type-text foreground-blue', thClass: '-ex-type-text' },
+        { data: FinishLink, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.FinishLink'), 
+          tdClass: 'left -ex-type-text foreground-blue', thClass: '-ex-type-text' },
         // 10
-        { data: PODate, thName: 'Date', tdClass: '', thClass: '' },
+        { data: PrintLink, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.PrintLink'), 
+          tdClass: 'left -ex-type-text foreground-blue', thClass: '-ex-type-text' }
       ],
       editComponent: OlivePurchaseOrderManagerComponent,
       searchComponent: OliveSearchPurchaseOrderComponent,
@@ -98,10 +114,10 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: PurchaseOrder) {
     if (item) {
-      return `PO # ${this.id36(item.id)} : ${item.vendorFk.name}`;
+      return `${this.translater.get('navi.purchase.group')} ID : ${this.id36(item.id)}-${this.dateCode(item.date)}`;
     }
     else {
-      return this.translater.get(NavTranslates.Purchase.PurchaseEntry);
+      return this.translater.get(NavTranslates.Purchase.Entry);
     }
   }
 
@@ -110,7 +126,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = this.id36(item.id);
+        retValue = this.id36(item.id) + '-' + this.dateCode(item.date);
         break;
 
       case VendorName:
@@ -121,33 +137,29 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         retValue = OliveUtilities.getItemsFirstName(item.purchaseOrderItems);
         break;
 
-      case TotalDueAmount:
-        retValue = this.getTotalDueAmount(item);
+      case Warehouse:
+        retValue = item.warehouseFk.code;
+        break;
+
+      case TotalAmount:
+        retValue = this.getTotalAmount(item);
         break;
 
       case PaymentsName:
         retValue = OliveUtilities.getItemsFirstCode(item.purchaseOrderPayments);
         break;
 
-      case FinishLink:
-        retValue = 'finish';
-        break;
-
       case PrintLink:
-        retValue = 'print';
-        break;
-
-      case PODate:
-        retValue = this.date(item.date);
+        retValue = item.printOutCount > 1 ? OliveUtilities.addSpanAddedCount(item.printOutCount - 1) : '';
         break;
     }
 
     return retValue;
   }
 
-  getTotalDueAmount(item: PurchaseOrder): string {
+  getTotalAmount(item: PurchaseOrder): string {
     let totalItemDue = 0;
-    item.purchaseOrderItems.forEach(unit => totalItemDue += unit.price * unit.quantity);
+    item.purchaseOrderItems.forEach(unit => totalItemDue += unit.price * unit.quantity - unit.discount);
 
     const totalDue =
       totalItemDue + Math.abs(item.freightAmount) +
@@ -161,7 +173,15 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     let retValue = false;
 
     switch (columnName) {
+      case FinishLink:
+        retValue = true;
+        break;
+
       case InWarehouseStatusLink:
+        retValue = true;
+        break;
+
+      case PrintLink:
         retValue = true;
         break;
     }
@@ -173,13 +193,21 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
     let retValue = '';
     switch (columnName) {
+      case FinishLink:
+        retValue = item.closedDate ? OliveContants.IconStatus.Completed : OliveContants.IconStatus.Pending;
+        break;
+
       case InWarehouseStatusLink:
         if (item.purchaseOrderItems.length) {
-          retValue = item.closedDate ? 'check' : 'access_time';
+          retValue = item.inWareHouseCompletedDate ? OliveContants.IconStatus.Completed : OliveContants.IconStatus.Pending;
         }
         else {
-          retValue = 'error_outline';
+          retValue = OliveContants.IconStatus.Error;
         }
+        break;
+
+      case PrintLink:
+        retValue = item.printOutCount > 0 ? OliveContants.IconStatus.Completed : OliveContants.IconStatus.Pending;
         break;
     }
 
@@ -200,6 +228,9 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
           retValue = this.translater.get('common.status.inItemEntry');
         }
         break;
+
+      case PrintLink:
+        break;        
     }
 
     return retValue;
@@ -211,7 +242,10 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     if (
       columnName === FinishLink ||
       columnName === InWarehouseStatusLink ||
-      columnName === PrintLink) {
+      columnName === PrintLink || 
+      columnName === ItemsName || 
+      columnName === TotalAmount ||
+      columnName === PaymentsName) {
       this.setTdId(item.id, columnName);
       retValue = true;
     }
@@ -228,38 +262,61 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       case PrintLink:
         this.onPOPrint(item);
         break;
+
+      case ItemsName:
+      case TotalAmount:
+        const itemsTabIndex = 1;
+        this.editItem(item, new Event('custom'), itemsTabIndex);
+        break;
+
+      case PaymentsName:
+        const paymentsTabIndex = 2;
+        this.editItem(item, new Event('custom'), paymentsTabIndex);
+        break;
     }
 
     return retValue;
   }
 
-  renderTDClass(item: PurchaseOrder, column: any) {
+  renderTDClass(item: PurchaseOrder, column: any): string {
     let addedClass = '';
-    if (column.data === InWarehouseStatusLink) {
-      if (item.purchaseOrderItems.length) {
-        addedClass = item.closedDate ? 'foreground-blue' : 'foreground-orange';
-      }
-      else {
-        addedClass = 'foreground-red';
-      }
+
+    switch (column.data) {
+      case FinishLink:
+        addedClass = item.closedDate ? OliveContants.ForegroundColor.Blue : OliveContants.ForegroundColor.Orange;
+        break;
+
+      case InWarehouseStatusLink:
+        if (item.purchaseOrderItems.length) {
+          addedClass = item.inWareHouseCompletedDate ? OliveContants.ForegroundColor.Blue : OliveContants.ForegroundColor.Orange;
+        }
+        else {
+          addedClass = OliveContants.ForegroundColor.Red;
+        }
+        break;
+
+      case PrintLink:
+        addedClass = item.printOutCount === 0 ? OliveContants.ForegroundColor.Orange : OliveContants.ForegroundColor.Blue;
+        break;
     }
+
     return super.renderTDClass(item, column, addedClass);
   }
 
   patchPurchaseOrder(item: PurchaseOrder, transactionType: string) {
     this.loadingIndicator = true;
 
-    this.miscService.patchPurchaseOrder(transactionType, item.id).subscribe(
+     this.miscService.patchPurchaseOrder('purchaseOrder', transactionType, item.id).subscribe(
       response => {
         this.loadingIndicator = false;
 
         let message = '';
 
         if (transactionType === 'close') {
-          message = this.translater.get('purchaseOrders.close');
+          message = this.translater.get('purchasing.purchaseOrders.closed');
         }
         else if (transactionType === 'open') {
-          message = this.translater.get('purchaseOrders.open');
+          message = this.translater.get('purchasing.purchaseOrders.opened');
         }
 
         this.alertService.showMessage(
@@ -267,6 +324,14 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
           message, 
           MessageSeverity.success
         );
+
+        if (transactionType === 'print') {
+          item.printOutCount = response.model;
+          item.lastPrintOutUser = this.accountService.currentUser.userAuditKey;
+        }
+        else {
+          item.inWareHouseCompletedDate = transactionType === 'close' ? response.model : null;
+        }
       },
       error => {
         this.loadingIndicator = false;
@@ -276,50 +341,89 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
   }
 
   onFinish(item: PurchaseOrder) {
-    let dialog = true;
-    let message = '';
-    let title = '';
+    let errorDialogMessage: string;
+    let errorDialogTitle: string;
+    let transactionType: string;
+
+    let startTabIndex = 0;
 
     if (item.closedDate) {
-      dialog = false;
-      this.patchPurchaseOrder(item, 'open');
+      transactionType = 'open';
     }
     else { // 종결 요청 Validation
       if (item.purchaseOrderItems.length === 0) { // No Item?
-        title = this.translater.get('common.title.errorConfirm');
-        message = this.translater.get('purchaseOrders.noItem');
+        errorDialogTitle = this.translater.get('common.title.errorConfirm');
+        errorDialogMessage = this.translater.get('purchasing.purchaseOrders.noItem');
+        startTabIndex = 1;
       }
-      else if (item.purchaseOrderItems.length === 0) { // No Payment?
-        title = this.translater.get('common.title.errorConfirm');
-        message = this.translater.get('purchaseOrders.noPayment');
+      else if (item.purchaseOrderPayments.length === 0) { // No Payment?
+        errorDialogTitle = this.translater.get('common.title.errorConfirm');
+        errorDialogMessage = this.translater.get('purchasing.purchaseOrders.noPayment');
+        startTabIndex = 2;
       }
       else if (item.inWareHouseCompletedDate) { // 입고완료
-        dialog = false;
-        this.patchPurchaseOrder(item, 'close');
+        transactionType = 'close';
       }
       else { // 입고중
-        dialog = true;
-        title = this.translater.get('common.title.errorConfirm');
-        message = this.translater.get('purchaseOrders.pendingInWarehouse');
+        errorDialogTitle = this.translater.get('common.title.errorConfirm');
+        errorDialogMessage = this.translater.get('purchasing.purchaseOrders.pendingInWarehouse');
       }
     }
 
-    if (dialog) {
+    if (transactionType) { // 저장 확인
+      this.alertService.showDialog(
+        this.translater.get('common.title.yesOrNo'),
+        transactionType === 'open' ? this.translater.get('purchasing.purchaseOrders.confirmOpen') : this.translater.get('purchasing.purchaseOrders.confirmClose'),
+        DialogType.confirm,
+        () => this.patchPurchaseOrder(item, transactionType),
+        () => null,
+        this.translater.get('common.button.save'),
+        this.translater.get('common.button.cancel')
+      );
+    }
+    else {
       this.alertService.showDialog
         (
-          title,
-          message,
+          errorDialogTitle,
+          errorDialogMessage,
           DialogType.alert,
-          () => this.editItem(item, new Event('custom'))
+          () => this.editItem(item, new Event('custom'), startTabIndex)
         );
     }
   }
 
   onInWarehouseStatus(item: PurchaseOrder) {
-    console.log('onInWarehouseStatus');
+    this.dialog.open(
+      OliveInWarehouseStatusComponent,
+      {
+        disableClose: false,
+        panelClass: 'mat-dialog-md',
+        data: {
+          name: 'InWarehouseItem',
+          columnType: 'custom',
+          disableSearchInput: true,
+          customClick: true,
+          dialogTitle: this.translater.get(NavTranslates.InWarehouse.Status),
+          dataService: this.inWarehouseItemService,
+          extraSearches: [{ name: 'status', value: item.id }] as NameValue[]
+        } as LookupListerSetting
+      });
   }
 
   onPOPrint(item: PurchaseOrder) {
+    const printAction = 'print';
+    if (item.purchaseOrderItems.length === 0) {
+      const startTabIndex = 1;
+      this.alertService.showDialog
+      (
+        this.translater.get('common.title.errorConfirm'),
+        this.translater.get('purchasing.purchaseOrders.noItemToPrint'),
+        DialogType.alert,
+        () => this.editItem(item, new Event('custom'), startTabIndex)
+      );
+      return;
+    }
+
     const dialogSetting = new OliveDialogSetting(
       OlivePreviewPurchaseOrderComponent, 
       {
@@ -334,10 +438,9 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         data: dialogSetting
       });
 
-    dialogRef.afterClosed().subscribe(searches => {
-      if (searches != null) {
-        this.setting.extraSearches = searches;
-        this.dataTable().search('').draw();
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === printAction) {
+        this.patchPurchaseOrder(item, printAction);
       }
     });
   }

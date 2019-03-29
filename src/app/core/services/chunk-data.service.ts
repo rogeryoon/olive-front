@@ -1,42 +1,27 @@
-import { Injectable, Injector } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 import { ConfigurationService } from '@quick/services/configuration.service';
 
-import { OliveQueryParameterService } from './query-parameter.service';
-import { OliveEndpointBaseService } from './endpoint-base.service';
+import { OliveEntityEndpointService } from './entity-endpoint.service';
+import { OliveEntityService } from './entity-service';
 
 @Injectable()
-export class OliveChunkDataEndpointService extends OliveEndpointBaseService {
-  private readonly _url: string = '/api/chunkdatas';
+export class OliveChunkDataService extends OliveEntityService {
 
-  get url() { return this.configurations.baseUrl + this._url; }
+  constructor
+    (
+    endpoint: OliveEntityEndpointService,
+    configurations: ConfigurationService
+    ) {
+    super(
+      endpoint,
+      configurations
+    );
 
-  constructor(
-    http: HttpClient, configurations: ConfigurationService, 
-    injector: Injector, queryParams: OliveQueryParameterService
-  ) 
-  { 
-    super(http, configurations, injector, queryParams); 
+    this.setApiUrl('chunkdatas');
   }
 
-  getItemsEndpoint<T>(parameter: any, type: string): Observable<T> {
-    const endpointUrl = `${this.url}/${type}/${this.queryParams.CompanyGroupId}`;
-    
-    return this.http.post<T>(endpointUrl, parameter ? JSON.stringify(parameter) : null, this.getRequestHeaders())
-      .catch(error => {
-        return this.handleError(error, () => this.getItemsEndpoint(parameter, endpointUrl));
-      });
-  } 
-}
-
-@Injectable()
-export class OliveChunkDataService {
-
-  constructor(private endpoint: OliveChunkDataEndpointService) { }
-
-  getItems(parameter: any, type: string) {
-    return this.endpoint.getItemsEndpoint<any>(parameter, type);
+  getUserNames(userNames: string[]) {
+    return this.post('userNames', {userAuditKeys: userNames});
   }
 }

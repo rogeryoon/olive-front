@@ -5,72 +5,89 @@ import { NavTranslates } from './nav-translates';
 
 export const defaultNavigation: FuseNavigation[] = [
     {
-        id: 'purchase',
-        title: '발주',
-        translate: 'navi.purchase.purchase',
+        id: 'product',
+        title: '상품',
+        translate: 'navi.group.product',
         type: 'group',
-        icon: NavIcons.Purchase.Purchase,
+        icon: NavIcons.Group.Product,
         children: [
             {
-                id: 'purchaseViewGroup',
-                title: '발주서',
-                translate: 'navi.purchase.viewGroup',
+                id: 'purchaseGroup',
+                title: '발주',
+                translate: 'navi.purchase.group',
                 type: 'collapsable',
-                icon: NavIcons.Purchase.PurchaseViewGroup,
+                icon: NavIcons.Purchase.Group,
                 children: [
-                    {
-                        id: 'purchaseOrderList',
-                        title: '발주서 목록',
-                        translate: NavTranslates.Purchase.PurchaseOrderList,
-                        type: 'item',
-                        icon: NavIcons.Purchase.PurchaseOrderList,
-                        url: '/purchases/purchase-orders'
-                    },
                     {
                         id: 'purchaseEntry',
                         title: '발주서 작성',
-                        translate: NavTranslates.Purchase.PurchaseEntry,
+                        translate: NavTranslates.Purchase.Entry,
                         type: 'item',
-                        icon: NavIcons.Purchase.PurchaseEntry,
-                        url: '/purchases/orders/0'
+                        icon: NavIcons.Purchase.Entry,
+                        url: '/purchases/0'
+                    },                   
+                    {
+                        id: 'purchaseOrderList',
+                        title: '발주서 목록',
+                        translate: NavTranslates.Purchase.List,
+                        type: 'item',
+                        icon: NavIcons.Purchase.List,
+                        url: '/purchases/list'
+                    }
+                ]
+            },
+            {
+                id: 'inWarehouseGroup',
+                title: '입고',
+                translate: 'navi.inWarehouse.group',
+                type: 'collapsable',
+                icon: NavIcons.InWarehouse.Group,
+                children: [
+                    {
+                        id: 'inWarehouseList',
+                        title: '입고서 작성',
+                        translate: NavTranslates.InWarehouse.Entry,
+                        type: 'item',
+                        icon: NavIcons.InWarehouse.Entry,
+                        url: '/inwarehouses/0'
                     },                    
                     {
                         id: 'inWarehouseList',
                         title: '입고 목록',
-                        translate: NavTranslates.Purchase.InWarehouseList,
+                        translate: NavTranslates.InWarehouse.List,
                         type: 'item',
-                        icon: NavIcons.Purchase.InWarehouseList,
-                        url: '/inwarehouses'
+                        icon: NavIcons.InWarehouse.List,
+                        url: '/inwarehouses/list'
                     },                    
                     {
-                        id: 'purchasePending',
+                        id: 'inWarehousePending',
                         title: '미입고 현황',
-                        translate: 'navi.purchase.pending',
+                        translate: NavTranslates.InWarehouse.Pending,
                         type: 'item',
-                        icon: NavIcons.Purchase.PurchasePending,
-                        url: '/purchases/pending'
-                    }
+                        icon: NavIcons.InWarehouse.Pending,
+                        url: '/inwarehouses/pending'
+                    }                    
                 ]
             }
         ]
     },
     {
         id: 'product',
-        title: '제품',
+        title: '상품',
         translate: NavTranslates.Product.Home,
         type: 'group',
         icon: NavIcons.Product.Home,
         children: [
             {
                 id: 'productHome',
-                title: '제품',
+                title: '상품',
                 translate: NavTranslates.Product.ProductHome,
                 type: 'collapsable',
                 icon: NavIcons.Product.ProductHome,
                 children: [
                     {
                         id: 'products',
-                        title: '제품 그룹',
+                        title: '상품 그룹',
                         translate: NavTranslates.Product.ProductGroup,
                         type: 'item',
                         icon: NavIcons.Product.ProductGroup,
@@ -78,7 +95,7 @@ export const defaultNavigation: FuseNavigation[] = [
                     },
                     {
                         id: 'products',
-                        title: '제품',
+                        title: '상품',
                         translate: NavTranslates.Product.ProductVariant,
                         type: 'item',
                         icon: NavIcons.Product.ProductVariant,
@@ -302,9 +319,9 @@ export const defaultNavigation: FuseNavigation[] = [
                     },
                     {
                         id: 'paymentMethod',
-                        title: NavTranslates.Purchase.PaymentMethod,
+                        title: NavTranslates.Company.PaymentMethod,
                         type: 'item',
-                        icon: NavIcons.Purchase.PaymentMethod,
+                        icon: NavIcons.Company.PaymentMethod,
                         url: '/companies/payment-method'
                     },
                     {

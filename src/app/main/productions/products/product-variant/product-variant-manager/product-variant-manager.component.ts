@@ -9,7 +9,7 @@ import { AccountService } from '@quick/services/account.service';
 
 import { OliveProductVariantService } from '../../services/product-variant.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { OliveEntityEditComponent } from 'app/core/components/entity-edit/entity-edit.component';
+import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveProductVariantEditorComponent } from '../product-variant-editor/product-variant-editor.component';
 
 @Component({

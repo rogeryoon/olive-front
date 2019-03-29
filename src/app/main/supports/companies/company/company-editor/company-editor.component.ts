@@ -5,10 +5,9 @@ import { AccountService } from '@quick/services/account.service';
 import { Permission } from '@quick/models/permission.model';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
-import { OliveUtilities } from 'app/core/classes/utilities';
+import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { Company } from '../../models/company.model';
-import { OliveLookupHostComponent } from 'app/core/components/lookup-host/lookup-host.component';
+import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveCompanyGroupService } from '../../services/company-group.service';
 import { CompanyGroup } from '../../models/company-group.model';

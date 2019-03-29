@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
+import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { Vendor } from '../../models/vendor.model';
 
@@ -52,7 +52,7 @@ export class OliveVendorEditorComponent extends OliveEntityFormComponent {
   resetForm() {
     this.oForm.reset({
       id: this.id36(this.item.id),
-      code: this.item.code || OliveUtilities.Make36Id(4),
+      code: this.item.code || OliveUtilities.make36Id(4),
       name: this.item.name || '',
       phoneNumber: this.item.phoneNumber || '',
       email: this.item.email || '',

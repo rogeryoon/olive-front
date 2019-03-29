@@ -10,17 +10,20 @@ export const locale = {
             'message' : {
                 'noRecordsFound' : 'No matching records found',
                 'savingChanges' : 'Saving changes...',
-                'newItemCreated': '"{0}" was created successfully',
+                'newItemCreated': '"{0}"(이)가 저장되었습니다.', // '"{0}" was created successfully'
+                'newItemCreatedGeneral': '데이터가 저장되었습니다.', // 'The item was created successfully',
                 'uploadSaved': '업로드 데이터 저장을 완료하였습니다.',
-                'deleted' : '"{0}" was deleted successfully',
-                'updated' : '"{0}" was saved successfully',
+                'deleted' : '"{0}"(이)가 삭제되었습니다.', // '"{0}" was deleted successfully'
+                'deletedGeneral' : '데이터가 삭제되었습니다.', // 'The item was deleted successfully'
+                'updated' : '"{0}"(이)가 저장되었습니다.', // '"{0}" was saved successfully'
+                'updatedGeneral' : '데이터가 저장되었습니다.', // 'The item was saved successfully'
                 'saveError' : 'The below errors occured whilst saving your changes:',
                 'noExcelFile' : 'Please upload a valid Excel file (.xlsx)!',
                 'selectItem' : '원하는 항목을 체크 선택해주세요.',
                 'notSupportHtml5' : 'Sorry! Your browser does not support HTML5.',
                 'invalidSelectedFiles' : '선택한 파일이 없습니다.',
                 'clickFileButton' : '파일열기 버튼을 눌러 업로드 파일을 선택해 주십시오.',
-                'confirmDelete' : 'Delete {0}?',
+                'confirmDelete' : '정말 삭제하겠습니까{0}?',
                 'errorDeleteting' : 'The below errors occured whilst sdeleting the item:',
                 'deleting' : 'Deleting...',
                 'errorLoading' : 'Unable to retrieve data from the server.\r\n Please contact your system administrator',
@@ -30,11 +33,12 @@ export const locale = {
                 'duplicated' : '아래건(들)이 이미 존재하여 추가되지 않았습니다.\r\n{0}',
                 'requestFinished': '요청한 작업을 완료하였습니다.',
                 'noItemCreated' : '1개 이상의 항목을 등록하십시오.',
-                'balanceIsMinus' : '잔량이 음수인 값이 있습니다.'
+                'balanceIsMinus' : '잔량이 음수인 값이 있습니다.',
+                'inWarehouseConfirm' :  '정말 입고 내용을 저장하시겠습니까?'
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
-                'deleteByConcurrency' : '해당 데이터를 참조하고 있는 관련 데이터가 존재해서 삭제를 할 수 없습니다. ',
+                'deleteByConcurrency' : '해당 데이터를 참조하고 있는 관련 데이터가 존재하여 삭제를 할 수 없습니다. ',
             },
             'validate' : {
                 'required' : '필수 입력(선택) 항목입니다.',
@@ -60,7 +64,10 @@ export const locale = {
                 'sessionExpired' : 'Session Expired',
                 'confirm' : '확인',
                 'errorConfirm' : '오류 알림',
-                'duplicated' : '중복 오류 알림'
+                'duplicated' : '중복 오류 알림',
+                'deleteConfirm' : '삭제 알림',
+                'inWarehouseConfirm' : '입고 확인',
+                'yesOrNo': '확인'
             },
             'button': {
                 'save' : '저장',
@@ -73,7 +80,11 @@ export const locale = {
                 'select' : '선택',
                 'new' : '신규',
                 'print' : '인쇄',
-                'add' : '추가'
+                'add' : '추가',
+                'finish': '종결',
+                'yes': '예',
+                'no': '아니오',
+                'ok': '확인'
             },
             'menu': {
                 'menuButton' : '부가 기능',
@@ -94,47 +105,45 @@ export const locale = {
                 'login': 'LOGIN TO YOUR ACCOUNT'
             }
         },
-        'naviTitle' : {
-            'purchase' : {
-                'purchaseEntry': '발주서 작성',
-                'purchaseOrderList' : '발주서 조회',
-                'paymentMethod' : '결제 수단',
-                'inWarehouseList' : '입고 목록'
-            },
-            'product' : {
-                'home' : '제품',
-                'productHome' : '제품',
-                'productGroup' : '제품 그룹',
-                'productVariant' : '제품',
-            },
-            'company' : {
-                'list' : '고객사',
-                'group' : '고객사 그룹',
-                'branch' : '지점',
-                'vendor' : '거래처',
-                'warehouse' : '창고'
-            },
-            'basic' : {
-                'currency' : '외국 화폐',
-                'country' : '국가 코드'
-            }
-        },
         'navi' : {
+            'group' : {
+                'product': '상품'
+            },
             'purchase' : {
-                'purchase' : '발주',
-                'entry' : '발주서 등록',
-                'viewGroup' : '발주서 목록',
-                'view' : '발주서 조회',
-                'stats' : '발주서 현황',
-                'pending' : '미입고 현황'
+                'group' : '발주',
+                'entry': '발주서 작성',
+                'list' : '발주서 목록',
+            },
+            'inWarehouse' : {
+                'group' : '입고',
+                'entry': '입고서 작성',
+                'list' : '입고 목록',
+                'pending' : '미입고 현황',
+                'status' : '입고 현황'
             },
             'product' : {
+                'home' : '상품',
+                'productHome' : '상품',
+                'productGroup' : '상품 그룹',
+                'productVariant' : '상품',
                 'product' : '상품',
                 'products' : '상품 목록',
                 'invetoryGroup' : '재고 목록',
                 'inventoriesBalance' : '재고 조회',
                 'inventoriesWarehouse' : '창고별 재고',
                 'inventoriesHistory' : '품목별 재고기록'
+            },
+            'company' : {
+                'list' : '고객사',
+                'group' : '고객사 그룹',
+                'branch' : '지점',
+                'vendor' : '거래처',
+                'warehouse' : '창고',
+                'paymentMethod': '결제 수단'
+            },
+            'basic' : {
+                'currency' : '외국 화폐',
+                'country' : '국가 코드'
             },
             'config' : {
                 'companies' : '고객사',
@@ -183,6 +192,79 @@ export const locale = {
                 'tabClass' : '분류',
                 'tabInventory' : 'Inventory'
             }
+        },
+        'purchasing' : {
+            'purchaseOrders': {
+                'noItem' : '발주서 상품등록을 하지 않아서 입고 및 종결처리를 할 수 없습니다.',
+                'noPayment' : '발주서 결제정보를 입력하지 않아서 종결처리를 할 수 없습니다.',
+                'pendingInWarehouse' : '입고처리를 완료하지 않아서 종결처리를 할 수 없습니다.',
+                'closed' : '발주서 종결처리를 완료 하였습니다.',
+                'opened' : '발주서 종결처리를 취소 하였습니다.',
+                'noItemToPrint' : '발주서 상품등록을 하지 않아서 인쇄를 할수 없습니다.',
+                'confirmOpen' : '정말 종결완료된 발주서를 종결취소를 진행 하겠습니까?',
+                'confirmClose' : '정말 발주서 종결처리를 진행하겠습니까?'
+            },
+            'purchaseOrderItems': {
+                'id' : 'ID',
+                'name' : 'Name',
+                'quantity': '수량',
+                'price': '가격',
+                'amount' : '소계',
+                'discount' : '할인',
+                'appliedCost' : '적용원가',
+                'otherCurrencyPrice' : '가격',
+                'remark' : '비고'
+            },
+            'purchaseOrderPayments': {
+                'paymentMethodId' : '결제',
+                'amount' : '금액',
+                'remarkId': '승인번호'
+            },
+            'previewPurchaseOrder': {
+                'freight' : 'freight',
+                'addedDiscount' : 'Discount',
+                'tax' : 'Tax',
+                'subTotal' : 'Sub Total',
+                'grandTotal' : 'Total',
+                'payments' : 'Payments'
+            },
+            'purchaseOrdersHeader': {
+                'Id': 'ID',
+                'VendorName': '벤더',
+                'ItemsName': '제품',
+                'Warehouse': '창고',
+                'TotalAmount': '총액',
+                'PaymentsName': '결제',
+                'InWarehouseStatusLink': '입고',
+                'FinishLink' : '종결',
+                'PrintLink': '인쇄'
+            },
+            'inWarehouseItems': {
+                'id' : '품목',
+                'vendor': '벤더',
+                'name' : '품명',
+                'quantity': '입고',
+                'balance': '잔량',
+                'remark' : '비고',
+                'price' : '단가',
+                'quantityDue' : '계',
+                'selectWarehouseFirst' : '입고 창고를 먼저 선택하십시오.'
+            },
+            'inWarehousesHeader': {
+                'Id': 'ID',
+                'Vendors': '벤더',
+                'Items': '품명',
+                'Quantity': '수량',
+                'TotalAmount': '총액',
+                'Warehouse': '창고'
+            },
+            'inWarehouseStatusHeader': {
+                'ProductVariantId': '품목',
+                'ItemName': '품명',
+                'Quantity': '수량',
+                'Balance': '잔량',
+                'InWarehouseId': '입고 ID'
+            }            
         }
     }
 };

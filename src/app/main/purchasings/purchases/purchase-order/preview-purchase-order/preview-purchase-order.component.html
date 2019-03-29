@@ -350,7 +350,7 @@
         </div>
         <div id="reference">
             <h3><strong>Purchase Order</strong></h3>
-            <h4>PO # : {{id36(order.id)}}</h4>
+            <h4>PO # : {{id36(order.id)}}-{{this.dateCode(order.date)}}</h4>
             <p>Date : {{date(order.date)}}</p>
         </div>
     </div>
@@ -369,7 +369,7 @@
     </div>
 
     <div id="items">
-        <p>{{'previewPurchaseOrder.payments' | translate}} : {{paymentSummary}}</p>
+        <p>{{'purchasing.previewPurchaseOrder.payments' | translate}} : {{paymentSummary}}</p>
         <table id="olive-table">
             <thead>
                 <tr>
@@ -386,7 +386,7 @@
                 <tr *ngFor="let item of order.purchaseOrderItems" class="print">
                     <td class="print -ex-type-id">{{id36(item.id)}}</td>
                     <td class="print -ex-type-text">{{item.name}}</td>
-                    <td class="print -ex-type-number">{{numberFormat(item.quantity)}}</td>
+                    <td class="print -ex-type-number">{{commaNumber(item.quantity)}}</td>
                     <td class="print -ex-type-number">{{numberFormat(item.price, digits)}}</td>
                     <td class="print -ex-type-number">{{numberFormat(item.discount*-1, digits, '0')}}</td>
                     <td class="print -ex-type-number">{{numberFormat(item.quantity*item.price-item.discount, digits)}}</td>
@@ -404,23 +404,23 @@
         <div id="total">
             <table>
                 <tr>
-                    <td>{{'previewPurchaseOrder.subTotal' | translate}}</td>
+                    <td>{{'purchasing.previewPurchaseOrder.subTotal' | translate}}</td>
                     <td>{{numberFormat(subTotal, digits)}}</td>
                 </tr>
                 <tr>
-                    <td>{{'previewPurchaseOrder.freight' | translate}}</td>
+                    <td>{{'purchasing.previewPurchaseOrder.freight' | translate}}</td>
                     <td>{{numberFormat(order.freightAmount, digits)}}</td>
                 </tr>
                 <tr>
-                    <td>{{'previewPurchaseOrder.addedDiscount' | translate}}</td>
+                    <td>{{'purchasing.previewPurchaseOrder.addedDiscount' | translate}}</td>
                     <td>{{numberFormat(order.addedDiscountAmount*-1, digits)}}</td>
                 </tr>
                 <tr>
-                    <td>{{'previewPurchaseOrder.tax' | translate}}</td>
+                    <td>{{'purchasing.previewPurchaseOrder.tax' | translate}}</td>
                     <td>{{numberFormat(order.taxAmount, digits)}}</td>
                 </tr>
                 <tr>
-                    <td>{{'previewPurchaseOrder.grandTotal' | translate}}</td>
+                    <td>{{'purchasing.previewPurchaseOrder.grandTotal' | translate}}</td>
                     <td>{{numberFormat(grandTotal, digits)}}</td>
                 </tr>
             </table>

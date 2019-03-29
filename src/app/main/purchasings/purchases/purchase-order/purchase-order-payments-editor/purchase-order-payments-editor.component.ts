@@ -2,11 +2,10 @@ import { Component, forwardRef } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, ValidationErrors, 
   NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
-import { String } from 'typescript-string-operations';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
+import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveContants } from 'app/core/classes/contants';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OlivePaymentMethodService } from 'app/main/supports/companies/services/payment-method.service';
@@ -14,7 +13,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { OlivePurchaseOrderPaymentDatasource } from './purchase-order-payment-datasource';
 import { PurchaseOrder } from '../../models/purchase-order.model';
 import { PaymentMethod } from 'app/main/supports/companies/models/payment-method.model';
-import { locale as english } from '../../i18n/en';
+import { OliveUtilities } from 'app/core/classes/utilities';
 
 @Component({
   selector: 'olive-purchase-order-payments-editor',
@@ -48,8 +47,6 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     super(
       formBuilder, translater
     );
-
-    this.translater.loadTranslations(english);
   }
 
   initializeChildComponent() {
@@ -97,14 +94,15 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
 
   private newItem() {
     this.paymentsDataSource.addNewItem(null);
+    this.paymentsDataSource.renderItems();
     this.oForm.markAsDirty();
   }
   
   private deleteItem(item: any) {
     if (item.Obj.id || item.Obj.amount || item.Obj.paymentMethodId || item.Obj.remarkId) {
       this.snackBar.open(
-        String.Format(this.translater.get('common.message.confirmDelete'), 'the data'),
-        this.translater.get('common.button.confirmDelete'),
+        OliveUtilities.showParamMessage(this.translater.get('common.message.confirmDelete'), ''),
+        this.translater.get('common.button.delete'),
         { duration: 5000 }
       )
         .onAction().subscribe(() => {

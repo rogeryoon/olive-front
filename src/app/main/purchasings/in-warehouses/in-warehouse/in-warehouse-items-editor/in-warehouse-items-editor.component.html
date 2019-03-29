@@ -10,26 +10,44 @@
       (click)="currentRow=row;">
     </mat-row>
 
-    <ng-container matColumnDef="viewId">
-      <mat-header-cell *matHeaderCellDef>{{'inWarehouseItems.id' | translate}}</mat-header-cell>
-      <mat-cell *matCellDef="let row" class="justify-center">{{viewId(row.Obj)}}</mat-cell>
+    <ng-container matColumnDef="productVariantId">
+      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.id' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="justify-center">{{id36(row.Obj.productVariantId)}}</mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="vendor">
-      <mat-header-cell *matHeaderCellDef>{{'inWarehouseItems.vendor' | translate}}</mat-header-cell>
-      <mat-cell *matCellDef="let row" class="justify-center">{{row.Obj.purchaseOrderFk.vendorFk.name}}</mat-cell>
+      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.vendor' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="justify-center">{{row.Obj.vendorName}}</mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>    
 
     <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef>{{'inWarehouseItems.name' | translate}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.name' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row">{{row.Obj.name}}</mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>
 
+    <ng-container matColumnDef="balance">
+      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.balance' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="justify-end pr-4">{{row.Obj.balance|number:'1.0-0'}}</mat-cell>
+      <mat-footer-cell *matFooterCellDef class="justify-end pr-4">{{totalBalance|number:'1.0-0'}}</mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.price' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="justify-end pr-4">{{numberFormat(row.Obj.price, standCurrency.decimalPoint)}}</mat-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
+    </ng-container>
+    
+    <ng-container matColumnDef="quantityDue">
+      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.quantityDue' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="justify-end pr-4">{{numberFormat(row.Obj.price*row.Obj.quantity, standCurrency.decimalPoint)}}</mat-cell>
+      <mat-footer-cell *matFooterCellDef class="justify-end pr-4">{{numberFormat(totalQuantityDue, standCurrency.decimalPoint)}}</mat-footer-cell>
+    </ng-container>
+
     <ng-container matColumnDef="quantity">
-      <mat-header-cell *matHeaderCellDef>{{'inWarehouseItems.quantity' | translate}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.quantity' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('quantity',i)">
         <mat-form-field fxFlex='95%'>
           <input name="inputQuantity{{row.ObjId}}" class="right olive-error" matInput formControlName="quantity"
@@ -38,16 +56,10 @@
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef class="justify-end pr-4">{{totalQuantity|number:'1.0-0'}}</mat-footer-cell>
-    </ng-container>
-
-    <ng-container matColumnDef="balance">
-      <mat-header-cell *matHeaderCellDef>{{'inWarehouseItems.balance' | translate}}</mat-header-cell>
-      <mat-cell *matCellDef="let row" class="justify-end pr-4">{{row.Obj.balance|number:'1.0-0'}}</mat-cell>
-      <mat-footer-cell *matFooterCellDef class="justify-end pr-4">{{totalBalance|number:'1.0-0'}}</mat-footer-cell>
-    </ng-container>
+    </ng-container>    
 
     <ng-container matColumnDef="remark">
-      <mat-header-cell *matHeaderCellDef>{{'inWarehouseItems.remark' | translate}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.remark' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <input name="inputRemark{{row.ObjId}}" matInput type="text" formControlName="remark" (change)="onChange($event)"

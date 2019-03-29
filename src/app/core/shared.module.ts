@@ -7,36 +7,35 @@ import { DataTablesModule } from 'angular-datatables';
 
 import { OlivePipesModule } from './pipes/pipes.module';
 import { OliveMaterialModule } from './modules/material.module';
-import { OliveAppDialogComponent } from './components/app-dialog/app-dialog.component';
-import { OliveImportFileDialogComponent } from './components/import-file-dialog/import-file-dialog.component';
+import { OliveAppDialogComponent } from './components/dialogs/app-dialog/app-dialog.component';
+import { OliveImportFileDialogComponent } from './components/dialogs/import-file-dialog/import-file-dialog.component';
 import { OliveDocumentService } from './services/document.service';
 import { OliveMessageHelperService } from './services/message-helper.service';
 import { OliveCacheService } from './services/cache.service';
-import { OliveSearchDialogComponent } from './components/search-dialog/search-dialog.component';
-import { OliveEntityListComponent } from './components/entity-list/entity-list.component';
-import { OliveLookupDialogComponent } from './components/lookup-dialog/lookup-dialog.component';
-import { OliveEditDialogComponent } from './components/edit-dialog/edit-dialog.component';
-import { OliveEntityEditComponent } from './components/entity-edit/entity-edit.component';
-import { OliveEntityDateComponent } from './components/entity-date/entity-date.component';
-import { OliveUserNameService } from './services/user-name.service';
-import { OliveEntityFormComponent } from './components/entity-edit/entity-form.component';
-import { OliveEntityFormBaseComponent } from './components/entity-edit/entity-form-base.component';
-import { OliveTabLabelComponent } from './components/tab-label/tab-label.component';
+import { OliveSearchDialogComponent } from './components/dialogs/search-dialog/search-dialog.component';
+import { OliveEntityListComponent } from './components/extends/entity-list/entity-list.component';
+import { OliveLookupDialogComponent } from './components/dialogs/lookup-dialog/lookup-dialog.component';
+import { OliveEditDialogComponent } from './components/dialogs/edit-dialog/edit-dialog.component';
+import { OliveEntityEditComponent } from './components/extends/entity-edit/entity-edit.component';
+import { OliveEntityDateComponent } from './components/entries/entity-date/entity-date.component';
+import { OliveEntityFormComponent } from './components/extends/entity-form/entity-form.component';
+import { OliveEntityFormBaseComponent } from './components/extends/entity-form-base/entity-form-base.component';
 import { OliveEntityEndpointService } from './services/entity-endpoint.service';
-import { OliveAddressEditorComponent } from './components/editor/address-editor/address-editor.component';
-import { OliveLookupHostComponent } from './components/lookup-host/lookup-host.component';
-import { OliveChipInputComponent } from './components/chip-input/chip-input.component';
-import { OliveChunkDataEndpointService, OliveChunkDataService } from './services/chunk-data.service';
-import { OliveEntityListEditComponent } from './components/entity-list-edit/entity-list-edit.component';
+import { OliveAddressEditorComponent } from './components/entries/address-editor/address-editor.component';
+import { OliveLookupHostComponent } from './components/entries/lookup-host/lookup-host.component';
+import { OliveChipInputComponent } from './components/entries/chip-input/chip-input.component';
+import { OliveChunkDataService } from './services/chunk-data.service';
 import { OliveQueryParameterService } from './services/query-parameter.service';
 import { OliveCompanyGroupSettingService } from './services/company-group-setting.service';
 import { OliveCompanyMasterService } from './services/company-master.service';
 import { OliveCurrencyService } from 'app/main/supports/bases/services/currency.service';
-import { OliveEditPageComponent } from './components/edit-page/edit-page.component';
+import { OliveEditPageComponent } from './components/extends/edit-page/edit-page.component';
 import { OlivePlaceHolderDirective } from './directives/place-holder.directive';
-import { OliveBaseComponent } from './components/base/base.component';
+import { OliveBaseComponent } from './components/extends/base/base.component';
 import { OliveEndpointBaseService } from './services/endpoint-base.service';
-import { OlivePreviewDialogComponent } from './components/preview-dialog/preview-dialog.component';
+import { OlivePreviewDialogComponent } from './components/dialogs/preview-dialog/preview-dialog.component';
+import { OliveViewDialogComponent } from './components/dialogs/view-dialog/view-dialog.component';
+import { OliveTabLabelComponent } from './components/entries/tab-label/tab-label.component';
 
 @NgModule({
   imports: [
@@ -63,19 +62,19 @@ import { OlivePreviewDialogComponent } from './components/preview-dialog/preview
     OliveEntityDateComponent,
     OliveEntityFormComponent,
     OliveEntityFormBaseComponent,
-    OliveTabLabelComponent,
     OliveLookupHostComponent,
     OliveChipInputComponent,
-    OliveEntityListEditComponent,
     
     OliveImportFileDialogComponent,
     OliveSearchDialogComponent,
     OliveLookupDialogComponent,
     OliveEditDialogComponent,
     OlivePreviewDialogComponent,
+    OliveViewDialogComponent,
   
     OliveAddressEditorComponent,
     OliveEditPageComponent,
+    OliveTabLabelComponent,
 
     OlivePlaceHolderDirective
   ],
@@ -86,10 +85,8 @@ import { OlivePreviewDialogComponent } from './components/preview-dialog/preview
     OliveEntityDateComponent,
     OliveEntityFormComponent,
     OliveEntityFormBaseComponent,
-    OliveTabLabelComponent,
     OliveLookupHostComponent,
     OliveChipInputComponent,
-    OliveEntityListEditComponent,
 
     OliveAppDialogComponent,
     OliveImportFileDialogComponent,
@@ -97,9 +94,11 @@ import { OlivePreviewDialogComponent } from './components/preview-dialog/preview
     OliveLookupDialogComponent,
     OliveEditDialogComponent,
     OlivePreviewDialogComponent,
+    OliveViewDialogComponent,
 
     OliveAddressEditorComponent,
     OliveEditPageComponent,
+    OliveTabLabelComponent,
 
     OlivePlaceHolderDirective
   ],
@@ -107,10 +106,8 @@ import { OlivePreviewDialogComponent } from './components/preview-dialog/preview
     OliveDocumentService,
     OliveMessageHelperService,
     OliveCacheService,
-    OliveUserNameService,
     OliveEndpointBaseService,
     OliveEntityEndpointService,
-    OliveChunkDataEndpointService,
     OliveChunkDataService,
     OliveQueryParameterService,
     OliveCompanyGroupSettingService,
@@ -123,7 +120,8 @@ import { OlivePreviewDialogComponent } from './components/preview-dialog/preview
     OliveSearchDialogComponent,
     OliveLookupDialogComponent,
     OliveEditDialogComponent,
-    OlivePreviewDialogComponent
+    OlivePreviewDialogComponent,
+    OliveViewDialogComponent
   ]
 })
 export class OliveSharedModule { }

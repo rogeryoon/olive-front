@@ -4,12 +4,11 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { AccountService } from '@quick/services/account.service';
 
-import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
-import { OliveUtilities } from 'app/core/classes/utilities';
+import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveContants } from 'app/core/classes/contants';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { ProductVariant } from '../../models/product-variant.model';
-import { OliveLookupHostComponent } from 'app/core/components/lookup-host/lookup-host.component';
+import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveProductService } from '../../services/product.service';
 import { OliveProductManagerComponent } from '../../product/product-manager/product-manager.component';

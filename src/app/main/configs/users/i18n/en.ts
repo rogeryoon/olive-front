@@ -19,7 +19,7 @@ export const locale = {
             'UserName': 'User Name',
             'UserNameRequired': 'User name is required (minimum of 2 and maximum of 200 characters)',
             'CompanyGroupName': '고객사 그룹 선택',
-            'CompanyGroupNameRequired': '오른쪽 돋보기를 클릭해서 고객사 그룹을 선택하세요.',
+            'CompanyGroupNameRequired': '오른쪽 돋보기를 클릭하여 고객사 그룹을 선택하세요.',
             'Password': 'Password',
             'PasswordHint': 'Your password is required when changing user name',
             'CurrentPasswordRequired': 'Current password is required',

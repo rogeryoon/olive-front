@@ -16,14 +16,13 @@ import { PurchaseOrderItem } from '../../models/purchase-order-item.model';
 import { PaymentMethod } from 'app/main/supports/companies/models/payment-method.model';
 import { OlivePurchaseOrderItemDatasource } from './purchase-order-item-datasource';
 import { NavIcons } from 'app/core/navigations/nav-icons';
-import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
+import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveProductVariantService } from 'app/main/productions/products/services/product-variant.service';
 import { OliveProductVariantManagerComponent } from 'app/main/productions/products/product-variant/product-variant-manager/product-variant-manager.component';
 import { ProductVariant } from 'app/main/productions/products/models/product-variant.model';
 import { OliveProductVariantLookupDialogComponent } from 'app/main/productions/products/product-variant/product-variant-lookup-dialog/product-variant-lookup-dialog.component';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OlivePurchaseOrderService } from '../../services/purchase-order.service';
 import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/purchase-order-manager.component';
 import { NameValue } from 'app/core/models/name-value';
@@ -31,7 +30,7 @@ import { OlivePurchaseOrderLookupDialogComponent } from '../purchase-order-looku
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
 import { numberValidator } from 'app/core/classes/validators';
-import { locale as english } from '../../i18n/en';
+import { OliveUtilities } from 'app/core/classes/utilities';
 
 @Component({
   selector: 'olive-purchase-order-items-editor',
@@ -69,8 +68,6 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     super(
       formBuilder, translater
     );
-
-    this.translater.loadTranslations(english);
   }
 
   get poCurrency() {
@@ -178,24 +175,19 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     return new PurchaseOrder();
   }
 
-  private addNewItem(item: PurchaseOrderItem) {
-    this.itemsDataSource.addNewItem(item);
-    this.oForm.markAsDirty();
-  }
-
   private deleteItem(item: any) {
     if (item.Obj.id || item.Obj.name || item.Obj.quantity || item.Obj.price || item.Obj.remark) {
       this.snackBar.open(
-        String.Format(this.translater.get('common.message.confirmDelete'), 'the data'),
-        this.translater.get('common.button.confirmDelete'),
+        OliveUtilities.showParamMessage(this.translater.get('common.message.confirmDelete'), ''),
+        this.translater.get('common.button.delete'),
         { duration: 5000 }
       )
         .onAction().subscribe(() => {
-          this.itemsDataSource.deleteItem(item);
+          this.deleteUnit(item);
         });
     }
     else {
-      this.itemsDataSource.deleteItem(item);
+      this.deleteUnit(item);
     }
   }
 
@@ -203,7 +195,8 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     this.itemsDataSource.deleteItem(item);
     if (this.itemsDataSource.items.length === 0) {
       this.oFArray.removeAt(0);
-    }    
+    }
+    this.updateCosts();    
   }
 
   get totalQuantity(): number {
@@ -266,18 +259,26 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
           });
       });
 
+      let needToRender = false;
+
       pvItems
         .filter((pvItem: ProductVariant) => !dupCheckset.has(pvItem.id))
         .forEach((pvItem: ProductVariant) => {
-          this.addNewItem({
+          this.itemsDataSource.addNewItem({
             price: pvItem.standPrice,
             discount: 0,
             appliedCost: pvItem.standPrice,
             productVariantId: pvItem.id,
             name: `${pvItem.productFk.name} ${pvItem.name}`.trimRight()
           } as PurchaseOrderItem);
+          needToRender = true;
         });
 
+      if (needToRender) {
+        this.itemsDataSource.renderItems();
+        this.oForm.markAsDirty();
+      }
+    
       this.updateCosts();
 
       this.showDuplicatedItems(duplicatedIdStrings);
@@ -293,13 +294,13 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
         data: {
           name: 'PurchaseOrder',
           columnType: 'custom',
-          dialogTitle: this.translater.get(NavTranslates.Purchase.PurchaseOrderList),
+          dialogTitle: this.translater.get(NavTranslates.Purchase.List),
           dataService: this.purchaseOrderService,
           maxSelectItems: 10,
           newComponent: OlivePurchaseOrderManagerComponent,
           itemType: PurchaseOrder,
           managePermission: Permission.manageProductsPermission,
-          translateTitleId: NavTranslates.Purchase.PurchaseOrderList,
+          translateTitleId: NavTranslates.Purchase.List,
           maxNameLength: 10,
           extraSearches: [{ name: 'ItemsExists', value: 'true' }] as NameValue[]
         } as LookupListerSetting
@@ -322,21 +323,29 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
         });
       });
 
+      let needToRender = false;
+
       pItems
         .forEach((fItem: PurchaseOrder) => {
           fItem.purchaseOrderItems
             .filter((sItem: PurchaseOrderItem) => !dupCheckset.has(sItem.productVariantId))
             .forEach((sItem: PurchaseOrderItem) => {
-              this.addNewItem({
+              this.itemsDataSource.addNewItem({
                 price: sItem.price,
                 discount: 0,                
                 appliedCost: sItem.price,
                 productVariantId: sItem.productVariantId,
                 name: sItem.name
-              } as PurchaseOrderItem);              
+              } as PurchaseOrderItem);
+              needToRender = true;
             });
         });
 
+      if (needToRender) {
+        this.itemsDataSource.renderItems();
+        this.oForm.markAsDirty();
+      }
+  
       this.updateCosts();        
 
       this.showDuplicatedItems(duplicatedIdStrings);
@@ -358,11 +367,11 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   }
 
   get purchaseOrderIcon() {
-    return NavIcons.Purchase.Purchase;
+    return NavIcons.Purchase.List;
   }
 
   updateCosts() {
-    this.oFArray.controls.forEach(formGroup => {
+    this.oFArray.controls.forEach((formGroup: FormGroup) => {
       const lineOtherCurrencyPrice = this.getMoney(formGroup.get('otherCurrencyPrice').value);
 
       if (lineOtherCurrencyPrice > 0 && this.otherCurrencyPriceRequired) {

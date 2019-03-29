@@ -3,9 +3,9 @@ import { FormBuilder } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
+import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { Product } from '../../models/product.model';
-import { OliveChipInputComponent } from 'app/core/components/chip-input/chip-input.component';
+import { OliveChipInputComponent } from 'app/core/components/entries/chip-input/chip-input.component';
 
 @Component({
   selector: 'olive-product-class-editor',

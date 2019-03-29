@@ -11,7 +11,7 @@ import { Permission } from '@quick/models/permission.model';
 
 import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
-import { OliveEntityListComponent } from 'app/core/components/entity-list/entity-list.component';
+import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
@@ -31,7 +31,7 @@ const CreatedUtc = 'createdUtc';
 
 @Component({
   selector: 'olive-payment-method',
-  templateUrl: '../../../../core/components/entity-list/entity-list.component.html',
+  templateUrl: '../../../../core/components/extends/entity-list/entity-list.component.html',
   styleUrls: ['./payment-methods.component.scss'],
   animations: fuseAnimations
 })
@@ -53,8 +53,8 @@ export class OlivePaymentMethodsComponent extends OliveEntityListComponent {
   initializeChildComponent() {
     this.setting = {
       name: 'PaymentMethod',
-      icon: NavIcons.Purchase.PaymentMethod,
-      translateTitleId: NavTranslates.Purchase.PaymentMethod,
+      icon: NavIcons.Company.PaymentMethod,
+      translateTitleId: NavTranslates.Company.PaymentMethod,
       managePermission: null,
       columns: [
         { data: Selected },

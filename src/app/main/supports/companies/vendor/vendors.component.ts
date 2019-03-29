@@ -11,7 +11,7 @@ import { Permission } from '@quick/models/permission.model';
 
 import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
-import { OliveEntityListComponent } from 'app/core/components/entity-list/entity-list.component';
+import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
@@ -35,7 +35,7 @@ const CreatedUtc = 'createdUtc';
 
 @Component({
   selector: 'olive-vendor',
-  templateUrl: '../../../../core/components/entity-list/entity-list.component.html',
+  templateUrl: '../../../../core/components/extends/entity-list/entity-list.component.html',
   styleUrls: ['./vendors.component.scss'],
   animations: fuseAnimations
 })
@@ -94,7 +94,7 @@ export class OliveVendorsComponent extends OliveEntityListComponent {
         retValue = item.email;
         break;
       case WebSite:
-        retValue = OliveUtilities.WebSiteHostName(item.webSite);
+        retValue = OliveUtilities.webSiteHostName(item.webSite);
         break;
       case Address:
         retValue = item.address;
@@ -140,7 +140,7 @@ export class OliveVendorsComponent extends OliveEntityListComponent {
 
     switch (columnName) {
       case WebSite:
-        const url = OliveUtilities.WebSiteUrl(item.webSite);
+        const url = OliveUtilities.webSiteUrl(item.webSite);
         if (url) {
           this.setTdId(item.id, columnName);
           retValue = true;

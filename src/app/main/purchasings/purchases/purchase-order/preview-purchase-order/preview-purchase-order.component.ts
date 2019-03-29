@@ -5,9 +5,8 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { OliveOnPreview } from 'app/core/interfaces/on-preview';
 import { PurchaseOrder } from '../../models/purchase-order.model';
-import { OliveBaseComponent } from 'app/core/components/base/base.component';
+import { OliveBaseComponent } from 'app/core/components/extends/base/base.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { locale as english } from '../../i18n/en';
 import { OliveCompanyService } from 'app/main/supports/companies/services/company.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -28,8 +27,6 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
     private http: HttpClient, protected sanitizer: DomSanitizer
   ) {
     super();
-
-    this.translater.loadTranslations(english);
   }
 
   ngOnInit() {
@@ -135,7 +132,7 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
 
   onPrint() {
     this.documentService.printPage(
-      `Purchase Order ${this.id36(this.order.id)}`, 
+      `Purchase Order ${this.id36(this.order.id)}-${this.dateCode(this.order.date)}`, 
       'olivestyle', 'olive-container'
     );
   }
@@ -143,7 +140,7 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
   onExcel() {
     const summaries = [];
 
-    summaries.push(`PO # : ${this.id36(this.order.id)}`);
+    summaries.push(`PO # : ${this.id36(this.order.id)}-${this.dateCode(this.order.date)}`);
     summaries.push(`Date : ${this.date(this.order.date)}`);
 
     const vfk = this.order.vendorFk;
@@ -152,11 +149,11 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
     const wfk = this.order.warehouseFk;
     summaries.push(`Warehouse : ${wfk.name} [${wfk.code}]`);
 
-    summaries.push(`${this.translater.get('previewPurchaseOrder.subTotal')} : ${this.numberFormat(this.subTotal, this.digits)}`);
-    summaries.push(`${this.translater.get('previewPurchaseOrder.freight')} : ${this.numberFormat(this.order.freightAmount, this.digits)}`);
-    summaries.push(`${this.translater.get('previewPurchaseOrder.addedDiscount')} : ${this.numberFormat(this.order.addedDiscountAmount * -1, this.digits)}`);
-    summaries.push(`${this.translater.get('previewPurchaseOrder.tax')} : ${this.numberFormat(this.order.taxAmount, this.digits)}`);
-    summaries.push(`${this.translater.get('previewPurchaseOrder.grandTotal')} : ${this.numberFormat(this.grandTotal, this.digits)}`);
+    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.subTotal')} : ${this.numberFormat(this.subTotal, this.digits)}`);
+    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.freight')} : ${this.numberFormat(this.order.freightAmount, this.digits)}`);
+    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.addedDiscount')} : ${this.numberFormat(this.order.addedDiscountAmount * -1, this.digits)}`);
+    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.tax')} : ${this.numberFormat(this.order.taxAmount, this.digits)}`);
+    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.grandTotal')} : ${this.numberFormat(this.grandTotal, this.digits)}`);
 
     this.documentService.exportExcel(
       `PO-${this.id36(this.order.id)}`,

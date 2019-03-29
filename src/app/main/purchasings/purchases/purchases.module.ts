@@ -21,25 +21,27 @@ import { OlivePurchaseOrderPaymentsEditorComponent } from './purchase-order/purc
 import { OlivePurchaseOrderItemsEditorComponent } from './purchase-order/purchase-order-items-editor/purchase-order-items-editor.component';
 import { OliveProductVariantService } from 'app/main/productions/products/services/product-variant.service';
 import { OliveProductVariantLookupDialogModule } from 'app/main/productions/products/product-variant/product-variant-lookup-dialog/product-variant-lookup-dialog.module';
-import { OlivePurchaseOrderLookupDialogModule } from './purchase-order/purchase-order-lookup-dialog/purchase-order-lookup-dialog.module';
 import { OliveProductVariantManagerModule } from 'app/main/productions/products/product-variant/product-variant-manager/product-variant-manager.module';
 import { OliveProductManagerModule } from 'app/main/productions/products/product/product-manager/product-manager.module';
-import { OlivePurchasingMiscEndpointService, OlivePurchasingMiscService } from './services/purchasing-misc.service';
+import { OlivePurchasingMiscService } from './services/purchasing-misc.service';
 import { OlivePreviewPurchaseOrderComponent } from './purchase-order/preview-purchase-order/preview-purchase-order.component';
 import { OliveCompanyService } from 'app/main/supports/companies/services/company.service';
+import { OliveInWarehouseStatusModule } from '../in-warehouses/in-warehouse/in-warehouse-status/in-warehouse-status.module';
+import { OlivePurchaseOrderLookupDialogModule } from './purchase-order/purchase-order-lookup-dialog/purchase-order-lookup-dialog.module';
+import { OliveInWarehouseItemService } from '../in-warehouses/services/in-warehouse-items.service';
 
 const routes = [
   {
-    path: 'purchase-orders',
+    path: 'list',
     component: OlivePurchaseOrdersComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'orders/:id',
+    path: ':id',
     component: OlivePurchaseOrderEditorPageComponent,
     canActivate: [AuthGuard],
     resolve: { helps: OlivePurchaseOrderEditorPageResolver }
-  } 
+  }  
 ];
 
 @NgModule({
@@ -51,9 +53,10 @@ const routes = [
     OliveSharedModule,
 
     OliveProductVariantLookupDialogModule,
-    OlivePurchaseOrderLookupDialogModule,
     OliveProductVariantManagerModule,
-    OliveProductManagerModule
+    OliveProductManagerModule,
+    OlivePurchaseOrderLookupDialogModule,
+    OliveInWarehouseStatusModule
   ],
   declarations: [
     OlivePurchaseOrdersComponent,
@@ -72,9 +75,9 @@ const routes = [
     OliveWarehouseService,
     OlivePaymentMethodService,
     OliveProductVariantService,
-    OlivePurchasingMiscEndpointService,
     OlivePurchasingMiscService,
-    OliveCompanyService
+    OliveCompanyService,
+    OliveInWarehouseItemService
   ],
   entryComponents: [
     OlivePurchaseOrderManagerComponent,

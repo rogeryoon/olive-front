@@ -9,6 +9,8 @@ export interface OliveOnEdit {
 
     customTitle?: string;
 
+    startTabIndex?: number;
+
     itemSaved$: any;
 
     itemDeleted$: any;

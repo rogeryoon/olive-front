@@ -28,4 +28,5 @@ export interface AccessToken {
     amr: string[];
     companymastercode: string;
     companygroupid: number;
+    userauditKey: string;
 }

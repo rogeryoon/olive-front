@@ -9,7 +9,7 @@ import { AccountService } from '@quick/services/account.service';
 
 import { OlivePurchaseOrderService } from '../../services/purchase-order.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { OliveEntityEditComponent } from 'app/core/components/entity-edit/entity-edit.component';
+import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OlivePurchaseOrderEditorComponent } from '../purchase-order-editor/purchase-order-editor.component';
 import { OlivePurchaseOrderPaymentsEditorComponent } from '../purchase-order-payments-editor/purchase-order-payments-editor.component';
 import { OlivePurchaseOrderItemsEditorComponent } from '../purchase-order-items-editor/purchase-order-items-editor.component';
@@ -70,7 +70,7 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
       vendorOrderId: purchaseOrder.vendorOrderId,
       date: purchaseOrder.date,
       memo: purchaseOrder.memo,
-      totalItemsAmount: this.purchaseOrderItems.totalAmount,
+      totalAmount: this.purchaseOrderItems.totalAmount,
       addedDiscountAmount: itemsEditor.addedDiscountAmount,
       freightAmount: itemsEditor.freightAmount,
       taxAmount: itemsEditor.taxAmount,

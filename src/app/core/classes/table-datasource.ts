@@ -18,6 +18,7 @@ export class DatasourceObject {
 
 export class TableDatasource extends DataSource<any> {
     private _objectStore: DatasourceObject[] = [];
+    private _saveObjectStore: DatasourceObject[] = [];
     private _ObjectsSubject$ = new BehaviorSubject<DatasourceObject[]>([]);
     public formGroup: FormGroup;
     protected standCurrency: Currency;
@@ -38,7 +39,9 @@ export class TableDatasource extends DataSource<any> {
             tap(res => {
                 const fa = <FormArray>this.formGroup.get('formarray');
                 fa.controls.splice(0);
-                res.forEach(r => fa.push(this.createRowFormGroup(r)));
+                res.forEach(r => {
+                    fa.push(this.createRowFormGroup(r));
+                });
             }),
         );
     }
@@ -56,30 +59,52 @@ export class TableDatasource extends DataSource<any> {
     loadItems(items: any[]) {
         this._objectStore = []; // clear current stored data
         items.forEach(m => this._objectStore.push(new DatasourceObject(m)));
-        this._ObjectsSubject$.next(this._objectStore);
+        this.renderItems();
     }
 
     public addNewItem(m: any): DatasourceObject {
         if (!m) { m = this.createNewItem(); }
         const o = new DatasourceObject(m);
         this._objectStore.push(o);
-        this._ObjectsSubject$.next(this._objectStore);
         return o;
+    }
+
+    public renderItems() {
+        this._ObjectsSubject$.next(this._objectStore);
     }
 
     public deleteItem(res: DatasourceObject) {
         if (!res || !res.Obj) { return; }
+
         const d = res.ObjId;
         this._objectStore.forEach((m, i) => {
             if (m.ObjId === d) { 
                 this._objectStore.splice(i, 1); 
             }
         });
-        this._ObjectsSubject$.next(this._objectStore);
+
+        Object.assign(this._saveObjectStore, this._objectStore);
+
+        this._objectStore = [];
+
+        this._saveObjectStore.forEach(m => {
+            this.addNewItem(m.Obj); 
+        });
+
+        this._saveObjectStore = [];
+
+        this.renderItems();
+
+        this.formGroup.markAsDirty();
     }
 
+    public deleteAll() {
+        this._objectStore = [];
+        this.renderItems();
+    }    
+
     createNewFormContorl(r: any, propName: string, validators: any[]): FormControl {
-        const value = OliveUtilities.TestIsUndefined(r.Obj[propName]) ? '' : r.Obj[propName].toString();
+        const value = OliveUtilities.testIsUndefined(r.Obj[propName]) ? '' : r.Obj[propName].toString();
         const m = new FormControl(value, validators.length ? validators : null);
         m.valueChanges.subscribe(val => { r.Obj[propName] = val; });
         return m;

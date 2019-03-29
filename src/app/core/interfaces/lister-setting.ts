@@ -46,6 +46,12 @@ export class LookupListerSetting implements IListerSetting {
 
     columnType?: string;
 
+    disableSearchInput?: boolean;
+
+    trMouseCursor?: string;
+
+    customClick?: boolean;
+
     extraSearches?: NameValue[];
 
     dialogTitle: string;
@@ -54,7 +60,7 @@ export class LookupListerSetting implements IListerSetting {
 
     renderCallback?: any;
 
-    maxSelectItems: number;
+    maxSelectItems?: number;
 
     maxNameLength?: number;
 

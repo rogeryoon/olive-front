@@ -13,14 +13,14 @@ import { AlertService, MessageSeverity } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
 
 import { EqualValidator } from '../../../../core/validators/equal.validator';
-import { OliveLookupDialogComponent } from 'app/core/components/lookup-dialog/lookup-dialog.component';
+import { OliveLookupDialogComponent } from 'app/core/components/dialogs/lookup-dialog/lookup-dialog.component';
 import { MatDialog } from '@angular/material';
 import { OliveCompanyGroupService } from 'app/main/supports/companies/services/company-group.service';
 import { CompanyGroup } from 'app/main/supports/companies/models/company-group.model';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { locale as english } from '../../../../core/i18n/en';
-import { OliveBaseComponent } from 'app/core/components/base/base.component';
+import { OliveBaseComponent } from 'app/core/components/extends/base/base.component';
 
 const Selected = 'selected';
 const Id = 'id';

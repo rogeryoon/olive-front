@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
+﻿import { Component, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 
@@ -7,9 +7,9 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
 
-import { OliveInWarehouseService } from '../services/in-warehouse.service';
+import { OliveInWarehouseService } from '../../services/in-warehouse.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { OliveEntityEditComponent } from 'app/core/components/entity-edit/entity-edit.component';
+import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveInWarehouseEditorComponent } from '../in-warehouse-editor/in-warehouse-editor.component';
 import { OliveInWarehouseItemsEditorComponent } from '../in-warehouse-items-editor/in-warehouse-items-editor.component';
 
@@ -37,6 +37,9 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
       snackBar, formBuilder, 
       dataService
     );
+
+    this.saveConfirmTitle = translater.get('common.title.inWarehouseConfirm');
+    this.saveConfirmMessage = translater.get('common.message.inWarehouseConfirm');
   }
 
   registerSubControl() {
@@ -50,13 +53,14 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
 
     return this.itemWithIdNAudit({
       memo: inWarehouse.memo,
+      warehouseId: inWarehouse.warehouseId,
       inWarehouseItems: inWarehouseItems.inWarehouseItems
     });
   }
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      inwarehouseItems: null
+      inWarehouseItems: null
     });
   }
 
@@ -65,7 +69,7 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
 
     if (this.item) {
       this.oForm.patchValue({
-        inwarehouseItems: this.item.inwarehouseItems
+        inWarehouseItems: this.item.inWarehouseItems
       });
     }
 

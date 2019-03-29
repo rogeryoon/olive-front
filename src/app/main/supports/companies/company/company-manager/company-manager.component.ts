@@ -9,9 +9,9 @@ import { AccountService } from '@quick/services/account.service';
 
 import { OliveCompanyService } from '../../services/company.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { OliveEntityEditComponent } from 'app/core/components/entity-edit/entity-edit.component';
+import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveCompanyEditorComponent } from '../company-editor/company-editor.component';
-import { OliveAddressEditorComponent } from 'app/core/components/editor/address-editor/address-editor.component';
+import { OliveAddressEditorComponent } from 'app/core/components/entries/address-editor/address-editor.component';
 
 @Component({
   selector: 'olive-company-manager',

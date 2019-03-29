@@ -1,25 +1,23 @@
 import { Component, forwardRef } from '@angular/core';
 import {
   FormBuilder, FormControl, ValidationErrors,
-  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, AbstractControl, FormArray, FormGroup
+  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, 
+  Validator, FormGroup
 } from '@angular/forms';
 import { MatSnackBar, MatDialog } from '@angular/material';
-import { String } from 'typescript-string-operations';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { Permission } from '@quick/models/permission.model';
-import { AlertService, MessageSeverity, DialogType } from '@quick/services/alert.service';
+import { AlertService } from '@quick/services/alert.service';
 
 import { OliveInWarehouseItemDatasource } from './in-warehouse-item-datasource';
-import { NavIcons } from 'app/core/navigations/nav-icons';
-import { OliveEntityFormComponent } from 'app/core/components/entity-edit/entity-form.component';
+import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { NameValue } from 'app/core/models/name-value';
-import { locale as english } from '../../i18n/en';
-import { InWarehouseItem } from '../models/in-warehouse-item.model';
-import { InWarehouse } from '../models/in-warehouse.model';
+import { InWarehouseItem } from '../../models/in-warehouse-item.model';
+import { InWarehouse } from '../../models/in-warehouse.model';
 import { OlivePurchaseOrderLookupDialogComponent } from 'app/main/purchasings/purchases/purchase-order/purchase-order-lookup-dialog/purchase-order-lookup-dialog.component';
 import { OlivePurchaseOrderService } from 'app/main/purchasings/purchases/services/purchase-order.service';
 import { OlivePurchaseOrderManagerComponent } from 'app/main/purchasings/purchases/purchase-order/purchase-order-manager/purchase-order-manager.component';
@@ -47,7 +45,7 @@ import { PurchaseOrderItem } from 'app/main/purchasings/purchases/models/purchas
   ]
 })
 export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
-  displayedColumns = ['viewId', 'vendor', 'name', 'quantity', 'balance', 'remark', 'actions'];
+  displayedColumns = ['productVariantId', 'vendor', 'name', 'balance', 'price', 'quantityDue', 'quantity', 'remark', 'actions'];
   itemsDataSource: OliveInWarehouseItemDatasource = new OliveInWarehouseItemDatasource(this.cacheService);
 
   parentItem: InWarehouse;
@@ -63,40 +61,30 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     super(
       formBuilder, translater
     );
-
-    this.translater.loadTranslations(english);
   }
 
   initializeChildComponent() {
+    this.standCurrency = this.cacheService.standCurrency;
   }
 
   getEditedItem(): any {
     const formModel = this.oForm.value;
 
     return {
-      // addedDiscountAmount: formModel.addedDiscountAmount,
-      // freightAmount: formModel.freightAmount,
-      // taxAmount: formModel.taxAmount,
-      items: this.itemsDataSource.items
+      inWarehouseItems: this.itemsDataSource.items
     };
   }
 
   buildForm() {
     this.oFormArray = this.formBuilder.array([]);
     this.oForm = this.formBuilder.group({ 
-      formarray: this.oFormArray,
-      // addedDiscountAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
-      // freightAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
-      // taxAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]]
+      formarray: this.oFormArray
     });
     this.itemsDataSource.formGroup = this.oForm;
   }
 
   resetForm() {
     this.oForm.patchValue({
-      // addedDiscountAmount: this.parentItem.addedDiscountAmount || '0',
-      // freightAmount: this.parentItem.freightAmount || '0',
-      // taxAmount: this.parentItem.taxAmount || '0',
     });
   }
 
@@ -106,30 +94,47 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   
   setWarehouse(warehouse: Warehouse) {
     this.wareHouse = warehouse;
-  }  
+
+    let needToClearItems = false;
+
+    if (this.isNull(this.wareHouse) || 
+      this.wareHouse.id === warehouse.id || 
+      this.itemsDataSource.items.length === 0
+    ) {
+      needToClearItems = true;
+    }
+
+    if (needToClearItems) {
+      this.clearAllItemsDataSource();
+
+      if (!this.isNull(this.wareHouse)) {
+        this.lookupPurchaseOrder();
+      }
+    }
+  }
+
+  clearAllItemsDataSource() {
+    this.oFormArray.controls = [];
+    this.itemsDataSource.deleteAll();     
+  }
 
   createEmptyObject() {
     return new InWarehouse();
   }
 
-  private addNewItem(item: InWarehouseItem) {
-    this.itemsDataSource.addNewItem(item);
-    this.oForm.markAsDirty();
-  }
-
   private deleteItem(item: any) {
     if (item.Obj.id || item.Obj.name || item.Obj.quantity || item.Obj.price || item.Obj.remark) {
       this.snackBar.open(
-        String.Format(this.translater.get('common.message.confirmDelete'), 'the data'),
-        this.translater.get('common.button.confirmDelete'),
+        OliveUtilities.showParamMessage(this.translater.get('common.message.confirmDelete'), ''),
+        this.translater.get('common.button.delete'),
         { duration: 5000 }
       )
         .onAction().subscribe(() => {
-          this.itemsDataSource.deleteItem(item);
+          this.deleteUnit(item);
         });
     }
     else {
-      this.itemsDataSource.deleteItem(item);
+      this.deleteUnit(item);
     }
   }
 
@@ -137,7 +142,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     this.itemsDataSource.deleteItem(item);
     if (this.itemsDataSource.items.length === 0) {
       this.oFArray.removeAt(0);
-    }    
+    }
   }
 
   get totalQuantity(): number {
@@ -164,13 +169,23 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     return balance;
   }
 
+  get totalQuantityDue(): number {
+    let due = 0;
+
+    this.itemsDataSource.items.forEach(item => {
+      if (!isNaN(item.quantity) && !isNaN(item.price)) {
+        due += +item.quantity * +item.price;
+      }
+    });
+
+    return due;
+  }
+
   lookupPurchaseOrder() {
     if (this.isNull(this.wareHouse)) {
-      this.alertService.showDialog(
+      this.alertService.showMessageBox(
         this.translater.get('common.title.confirm'),
-        this.translater.get('inWarehouseItems.selectWarehouseFirst'),
-        DialogType.alert,
-        () => null
+        this.translater.get('purchasing.inWarehouseItems.selectWarehouseFirst')
       );
       return;
     }
@@ -183,13 +198,13 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
         data: {
           name: 'PurchaseOrder',
           columnType: 'custom',
-          dialogTitle: this.translater.get(NavTranslates.Purchase.PurchaseOrderList),
+          dialogTitle: this.translater.get(NavTranslates.Purchase.List),
           dataService: this.purchaseOrderService,
           maxSelectItems: 10,
           newComponent: OlivePurchaseOrderManagerComponent,
           itemType: PurchaseOrder,
           managePermission: Permission.manageProductsPermission,
-          translateTitleId: NavTranslates.Purchase.PurchaseOrderList,
+          translateTitleId: NavTranslates.Purchase.List,
           maxNameLength: 10,
           extraSearches: [
             { name: 'ItemsExists', value: 'true' }, 
@@ -201,21 +216,33 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     dialogRef.afterClosed().subscribe(pItems => {
       if (!pItems || pItems.length === 0) { return; }
 
+      let needToRender = false;
+
       pItems
-        .forEach((fItem: PurchaseOrder) => {
-          fItem.purchaseOrderItems
+        .forEach((pItem: PurchaseOrder) => {
+          pItem.purchaseOrderItems
             .filter((sItem: PurchaseOrderItem) => sItem.balance > 0)
             .forEach((sItem: PurchaseOrderItem) => {
-              this.addNewItem({
+              this.itemsDataSource.addNewItem({
                 quantity: sItem.balance,
                 balance: 0,
+
+                purchaseOrderItemId: sItem.id,
+
+                name: sItem.name,                
                 originalBalance: sItem.balance,
-                name: sItem.name,
-                purchaseOrderFk: fItem,
-                productVariantId: sItem.productVariantId
-              } as InWarehouseItem);              
+                price: sItem.price,
+                productVariantId: sItem.productVariantId,
+                vendorName: pItem.vendorFk.name
+              } as InWarehouseItem);
+              needToRender = true;
             });
         });
+
+      if (needToRender) {
+        this.itemsDataSource.renderItems();
+        this.oForm.markAsDirty();
+      }
     });
   }
 
@@ -240,39 +267,31 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
   protected hasOtherError(): boolean {
     if (this.noItemSelectedError) {
-      this.alertService.showDialog(
+      this.alertService.showMessageBox(
         this.translater.get('common.title.errorConfirm'),
-        this.translater.get('common.message.noItemCreated'),
-        DialogType.alert,
-        () => null
+        this.translater.get('common.message.noItemCreated')
       );
 
       return true;
     }
 
     if (this.balanceIsMinusError) {
-      this.alertService.showDialog(
+      this.alertService.showMessageBox(
         this.translater.get('common.title.errorConfirm'),
-        this.translater.get('common.message.balanceIsMinus'),
-        DialogType.alert,
-        () => null
+        this.translater.get('common.message.balanceIsMinus')
       );
 
       return true;
     }
   }
 
-  protected get showNoItemCreatedError(): boolean {
+  get showNoItemCreatedError(): boolean {
     return this.noItemSelectedError && this.oForm.touched;
   }
 
-  protected get showBalanceIsMinusError(): boolean {
+  get showBalanceIsMinusError(): boolean {
     return this.balanceIsMinusError && this.oForm.touched;
   }  
-
-  viewId(item: InWarehouseItem): string {
-    return `${this.id36(item.purchaseOrderFk.id)}-${this.id36(item.productVariantId)}` ;
-  } 
 
   private _onChange = (_: any) => { };
   private _onTouched = () => { };
