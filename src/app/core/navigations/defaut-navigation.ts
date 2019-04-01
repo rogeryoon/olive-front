@@ -2,6 +2,7 @@ import { FuseNavigation } from '@fuse/types';
 
 import { NavIcons } from './nav-icons';
 import { NavTranslates } from './nav-translates';
+import { Permission } from '@quick/models/permission.model';
 
 export const defaultNavigation: FuseNavigation[] = [
     {
@@ -68,16 +69,7 @@ export const defaultNavigation: FuseNavigation[] = [
                         url: '/inwarehouses/pending'
                     }                    
                 ]
-            }
-        ]
-    },
-    {
-        id: 'product',
-        title: '상품',
-        translate: NavTranslates.Product.Home,
-        type: 'group',
-        icon: NavIcons.Product.Home,
-        children: [
+            },
             {
                 id: 'productHome',
                 title: '상품',
@@ -177,7 +169,7 @@ export const defaultNavigation: FuseNavigation[] = [
                         url: '/inventory/return'
                     }
                 ]
-            }
+            }            
         ]
     },
     {
@@ -185,6 +177,7 @@ export const defaultNavigation: FuseNavigation[] = [
         title: '판매',
         type: 'group',
         icon: 'add_shopping_cart',
+        permissions: [Permission.assignCompanyMasters],
         children: [
             {
                 id: 'salesEntry',
@@ -339,6 +332,37 @@ export const defaultNavigation: FuseNavigation[] = [
                 type: 'item',
                 icon: 'build',
                 url: '/config/misc'
+            }
+        ]
+    },
+    {
+        id: 'public',
+        title: '공개테스트',
+        type: 'group',
+        permissions: [],
+        icon: 'settings_input_component',
+        children: [
+            {
+                id: 'publicConfig',
+                title: '공개',
+                type: 'collapsable',
+                icon: 'person',
+                children: [
+                    {
+                        id: 'publicUsers',
+                        title: '사용자',
+                        type: 'item',
+                        icon: 'person_add',
+                        url: '/configs/users'
+                    },
+                    {
+                        id: 'publicRoles',
+                        title: '권한설정',
+                        type: 'item',
+                        icon: 'contacts',
+                        url: '/configs/roles'
+                    }
+                ]
             }
         ]
     }

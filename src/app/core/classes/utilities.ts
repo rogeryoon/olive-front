@@ -7,7 +7,7 @@ import * as moment from 'moment';
 
 import { NameValue } from '../models/name-value';
 
-import { OliveContants } from './contants';
+import { OliveConstants } from './constants';
 import { Address } from '../models/core/address.model';
 
 export class OliveUtilities {
@@ -97,7 +97,7 @@ export class OliveUtilities {
     }
 
     public static iconName(condition: boolean): string {
-        return condition ? OliveContants.IconStatus.Checked : OliveContants.IconStatus.Unchecked;
+        return condition ? OliveConstants.iconStatus.checked : OliveConstants.iconStatus.unchecked;
     }
 
     public static webSiteHostName(url: string): string {

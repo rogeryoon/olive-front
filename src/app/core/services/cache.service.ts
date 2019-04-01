@@ -16,7 +16,7 @@ import { Branch } from 'app/main/supports/companies/models/branch.model';
 import { OliveDataService } from '../interfaces/data-service';
 import { OliveUtilities } from '../classes/utilities';
 import { UserName } from '../models/user-name';
-import { OliveContants } from '../classes/contants';
+import { OliveConstants } from '../classes/constants';
 
 interface CacheContent {
   expiry: number;
@@ -162,7 +162,7 @@ export class OliveCacheService {
 
     const queryKeys = new Set();
     uniqueKeys.forEach(key => {
-      if (!this.exist(OliveContants.CacheKeys.PaymentMethod + '!' + key)) {
+      if (!this.exist(OliveConstants.cacheKeys.paymentMethod + '!' + key)) {
         queryKeys.add(key);
       }
     });
@@ -175,7 +175,7 @@ export class OliveCacheService {
         const userNames = response.model;
 
         userNames.forEach(user => {
-          this.set(OliveContants.CacheKeys.PaymentMethod + '!' + user.userAuditKey, user);
+          this.set(OliveConstants.cacheKeys.paymentMethod + '!' + user.userAuditKey, user);
         });
       }
       catch (error) {
@@ -184,7 +184,7 @@ export class OliveCacheService {
     }
 
     uniqueKeys.forEach(key => {
-      const cacheKey: string = OliveContants.CacheKeys.PaymentMethod + '!' + key;
+      const cacheKey: string = OliveConstants.cacheKeys.paymentMethod + '!' + key;
       if (this.exist(cacheKey)) {
         returnUserNames.push(this.get(cacheKey));
       }

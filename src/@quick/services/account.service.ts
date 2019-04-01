@@ -106,7 +106,7 @@ export class AccountService {
             return true;
         }
 
-        return this.permissions.some(p => p === permissionValue);
+        return this.authService.userHasPermission(permissionValue);
     }
 
     refreshLoggedInUser() {

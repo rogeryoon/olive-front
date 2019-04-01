@@ -106,8 +106,8 @@ export class ToolbarComponent implements OnInit, OnDestroy
         //#region roger
         this.navigationChangingWatcher =
             this.navigationSelector.onNavigationChanged.subscribe(
-                (name) => {
-                    this.navigation = this.navigationSelector.navigationMap[name];
+                (navigation) => {
+                    this.navigation = navigation;
                 }
             );
         //#endregion

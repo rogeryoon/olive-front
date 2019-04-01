@@ -15,7 +15,7 @@ import { OliveEntityListComponent } from 'app/core/components/extends/entity-lis
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
-import { OliveContants } from 'app/core/classes/contants';
+import { OliveConstants } from 'app/core/classes/constants';
 
 import { OliveSearchPurchaseOrderComponent } from './search-purchase-order/search-purchase-order.component';
 import { OlivePurchaseOrderService } from '../services/purchase-order.service';
@@ -194,20 +194,20 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case FinishLink:
-        retValue = item.closedDate ? OliveContants.IconStatus.Completed : OliveContants.IconStatus.Pending;
+        retValue = item.closedDate ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
         break;
 
       case InWarehouseStatusLink:
         if (item.purchaseOrderItems.length) {
-          retValue = item.inWareHouseCompletedDate ? OliveContants.IconStatus.Completed : OliveContants.IconStatus.Pending;
+          retValue = item.inWareHouseCompletedDate ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
         }
         else {
-          retValue = OliveContants.IconStatus.Error;
+          retValue = OliveConstants.iconStatus.error;
         }
         break;
 
       case PrintLink:
-        retValue = item.printOutCount > 0 ? OliveContants.IconStatus.Completed : OliveContants.IconStatus.Pending;
+        retValue = item.printOutCount > 0 ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
         break;
     }
 
@@ -283,20 +283,20 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
     switch (column.data) {
       case FinishLink:
-        addedClass = item.closedDate ? OliveContants.ForegroundColor.Blue : OliveContants.ForegroundColor.Orange;
+        addedClass = item.closedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
         break;
 
       case InWarehouseStatusLink:
         if (item.purchaseOrderItems.length) {
-          addedClass = item.inWareHouseCompletedDate ? OliveContants.ForegroundColor.Blue : OliveContants.ForegroundColor.Orange;
+          addedClass = item.inWareHouseCompletedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
         }
         else {
-          addedClass = OliveContants.ForegroundColor.Red;
+          addedClass = OliveConstants.foregroundColor.red;
         }
         break;
 
       case PrintLink:
-        addedClass = item.printOutCount === 0 ? OliveContants.ForegroundColor.Orange : OliveContants.ForegroundColor.Blue;
+        addedClass = item.printOutCount === 0 ? OliveConstants.foregroundColor.orange : OliveConstants.foregroundColor.blue;
         break;
     }
 

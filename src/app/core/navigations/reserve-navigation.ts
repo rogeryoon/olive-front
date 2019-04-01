@@ -1,4 +1,7 @@
-export const adminNavigation = [
+import { FuseNavigation } from '@fuse/types';
+
+// 현재 사용하지 않고, 나중을 위해 Mult Navigation지원을 위해 잡아둔다.
+export const reserveNavigation: FuseNavigation[] = [
     {
         'id'      : 'applications',
         'title'   : 'Applications',
@@ -11,7 +14,6 @@ export const adminNavigation = [
                 'icon' : 'email',
                 'url'  : '/sample',
                 'badge': {
-                    'title': 25,
                     'bg'   : '#F44336',
                     'fg'   : '#FFFFFF'
                 }
@@ -30,7 +32,6 @@ export const adminNavigation = [
                 'icon' : 'today',
                 'url'  : '/olive',
                 'badge': {
-                    'title': 25,
                     'bg'   : '#F44336',
                     'fg'   : '#FFFFFF'
                 }

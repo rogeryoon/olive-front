@@ -2,17 +2,17 @@ import { Injectable } from '@angular/core';
 import { filter } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 
-import { AccountService } from '@quick/services/account.service';
 import { Permission } from '@quick/models/permission.model';
 
 import { OliveUtilities } from '../classes/utilities';
+import { AuthService } from '@quick/services/auth.service';
 
 
 @Injectable()
 export class OliveQueryParameterService {
   constructor(
     protected route: ActivatedRoute,
-    private accountService: AccountService
+    private authService: AuthService
   ) 
   {
   }
@@ -27,7 +27,7 @@ export class OliveQueryParameterService {
         queryParamGroupIdBase36 = params.cgroup;
       });
 
-    let returnCompanyGroupID = this.accountService.currentUser.companyGroupId;
+    let returnCompanyGroupID = this.authService.currentUser.companyGroupId;
 
     if (queryParamGroupIdBase36) {
       const queryCompanyGroupId = OliveUtilities.convertBase36ToNumber(queryParamGroupIdBase36);
@@ -36,7 +36,7 @@ export class OliveQueryParameterService {
       (
         queryCompanyGroupId > 0 && 
         queryCompanyGroupId !== returnCompanyGroupID &&
-        this.accountService.userHasPermission(Permission.manageOtherCompanies)
+        this.authService.userHasPermission(Permission.manageOtherCompanies)
       ) {
         returnCompanyGroupID = queryCompanyGroupId;
       }

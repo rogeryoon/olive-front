@@ -6,7 +6,7 @@ import { MatSnackBar } from '@angular/material';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { OliveContants } from 'app/core/classes/contants';
+import { OliveConstants } from 'app/core/classes/constants';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OlivePaymentMethodService } from 'app/main/supports/companies/services/payment-method.service';
 import { OliveCacheService } from 'app/core/services/cache.service';
@@ -51,7 +51,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
 
   initializeChildComponent() {
     this.standCurrency = this.cacheService.standCurrency;
-    const key = OliveContants.CacheKeys.PaymentMethod;
+    const key = OliveConstants.cacheKeys.paymentMethod;
     if (!this.cacheService.exist(key)) {
       this.paymentMethodService.getItems(null)
         .subscribe(response => {

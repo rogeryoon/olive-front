@@ -1,3 +1,5 @@
+import { PermissionValues } from '@quick/models/permission.model';
+
 export interface FuseNavigationItem
 {
     id: string;
@@ -11,6 +13,11 @@ export interface FuseNavigationItem
     exactMatch?: boolean;
     externalUrl?: boolean;
     openInNewTab?: boolean;
+    // roger start
+    permissions?: PermissionValues[];
+    masterEnables?: string[];
+    groupEnables?: string[];
+    // roger end
     function?: any;
     badge?: {
         title?: string;

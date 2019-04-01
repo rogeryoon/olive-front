@@ -17,6 +17,7 @@ import { PermissionValues } from '../models/permission.model';
 import { CompanyMaster } from 'app/core/models/company-master.model';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
 import { Branch } from 'app/main/supports/companies/models/branch.model';
+import { CompanyGroupSetting } from 'app/core/models/company-group-setting.model';
 
 @Injectable()
 export class AuthService {
@@ -165,16 +166,19 @@ export class AuthService {
 
     private processPreLoadResponse(data: any) {
         const companyMaster = data.companyMaster;
+        const companyGroupSetting = data.companyGroupSetting;
         const currencies = data.currencies;
         const branches = data.branches;
 
         // if (this.rememberMe) {
             this.localStorage.savePermanentData(companyMaster, DBkeys.COMPANY_MASTER);
+            this.localStorage.savePermanentData(companyGroupSetting, DBkeys.COMPANY_GROUP_SETTING);
             this.localStorage.savePermanentData(currencies, DBkeys.CURRENCIES);
             this.localStorage.savePermanentData(branches, DBkeys.BRANCHES);
         // }
         // else {
         //     this.localStorage.saveSyncedSessionData(companyMaster, DBkeys.COMPANY_MASTER);
+        //     this.localStorage.saveSyncedSessionData(companyGroupSetting, DBkeys.COMPANY_GROUP_SETTING);
         //     this.localStorage.saveSyncedSessionData(currencies, DBkeys.CURRENCIES);
         //     this.localStorage.saveSyncedSessionData(branches, DBkeys.BRANCHES);
         // }
@@ -296,6 +300,10 @@ export class AuthService {
         return this.localStorage.getDataObject<CompanyMaster>(DBkeys.COMPANY_MASTER);
     }
 
+    get companyGroupSetting(): CompanyGroupSetting {
+        return this.localStorage.getDataObject<CompanyGroupSetting>(DBkeys.COMPANY_GROUP_SETTING);
+    }    
+
     get currencies(): Currency[] {
         return this.localStorage.getDataObject<Currency[]>(DBkeys.CURRENCIES) || [];
     }
@@ -307,6 +315,10 @@ export class AuthService {
 
     get branches(): Branch[] {
         return this.localStorage.getDataObject<Branch[]>(DBkeys.BRANCHES) || [];
+    }
+
+    userHasPermission(permissionValue: PermissionValues): boolean {
+        return this.userPermissions.some(p => p === permissionValue);
     }
     // roger end
 }

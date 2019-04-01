@@ -1,5 +1,6 @@
 // olive by roger
 export type PermissionNames =
+    'Override Blocked Task' |
     'Manage Customer Companies' |
     'View Products' | 'Manage Products' |
     'View Inventories' | 'Manage Inventories' |
@@ -9,6 +10,7 @@ export type PermissionNames =
     'View Companies' | 'Manage Companies';
 
 export type PermissionValues =
+    'app.override.blocked.task' |
     'app.manage.other.company' |
     'products.view' | 'products.manage' |
     'inventories.view' | 'inventories.manage' |
@@ -25,6 +27,7 @@ export class Permission {
     public static readonly viewInventoriesPermission: PermissionValues = 'inventories.view';
     public static readonly manageInventoriesPermission: PermissionValues = 'inventories.manage';
 
+    public static readonly overrideBlockedTask: PermissionValues = 'app.override.blocked.task';
     public static readonly manageOtherCompanies: PermissionValues = 'app.manage.other.company';
 
     public static readonly viewUsersPermission: PermissionValues = 'users.view';

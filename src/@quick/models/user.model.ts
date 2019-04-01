@@ -1,5 +1,3 @@
-import { CompanyGroup } from 'app/main/supports/companies/models/company-group.model';
-
 export class User {
     // Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
     constructor(id?: string, userName?: string, fullName?: string, email?: string, 

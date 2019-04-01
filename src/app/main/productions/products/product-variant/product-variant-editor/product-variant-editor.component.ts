@@ -5,7 +5,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { AccountService } from '@quick/services/account.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { OliveContants } from 'app/core/classes/contants';
+import { OliveConstants } from 'app/core/classes/constants';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { ProductVariant } from '../../models/product-variant.model';
 import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
@@ -25,7 +25,7 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
   @ViewChild('product') 
   lookupProduct: OliveLookupHostComponent;
 
-  weightTypes: any[] = OliveContants.weightTypes;
+  weightTypes: any[] = OliveConstants.weightTypes;
 
   constructor(
     formBuilder: FormBuilder,

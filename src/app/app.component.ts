@@ -189,8 +189,8 @@ export class AppComponent implements OnInit, OnDestroy
         //#region Roger
         this.navigationChangingWatcher =
             this.navigationSelector.onNavigationChanged.subscribe(
-                (name) => {
-                    this.navigation = this.navigationSelector.navigationMap[name];
+                (navigation) => {
+                    this.navigation = navigation;
                 }
             );
 

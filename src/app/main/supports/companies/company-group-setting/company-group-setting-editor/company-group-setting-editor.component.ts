@@ -4,7 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { OliveContants } from 'app/core/classes/contants';
+import { OliveConstants } from 'app/core/classes/constants';
 import { CompanyGroupSetting } from '../../../../../core/models/company-group-setting.model';
 
 @Component({
@@ -14,7 +14,7 @@ import { CompanyGroupSetting } from '../../../../../core/models/company-group-se
 })
 export class OliveCompanyGroupSettingEditorComponent extends OliveEntityFormComponent {
 
-  weightTypes: any[] = OliveContants.weightTypes;
+  weightTypes: any[] = OliveConstants.weightTypes;
 
   constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
     super(
