@@ -198,13 +198,13 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
         data: {
           name: 'PurchaseOrder',
           columnType: 'custom',
-          dialogTitle: this.translater.get(NavTranslates.Purchase.List),
+          dialogTitle: this.translater.get(NavTranslates.Purchase.list),
           dataService: this.purchaseOrderService,
           maxSelectItems: 10,
           newComponent: OlivePurchaseOrderManagerComponent,
           itemType: PurchaseOrder,
           managePermission: Permission.manageProductsPermission,
-          translateTitleId: NavTranslates.Purchase.List,
+          translateTitleId: NavTranslates.Purchase.list,
           maxNameLength: 10,
           extraSearches: [
             { name: 'ItemsExists', value: 'true' }, 

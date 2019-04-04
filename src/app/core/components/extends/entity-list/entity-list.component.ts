@@ -26,12 +26,12 @@ import { locale as english } from '../../../../core/i18n/en';
 import { OliveEditDialogComponent } from '../../dialogs/edit-dialog/edit-dialog.component';
 import * as _ from 'lodash';
 import { OliveBaseComponent } from '../../extends/base/base.component';
+import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 
 @Component({
   selector: 'olive-entity-list',
   templateUrl: './entity-list.component.html',
-  animations: fuseAnimations,
-  encapsulation: ViewEncapsulation.None
+  animations: fuseAnimations
 })
 export class OliveEntityListComponent extends OliveBaseComponent implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild(DataTableDirective)
@@ -80,6 +80,8 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   iconName(item: any, columnName: string) { return ''; }
   onTdClick(event: any, item: any, columnName: string): boolean { return false; }
   getEditorCustomTitle(item: any): string { return null; }
+  convertModel(model: any): any { return model; }
+  getEditDialogReadOnly(item: any): boolean { return this.setting.isEditDialogReadOnly; }
   
   setTdId(id: number, columnName: string) {
     this.tdId = id.toString() + columnName;
@@ -90,7 +92,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   }
 
   get canManageItems() {
-    if (Utilities.TestIsUndefined(this.setting.managePermission)) { return true; }
+    if (this.isNull(this.setting.managePermission)) { return true; }
     return this.accountService.userHasPermission(this.setting.managePermission);
   }
 
@@ -125,7 +127,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
             this.alertService.stopLoadingMessage();
             this.loadingIndicator = false;
 
-            this.items = response.model;
+            this.items = this.convertModel(response.model);
 
             callback({
               recordsTotal: response.itemsCount,
@@ -145,7 +147,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
       columnDefs: [
         { targets: 'nosort', orderable: false }
       ],
-      order: [[1, 'desc']]
+      order: this.setting.order ? this.setting.order : [[1, 'desc']]
     };
 
     $(document).ready(function () {
@@ -239,8 +241,9 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
         managePermission: this.setting.managePermission,
         translateTitleId: this.setting.translateTitleId,
         customTitle: this.getEditorCustomTitle(this.sourceItem),
-        startTabIndex: startTabIndex
-      }
+        startTabIndex: startTabIndex,
+        readOnly: this.getEditDialogReadOnly(this.sourceItem)
+      } as OliveOnEdit
     );
 
     const dialogRef = this.dialog.open(

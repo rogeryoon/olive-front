@@ -1,23 +1,5 @@
 @import "src/@fuse/scss/fuse";
 :host {
-  .header {
-    position: relative;
-    .search-input-wrapper {
-      max-width: 480px;
-    }
-    @include media-breakpoint(xs) {
-      margin: 24px 0;
-      height: 128px !important;
-      min-height: 128px !important;
-      max-height: 128px !important;
-    }
-    .add-item-button {
-      position: absolute;
-      bottom: -28px;
-      left: -10px;
-      z-index: 999;
-    }
-  }
   table {
     th:nth-child(1) {
       width: 20px;

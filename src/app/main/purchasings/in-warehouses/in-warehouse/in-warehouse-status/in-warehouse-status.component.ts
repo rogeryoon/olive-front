@@ -14,6 +14,12 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { InWarehouseItem } from '../../models/in-warehouse-item.model';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
+import { OliveInWarehouseService } from '../../services/in-warehouse.service';
+import { OliveInWarehouseManagerComponent } from '../in-warehouse-manager/in-warehouse-manager.component';
+import { InWarehouse } from '../../models/in-warehouse.model';
+import { NavTranslates } from 'app/core/navigations/nav-translates';
+import { OliveOnEdit } from 'app/core/interfaces/on-edit';
+import { OliveEditDialogComponent } from 'app/core/components/dialogs/edit-dialog/edit-dialog.component';
 
 const ProductVariantId = 'id';
 const ItemName = 'name';
@@ -27,15 +33,15 @@ const InWarehouseId = 'inWarehouseId';
   styleUrls: ['./in-warehouse-status.component.scss']
 })
 export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent {
+  private inWarehouses = new Map<number, InWarehouse>();
+
   constructor(
-    dialog: MatDialog,
-    formBuilder: FormBuilder,
-    dialogRef: MatDialogRef<OliveInWarehouseStatusComponent>,
+    dialog: MatDialog, formBuilder: FormBuilder, 
+    dialogRef: MatDialogRef<OliveInWarehouseStatusComponent>,     
     @Inject(MAT_DIALOG_DATA) setting: LookupListerSetting,
-    translater: FuseTranslationLoaderService,
-    alertService: AlertService,
-    messageHelper: OliveMessageHelperService,
-    deviceService: DeviceDetectorService
+    translater: FuseTranslationLoaderService, alertService: AlertService,
+    messageHelper: OliveMessageHelperService, deviceService: DeviceDetectorService,
+    private oliveInWarehouseService: OliveInWarehouseService
   ) { 
     super(
       dialog, formBuilder,
@@ -69,7 +75,7 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
           break;
 
         case InWarehouseId:
-          retValue = this.id36(item.inWarehouseId) + '-' + this.dateCode(item.createdUtc);
+          retValue = this.dateCode(item.createdUtc, item.inWarehouseId);
           break;        
       }
       return retValue;
@@ -80,41 +86,63 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
     return [
       // 1
       { data: ProductVariantId, orderable: true, 
-          name: this.translater.get('purchasing.inWarehouseStatusHeader.ProductVariantId')},
+          name: this.translater.get('purchasing.inWarehouseStatusHeader.productVariantId')},
       // 2
       { data: ItemName, orderable: false, 
-          name: this.translater.get('purchasing.inWarehouseStatusHeader.ItemName')},
+          name: this.translater.get('purchasing.inWarehouseStatusHeader.itemName')},
       // 3
       { data: Quantity, orderable: true, 
-          name: this.translater.get('purchasing.inWarehouseStatusHeader.Quantity')},
+          name: this.translater.get('purchasing.inWarehouseStatusHeader.quantity')},
       // 4
       { data: Balance, orderable: true, 
-          name: this.translater.get('purchasing.inWarehouseStatusHeader.Balance')},
+          name: this.translater.get('purchasing.inWarehouseStatusHeader.balance')},
       // 5
       { data: InWarehouseId, orderable: false, 
-          name: this.translater.get('purchasing.inWarehouseStatusHeader.InWarehouseId')},
+          name: this.translater.get('purchasing.inWarehouseStatusHeader.inWarehouseId')},
     ];
   }
 
-  onCustomClick() {
-    // const setting = new OliveDialogSetting(
-    //   this.setting.editComponent, 
-    //   {
-    //     item: _.cloneDeep(this.sourceItem),
-    //     itemType: this.setting.itemType,
-    //     managePermission: this.setting.managePermission,
-    //     translateTitleId: this.setting.translateTitleId,
-    //     customTitle: this.getEditorCustomTitle(this.sourceItem),
-    //     startTabIndex: startTabIndex
-    //   }
-    // );
+  onCustomClick(item: InWarehouseItem) {
+    this.loadingIndicator = true;
 
-    // const dialogRef = this.dialog.open(
-    //   OliveEditDialogComponent,
-    //   {
-    //     disableClose: true,
-    //     panelClass: 'mat-dialog-md',
-    //     data: setting
-    //   });
+    if (this.inWarehouses.has(item.inWarehouseId)) {
+      this.openDialog(this.inWarehouses.get(item.inWarehouseId));
+    }
+    else {
+      this.oliveInWarehouseService.getItem(item.inWarehouseId).subscribe(
+        response => {
+          this.loadingIndicator = false;
+  
+          this.openDialog(response.model);
+          this.inWarehouses.set(item.inWarehouseId, response.model);
+        },
+        error => {
+          this.loadingIndicator = false;            
+          this.messageHelper.showLoadFaild(error);
+        }
+      );
+    }
+  }
+
+  private openDialog(item: InWarehouse) {
+    const setting = new OliveDialogSetting(
+      OliveInWarehouseManagerComponent, 
+      {
+        item: item,
+        itemType: InWarehouse,
+        managePermission: null,
+        translateTitleId: NavTranslates.InWarehouse.list,
+        customTitle: `${this.translater.get('navi.inWarehouse.group')} ID : ${this.dateCode(item.createdUtc, item.id)}`,
+        readOnly : true
+      } as OliveOnEdit
+    );
+
+    const dialogRef = this.dialog.open(
+      OliveEditDialogComponent,
+      {
+        disableClose: true,
+        panelClass: 'mat-dialog-md',
+        data: setting
+      });            
   }
 }

@@ -1,15 +1,16 @@
 export class NavTranslates {
     static Purchase = class {
-        static List = 'navi.purchase.list';
-        static Entry = 'navi.purchase.entry';
+        static list = 'navi.purchase.list';
+        static entry = 'navi.purchase.entry';
+        static inWarehousePending = 'navi.purchase.inWarehousePending';
+        static cancel = 'navi.purchase.cancel';
     };
 
     static InWarehouse = class {
-        static Group = 'navi.inWarehouse.group';
-        static Entry = 'navi.inWarehouse.entry';
-        static List = 'navi.inWarehouse.list';
-        static Pending = 'navi.inWarehouse.pending';
-        static Status = 'navi.inWarehouse.status';
+        static group = 'navi.inWarehouse.group';
+        static entry = 'navi.inWarehouse.entry';
+        static list = 'navi.inWarehouse.list';
+        static status = 'navi.inWarehouse.status';        
     };
 
     static Product = class {

@@ -61,13 +61,13 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
 
   constructor(
     protected dialog: MatDialog,
-    private formBuilder: FormBuilder,
+    protected formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<OliveLookupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public setting: LookupListerSetting,
     protected translater: FuseTranslationLoaderService,
-    private alertService: AlertService,
-    private messageHelper: OliveMessageHelperService,
-    private deviceService: DeviceDetectorService
+    protected alertService: AlertService,
+    protected messageHelper: OliveMessageHelperService,
+    protected deviceService: DeviceDetectorService
   ) {
     super();
     this.initializeComponent();
@@ -209,8 +209,7 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     return null;
   }
 
-  protected onCustomClick() {
-  }
+  protected onCustomClick(item?: any) {}
 
   private setTableColumns() {
     switch (this.setting.columnType) {
@@ -236,7 +235,7 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     if (event && event.srcElement.getAttribute('type') === 'checkbox' || this.setting.maxSelectItems === 0) { return; }
 
     if (this.setting.customClick) {
-      this.onCustomClick();
+      this.onCustomClick(item);
     }
     else {
       item.selected = !item.selected;
@@ -337,7 +336,7 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
   }
 
   renderStyle(styleString: any) {
-    return Utilities.TestIsUndefined(styleString) ? '' : styleString;
+    return this.isNull(styleString) ? '' : styleString;
   }
 
   get dataColumns() {

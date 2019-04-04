@@ -37,8 +37,8 @@ export class OlivePurchaseOrderEditorPageComponent extends OliveEditPageComponen
       component: OlivePurchaseOrderManagerComponent,
       itemType: PurchaseOrder,
       managePermission: null,
-      iconName: NavIcons.Purchase.Entry,
-      translateTitleId: NavTranslates.Purchase.Entry,
+      iconName: NavIcons.Purchase.entry,
+      translateTitleId: NavTranslates.Purchase.entry,
       itemListPath: 'purchases/list'
     };
 

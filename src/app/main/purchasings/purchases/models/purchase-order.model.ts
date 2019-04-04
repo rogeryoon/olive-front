@@ -7,9 +7,9 @@ import { Currency } from 'app/main/supports/bases/models/currency.model';
 
 export class PurchaseOrder extends OliveTrackingAttribute {
     id?: number;
-    vendorOrderId: string;
+    vendorOrderId?: string;
     date?: any;
-    memo: string;
+    memo?: string;
     totalAmount?: number;
     addedDiscountAmount?: number;
     freightAmount?: number;
@@ -19,7 +19,7 @@ export class PurchaseOrder extends OliveTrackingAttribute {
     closedDate?: any;
     inWareHouseCompletedDate?: any;
     printOutCount?: number;
-    lastPrintOutUser: string;
+    lastPrintOutUser?: string;
 
     vendorId?: number;
     vendorFk?: Vendor;
@@ -32,4 +32,7 @@ export class PurchaseOrder extends OliveTrackingAttribute {
 
     purchaseOrderPayments?: PurchaseOrderPayment[];
     purchaseOrderItems?: PurchaseOrderItem[];
+
+    tagPurchaseOrderItem?: PurchaseOrderItem;
+    tagCode?: string;
 }

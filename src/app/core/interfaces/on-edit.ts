@@ -9,7 +9,11 @@ export interface OliveOnEdit {
 
     customTitle?: string;
 
+    translateTitleId?: string;
+
     startTabIndex?: number;
+
+    readOnly?: boolean;
 
     itemSaved$: any;
 

@@ -139,7 +139,7 @@ export class OliveCacheService {
     const unlock = await this.chunkItemsMutexes.get(cacheKey).lock();
       if (!this.exist(cacheKey)) {
         try {
-          const response = await this.chunkDataService.getItems(key).toPromise();
+          const response = await this.chunkDataService.getChuckItems(key).toPromise();
           items = this.set(cacheKey, response.model);
         }
         catch (error) {

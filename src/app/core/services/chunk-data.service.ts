@@ -24,4 +24,8 @@ export class OliveChunkDataService extends OliveEntityService {
   getUserNames(userNames: string[]) {
     return this.post('userNames', {userAuditKeys: userNames});
   }
+
+  getChuckItems(key: string) {
+    return this.post('items/' + key, null);
+  }
 }

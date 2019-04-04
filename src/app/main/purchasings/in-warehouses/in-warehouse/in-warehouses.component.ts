@@ -54,29 +54,29 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
   initializeChildComponent() {
     this.setting = {
       name: 'InWarehouse',
-      icon: NavIcons.InWarehouse.List,
-      translateTitleId: NavTranslates.InWarehouse.List,
+      icon: NavIcons.InWarehouse.list,
+      translateTitleId: NavTranslates.InWarehouse.list,
       managePermission: null,
       columns: [
         // 1
         { data: Selected },
         // 2
-        { data: Id, thName: this.translater.get('purchasing.inWarehousesHeader.Id'), 
+        { data: Id, thName: this.translater.get('purchasing.inWarehousesHeader.id'), 
           tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: Vendors, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.Vendors'), 
+        { data: Vendors, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.vendors'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 4
-        { data: Items, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.Items'), 
+        { data: Items, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.items'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 5
-        { data: Quantity, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.Quantity'), 
+        { data: Quantity, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.quantity'), 
           tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 6
-        { data: TotalAmount, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.TotalAmount'), 
+        { data: TotalAmount, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.totalAmount'), 
           tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 7
-        { data: Warehouse, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.Warehouse'), 
+        { data: Warehouse, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.warehouse'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },        
       ],
       editComponent: OliveInWarehouseManagerComponent,
@@ -87,10 +87,10 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: InWarehouse) {
     if (item) {
-      return `${this.translater.get('navi.inWarehouse.group')} ID : ${this.id36(item.id)}`;
+      return `${this.translater.get('navi.inWarehouse.group')} ID : ${this.dateCode(item.createdUtc, item.id)}`;
     }
     else {
-      return this.translater.get(NavTranslates.InWarehouse.Entry);
+      return this.translater.get(NavTranslates.InWarehouse.entry);
     }
   }
 
@@ -99,7 +99,7 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = this.id36(item.id) + '-' + this.dateCode(item.createdUtc);
+        retValue = this.dateCode(item.createdUtc, item.id);
         break;
 
       case Vendors:

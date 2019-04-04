@@ -50,10 +50,6 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
     this.subControls.push(this.purchaseOrderItems);
   }
 
-  test() {
-    this.item.id = 3;
-  }
-
   onCurrencyChanged(id) {
     this.purchaseOrderItems.onCurrencyChanged(id);
   }

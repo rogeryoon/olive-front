@@ -7,7 +7,6 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { AlertService, DialogType, MessageSeverity } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
-import { Permission } from '@quick/models/permission.model';
 
 import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
@@ -17,19 +16,19 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveConstants } from 'app/core/classes/constants';
 
-import { OliveSearchPurchaseOrderComponent } from './search-purchase-order/search-purchase-order.component';
-import { OlivePurchaseOrderService } from '../services/purchase-order.service';
-import { PurchaseOrder } from '../models/purchase-order.model';
-import { OlivePurchaseOrderManagerComponent } from './purchase-order-manager/purchase-order-manager.component';
-import { OlivePurchasingMiscService } from '../services/purchasing-misc.service';
+import { OliveSearchPurchaseOrderComponent } from '../search-purchase-order/search-purchase-order.component';
+import { OlivePurchaseOrderService } from '../../services/purchase-order.service';
+import { PurchaseOrder } from '../../models/purchase-order.model';
+import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/purchase-order-manager.component';
+import { OlivePurchasingMiscService } from '../../services/purchasing-misc.service';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
-import { OlivePreviewPurchaseOrderComponent } from './preview-purchase-order/preview-purchase-order.component';
+import { OlivePreviewPurchaseOrderComponent } from '../preview-purchase-order/preview-purchase-order.component';
 import { OlivePreviewDialogComponent } from 'app/core/components/dialogs/preview-dialog/preview-dialog.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { OliveInWarehouseStatusComponent } from '../../in-warehouses/in-warehouse/in-warehouse-status/in-warehouse-status.component';
+import { OliveInWarehouseStatusComponent } from '../../../in-warehouses/in-warehouse/in-warehouse-status/in-warehouse-status.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { NameValue } from 'app/core/models/name-value';
-import { OliveInWarehouseItemService } from '../../in-warehouses/services/in-warehouse-items.service';
+import { OliveInWarehouseItemService } from '../../../in-warehouses/services/in-warehouse-items.service';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -44,7 +43,7 @@ const PrintLink = 'printLink';
 
 @Component({
   selector: 'olive-purchase-order',
-  templateUrl: '../../../../core/components/extends/entity-list/entity-list.component.html',
+  templateUrl: '../../../../../core/components/extends/entity-list/entity-list.component.html',
   styleUrls: ['./purchase-orders.component.scss'],
   animations: fuseAnimations
 })
@@ -72,38 +71,38 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
   initializeChildComponent() {
     this.setting = {
       name: 'PurchaseOrder',
-      icon: NavIcons.Purchase.List,
-      translateTitleId: NavTranslates.Purchase.List,
+      icon: NavIcons.Purchase.list,
+      translateTitleId: NavTranslates.Purchase.list,
       managePermission: null,
       columns: [
         // 1
         { data: Selected },
         // 2
-        { data: Id, thName: this.translater.get('purchasing.purchaseOrdersHeader.Id'), 
+        { data: Id, thName: this.translater.get('purchasing.purchaseOrdersHeader.id'), 
           tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: VendorName, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.VendorName'), 
+        { data: VendorName, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.vendorName'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 4
-        { data: ItemsName, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.ItemsName'), 
+        { data: ItemsName, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.itemsName'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 5
-        { data: Warehouse, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.Warehouse'), 
+        { data: Warehouse, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.warehouse'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },        
         // 6
-        { data: TotalAmount, thName: this.translater.get('purchasing.purchaseOrdersHeader.TotalAmount'), 
+        { data: TotalAmount, thName: this.translater.get('purchasing.purchaseOrdersHeader.totalAmount'), 
           tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 7
-        { data: PaymentsName, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.PaymentsName'), 
+        { data: PaymentsName, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.paymentsName'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 8
-        { data: InWarehouseStatusLink, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.InWarehouseStatusLink'), 
+        { data: InWarehouseStatusLink, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.inWarehouseStatusLink'), 
           tdClass: 'left -ex-type-text', thClass: '-ex-type-text' },
         // 9
-        { data: FinishLink, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.FinishLink'), 
+        { data: FinishLink, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.finishLink'), 
           tdClass: 'left -ex-type-text foreground-blue', thClass: '-ex-type-text' },
         // 10
-        { data: PrintLink, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.PrintLink'), 
+        { data: PrintLink, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.printLink'), 
           tdClass: 'left -ex-type-text foreground-blue', thClass: '-ex-type-text' }
       ],
       editComponent: OlivePurchaseOrderManagerComponent,
@@ -112,13 +111,17 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     };
   }
 
-  getEditorCustomTitle(item: PurchaseOrder) {
+  getEditorCustomTitle(item: PurchaseOrder): string {
     if (item) {
-      return `${this.translater.get('navi.purchase.group')} ID : ${this.id36(item.id)}-${this.dateCode(item.date)}`;
+      return `${this.translater.get('navi.purchase.group')} ID : ${this.dateCode(item.date, item.id)}`;
     }
     else {
-      return this.translater.get(NavTranslates.Purchase.Entry);
+      return this.translater.get(NavTranslates.Purchase.entry);
     }
+  }
+
+  getEditDialogReadOnly(item: PurchaseOrder): boolean {
+    return item.closedDate;
   }
 
   renderItem(item: PurchaseOrder, columnName: string): string {
@@ -126,7 +129,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = this.id36(item.id) + '-' + this.dateCode(item.date);
+        retValue = this.dateCode(item.date, item.id);
         break;
 
       case VendorName:
@@ -403,7 +406,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
           columnType: 'custom',
           disableSearchInput: true,
           customClick: true,
-          dialogTitle: this.translater.get(NavTranslates.InWarehouse.Status),
+          dialogTitle: this.translater.get(NavTranslates.InWarehouse.status),
           dataService: this.inWarehouseItemService,
           extraSearches: [{ name: 'status', value: item.id }] as NameValue[]
         } as LookupListerSetting

@@ -132,7 +132,7 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
 
   onPrint() {
     this.documentService.printPage(
-      `Purchase Order ${this.id36(this.order.id)}-${this.dateCode(this.order.date)}`, 
+      `Purchase Order ${this.dateCode(this.order.date, this.order.id)}`, 
       'olivestyle', 'olive-container'
     );
   }
@@ -140,7 +140,7 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
   onExcel() {
     const summaries = [];
 
-    summaries.push(`PO # : ${this.id36(this.order.id)}-${this.dateCode(this.order.date)}`);
+    summaries.push(`PO # : ${this.dateCode(this.order.date, this.order.id)}`);
     summaries.push(`Date : ${this.date(this.order.date)}`);
 
     const vfk = this.order.vendorFk;

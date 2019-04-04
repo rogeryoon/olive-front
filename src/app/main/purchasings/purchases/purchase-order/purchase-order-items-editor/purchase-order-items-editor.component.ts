@@ -1,7 +1,7 @@
 import { Component, forwardRef } from '@angular/core';
 import {
   FormBuilder, FormControl, ValidationErrors,
-  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, AbstractControl, FormArray, FormGroup
+  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, FormGroup
 } from '@angular/forms';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { String } from 'typescript-string-operations';
@@ -223,6 +223,10 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     return amount;
   }
 
+  canEditQuantity(item: PurchaseOrderItem): boolean {
+    return this.isNull(item) || this.isNull(item.id) || isNaN(item.quantity) || item.balance >= item.quantity;
+  }
+
   lookUpProductVariant() {
     const dialogRef = this.dialog.open(
       OliveProductVariantLookupDialogComponent,
@@ -294,13 +298,13 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
         data: {
           name: 'PurchaseOrder',
           columnType: 'custom',
-          dialogTitle: this.translater.get(NavTranslates.Purchase.List),
+          dialogTitle: this.translater.get(NavTranslates.Purchase.list),
           dataService: this.purchaseOrderService,
           maxSelectItems: 10,
           newComponent: OlivePurchaseOrderManagerComponent,
           itemType: PurchaseOrder,
           managePermission: Permission.manageProductsPermission,
-          translateTitleId: NavTranslates.Purchase.List,
+          translateTitleId: NavTranslates.Purchase.list,
           maxNameLength: 10,
           extraSearches: [{ name: 'ItemsExists', value: 'true' }] as NameValue[]
         } as LookupListerSetting
@@ -367,7 +371,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   }
 
   get purchaseOrderIcon() {
-    return NavIcons.Purchase.List;
+    return NavIcons.Purchase.list;
   }
 
   updateCosts() {
@@ -375,6 +379,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       const lineOtherCurrencyPrice = this.getMoney(formGroup.get('otherCurrencyPrice').value);
 
       if (lineOtherCurrencyPrice > 0 && this.otherCurrencyPriceRequired) {
+        formGroup.get('price').markAsTouched();
         formGroup.patchValue({price: (lineOtherCurrencyPrice / this.exchangeRate).toFixed(this.standCurrency.decimalPoint)});
       }
 
@@ -382,12 +387,10 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       const lineDiscount = this.getMoney(formGroup.get('discount').value);
       const linePrice = this.getMoney(formGroup.get('price').value);
 
-      if (linePrice === 0 || lineQuantity === 0) {
-        formGroup.patchValue({appliedCost: ''});
-      }
-      else
-      {
-        const appliedCost = linePrice - +(lineDiscount / lineQuantity).toFixed(2) + this.extraCostPerUnit;
+      const appliedCost = linePrice - +(lineDiscount / lineQuantity).toFixed(2) + this.extraCostPerUnit;
+
+      if (!isNaN(appliedCost)) {
+        formGroup.get('appliedCost').markAsTouched();
         formGroup.patchValue({appliedCost: appliedCost.toFixed(this.standCurrency.decimalPoint)});
       }
     });

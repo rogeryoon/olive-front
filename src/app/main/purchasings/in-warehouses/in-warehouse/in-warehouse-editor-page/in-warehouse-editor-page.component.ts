@@ -37,8 +37,8 @@ export class OliveInWarehouseEditorPageComponent extends OliveEditPageComponent 
       component: OliveInWarehouseManagerComponent,
       itemType: InWarehouse,
       managePermission: null,
-      iconName: NavIcons.InWarehouse.Entry,
-      translateTitleId: NavTranslates.InWarehouse.Entry,
+      iconName: NavIcons.InWarehouse.entry,
+      translateTitleId: NavTranslates.InWarehouse.entry,
       itemListPath: 'inwarehouses/list'
     };
 

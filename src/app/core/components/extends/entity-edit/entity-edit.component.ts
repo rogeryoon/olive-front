@@ -39,6 +39,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   managePermission: PermissionValues;
   customTitle: string;
   startTabIndex = 0;
+  readonly = false;
   saveConfirmTitle: string;
   saveConfirmMessage: string;
   itemSaved$ = this.onItemSaved.asObservable();

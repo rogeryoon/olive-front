@@ -150,6 +150,10 @@ input[type=search]::-webkit-search-cancel-button {
     color: orange;
 }
 
+.foreground-disabled {
+    color: 	lightgray;
+}
+
 .mat-header-cell {
     display: flex;
     justify-content: center;

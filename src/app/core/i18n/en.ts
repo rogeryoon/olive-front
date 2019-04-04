@@ -8,7 +8,7 @@ export const locale = {
                 'inItemEntry' : '상품 등록'
             },
             'message' : {
-                'noRecordsFound' : 'No matching records found',
+                'noRecordsFound' : '해당 데이터가 존재하지 않습니다.', // 'No matching records found',
                 'savingChanges' : 'Saving changes...',
                 'newItemCreated': '"{0}"(이)가 저장되었습니다.', // '"{0}" was created successfully'
                 'newItemCreatedGeneral': '데이터가 저장되었습니다.', // 'The item was created successfully',
@@ -88,10 +88,10 @@ export const locale = {
             },
             'menu': {
                 'menuButton' : '부가 기능',
-                'addNewItem' : 'Add New Item',
-                'exportExcelFile' : 'Export Excel File',
-                'printList' : 'Print List',
-                'upload' : 'Upload',
+                'addNewItem' : '신규 등록', // 'Add New Item',
+                'exportExcelFile' : '엑셀 다운로드', // 'Export Excel File',
+                'printList' : '인쇄', // 'Print List',
+                'upload' : '업로드', // 'Upload',
                 'productLookUp' : '상품 조회',
                 'purchaseOrderLookup' : '발주 조회'
             },
@@ -113,13 +113,14 @@ export const locale = {
                 'group' : '발주',
                 'entry': '발주서 작성',
                 'list' : '발주서 목록',
+                'inWarehousePending' : '미입고 현황',
+                'cancel' : '반품/취소 목록'                
             },
             'inWarehouse' : {
                 'group' : '입고',
                 'entry': '입고서 작성',
                 'list' : '입고 목록',
-                'pending' : '미입고 현황',
-                'status' : '입고 현황'
+                'status' : '입고 현황',
             },
             'product' : {
                 'home' : '상품',
@@ -229,15 +230,15 @@ export const locale = {
                 'payments' : 'Payments'
             },
             'purchaseOrdersHeader': {
-                'Id': 'ID',
-                'VendorName': '벤더',
-                'ItemsName': '제품',
-                'Warehouse': '창고',
-                'TotalAmount': '총액',
-                'PaymentsName': '결제',
-                'InWarehouseStatusLink': '입고',
-                'FinishLink' : '종결',
-                'PrintLink': '인쇄'
+                'id': 'ID',
+                'vendorName': '벤더',
+                'itemsName': '제품',
+                'warehouse': '창고',
+                'totalAmount': '총액',
+                'paymentsName': '결제',
+                'inWarehouseStatusLink': '입고',
+                'finishLink' : '종결',
+                'printLink': '인쇄'
             },
             'inWarehouseItems': {
                 'id' : '품목',
@@ -251,19 +252,32 @@ export const locale = {
                 'selectWarehouseFirst' : '입고 창고를 먼저 선택하십시오.'
             },
             'inWarehousesHeader': {
-                'Id': 'ID',
-                'Vendors': '벤더',
-                'Items': '품명',
-                'Quantity': '수량',
-                'TotalAmount': '총액',
-                'Warehouse': '창고'
+                'id': 'ID',
+                'vendors': '벤더',
+                'items': '품명',
+                'quantity': '수량',
+                'totalAmount': '총액',
+                'warehouse': '창고'
             },
             'inWarehouseStatusHeader': {
-                'ProductVariantId': '품목',
-                'ItemName': '품명',
-                'Quantity': '수량',
-                'Balance': '잔량',
-                'InWarehouseId': '입고 ID'
+                'productVariantId': '품목 ID',
+                'itemName': '품명',
+                'quantity': '수량',
+                'balance': '잔량',
+                'inWarehouseId': '입고 ID'
+            },
+            'inWarehousePendingHeader': {
+                'id': '발주 ID',
+                'warehouse': '창고',
+                'vendor': '벤더',
+                'memo': '메모',
+                'finishLink' : '종결',
+                'itemName': '품명',
+                'quantity': '수량',
+                'balance': '잔량',
+                'price': '단가',
+                'due': '계',
+                'remark': '비고'
             }            
         }
     }

@@ -36,8 +36,13 @@ export class OliveBaseComponent implements OnInit {
     return OliveUtilities.getShortDate(input);
   }
 
-  dateCode(input: any): string {
-    return OliveUtilities.getDateCode(input);
+  dateCode(date: any, id: number = 0): string {
+    if (id === 0) {
+      return OliveUtilities.getDateCode(date);
+    }
+    else {
+      return this.id36(id) + '-' + OliveUtilities.getDateCode(date);
+    }
   }
 
   boolValue(value?: boolean): boolean {

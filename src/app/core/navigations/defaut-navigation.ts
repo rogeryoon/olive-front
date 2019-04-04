@@ -10,31 +10,47 @@ export const defaultNavigation: FuseNavigation[] = [
         title: '상품',
         translate: 'navi.group.product',
         type: 'group',
-        icon: NavIcons.Group.Product,
+        icon: NavIcons.Group.product,
         children: [
             {
                 id: 'purchaseGroup',
                 title: '발주',
                 translate: 'navi.purchase.group',
                 type: 'collapsable',
-                icon: NavIcons.Purchase.Group,
+                icon: NavIcons.Purchase.group,
                 children: [
                     {
                         id: 'purchaseEntry',
                         title: '발주서 작성',
-                        translate: NavTranslates.Purchase.Entry,
+                        translate: NavTranslates.Purchase.entry,
                         type: 'item',
-                        icon: NavIcons.Purchase.Entry,
+                        icon: NavIcons.Purchase.entry,
                         url: '/purchases/0'
                     },                   
                     {
                         id: 'purchaseOrderList',
                         title: '발주서 목록',
-                        translate: NavTranslates.Purchase.List,
+                        translate: NavTranslates.Purchase.list,
                         type: 'item',
-                        icon: NavIcons.Purchase.List,
+                        icon: NavIcons.Purchase.list,
                         url: '/purchases/list'
-                    }
+                    },
+                    {
+                        id: 'inWarehousePending',
+                        title: '미입고 현황',
+                        translate: NavTranslates.Purchase.inWarehousePending,
+                        type: 'item',
+                        icon: NavIcons.Purchase.inWarehousePending,
+                        url: '/purchases/pending'
+                    },
+                    {
+                        id: 'returns',
+                        title: '반품/취소 목록',
+                        translate: NavTranslates.Purchase.cancel,
+                        type: 'item',
+                        icon: NavIcons.Purchase.cancel,
+                        url: '/purchases/cancel'
+                    }                    
                 ]
             },
             {
@@ -42,32 +58,24 @@ export const defaultNavigation: FuseNavigation[] = [
                 title: '입고',
                 translate: 'navi.inWarehouse.group',
                 type: 'collapsable',
-                icon: NavIcons.InWarehouse.Group,
+                icon: NavIcons.InWarehouse.group,
                 children: [
                     {
                         id: 'inWarehouseList',
                         title: '입고서 작성',
-                        translate: NavTranslates.InWarehouse.Entry,
+                        translate: NavTranslates.InWarehouse.entry,
                         type: 'item',
-                        icon: NavIcons.InWarehouse.Entry,
+                        icon: NavIcons.InWarehouse.entry,
                         url: '/inwarehouses/0'
                     },                    
                     {
                         id: 'inWarehouseList',
                         title: '입고 목록',
-                        translate: NavTranslates.InWarehouse.List,
+                        translate: NavTranslates.InWarehouse.list,
                         type: 'item',
-                        icon: NavIcons.InWarehouse.List,
+                        icon: NavIcons.InWarehouse.list,
                         url: '/inwarehouses/list'
-                    },                    
-                    {
-                        id: 'inWarehousePending',
-                        title: '미입고 현황',
-                        translate: NavTranslates.InWarehouse.Pending,
-                        type: 'item',
-                        icon: NavIcons.InWarehouse.Pending,
-                        url: '/inwarehouses/pending'
-                    }                    
+                    }
                 ]
             },
             {

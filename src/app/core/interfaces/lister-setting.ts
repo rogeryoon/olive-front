@@ -35,7 +35,13 @@ export class ListerSetting implements IListerSetting {
 
     loadDetail?: boolean;
 
+    // Dialog Title Overriding
     editCustomTitle?: string;
+
+    // Datatable Order Overriding
+    order?: any;
+
+    isEditDialogReadOnly?: boolean;
 }
 
 export class LookupListerSetting implements IListerSetting {

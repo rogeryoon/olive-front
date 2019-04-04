@@ -84,6 +84,7 @@ export class OliveEditDialogComponent extends OliveBaseComponent implements OnIn
     this.createdComponent.itemType = this.setting.data.itemType;
     this.createdComponent.customTitle = this.setting.data.customTitle;
     this.createdComponent.startTabIndex = this.setting.data.startTabIndex;
+    this.createdComponent.readOnly = this.setting.data.readOnly;
   }
 
   get customTitle() {
@@ -107,6 +108,6 @@ export class OliveEditDialogComponent extends OliveBaseComponent implements OnIn
   }
 
   get canManageItems() {
-    return this.accountService.userHasPermission(this.setting.data.managePermission);
+    return !this.createdComponent.readOnly && this.accountService.userHasPermission(this.setting.data.managePermission);
   }
 }

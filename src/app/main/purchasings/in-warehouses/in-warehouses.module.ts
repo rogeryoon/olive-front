@@ -22,11 +22,6 @@ const routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'pending',
-    component: OliveInWarehousesComponent,
-    canActivate: [AuthGuard]
-  },
-  {
     path: ':id',
     component: OliveInWarehouseEditorPageComponent,
     canActivate: [AuthGuard],

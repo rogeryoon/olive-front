@@ -7,7 +7,7 @@ import { FuseSharedModule } from '@fuse/shared.module';
 import { AuthGuard } from '@quick/services/auth-guard.service';
 
 import { OliveSharedModule } from '../../../core/shared.module';
-import { OlivePurchaseOrdersComponent } from './purchase-order/purchase-orders.component';
+import { OlivePurchaseOrdersComponent } from './purchase-order/purchase-orders/purchase-orders.component';
 import { OlivePurchaseOrderManagerComponent } from './purchase-order/purchase-order-manager/purchase-order-manager.component';
 import { OlivePurchaseOrderEditorComponent } from './purchase-order/purchase-order-editor/purchase-order-editor.component';
 import { OliveSearchPurchaseOrderComponent } from './purchase-order/search-purchase-order/search-purchase-order.component';
@@ -29,19 +29,33 @@ import { OliveCompanyService } from 'app/main/supports/companies/services/compan
 import { OliveInWarehouseStatusModule } from '../in-warehouses/in-warehouse/in-warehouse-status/in-warehouse-status.module';
 import { OlivePurchaseOrderLookupDialogModule } from './purchase-order/purchase-order-lookup-dialog/purchase-order-lookup-dialog.module';
 import { OliveInWarehouseItemService } from '../in-warehouses/services/in-warehouse-items.service';
+import { OliveInWarehousePendingComponent } from './purchase-order/in-Warehouse-pendings/in-Warehouse-pendings.component';
+import { OliveInWarehouseService } from '../in-warehouses/services/in-warehouse.service';
+import { OliveInWarehouseManagerModule } from '../in-warehouses/in-warehouse/in-warehouse-manager/in-warehouse-manager.module';
 
 const routes = [
   {
     path: 'list',
     component: OlivePurchaseOrdersComponent,
+    canActivate: [AuthGuard],
+    data: {'someData': 'test'}
+  },
+  {
+    path: 'pending',
+    component: OliveInWarehousePendingComponent,
     canActivate: [AuthGuard]
   },
+  {
+    path: 'cancel',
+    component: OlivePurchaseOrdersComponent,
+    canActivate: [AuthGuard]
+  },  
   {
     path: ':id',
     component: OlivePurchaseOrderEditorPageComponent,
     canActivate: [AuthGuard],
     resolve: { helps: OlivePurchaseOrderEditorPageResolver }
-  }  
+  }
 ];
 
 @NgModule({
@@ -56,7 +70,8 @@ const routes = [
     OliveProductVariantManagerModule,
     OliveProductManagerModule,
     OlivePurchaseOrderLookupDialogModule,
-    OliveInWarehouseStatusModule
+    OliveInWarehouseStatusModule,
+    OliveInWarehouseManagerModule
   ],
   declarations: [
     OlivePurchaseOrdersComponent,
@@ -66,7 +81,8 @@ const routes = [
     OlivePurchaseOrderEditorPageComponent,
     OlivePurchaseOrderPaymentsEditorComponent,
     OlivePurchaseOrderItemsEditorComponent,
-    OlivePreviewPurchaseOrderComponent
+    OlivePreviewPurchaseOrderComponent,
+    OliveInWarehousePendingComponent
   ],
   providers: [
     OlivePurchaseOrderService,
@@ -77,7 +93,8 @@ const routes = [
     OliveProductVariantService,
     OlivePurchasingMiscService,
     OliveCompanyService,
-    OliveInWarehouseItemService
+    OliveInWarehouseItemService,
+    OliveInWarehouseService
   ],
   entryComponents: [
     OlivePurchaseOrderManagerComponent,
