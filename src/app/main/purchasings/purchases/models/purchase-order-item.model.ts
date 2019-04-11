@@ -3,6 +3,7 @@
 export class PurchaseOrderItem extends OliveTrackingAttribute {
     id?: number;
     quantity?: number;
+    cancelQuantity?: number;
     balance?: number;
     price?: number;
     discount?: number;

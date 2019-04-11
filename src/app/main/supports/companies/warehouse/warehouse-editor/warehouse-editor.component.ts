@@ -81,25 +81,25 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
     this.lookupCompany.setting = {
       name: 'Company',
       columnType: 'code',
-      dialogTitle: this.translater.get(NavTranslates.Company.List),
+      dialogTitle: this.translater.get(NavTranslates.Company.list),
       dataService: this.companyService,
       maxSelectItems: 1,
       newComponent: OliveCompanyGroupManagerComponent,
       itemType: Company,
       managePermission: Permission.assignCompanyGroups,
-      translateTitleId: NavTranslates.Company.List
+      translateTitleId: NavTranslates.Company.list
     };
 
     this.lookupBranch.setting = {
       name: 'Branch',
       columnType: 'code',
-      dialogTitle: this.translater.get(NavTranslates.Company.Branch),
+      dialogTitle: this.translater.get(NavTranslates.Company.branch),
       dataService: this.branchService,
       maxSelectItems: 1,
       newComponent: OliveBranchManagerComponent,
       itemType: Branch,
       managePermission: Permission.assignCompanyGroups,
-      translateTitleId: NavTranslates.Company.Branch
+      translateTitleId: NavTranslates.Company.branch
     };    
   }
 

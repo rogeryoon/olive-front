@@ -67,7 +67,9 @@ export const locale = {
                 'duplicated' : '중복 오류 알림',
                 'deleteConfirm' : '삭제 알림',
                 'inWarehouseConfirm' : '입고 확인',
-                'yesOrNo': '확인'
+                'yesOrNo': '확인',
+                'creater' : '등록',
+                'lastUpdater' : '최종수정'
             },
             'button': {
                 'save' : '저장',
@@ -98,6 +100,15 @@ export const locale = {
             'form': {
                 'createdDateFrom' : '등록일 시작',
                 'createdDateTo' : '등록일 종료'
+            },
+            'tableHeader': {
+                'id' : 'ID',
+                'code' : '코드',
+                'name' : '이름',
+                'webSite' : '웹사이트',
+                'activated' : '활동',
+                'memo' : '메모',
+                'createdUtc' : '등록일'
             }
         },
         'page': {
@@ -107,17 +118,21 @@ export const locale = {
         },
         'navi' : {
             'group' : {
-                'product': '상품'
+                'product': '상품',
+                'config': '환경설정'
             },
             'purchase' : {
                 'group' : '발주',
+
                 'entry': '발주서 작성',
                 'list' : '발주서 목록',
                 'inWarehousePending' : '미입고 현황',
-                'cancel' : '반품/취소 목록'                
+                'cancel' : '반품/취소 목록',
+                'cancelEntry' : '반품/취소 작성'
             },
             'inWarehouse' : {
                 'group' : '입고',
+
                 'entry': '입고서 작성',
                 'list' : '입고 목록',
                 'status' : '입고 현황',
@@ -135,20 +150,26 @@ export const locale = {
                 'inventoriesHistory' : '품목별 재고기록'
             },
             'company' : {
+                'group' : '기초코드-회사',
+
                 'list' : '고객사',
-                'group' : '고객사 그룹',
+                'groupList' : '고객사 그룹',
                 'branch' : '지점',
                 'vendor' : '거래처',
                 'warehouse' : '창고',
                 'paymentMethod': '결제 수단'
             },
             'basic' : {
+                'group' : '기초코드-기타',
+
                 'currency' : '외국 화폐',
-                'country' : '국가 코드'
+                'country' : '국가 코드',
+                'carrier' : '캐리어'
             },
-            'config' : {
-                'companies' : '고객사',
-                'companyGroups' : '고객사 그룹'
+            'secure' : {
+                'group' : '보안 설정',
+                'user' : '사용자',
+                'role' : '권한'
             }
         },
         'tab': {
@@ -244,7 +265,8 @@ export const locale = {
                 'id' : '품목',
                 'vendor': '벤더',
                 'name' : '품명',
-                'quantity': '입고',
+                'quantity': '입고 갯수',
+                'cancel': '취소 갯수',
                 'balance': '잔량',
                 'remark' : '비고',
                 'price' : '단가',

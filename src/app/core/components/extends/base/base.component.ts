@@ -36,6 +36,10 @@ export class OliveBaseComponent implements OnInit {
     return OliveUtilities.getShortDate(input);
   }
 
+  moment(input: any): string {
+    return OliveUtilities.getMomentDate(input);
+  }  
+
   dateCode(date: any, id: number = 0): string {
     if (id === 0) {
       return OliveUtilities.getDateCode(date);

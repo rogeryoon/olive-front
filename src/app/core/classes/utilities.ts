@@ -70,7 +70,7 @@ export class OliveUtilities {
         if (!date) { return ''; }
 
         moment.locale();
-        return moment(date).format('L');
+        return moment(date).fromNow();
     }
 
     public static testIsUndefined(value: any): boolean {

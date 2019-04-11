@@ -72,13 +72,13 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
     this.lookupWarehouse.setting = {
       name: 'Warehouse',
       columnType: 'code',
-      dialogTitle: this.translater.get(NavTranslates.Company.Warehouse),
+      dialogTitle: this.translater.get(NavTranslates.Company.warehouse),
       dataService: this.warehouseService,
       maxSelectItems: 1,
       newComponent: OliveWarehouseManagerComponent,
       itemType: Warehouse,
       managePermission: Permission.assignCompanyGroups,
-      translateTitleId: NavTranslates.Company.Warehouse
+      translateTitleId: NavTranslates.Company.warehouse
     } as LookupListerSetting;
   }
 

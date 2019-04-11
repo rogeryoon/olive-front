@@ -53,8 +53,8 @@ export class OliveCompanyGroupsComponent extends OliveEntityListComponent {
   initializeChildComponent() {
     this.setting = {
       name: 'CompanyGroup',
-      icon: NavIcons.Company.Group,
-      translateTitleId: NavTranslates.Company.Group,
+      icon: NavIcons.Company.groupList,
+      translateTitleId: NavTranslates.Company.groupList,
       managePermission: Permission.assignCompanyGroups,
       columns: [
         // 1

@@ -1,9 +1,16 @@
 export class NavTranslates {
+    static Group = class {
+        static product = 'navi.group.product';
+        static config = 'navi.group.config';
+    };
+    
     static Purchase = class {
+        static group = 'navi.purchase.group';
         static list = 'navi.purchase.list';
         static entry = 'navi.purchase.entry';
         static inWarehousePending = 'navi.purchase.inWarehousePending';
         static cancel = 'navi.purchase.cancel';
+        static cancelEntry = 'navi.purchase.cancelEntry';
     };
 
     static InWarehouse = class {
@@ -27,17 +34,29 @@ export class NavTranslates {
     };
 
     static Company = class {
-        static List = 'navi.company.list';
-        static Group = 'navi.company.group';
-        static Branch = 'navi.company.branch';
-        static Vendor = 'navi.company.vendor';
-        static Warehouse = 'navi.company.warehouse';
-        static PaymentMethod = 'navi.company.paymentMethod';
+        static group = 'navi.company.group';
+
+        static list = 'navi.company.list';
+        static groupList = 'navi.company.groupList';
+        static branch = 'navi.company.branch';
+        static vendor = 'navi.company.vendor';
+        static warehouse = 'navi.company.warehouse';
+        static paymentMethod = 'navi.company.paymentMethod';
     };
 
     static Basic = class {
-        static Currency = 'navi.basic.currency';
-        static Country = 'navi.basic.country';
+        static group = 'navi.basic.group';
+
+        static currency = 'navi.basic.currency';
+        static country = 'navi.basic.country';
+        static carrier = 'navi.basic.carrier';
+    };
+
+    static Secure = class {
+        static group = 'navi.secure.group';
+
+        static user = 'navi.secure.user';
+        static role = 'navi.secure.role';
     };
 }
 

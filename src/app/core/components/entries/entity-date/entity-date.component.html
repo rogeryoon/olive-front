@@ -1,24 +1,18 @@
-<div class="mt-16" [formGroup]="oForm" novalidate fxLayout="column" fxLayoutGap="1em" autocomplete="off">
-  <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em" *ngIf="updatedDatesExists">
-      <mat-form-field appearance="outline" fxFlex>
-          <mat-label>수정인</mat-label>
-          <input matInput name="updatedUser" formControlName="updatedUser" readonly="readonly">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" fxFlex>
-          <mat-label>수정일</mat-label>
-          <input matInput name="updatedUtc" formControlName="updatedUtc" readonly="readonly">
-      </mat-form-field>      
-  </div>
-  <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em" *ngIf="createdDatesExists">
-      <mat-form-field appearance="outline" fxFlex>
-          <mat-label>등록인</mat-label>
-          <input matInput name="createdUser" formControlName="createdUser" readonly="readonly">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" fxFlex>
-          <mat-label>등록일</mat-label>
-          <input matInput name="createdUtc" formControlName="createdUtc" readonly="readonly">
-      </mat-form-field>      
-  </div>  
+<div [formGroup]="oForm" novalidate fxLayout="column" fxLayoutGap="1em" autocomplete="off"
+    *ngIf="visible && mode=='textbox'">
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-label>{{textLableName}}</mat-label>
+            <input matInput name="user" formControlName="user" [value]="infoText"
+                readonly="readonly" (click)="onClick()" class="link-cursor">
+            <span matPrefix (click)="onClick()">
+                <mat-icon class="secondary-text link-cursor">{{iconName}}</mat-icon>
+            </span>
+        </mat-form-field>
+    </div>
 </div>
+
+<button mat-raised-button (click)="onClick()" *ngIf="visible && mode=='button'" style="color: gray;">
+    <mat-icon>{{iconName}}</mat-icon>
+    {{infoText}}
+</button>

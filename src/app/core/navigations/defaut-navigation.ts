@@ -8,14 +8,14 @@ export const defaultNavigation: FuseNavigation[] = [
     {
         id: 'product',
         title: '상품',
-        translate: 'navi.group.product',
+        translate: NavTranslates.Group.product,
         type: 'group',
         icon: NavIcons.Group.product,
         children: [
             {
                 id: 'purchaseGroup',
                 title: '발주',
-                translate: 'navi.purchase.group',
+                translate: NavTranslates.Purchase.group,
                 type: 'collapsable',
                 icon: NavIcons.Purchase.group,
                 children: [
@@ -36,7 +36,7 @@ export const defaultNavigation: FuseNavigation[] = [
                         url: '/purchases/list'
                     },
                     {
-                        id: 'inWarehousePending',
+                        id: 'purchaseInWarehousePending',
                         title: '미입고 현황',
                         translate: NavTranslates.Purchase.inWarehousePending,
                         type: 'item',
@@ -44,13 +44,21 @@ export const defaultNavigation: FuseNavigation[] = [
                         url: '/purchases/pending'
                     },
                     {
-                        id: 'returns',
+                        id: 'purchaseCancel',
                         title: '반품/취소 목록',
                         translate: NavTranslates.Purchase.cancel,
                         type: 'item',
                         icon: NavIcons.Purchase.cancel,
-                        url: '/purchases/cancel'
-                    }                    
+                        url: '/purchases/cancel/list'
+                    },                    
+                    {
+                        id: 'purchaseCancelEntry',
+                        title: '반품/취소 작성',
+                        translate: NavTranslates.Purchase.cancelEntry,
+                        type: 'item',
+                        icon: NavIcons.Purchase.cancelEntry,
+                        url: '/purchases/cancel/0'
+                    }
                 ]
             },
             {
@@ -241,105 +249,126 @@ export const defaultNavigation: FuseNavigation[] = [
     {
         id: 'config',
         title: '환경설정',
+        translate: NavTranslates.Group.config,
         type: 'group',
-        icon: 'settings_input_component',
+        icon: NavIcons.Group.config,
         children: [
             {
-                id: 'configSecure',
+                id: 'secure',
                 title: '보안 설정',
                 type: 'collapsable',
-                icon: 'person',
+                translate: NavTranslates.Secure.group,
+                icon: NavIcons.Secure.group,
                 children: [
                     {
-                        id: 'configUsers',
+                        id: 'secureUsers',
                         title: '사용자',
                         type: 'item',
-                        icon: 'person_add',
+                        translate: NavTranslates.Secure.user,
+                        icon: NavIcons.Secure.user,
                         url: '/configs/users'
                     },
                     {
-                        id: 'configRoles',
+                        id: 'secureRoles',
                         title: '권한설정',
                         type: 'item',
-                        icon: 'contacts',
+                        translate: NavTranslates.Secure.role,
+                        icon: NavIcons.Secure.role,
                         url: '/configs/roles'
                     }
                 ]
             },
             {
-                id: 'configCodes',
-                title: '기초코드',
+                id: 'company',
+                title: '기초코드-회사',
+                translate: NavTranslates.Company.group,
                 type: 'collapsable',
-                icon: 'business_center',
+                icon: NavIcons.Company.group,
 
                 children: [
                     {
-                        id: 'companyBranch',
-                        title: NavTranslates.Company.Branch,
-                        type: 'item',
-                        icon: NavIcons.Company.Branch,
-                        url: '/companies/branch'
-                    },
-                    {
                         id: 'companyList',
                         title: '고객사',
-                        translate: NavTranslates.Company.List,
-                        type: 'item',
-                        icon: NavIcons.Company.List,
+                        type: 'item',                        
+                        translate: NavTranslates.Company.list,
+                        icon: NavIcons.Company.list,
                         url: '/companies/list'
                     },
                     {
-                        id: 'companyGroup',
+                        id: 'companyGroupList',
                         title: '고객사 그룹',
-                        translate: NavTranslates.Company.Group,
-                        type: 'item',
-                        icon: NavIcons.Company.Group,
+                        type: 'item',                        
+                        translate: NavTranslates.Company.groupList,
+                        icon: NavIcons.Company.groupList,
                         url: '/companies/groups'
                     },
                     {
-                        id: 'vendor',
-                        title: '거래처',
-                        translate: NavTranslates.Company.Vendor,
-                        type: 'item',
-                        icon: NavIcons.Company.Vendor,
-                        url: '/companies/vendor'
-                    },
-                    {
-                        id: 'currency',
-                        title: NavTranslates.Basic.Currency,
-                        type: 'item',
-                        icon: NavIcons.Basic.Currency,
-                        url: '/bases/currency'
+                        id: 'companyBranch',
+                        title: '지점',
+                        type: 'item',                        
+                        translate: NavTranslates.Company.branch,
+                        icon: NavIcons.Company.branch,
+                        url: '/companies/branch'
                     },
                     {
                         id: 'companyWarehouse',
-                        title: NavTranslates.Company.Warehouse,
-                        type: 'item',
-                        icon: NavIcons.Company.Warehouse,
+                        title: '창고',
+                        type: 'item',                        
+                        translate: NavTranslates.Company.warehouse,
+                        icon: NavIcons.Company.warehouse,
                         url: '/companies/warehouse'
                     },
                     {
-                        id: 'paymentMethod',
-                        title: NavTranslates.Company.PaymentMethod,
-                        type: 'item',
-                        icon: NavIcons.Company.PaymentMethod,
-                        url: '/companies/payment-method'
-                    },
-                    {
-                        id: 'country',
-                        title: NavTranslates.Basic.Country,
-                        type: 'item',
-                        icon: NavIcons.Basic.Country,
-                        url: '/bases/country'
+                        id: 'companyVendor',
+                        title: '거래처',
+                        type: 'item',                        
+                        translate: NavTranslates.Company.vendor,
+                        icon: NavIcons.Company.vendor,
+                        url: '/companies/vendor'
                     }
                 ]
             },
             {
-                id: 'configMisc',
-                title: '기타설정',
-                type: 'item',
-                icon: 'build',
-                url: '/config/misc'
+                id: 'basic',
+                title: '기초코드-기타',
+                translate: NavTranslates.Basic.group,
+                type: 'collapsable',
+                icon: NavIcons.Basic.group,
+
+                children: [
+                    {
+                        id: 'basicCurrency',
+                        title: '외국 화폐',
+                        type: 'item',                        
+                        translate: NavTranslates.Basic.currency,
+                        icon: NavIcons.Basic.currency,
+                        url: '/bases/currency'
+                    },
+                    {
+                        id: 'basicPaymentMethod',
+                        title: 'paymentMethod',
+                        type: 'item',                        
+                        translate: NavTranslates.Company.paymentMethod,
+                        icon: NavIcons.Company.paymentMethod,
+                        url: '/companies/payment-method'
+                    },
+                    {
+                        id: 'basicCountry',
+                        title: '국가 코드',
+                        type: 'item',                        
+                        translate: NavTranslates.Basic.country,
+                        icon: NavIcons.Basic.country,
+                        url: '/bases/country'
+                    },
+                    {
+                        id: 'basicCarrier',
+                        title: '캐리어',
+                        type: 'item',                        
+                        translate: NavTranslates.Basic.carrier,
+                        icon: NavIcons.Basic.carrier,
+                        url: '/bases/carrier'
+                    }
+                ]
             }
         ]
     },

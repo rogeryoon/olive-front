@@ -7,14 +7,12 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
-import { Permission } from '@quick/models/permission.model';
 
 import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchCountryComponent } from './search-country/search-country.component';
 import { OliveCountryService } from '../services/country.service';
@@ -51,8 +49,8 @@ export class OliveCountriesComponent extends OliveEntityListComponent {
   initializeChildComponent() {
     this.setting = {
       name: 'Country',
-      icon: NavIcons.Basic.Country,
-      translateTitleId: NavTranslates.Basic.Country,
+      icon: NavIcons.Basic.country,
+      translateTitleId: NavTranslates.Basic.country,
       managePermission: null,
       columns: [
         { data: Selected },

@@ -54,8 +54,8 @@ export class OliveWarehousesComponent extends OliveEntityListComponent {
   initializeChildComponent() {
     this.setting = {
       name: 'Warehouse',
-      icon: NavIcons.Company.Warehouse,
-      translateTitleId: NavTranslates.Company.Warehouse,
+      icon: NavIcons.Company.warehouse,
+      translateTitleId: NavTranslates.Company.warehouse,
       managePermission: null,
       columns: [
         { data: Selected },

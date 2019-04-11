@@ -1,6 +1,7 @@
 export class NavIcons {
     static Group = class {
         static product = 'group_work';
+        static config = 'settings_input_component';
     };
 
     static Purchase = class {
@@ -11,6 +12,7 @@ export class NavIcons {
 
         static inWarehousePending = 'assistant_photo';
         static cancel = 'cached';
+        static cancelEntry = 'loop';
     };
 
     static InWarehouse = class {
@@ -34,18 +36,29 @@ export class NavIcons {
     };
 
     static Company = class {
-        static List = 'domain';
-        static Group = 'dns';
-        static Branch = 'account_balance';
-        static Vendor = 'forum';
-        static Warehouse = 'store';
-        static PaymentMethod = 'card_membership';        
+        static group = 'business_center';
+
+        static list = 'domain';
+        static groupList = 'dns';
+        static branch = 'account_balance';
+        static vendor = 'forum';
+        static warehouse = 'store';
+        static paymentMethod = 'card_membership';        
     };
 
     static Basic = class {
-        static Currency = 'attach_money';
-        static Country = 'landscape';
-    };    
+        static group = 'build';
+
+        static currency = 'attach_money';
+        static country = 'landscape';
+        static carrier = 'local_shipping';
+    };
+    
+    static Secure = class {
+        static group = 'person';
+        static user = 'person_add';
+        static role = 'contacts';
+    };
 }
 
 

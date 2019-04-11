@@ -34,7 +34,7 @@ export class OliveCompanyEditorComponent extends OliveEntityFormComponent {
   }
 
   get companyGroupTitle() {
-    return NavTranslates.Company.Group;
+    return NavTranslates.Company.groupList;
   }
 
   getEditedItem(): any {
@@ -90,13 +90,13 @@ export class OliveCompanyEditorComponent extends OliveEntityFormComponent {
     this.lookupCompanyGroup.setting = {
       name: 'CompanyGroup',
       columnType: 'id',
-      dialogTitle: this.translater.get(NavTranslates.Company.List),
+      dialogTitle: this.translater.get(NavTranslates.Company.list),
       dataService: this.companyGroupService,
       maxSelectItems: 1,
       newComponent: OliveCompanyGroupManagerComponent,
       itemType: CompanyGroup,
       managePermission: Permission.assignCompanyGroups,
-      translateTitleId: NavTranslates.Company.Group
+      translateTitleId: NavTranslates.Company.groupList
     };
   }
 }

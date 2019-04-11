@@ -16,6 +16,10 @@ import { OliveCountryManagerComponent } from './country/country-manager/country-
 import { OliveCountryEditorComponent } from './country/country-editor/country-editor.component';
 import { OliveSearchCountryComponent } from './country/search-country/search-country.component';
 import { OliveCountryService } from './services/country.service';
+import { OliveCarrierManagerModule } from './carrier/carrier-manager/carrier-manager.module';
+import { OliveCarriersComponent } from './carrier/carriers.component';
+import { OliveSearchCarrierComponent } from './carrier/search-carrier/search-carrier.component';
+import { OliveCarrierService } from './services/carrier.service';
 
 const routes = [
   {
@@ -28,6 +32,11 @@ const routes = [
     component: OliveCurrenciesComponent,
     canActivate: [AuthGuard]
   },
+  {
+    path: 'carrier',
+    component: OliveCarriersComponent,
+    canActivate: [AuthGuard]
+  },  
 ];
 
 @NgModule({
@@ -36,7 +45,8 @@ const routes = [
     FuseSharedModule,
     TranslateModule.forChild(),
 
-    OliveSharedModule
+    OliveSharedModule,
+    OliveCarrierManagerModule
   ],
   declarations: [
     OliveCurrenciesComponent,
@@ -47,16 +57,21 @@ const routes = [
     OliveCountriesComponent,
     OliveCountryManagerComponent,    
     OliveCountryEditorComponent,
-    OliveSearchCountryComponent    
+    OliveSearchCountryComponent,
+
+    OliveCarriersComponent,
+    OliveSearchCarrierComponent      
   ],
   providers: [
-    OliveCountryService
+    OliveCountryService,
+    OliveCarrierService
   ],
   entryComponents: [
     OliveCurrencyManagerComponent,    
     OliveSearchCurrencyComponent,
     OliveCountryManagerComponent,    
-    OliveSearchCountryComponent 
+    OliveSearchCountryComponent,
+    OliveSearchCarrierComponent
   ]
 })
 export class OliveBasesModule { }

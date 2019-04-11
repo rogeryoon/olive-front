@@ -59,8 +59,8 @@ export class OliveBranchesComponent extends OliveEntityListComponent {
   initializeChildComponent() {
     this.setting = {
       name: 'Branch',
-      icon: NavIcons.Company.Branch,
-      translateTitleId: NavTranslates.Company.Branch,
+      icon: NavIcons.Company.branch,
+      translateTitleId: NavTranslates.Company.branch,
       managePermission: Permission.assignCompanyGroups,
       columns: [
         { data: Selected },

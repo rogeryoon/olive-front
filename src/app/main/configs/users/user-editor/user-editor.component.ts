@@ -260,7 +260,7 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
     const setting = {
       name: 'CompanyGroup',
       columnType: 'id',
-      dialogTitle: this.translater.get(NavTranslates.Company.Group),
+      dialogTitle: this.translater.get(NavTranslates.Company.groupList),
       dataService: this.companyGroupService,
       maxSelectItems: 1
     };

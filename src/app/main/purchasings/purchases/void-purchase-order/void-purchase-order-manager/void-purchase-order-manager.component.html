@@ -1,0 +1,4 @@
+﻿<form #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()" class="w-100-p" fxLayout="column" fxFlex>
+    <olive-void-purchase-order-editor #main [item]="item" (warehouseChanged)="onWarehouseChanged($event)"></olive-void-purchase-order-editor>
+    <olive-void-purchase-order-items-editor #items formControlName="inWarehouseItems"></olive-void-purchase-order-items-editor>
+</form>

@@ -20,7 +20,6 @@ import { InWarehouseItem } from '../../models/in-warehouse-item.model';
 import { InWarehouse } from '../../models/in-warehouse.model';
 import { OlivePurchaseOrderLookupDialogComponent } from 'app/main/purchasings/purchases/purchase-order/purchase-order-lookup-dialog/purchase-order-lookup-dialog.component';
 import { OlivePurchaseOrderService } from 'app/main/purchasings/purchases/services/purchase-order.service';
-import { OlivePurchaseOrderManagerComponent } from 'app/main/purchasings/purchases/purchase-order/purchase-order-manager/purchase-order-manager.component';
 import { PurchaseOrder } from 'app/main/purchasings/purchases/models/purchase-order.model';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { Warehouse } from 'app/main/supports/companies/models/warehouse.model';
@@ -201,13 +200,12 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
           dialogTitle: this.translater.get(NavTranslates.Purchase.list),
           dataService: this.purchaseOrderService,
           maxSelectItems: 10,
-          newComponent: OlivePurchaseOrderManagerComponent,
           itemType: PurchaseOrder,
           managePermission: Permission.manageProductsPermission,
           translateTitleId: NavTranslates.Purchase.list,
           maxNameLength: 10,
           extraSearches: [
-            { name: 'ItemsExists', value: 'true' }, 
+            { name: 'InWarehousePending', value: 'true' }, 
             { name: 'Warehouse', value: this.wareHouse.id }
           ] as NameValue[]
         } as LookupListerSetting

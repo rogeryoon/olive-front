@@ -7,7 +7,6 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
-import { Permission } from '@quick/models/permission.model';
 
 import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
@@ -25,11 +24,7 @@ const Selected = 'selected';
 const Id = 'id';
 const Code = 'code';
 const Name = 'name';
-const PhoneNumber = 'phoneNumber';
-const Email = 'email';
 const WebSite = 'webSite';
-const Address = 'address';
-const Memo = 'memo';
 const Activated = 'activated';
 const CreatedUtc = 'createdUtc';
 
@@ -57,8 +52,8 @@ export class OliveVendorsComponent extends OliveEntityListComponent {
   initializeChildComponent() {
     this.setting = {
       name: 'Vendor',
-      icon: NavIcons.Company.Vendor,
-      translateTitleId: NavTranslates.Company.Vendor,
+      icon: NavIcons.Company.vendor,
+      translateTitleId: NavTranslates.Company.vendor,
       managePermission: null,
       columns: [
         { data: Selected },
@@ -87,20 +82,8 @@ export class OliveVendorsComponent extends OliveEntityListComponent {
       case Name:
         retValue = item.name;
         break;
-      case PhoneNumber:
-        retValue = item.phoneNumber;
-        break;
-      case Email:
-        retValue = item.email;
-        break;
       case WebSite:
         retValue = OliveUtilities.webSiteHostName(item.webSite);
-        break;
-      case Address:
-        retValue = item.address;
-        break;
-      case Memo:
-        retValue = item.memo;
         break;
       case CreatedUtc:
         retValue = this.date(item.createdUtc);

@@ -54,8 +54,8 @@ export class OliveCurrenciesComponent extends OliveEntityListComponent {
   initializeChildComponent() {
     this.setting = {
       name: 'Currency',
-      icon: NavIcons.Basic.Currency,
-      translateTitleId: NavTranslates.Basic.Currency,
+      icon: NavIcons.Basic.currency,
+      translateTitleId: NavTranslates.Basic.currency,
       managePermission: null,
       columns: [
         // 1

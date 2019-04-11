@@ -12,6 +12,7 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveInWarehouseEditorComponent } from '../in-warehouse-editor/in-warehouse-editor.component';
 import { OliveInWarehouseItemsEditorComponent } from '../in-warehouse-items-editor/in-warehouse-items-editor.component';
+import { InWarehouse } from '../../models/in-warehouse.model';
 
 @Component({
   selector: 'olive-in-warehouse-manager',
@@ -23,7 +24,7 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
   private inWarehouseEditor: OliveInWarehouseEditorComponent;
 
   @ViewChild(OliveInWarehouseItemsEditorComponent)
-  private inWarehouseItems: OliveInWarehouseItemsEditorComponent;
+  private inWarehouseItemsEditor: OliveInWarehouseItemsEditorComponent;
 
   constructor(
     translater: FuseTranslationLoaderService, alertService: AlertService,
@@ -44,18 +45,19 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
 
   registerSubControl() {
     this.subControls.push(this.inWarehouseEditor);
-    this.subControls.push(this.inWarehouseItems);
+    this.subControls.push(this.inWarehouseItemsEditor);
   }
 
   getEditedItem(): any {
     const inWarehouse = this.inWarehouseEditor.getEditedItem();
-    const inWarehouseItems = this.inWarehouseItems.getEditedItem();
+    const inWarehouseItems = this.inWarehouseItemsEditor.getEditedItem();
 
     return this.itemWithIdNAudit({
+      itemCount: this.inWarehouseItemsEditor.totalQuantity,
       memo: inWarehouse.memo,
       warehouseId: inWarehouse.warehouseId,
       inWarehouseItems: inWarehouseItems.inWarehouseItems
-    });
+    } as InWarehouse);
   }
 
   buildForm() {
@@ -73,10 +75,10 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
       });
     }
 
-    this.inWarehouseItems.setParentItem(this.item);
+    this.inWarehouseItemsEditor.setParentItem(this.item);
   }
 
   onWarehouseChanged(item: any) {
-    this.inWarehouseItems.setWarehouse(item);
+    this.inWarehouseItemsEditor.setWarehouse(item);
   }
 }
