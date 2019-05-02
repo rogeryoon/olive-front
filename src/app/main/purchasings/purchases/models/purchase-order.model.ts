@@ -1,13 +1,13 @@
 ﻿import { OliveTrackingAttribute } from 'app/core/classes/tracking-attribute';
 import { PurchaseOrderPayment } from './purchase-order-payment.model';
 import { PurchaseOrderItem } from './purchase-order-item.model';
-import { Vendor } from 'app/main/supports/companies/models/vendor.model';
+import { Supplier } from 'app/main/supports/companies/models/supplier.model';
 import { Warehouse } from 'app/main/supports/companies/models/warehouse.model';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
 
 export class PurchaseOrder extends OliveTrackingAttribute {
     id?: number;
-    vendorOrderId?: string;
+    supplierOrderId?: string;
     date?: any;
     memo?: string;
     totalAmount?: number;
@@ -17,12 +17,12 @@ export class PurchaseOrder extends OliveTrackingAttribute {
     totalDueAmount?: number;
     currencyExchangeRate?: number;
     closedDate?: any;
-    inWareHouseCompletedDate?: any;
+    inWarehouseCompletedDate?: any;
     printOutCount?: number;
     lastPrintOutUser?: string;
 
-    vendorId?: number;
-    vendorFk?: Vendor;
+    supplierId?: number;
+    supplierFk?: Supplier;
 
     warehouseId?: number;
     warehouseFk?: Warehouse;

@@ -20,10 +20,11 @@ import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveInWarehouseService } from '../../in-warehouses/services/in-warehouse.service';
 import { InWarehouse } from '../../in-warehouses/models/in-warehouse.model';
+import { VoidPurchaseOrder } from '../models/void-purchase-order.model';
 
 const Selected  = 'selected';
 const Id = 'id';
-const Vendors = 'vendors';
+const Suppliers = 'suppliers';
 const Items = 'items';
 const Quantity = 'quantity';
 const TotalAmount = 'totalAmount';
@@ -53,9 +54,8 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
 
   initializeChildComponent() {
     this.setting = {
-      name: 'InWarehouse',
-      icon: NavIcons.InWarehouse.list,
-      translateTitleId: NavTranslates.InWarehouse.list,
+      icon: NavIcons.Purchase.cancel,
+      translateTitleId: NavTranslates.Purchase.cancel,
       managePermission: null,
       columns: [
         // 1
@@ -64,7 +64,7 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
         { data: Id, thName: this.translater.get('purchasing.inWarehousesHeader.id'), 
           tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: Vendors, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.vendors'), 
+        { data: Suppliers, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.suppliers'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 4
         { data: Items, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.items'), 
@@ -81,11 +81,11 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
       ],
       editComponent: OliveVoidPurchaseOrderManagerComponent,
       searchComponent: OliveSearchVoidPurchaseOrderComponent,
-      itemType: InWarehouse
+      itemType: VoidPurchaseOrder
     };
   }
 
-  getEditorCustomTitle(item: InWarehouse) {
+  getEditorCustomTitle(item: VoidPurchaseOrder) {
     if (item) {
       return `${this.translater.get('navi.inWarehouse.group')} ID : ${this.dateCode(item.createdUtc, item.id)}`;
     }
@@ -94,7 +94,7 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
     }
   }
 
-  renderItem(item: InWarehouse, columnName: string): string {
+  renderItem(item: VoidPurchaseOrder, columnName: string): string {
 
     let retValue = '';
     switch (columnName) {
@@ -102,30 +102,30 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
         retValue = this.dateCode(item.createdUtc, item.id);
         break;
 
-      case Vendors:
+      case Suppliers:
         const sets = new Set([]);
-        item.inWarehouseItems.forEach(i => sets.add(i.vendorName));
-        const vendors = [];
-        sets.forEach(s => vendors.push({name: s}));
-        retValue = OliveUtilities.getItemsFirstName(vendors);
+        item.inWarehouseFk.inWarehouseItems.forEach(i => sets.add(i.supplierName));
+        const suppliers = [];
+        sets.forEach(s => suppliers.push({name: s}));
+        retValue = OliveUtilities.getItemsFirstName(suppliers);
         break;
 
       case Items:
         const items = [];
-        item.inWarehouseItems.forEach(i => items.push({name: i.name}));
+        item.inWarehouseFk.inWarehouseItems.forEach(i => items.push({name: i.name}));
         retValue = OliveUtilities.getItemsFirstName(items);
         break;
 
       case Quantity:
-        retValue = this.getTotalQuantity(item);
+        retValue = this.getTotalQuantity(item.inWarehouseFk);
         break;
 
       case TotalAmount:
-        retValue = this.getTotalAmount(item);
+        retValue = this.getTotalAmount(item.inWarehouseFk);
         break;
         
       case Warehouse:
-        retValue = item.warehouseFk.code;
+        retValue = item.inWarehouseFk.warehouseFk.code;
         break;
     }
 

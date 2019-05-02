@@ -94,15 +94,14 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
     this.standCurrency = this.cacheService.standCurrency;
 
     this.lookupProduct.setting = {
-      name: 'Product',
       columnType: 'id',
-      dialogTitle: this.translater.get(NavTranslates.Product.ProductGroup),
+      dialogTitle: this.translater.get(NavTranslates.Product.productGroup),
       dataService: this.productService,
       maxSelectItems: 1,
       newComponent: OliveProductManagerComponent,
       itemType: Product,
       managePermission: Permission.manageProductsPermission,
-      translateTitleId: NavTranslates.Product.ProductGroup
+      translateTitleId: NavTranslates.Product.productGroup
     };
   }
 

@@ -6,7 +6,6 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { OliveLookupDialogComponent } from '../../dialogs/lookup-dialog/lookup-dialog.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
-import { locale as english } from 'app/core/i18n/en';
 
 @Component({
   selector: 'olive-lookup-host',
@@ -36,6 +35,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
   @Input() classMode = '';
 
   @Output() changed = new EventEmitter();
+  @Output() selected = new EventEmitter();
 
   lookupName: FormControl;
 
@@ -46,7 +46,6 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
     private _renderer: Renderer2,
     private translater: FuseTranslationLoaderService
   ) {
-    this.translater.loadTranslations(english);
   }
 
   ngOnInit(): void {
@@ -75,6 +74,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
       if (items && items.length > 0) {
         this.writeValue(items[0]);
         this._onChange(items[0]);
+        this.selected.emit(items[0]);
       }
     });
   }
@@ -100,7 +100,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
     return this._inputElement;
   }
 
-  private _onChange = (item: any) => { console.log(item); };
+  private _onChange = (item: any) => {};
   private _onTouched = () => {};
 
   writeValue(obj: any): void {

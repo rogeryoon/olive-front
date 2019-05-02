@@ -12,8 +12,6 @@ import { fadeInOut } from '@quick/services/animations';
 
 import { OliveEditRoleDialogComponent } from './edit-role-dialog/edit-role-dialog.component';
 
-import { locale as english } from 'app/core/i18n/en'; // './i18n/en';
-
 @Component({
   selector: 'olive-roles',
   templateUrl: './roles.component.html',
@@ -40,7 +38,6 @@ export class OliveRolesComponent implements OnInit, AfterViewInit {
   ) {
     this.dataSource = new MatTableDataSource();
 
-    this.translater.loadTranslations(english);
   }
 
   get canManageRoles() {

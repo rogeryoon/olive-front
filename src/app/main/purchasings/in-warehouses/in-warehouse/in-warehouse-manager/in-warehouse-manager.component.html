@@ -1,4 +1,11 @@
-﻿<form #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()" class="w-100-p" fxLayout="column" fxFlex>
-    <olive-in-warehouse-editor #main [item]="item" (warehouseChanged)="onWarehouseChanged($event)"></olive-in-warehouse-editor>
-    <olive-in-warehouse-items-editor #items formControlName="inWarehouseItems"></olive-in-warehouse-items-editor>
+﻿<form #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()" class="w-100-p" fxLayout="column"
+    fxFlex>
+    <div class="entry-max-width">
+        <olive-in-warehouse-editor #main [item]="item" (warehouseChanged)="onWarehouseChanged($event)">
+        </olive-in-warehouse-editor>
+    </div>
+    <div class="entry-max-width">
+        <olive-in-warehouse-items-editor #items formControlName="inWarehouseItems"
+            (requiredWarehouse)="onRequiredWarehouse()"></olive-in-warehouse-items-editor>
+    </div>
 </form>

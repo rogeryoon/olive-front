@@ -5,7 +5,9 @@ import { ConfigurationService } from '@quick/services/configuration.service';
 import { OliveEntityService } from 'app/core/services/entity-service';
 import { OliveEntityEndpointService } from 'app/core/services/entity-endpoint.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OlivePaymentMethodService extends OliveEntityService {
 
   constructor
@@ -18,6 +20,6 @@ export class OlivePaymentMethodService extends OliveEntityService {
       configurations
     );
 
-	this.setApiUrl('paymentmethods');
+    this.setApiUrl('paymentmethods');
   }
 }

@@ -1,9 +1,4 @@
 ﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-      <mat-form-field appearance="outline" class="w-100-p" *ngIf="isIdVisible">
-        <mat-label>Id</mat-label>
-        <input matInput name="id" formControlName="id" readonly="readonly">
-      </mat-form-field>
-
       <olive-lookup-host #product formControlName="productFk" required  [placeholder]="'Product'" [isEditMode]="canAssignItem"></olive-lookup-host>
 
       <mat-form-field appearance="outline" class="w-100-p">
@@ -13,7 +8,7 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Code</mat-label>
+        <mat-label>{{'common.word.code' | translate}}</mat-label>
         <input matInput name="code" formControlName="code" maxlength="100" class="to-uppercase">
         <mat-hint align="end">{{getControl('code').value?.length || 0}}/100</mat-hint>
       </mat-form-field>

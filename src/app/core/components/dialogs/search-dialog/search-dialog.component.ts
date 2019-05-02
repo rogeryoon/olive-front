@@ -1,11 +1,8 @@
 import { Component, OnInit, ComponentFactoryResolver, ViewChild, OnDestroy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-
 import { OliveDialogSetting } from '../../../classes/dialog-setting';
 import { OliveOnSearch } from '../../../interfaces/on-search';
-import { locale as english } from '../../../../core/i18n/en';
 import { OlivePlaceHolderDirective } from 'app/core/directives/place-holder.directive';
 
 // https://angular.io/guide/dynamic-component-loader
@@ -22,10 +19,8 @@ export class OliveSearchDialogComponent implements OnInit, OnDestroy {
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
     public dialogRef: MatDialogRef<OliveSearchDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public dialog: OliveDialogSetting,
-    private translater: FuseTranslationLoaderService
+    @Inject(MAT_DIALOG_DATA) public dialog: OliveDialogSetting
   ) {
-    this.translater.loadTranslations(english);
   }
 
   ngOnInit() {

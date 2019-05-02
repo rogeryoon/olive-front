@@ -5,7 +5,9 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { OliveHelpService } from '../../supports/helps/services/help.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class HomeResolver implements Resolve<any> {
 
   helps: any;

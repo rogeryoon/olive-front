@@ -23,7 +23,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 
 const Selected  = 'selected';
 const Id = 'id';
-const Vendors = 'vendors';
+const Suppliers = 'suppliers';
 const Items = 'items';
 const Quantity = 'quantity';
 const TotalAmount = 'totalAmount';
@@ -53,7 +53,6 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
 
   initializeChildComponent() {
     this.setting = {
-      name: 'InWarehouse',
       icon: NavIcons.InWarehouse.list,
       translateTitleId: NavTranslates.InWarehouse.list,
       managePermission: null,
@@ -64,7 +63,7 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
         { data: Id, thName: this.translater.get('purchasing.inWarehousesHeader.id'), 
           tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: Vendors, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.vendors'), 
+        { data: Suppliers, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.suppliers'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 4
         { data: Items, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.items'), 
@@ -102,12 +101,12 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
         retValue = this.dateCode(item.createdUtc, item.id);
         break;
 
-      case Vendors:
+      case Suppliers:
         const sets = new Set([]);
-        item.inWarehouseItems.forEach(i => sets.add(i.vendorName));
-        const vendors = [];
-        sets.forEach(s => vendors.push({name: s}));
-        retValue = OliveUtilities.getItemsFirstName(vendors);
+        item.inWarehouseItems.forEach(i => sets.add(i.supplierName));
+        const suppliers = [];
+        sets.forEach(s => suppliers.push({name: s}));
+        retValue = OliveUtilities.getItemsFirstName(suppliers);
         break;
 
       case Items:

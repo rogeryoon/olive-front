@@ -5,7 +5,9 @@ import { ConfigurationService } from '@quick/services/configuration.service';
 import { OliveDataService } from '../interfaces/data-service';
 import { OliveEntityEndpointService } from './entity-endpoint.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OliveEntityService implements OliveDataService {
     private apiUrl: string;
 

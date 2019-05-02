@@ -7,7 +7,9 @@ import { ConfigurationService } from '@quick/services/configuration.service';
 import { OliveQueryParameterService } from './query-parameter.service';
 import { OliveEndpointBaseService } from './endpoint-base.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OliveEntityEndpointService extends OliveEndpointBaseService {
   constructor(
     http: HttpClient, configurations: ConfigurationService, 

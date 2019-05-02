@@ -59,18 +59,31 @@ export class TableDatasource extends DataSource<any> {
     loadItems(items: any[]) {
         this._objectStore = []; // clear current stored data
         items.forEach(m => this._objectStore.push(new DatasourceObject(m)));
-        this.renderItems();
+        this.renderItems(false);
+    }
+
+    public renderItems(needReInitialize: boolean = true) {
+        if (needReInitialize) {
+            Object.assign(this._saveObjectStore, this._objectStore);
+
+            this._objectStore = [];
+    
+            this._saveObjectStore.forEach(m => {
+                this.addNewItem(m.Obj); 
+            });
+    
+            this._saveObjectStore = [];
+        }
+
+        this._ObjectsSubject$.next(this._objectStore);
     }
 
     public addNewItem(m: any): DatasourceObject {
         if (!m) { m = this.createNewItem(); }
         const o = new DatasourceObject(m);
         this._objectStore.push(o);
-        return o;
-    }
 
-    public renderItems() {
-        this._ObjectsSubject$.next(this._objectStore);
+        return o;
     }
 
     public deleteItem(res: DatasourceObject) {
@@ -83,18 +96,7 @@ export class TableDatasource extends DataSource<any> {
             }
         });
 
-        Object.assign(this._saveObjectStore, this._objectStore);
-
-        this._objectStore = [];
-
-        this._saveObjectStore.forEach(m => {
-            this.addNewItem(m.Obj); 
-        });
-
-        this._saveObjectStore = [];
-
         this.renderItems();
-
         this.formGroup.markAsDirty();
     }
 

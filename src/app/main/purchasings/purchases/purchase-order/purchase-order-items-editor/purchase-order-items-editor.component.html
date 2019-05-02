@@ -11,13 +11,13 @@
     </mat-row>
 
     <ng-container matColumnDef="productVariantId">
-      <mat-header-cell *matHeaderCellDef>{{'purchasing.purchaseOrderItems.id' | translate}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{'common.word.id' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row" class="center">{{id36(row.Obj.productVariantId)}}</mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef>{{'purchasing.purchaseOrderItems.name' | translate}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{'common.word.itemsName' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <input matInput name="inputName{{row.ObjId}}" formControlName="name" (change)="onChange($event)" (keyup)="onKeyup($event)"
@@ -29,7 +29,7 @@
     </ng-container>
 
     <ng-container matColumnDef="quantity">
-      <mat-header-cell *matHeaderCellDef>{{'purchasing.purchaseOrderItems.quantity' | translate}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{'common.word.quantity' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('quantity',i)">
         <mat-form-field fxFlex='95%'>
           <input name="inputQuantity{{row.ObjId}}" class="right olive-error" matInput formControlName="quantity"
@@ -41,7 +41,7 @@
     </ng-container>
 
     <ng-container matColumnDef="price">
-      <mat-header-cell *matHeaderCellDef>{{'purchasing.purchaseOrderItems.price' | translate}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{'common.word.price' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('price',i)">
         <mat-form-field fxFlex='95%'>
           <input name="inputPrice{{row.ObjId}}" matInput class="right olive-error" formControlName="price" (change)="onChange($event)" (input)="updateCosts()"
@@ -97,7 +97,7 @@
     </ng-container>    
 
     <ng-container matColumnDef="remark">
-      <mat-header-cell *matHeaderCellDef>{{'purchasing.purchaseOrderItems.remark' | translate}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{'common.word.remark' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <input name="inputRemark{{row.ObjId}}" matInput type="text" formControlName="remark" (change)="onChange($event)"
@@ -133,29 +133,35 @@
 
   </mat-table>
 
-  <div class="mat-table">
+  <div class="entry-max-width">
   <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em" class="justify-end">
-    <div flex>
+    <div flex style="width: 120px">
       <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Freight</mat-label>
+        <mat-label>{{'common.word.freight' | translate}}</mat-label>
         <input matInput name="freightAmount" formControlName="freightAmount" required class="right" (input)="updateCosts()" autocomplete="off">
         <mat-error *ngIf="hasEntryError('freightAmount')">{{errorMessage('freightAmount')}}</mat-error>
       </mat-form-field>
     </div>
-    <div flex>
+    <div flex style="width: 120px">
       <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Added Discount</mat-label>
+        <mat-label>{{'purchasing.purchaseOrderItems.addedDiscount' | translate}}</mat-label>
         <input matInput name="addedDiscountAmount" formControlName="addedDiscountAmount" required class="right" (input)="updateCosts()" autocomplete="off">
         <mat-error *ngIf="hasEntryError('addedDiscountAmount')">{{errorMessage('addedDiscountAmount')}}</mat-error>
       </mat-form-field>
     </div>
-    <div flex>
+    <div flex style="width: 120px">
       <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Tax</mat-label>
+        <mat-label>{{'common.word.tax' | translate}}</mat-label>
         <input matInput name="taxAmount" formControlName="taxAmount" required class="right" (input)="updateCosts()" autocomplete="off">
         <mat-error *ngIf="hasEntryError('taxAmount')">{{errorMessage('taxAmount')}}</mat-error>
       </mat-form-field>
     </div>
+    <div flex *ngIf="extraAmount != 0" style="width: 120px">
+      <mat-form-field appearance="outline" class="w-100-p">
+        <mat-label>{{'purchasing.purchaseOrderItems.finalAmount' | translate}}</mat-label>
+        <input matInput readonly="true" class="right" [value]="numberFormat(paymentAmount, standCurrency.decimalPoint)" autocomplete="off">
+      </mat-form-field>
+    </div>    
   </div>
   </div>
 </form>

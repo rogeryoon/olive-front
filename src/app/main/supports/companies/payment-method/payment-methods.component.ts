@@ -52,7 +52,6 @@ export class OlivePaymentMethodsComponent extends OliveEntityListComponent {
 
   initializeChildComponent() {
     this.setting = {
-      name: 'PaymentMethod',
       icon: NavIcons.Company.paymentMethod,
       translateTitleId: NavTranslates.Company.paymentMethod,
       managePermission: null,

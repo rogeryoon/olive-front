@@ -34,7 +34,8 @@ export const locale = {
                 'requestFinished': '요청한 작업을 완료하였습니다.',
                 'noItemCreated' : '1개 이상의 항목을 등록하십시오.',
                 'balanceIsMinus' : '잔량이 음수인 값이 있습니다.',
-                'inWarehouseConfirm' :  '정말 입고 내용을 저장하시겠습니까?'
+                'validationError' : '입력 오류가 있습니다. 기입항목(들)을 확인하십시오s.',
+                'chooseOption' : '선택' // 'Choose an option'
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
@@ -66,10 +67,10 @@ export const locale = {
                 'errorConfirm' : '오류 알림',
                 'duplicated' : '중복 오류 알림',
                 'deleteConfirm' : '삭제 알림',
-                'inWarehouseConfirm' : '입고 확인',
                 'yesOrNo': '확인',
                 'creater' : '등록',
-                'lastUpdater' : '최종수정'
+                'lastUpdater' : '최종수정',
+                'validationError' : '입력 오류'
             },
             'button': {
                 'save' : '저장',
@@ -104,11 +105,42 @@ export const locale = {
             'tableHeader': {
                 'id' : 'ID',
                 'code' : '코드',
+                'supplier' : '공급처',
+                'itemsName' : '품명',
                 'name' : '이름',
                 'webSite' : '웹사이트',
                 'activated' : '활동',
                 'memo' : '메모',
-                'createdUtc' : '등록일'
+                'paymentsName' : '결제',
+                'warehouse' : '창고',
+                'createdUtc' : '등록일',
+                'dueAmount' : '합계'
+            },
+            'word': {
+                'id' : 'ID',
+                'warehouse' : '창고',
+                'memo' : '메모',
+                'name' : '이름',
+                'code' : '코드',
+                'supplier' : '공급처',
+                'itemsName' : '품명',
+                'date' : '날짜',
+                'quantity' : '수량',
+                'price' : '가격',
+                'remark' : '비고',
+                'freight' : '배송비',
+                'tax' : '세금',
+                'webSite' : '웹사이트',
+                'paymentMethod' : '결제수단',
+                'phoneNumber' : '전화번호',
+                'amount' : '금액',
+                'address' : '주소',
+                'email' : '이메일',
+                'paymentAmount' : '결제금액',
+                'refundAmount' : '환불금액',
+                'productName' : '품명',
+                'productType' : '타입',
+                'dueAmount' : '합계'
             }
         },
         'page': {
@@ -118,7 +150,7 @@ export const locale = {
         },
         'navi' : {
             'group' : {
-                'product': '상품',
+                'product': '바보',
                 'config': '환경설정'
             },
             'purchase' : {
@@ -142,8 +174,10 @@ export const locale = {
                 'productHome' : '상품',
                 'productGroup' : '상품 그룹',
                 'productVariant' : '상품',
+
                 'product' : '상품',
                 'products' : '상품 목록',
+                
                 'invetoryGroup' : '재고 목록',
                 'inventoriesBalance' : '재고 조회',
                 'inventoriesWarehouse' : '창고별 재고',
@@ -155,16 +189,24 @@ export const locale = {
                 'list' : '고객사',
                 'groupList' : '고객사 그룹',
                 'branch' : '지점',
-                'vendor' : '거래처',
+                'supplier' : '공급처',
                 'warehouse' : '창고',
-                'paymentMethod': '결제 수단'
+                'paymentMethod': '결제 수단',
+                'market': '판매처',
+                'marketSeller': '판매자'
             },
             'basic' : {
                 'group' : '기초코드-기타',
 
                 'currency' : '외국 화폐',
                 'country' : '국가 코드',
-                'carrier' : '캐리어'
+                'carrier' : '배송사',
+                'standCarrier' : '시스템 배송사'
+            },
+            'sales' : {
+                'group' : '판매',
+
+                'orderList' : '주문 목록',
             },
             'secure' : {
                 'group' : '보안 설정',
@@ -185,37 +227,92 @@ export const locale = {
                 'entryTooltip' : '입력오류가 있습니다.'
             }
         },
-        'management': {
-            'Search': 'Search for role...',
-            'NewRole': 'New Role',
-            'Edit': 'Edit',
-            'Details': 'Details',
-            'Delete': 'Delete',
-            'RoleDetails': 'Role Details "{{name}}"',
-            'EditRole': 'Edit Role "{{name}}"',
-            'Name': 'Name',
-            'Description': 'Description',
-            'Users': 'Users'
-        },
-        'editor': {
-            'Name': 'Name:',
-            'Description': 'Description:',
-            'RoleNameRequired': 'Role name is required (minimum of 2 and maximum of 200 characters)',
-            'SelectAll': 'Select all',
-            'SelectNone': 'Select none',
-            'Close': 'Close',
-            'Cancel': 'Cancel',
-            'Save': 'Save',
-            'Saving': 'Saving...'
+        'configs' : {
+            'roleManagement': {
+                'Search': 'Search for role...',
+                'NewRole': 'New Role',
+                'Edit': 'Edit',
+                'Details': 'Details',
+                'Delete': 'Delete',
+                'RoleDetails': 'Role Details "{{name}}"',
+                'EditRole': 'Edit Role "{{name}}"',
+                'Name': 'Name',
+                'Description': 'Description',
+                'Users': 'Users'
+            },
+            'roleEditor': {
+                'Name': 'Name:',
+                'Description': 'Description:',
+                'RoleNameRequired': 'Role name is required (minimum of 2 and maximum of 200 characters)',
+                'SelectAll': 'Select all',
+                'SelectNone': 'Select none',
+                'Close': 'Close',
+                'Cancel': 'Cancel',
+                'Save': 'Save',
+                'Saving': 'Saving...'
+            },
+            'userManagement': {
+                'Search': 'Search for user',
+                'NewUser': 'New User',
+                'Edit': 'Edit User',
+                'Delete': 'Delete User',
+                'EditUser': 'Edit User "{{name}}"',
+                'CompanyGroup': 'Company Group',
+                'UserName': 'User Name',
+                'FullName': 'Full Name',
+                'Email': 'Email',
+                'Roles': 'Roles',
+                'PhoneNumber': 'Phone Number'
+            },
+            'userEditor': {
+                'JobTitle': 'Job Title',
+                'UserName': 'User Name',
+                'UserNameRequired': 'User name is required (minimum of 2 and maximum of 200 characters)',
+                'CompanyGroupName': '고객사 그룹 선택',
+                'CompanyGroupNameRequired': '오른쪽 돋보기를 클릭하여 고객사 그룹을 선택하세요.',
+                'Password': 'Password',
+                'PasswordHint': 'Your password is required when changing user name',
+                'CurrentPasswordRequired': 'Current password is required',
+                'Email': 'Email',
+                'EmailRequired': 'Email address is required (maximum of 200 characters)',
+                'InvalidEmail': 'Specified email is not valid',
+                'ChangePassword': 'Change Password',
+                'CurrentPassword': 'Current Password',
+                'NewPassword': 'New Password',
+                'NewPasswordRequired': 'New password is required',
+                'NewPasswordRules': 'The new password must contain at least: one uppercase letter, one lowercase letter, one digit, and any special character',
+                'ConfirmPassword': 'Confirm Password',
+                'ConfirmationPasswordRequired': 'Confirmation password is required',
+                'PasswordMismatch': 'New password and confirmation password do not match',
+                'Roles': 'Roles',
+                'FullName': ' Full Name',
+                'RoleRequired': ' Role is required',
+                'PhoneNumber': 'Phone Number',
+                'Enabled': 'Enabled',
+                'Unblock': 'Unblock',
+                'Close': 'Close',
+                'Edit': 'Edit',
+                'Cancel': 'Cancel',
+                'Save': 'Save',
+                'Saving': 'Saving...'
+            }
         },
         'production' : {
             'productEditor': {
                 'tabBasicInfo' : 'Basic Info',
                 'tabClass' : '분류',
                 'tabInventory' : 'Inventory'
+            },
+            'inventoryBalances': {
+                'inTransitQuantity' : '주문'
             }
         },
         'purchasing' : {
+            'purchaseOrder' : {
+                'supplierOrderNo' : '공급자 주문 #',
+                'currency' : '화폐',
+                'currencyRate' : '환율'
+            },
             'purchaseOrders': {
                 'noItem' : '발주서 상품등록을 하지 않아서 입고 및 종결처리를 할 수 없습니다.',
                 'noPayment' : '발주서 결제정보를 입력하지 않아서 종결처리를 할 수 없습니다.',
@@ -227,15 +324,12 @@ export const locale = {
                 'confirmClose' : '정말 발주서 종결처리를 진행하겠습니까?'
             },
             'purchaseOrderItems': {
-                'id' : 'ID',
-                'name' : 'Name',
-                'quantity': '수량',
-                'price': '가격',
                 'amount' : '소계',
                 'discount' : '할인',
                 'appliedCost' : '적용원가',
                 'otherCurrencyPrice' : '가격',
-                'remark' : '비고'
+                'addedDiscount' : '추가 전체할인',
+                'finalAmount' : '최종금액'
             },
             'purchaseOrderPayments': {
                 'paymentMethodId' : '결제',
@@ -251,31 +345,37 @@ export const locale = {
                 'payments' : 'Payments'
             },
             'purchaseOrdersHeader': {
-                'id': 'ID',
-                'vendorName': '벤더',
-                'itemsName': '제품',
-                'warehouse': '창고',
                 'totalAmount': '총액',
-                'paymentsName': '결제',
                 'inWarehouseStatusLink': '입고',
                 'finishLink' : '종결',
-                'printLink': '인쇄'
+                'printLink': '인쇄',
+                'paymentsName' : '결제'
+            },
+            'voidPurchaseOrderItems': {
+                'quantity': '취소 갯수',
+                'balance': '취소 잔량',
+            },
+            'voidPurchaseOrderManager': {
+                'saveConfirmTitle' : '반품 / 취소 확인',
+                'saveConfirmMessage' : '정말 반품/취소 환불내용을 저장하시겠습니까?'
+            },
+            'inWarehouseManager': {
+                'saveConfirmTitle' : '입고 확인',
+                'saveConfirmMessage' : '정말 입고 내용을 저장하시겠습니까?'
             },
             'inWarehouseItems': {
                 'id' : '품목',
-                'vendor': '벤더',
+                'supplier': '공급처',
                 'name' : '품명',
-                'quantity': '입고 갯수',
-                'cancel': '취소 갯수',
-                'balance': '잔량',
+                'quantity': '검수량',
+                'quantityDue': '금액',
+                'balance': '입고 잔량',
                 'remark' : '비고',
-                'price' : '단가',
-                'quantityDue' : '계',
-                'selectWarehouseFirst' : '입고 창고를 먼저 선택하십시오.'
+                'price' : '단가'
             },
             'inWarehousesHeader': {
                 'id': 'ID',
-                'vendors': '벤더',
+                'suppliers': '공급처',
                 'items': '품명',
                 'quantity': '수량',
                 'totalAmount': '총액',
@@ -291,7 +391,7 @@ export const locale = {
             'inWarehousePendingHeader': {
                 'id': '발주 ID',
                 'warehouse': '창고',
-                'vendor': '벤더',
+                'supplier': '공급처',
                 'memo': '메모',
                 'finishLink' : '종결',
                 'itemName': '품명',
@@ -300,7 +400,15 @@ export const locale = {
                 'price': '단가',
                 'due': '계',
                 'remark': '비고'
-            }            
+            }
+        },
+        'support': {
+            'carrier': {
+                'standCarrier' : '시스템 배송사'
+            },
+            'marketEditor' : {
+                'standMarket' : '인터페이스'
+            }
         }
     }
 };

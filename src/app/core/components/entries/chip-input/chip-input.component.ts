@@ -8,6 +8,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { IIDName } from 'app/core/models/id-name';
 import { ShortenPipe } from 'app/core/pipes/shorten.pipe';
 import { OliveBaseComponent } from '../../extends/base/base.component';
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 @Component({
   selector: 'olive-chip-input',
@@ -47,11 +48,11 @@ export class OliveChipInputComponent extends OliveBaseComponent implements OnIni
   companyGroup: string;
 
   constructor(
-    private cacheService: OliveCacheService,
+    translater: FuseTranslationLoaderService, private cacheService: OliveCacheService,
     private _renderer: Renderer2
   ) 
   {
-    super();
+    super(translater);
   }
 
   ngOnInit() {

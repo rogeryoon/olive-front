@@ -16,11 +16,11 @@ import { EqualValidator } from '../../../../core/validators/equal.validator';
 import { OliveLookupDialogComponent } from 'app/core/components/dialogs/lookup-dialog/lookup-dialog.component';
 import { MatDialog } from '@angular/material';
 import { OliveCompanyGroupService } from 'app/main/supports/companies/services/company-group.service';
-import { CompanyGroup } from 'app/main/supports/companies/models/company-group.model';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-import { locale as english } from '../../../../core/i18n/en';
 import { OliveBaseComponent } from 'app/core/components/extends/base/base.component';
+import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { CompanyGroup } from 'app/main/supports/companies/models/company-group.model';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -107,15 +107,11 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
   }
 
   constructor(
-    private alertService: AlertService,
-    private translater: FuseTranslationLoaderService,
-    private accountService: AccountService,
-    private formBuilder: FormBuilder,
-    private dialog: MatDialog,
-    private companyGroupService: OliveCompanyGroupService
+    private alertService: AlertService, translater: FuseTranslationLoaderService,
+    private accountService: AccountService, private formBuilder: FormBuilder,
+    private dialog: MatDialog, private companyGroupService: OliveCompanyGroupService
   ) {
-    super();
-    this.translater.loadTranslations(english);
+    super(translater);
     this.buildForm();
   }
 
@@ -258,12 +254,12 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
 
   lookUpCompanyGroup() {
     const setting = {
-      name: 'CompanyGroup',
       columnType: 'id',
       dialogTitle: this.translater.get(NavTranslates.Company.groupList),
       dataService: this.companyGroupService,
-      maxSelectItems: 1
-    };
+      maxSelectItems: 1,
+      itemType: CompanyGroup
+    } as LookupListerSetting;
 
     const dialogRef = this.dialog.open(
       OliveLookupDialogComponent,

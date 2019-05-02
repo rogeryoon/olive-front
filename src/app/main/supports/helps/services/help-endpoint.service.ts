@@ -7,7 +7,9 @@ import { ConfigurationService } from '@quick/services/configuration.service';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
 import { OliveEndpointBaseService } from 'app/core/services/endpoint-base.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OliveHelpEndpointService extends OliveEndpointBaseService {
 
   private readonly _helpsUrl: string = '/api/helps';

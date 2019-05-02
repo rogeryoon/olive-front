@@ -7,7 +7,6 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { AccountService } from '@quick/services/account.service';
 import { AlertService, DialogType } from '@quick/services/alert.service';
 
-import { locale as english } from '../../../../core/i18n/en';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OlivePlaceHolderDirective } from 'app/core/directives/place-holder.directive';
 import { OliveBaseComponent } from '../../extends/base/base.component';
@@ -40,12 +39,11 @@ export class OliveEditPageComponent extends OliveBaseComponent implements OnInit
   createdComponent: OliveOnEdit;
 
   constructor(
-    private componentFactoryResolver: ComponentFactoryResolver, private translater: FuseTranslationLoaderService,
+    private componentFactoryResolver: ComponentFactoryResolver, translater: FuseTranslationLoaderService,
     private accountService: AccountService, private alertService: AlertService,
     private router: Router
   ) {
-    super();
-    this.translater.loadTranslations(english);
+    super(translater);
   }
 
   ngOnInit() {

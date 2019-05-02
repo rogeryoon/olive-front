@@ -26,12 +26,10 @@ import { OlivePurchaseOrderLookupDialogModule } from 'app/main/purchasings/purch
     OliveInWarehouseEditorComponent,
     OliveInWarehouseItemsEditorComponent
   ],
-  providers: [
-    OliveWarehouseService,
-    OlivePurchaseOrderService
-  ],
+  providers: [],
   exports: [
-    OliveInWarehouseManagerComponent
+    OliveInWarehouseManagerComponent,
+    OliveInWarehouseItemsEditorComponent
   ],
   entryComponents: [
     OliveInWarehouseManagerComponent

@@ -12,7 +12,7 @@ import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { AlertService } from '@quick/services/alert.service';
 import { OliveVoidPurchaseOrderManagerComponent } from '../void-purchase-order-manager/void-purchase-order-manager.component';
-import { InWarehouse } from 'app/main/purchasings/in-warehouses/models/in-warehouse.model';
+import { VoidPurchaseOrder } from '../../models/void-purchase-order.model';
 
 @Component({
   selector: 'olive-void-purchase-order-editor-page',
@@ -35,11 +35,11 @@ export class OliveVoidPurchaseOrderEditorPageComponent extends OliveEditPageComp
   initializeChildComponent() {
     this.setting = {
       component: OliveVoidPurchaseOrderManagerComponent,
-      itemType: InWarehouse,
+      itemType: VoidPurchaseOrder,
       managePermission: null,
       iconName: NavIcons.Purchase.cancelEntry,
       translateTitleId: NavTranslates.Purchase.cancelEntry,
-      itemListPath: 'inwarehouses/list'
+      itemListPath: 'cancel/list'
     };
 
     this.route.data.subscribe(({ item }) => {

@@ -8,36 +8,23 @@ import { AuthGuard } from '@quick/services/auth-guard.service';
 
 import { OliveSharedModule } from '../../../core/shared.module';
 import { OlivePurchaseOrdersComponent } from './purchase-order/purchase-orders/purchase-orders.component';
-import { OlivePurchaseOrderManagerComponent } from './purchase-order/purchase-order-manager/purchase-order-manager.component';
-import { OlivePurchaseOrderEditorComponent } from './purchase-order/purchase-order-editor/purchase-order-editor.component';
 import { OliveSearchPurchaseOrderComponent } from './purchase-order/search-purchase-order/search-purchase-order.component';
-import { OlivePurchaseOrderService } from './services/purchase-order.service';
 import { OlivePurchaseOrderEditorPageComponent } from './purchase-order/purchase-order-editor-page/purchase-order-editor-page.component';
 import { OlivePurchaseOrderEditorPageResolver } from './services/purchase-order-editor-page-resolver';
-import { OliveVendorService } from '../../supports/companies/services/vendor.service';
-import { OliveWarehouseService } from '../../supports/companies/services/warehouse.service';
-import { OlivePaymentMethodService } from '../../supports/companies/services/payment-method.service';
-import { OlivePurchaseOrderPaymentsEditorComponent } from './purchase-order/purchase-order-payments-editor/purchase-order-payments-editor.component';
-import { OlivePurchaseOrderItemsEditorComponent } from './purchase-order/purchase-order-items-editor/purchase-order-items-editor.component';
-import { OliveProductVariantService } from 'app/main/productions/products/services/product-variant.service';
 import { OliveProductVariantLookupDialogModule } from 'app/main/productions/products/product-variant/product-variant-lookup-dialog/product-variant-lookup-dialog.module';
 import { OliveProductVariantManagerModule } from 'app/main/productions/products/product-variant/product-variant-manager/product-variant-manager.module';
 import { OliveProductManagerModule } from 'app/main/productions/products/product/product-manager/product-manager.module';
-import { OlivePurchasingMiscService } from './services/purchasing-misc.service';
 import { OlivePreviewPurchaseOrderComponent } from './purchase-order/preview-purchase-order/preview-purchase-order.component';
-import { OliveCompanyService } from 'app/main/supports/companies/services/company.service';
 import { OliveInWarehouseStatusModule } from '../in-warehouses/in-warehouse/in-warehouse-status/in-warehouse-status.module';
 import { OlivePurchaseOrderLookupDialogModule } from './purchase-order/purchase-order-lookup-dialog/purchase-order-lookup-dialog.module';
-import { OliveInWarehouseItemService } from '../in-warehouses/services/in-warehouse-items.service';
-import { OliveInWarehousePendingComponent } from './purchase-order/in-Warehouse-pendings/in-Warehouse-pendings.component';
-import { OliveInWarehouseService } from '../in-warehouses/services/in-warehouse.service';
+import { OliveInWarehousePendingComponent } from './purchase-order/in-warehouse-pendings/in-warehouse-pendings.component';
 import { OliveInWarehouseManagerModule } from '../in-warehouses/in-warehouse/in-warehouse-manager/in-warehouse-manager.module';
 import { OliveInWarehouseEditorPageResolver } from '../in-warehouses/services/in-warehouse-editor-page-resolver';
 import { OliveSearchVoidPurchaseOrderComponent } from './void-purchase-order/search-void-purchase-order/search-void-purchase-order.component';
 import { OliveVoidPurchaseOrderEditorPageComponent } from './void-purchase-order/void-purchase-order-editor-page/void-purchase-order-editor-page.component';
 import { OliveVoidPurchaseOrdersComponent } from './void-purchase-order/void-purchase-orders.component';
 import { OliveVoidPurchaseOrderManagerModule } from './void-purchase-order/void-purchase-order-manager/void-purchase-order-manager.module';
-
+import { OlivePurchaseOrderManagerModule } from './purchase-order/purchase-order-manager/purchase-order-manager.module';
 
 const routes = [
   {
@@ -53,20 +40,20 @@ const routes = [
   },
   {
     path: 'cancel/list',
-    component: OlivePurchaseOrdersComponent,
+    component: OliveVoidPurchaseOrdersComponent,
     canActivate: [AuthGuard]
   },
   {
     path: 'cancel/:id',
     component: OliveVoidPurchaseOrderEditorPageComponent,
     canActivate: [AuthGuard],
-    resolve: { helps: OliveInWarehouseEditorPageResolver }
+    resolve: { item: OliveInWarehouseEditorPageResolver }
   },
   {
     path: ':id',
     component: OlivePurchaseOrderEditorPageComponent,
     canActivate: [AuthGuard],
-    resolve: { helps: OlivePurchaseOrderEditorPageResolver }
+    resolve: { item: OlivePurchaseOrderEditorPageResolver }
   }
 ];
 
@@ -79,45 +66,30 @@ const routes = [
     OliveSharedModule,
 
     OliveProductVariantLookupDialogModule,
-    OliveProductVariantManagerModule,
-    OliveProductManagerModule,
     OlivePurchaseOrderLookupDialogModule,
+
     OliveInWarehouseStatusModule,
+    
+    OliveProductVariantManagerModule,
+    OliveProductManagerModule,    
     OliveInWarehouseManagerModule,
-    OliveVoidPurchaseOrderManagerModule
+    OliveVoidPurchaseOrderManagerModule,
+    OlivePurchaseOrderManagerModule
   ],
   declarations: [
     OlivePurchaseOrdersComponent,
-    OlivePurchaseOrderManagerComponent,    
-    OlivePurchaseOrderEditorComponent,
     OliveSearchPurchaseOrderComponent,
     OlivePurchaseOrderEditorPageComponent,
-    OlivePurchaseOrderPaymentsEditorComponent,
-    OlivePurchaseOrderItemsEditorComponent,
-    OlivePreviewPurchaseOrderComponent,
-    OliveInWarehousePendingComponent,
 
     OliveVoidPurchaseOrdersComponent,
     OliveSearchVoidPurchaseOrderComponent,
-    OliveVoidPurchaseOrderEditorPageComponent
-  ],
-  providers: [
-    OlivePurchaseOrderService,
-    OlivePurchaseOrderEditorPageResolver,
+    OliveVoidPurchaseOrderEditorPageComponent,
 
-    OliveInWarehouseItemService,
-    OliveInWarehouseService,
-    OliveInWarehouseEditorPageResolver,
-
-    OliveVendorService,
-    OliveWarehouseService,
-    OlivePaymentMethodService,
-    OliveProductVariantService,
-    OlivePurchasingMiscService,
-    OliveCompanyService
+    OlivePreviewPurchaseOrderComponent,
+    OliveInWarehousePendingComponent,
   ],
+  providers: [],
   entryComponents: [
-    OlivePurchaseOrderManagerComponent,
     OliveSearchPurchaseOrderComponent,
     OlivePreviewPurchaseOrderComponent,
     OliveSearchVoidPurchaseOrderComponent

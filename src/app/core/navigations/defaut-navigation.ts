@@ -89,24 +89,24 @@ export const defaultNavigation: FuseNavigation[] = [
             {
                 id: 'productHome',
                 title: '상품',
-                translate: NavTranslates.Product.ProductHome,
+                translate: NavTranslates.Product.productHome,
                 type: 'collapsable',
-                icon: NavIcons.Product.ProductHome,
+                icon: NavIcons.Product.productHome,
                 children: [
                     {
                         id: 'products',
                         title: '상품 그룹',
-                        translate: NavTranslates.Product.ProductGroup,
+                        translate: NavTranslates.Product.productGroup,
                         type: 'item',
-                        icon: NavIcons.Product.ProductGroup,
+                        icon: NavIcons.Product.productGroup,
                         url: '/products/group'
                     },
                     {
                         id: 'products',
                         title: '상품',
-                        translate: NavTranslates.Product.ProductVariant,
+                        translate: NavTranslates.Product.productVariant,
                         type: 'item',
-                        icon: NavIcons.Product.ProductVariant,
+                        icon: NavIcons.Product.productVariant,
                         url: '/products/variant'
                     }
                 ]
@@ -114,136 +114,53 @@ export const defaultNavigation: FuseNavigation[] = [
             {
                 id: 'inventoryGroup',
                 title: '재고 목록',
-                translate: 'navi.product.invetoryGroup',
+                translate: NavTranslates.Product.inventoryGroup,
                 type: 'collapsable',
-                icon: NavIcons.Product.InventoryGroup,
+                icon: NavIcons.Product.inventoryGroup,
                 children: [
                     {
                         id: 'inventoriesBalance',
-                        title: '재고 조회',
-                        translate: 'navi.product.inventoriesBalance',
+                        title: '재고 현황',
+                        translate: NavTranslates.Product.inventoriesBalance,
                         type: 'item',
-                        icon: NavIcons.Product.InventoriesBalance,
+                        icon: NavIcons.Product.inventoriesBalance,
                         url: '/inventories/balance'
                     },
                     {
                         id: 'inventoriesWarehouse',
                         title: '창고별 재고',
-                        translate: 'navi.product.inventoriesWarehouse',
+                        translate: NavTranslates.Product.inventoriesWarehouse,
                         type: 'item',
-                        icon: NavIcons.Product.InventoriesWarehouse,
+                        icon: NavIcons.Product.inventoriesWarehouse,
                         url: '/inventories/warehouse'
                     },
                     {
                         id: 'inventoriesHistory',
                         title: '품목별 재고',
-                        translate: 'navi.product.inventoriesHistory',
+                        translate: NavTranslates.Product.inventoriesHistory,
                         type: 'item',
-                        icon: NavIcons.Product.InventoriesHistory,
+                        icon: NavIcons.Product.inventoriesHistory,
                         url: '/inventories/history'
                     }
                 ]
             },
             {
-                id: 'inventoryEdit',
-                title: '재고 조정',
+                id: 'salesGroup',
+                title: '판매',
+                translate: NavTranslates.Sales.group,
                 type: 'collapsable',
-                icon: 'settings_input_component',
-
+                icon: NavIcons.Sales.group,
                 children: [
                     {
-                        id: 'inventoryEntry',
-                        title: '입고',
+                        id: 'orderList',
+                        title: '주문 목록',
+                        translate: NavTranslates.Sales.orderList,
                         type: 'item',
-                        icon: 'border_all',
-                        url: '/inventory/entry',
-                        badge: {
-                            title: '13',
-                            bg: '#09d261',
-                            fg: '#FFFFFF'
-                        }
+                        icon: NavIcons.Sales.orderList,
+                        url: '/orders/list'
                     },
-                    {
-                        id: 'inventoryAdjust',
-                        title: '재고 수동조정',
-                        type: 'item',
-                        icon: 'content_cut',
-                        url: '/inventory/adjust'
-                    },
-                    {
-                        id: 'inventoryTransfer',
-                        title: '재고 창고이동',
-                        type: 'item',
-                        icon: 'games',
-                        url: '/inventory/transfer'
-                    },
-                    {
-                        id: 'inventoryReturn',
-                        title: '반품 / 폐기',
-                        type: 'item',
-                        icon: 'import_export',
-                        url: '/inventory/return'
-                    }
                 ]
             }            
-        ]
-    },
-    {
-        id: 'sales',
-        title: '판매',
-        type: 'group',
-        icon: 'add_shopping_cart',
-        permissions: [Permission.assignCompanyMasters],
-        children: [
-            {
-                id: 'salesEntry',
-                title: '판매 등록',
-                type: 'item',
-                icon: 'payment',
-                url: '/sales/new'
-            },
-            {
-                id: 'salesShipOut',
-                title: '판매 출고',
-                type: 'item',
-                icon: 'local_shipping',
-                url: '/sales/shipout',
-                badge: {
-                    title: '186',
-                    bg: '#F44336',
-                    fg: '#FFFFFF'
-                }
-            },
-            {
-                id: 'salesViewGroup',
-                title: '판매 목록',
-                type: 'collapsable',
-                icon: 'camera_enhance',
-
-                children: [
-                    {
-                        id: 'salesView',
-                        title: '판매 조회',
-                        type: 'item',
-                        icon: 'account_circle',
-                        url: '/sales/view'
-                    },
-                    {
-                        id: 'salesStats',
-                        title: '판매 현황',
-                        type: 'item',
-                        icon: 'all_inclusive',
-                        url: '/sales/stats'
-                    },
-                    {
-                        id: 'salesProfit',
-                        title: '이익 현황',
-                        type: 'item',
-                        icon: 'local_atm',
-                        url: '/sales/profit'
-                    }
-                ]
-            }
         ]
     },
     {
@@ -319,12 +236,28 @@ export const defaultNavigation: FuseNavigation[] = [
                         url: '/companies/warehouse'
                     },
                     {
-                        id: 'companyVendor',
-                        title: '거래처',
+                        id: 'companySupplier',
+                        title: '공급처',
                         type: 'item',                        
-                        translate: NavTranslates.Company.vendor,
-                        icon: NavIcons.Company.vendor,
-                        url: '/companies/vendor'
+                        translate: NavTranslates.Company.supplier,
+                        icon: NavIcons.Company.supplier,
+                        url: '/companies/supplier'
+                    },
+                    {
+                        id: 'companyMarket',
+                        title: '판매처',
+                        type: 'item',                        
+                        translate: NavTranslates.Company.market,
+                        icon: NavIcons.Company.market,
+                        url: '/companies/market'
+                    },
+                    {
+                        id: 'companyMarket',
+                        title: '판매자',
+                        type: 'item',                        
+                        translate: NavTranslates.Company.marketSeller,
+                        icon: NavIcons.Company.marketSeller,
+                        url: '/companies/market-seller'
                     }
                 ]
             },
@@ -346,9 +279,9 @@ export const defaultNavigation: FuseNavigation[] = [
                     },
                     {
                         id: 'basicPaymentMethod',
-                        title: 'paymentMethod',
+                        title: '결제 수단',
                         type: 'item',                        
-                        translate: NavTranslates.Company.paymentMethod,
+                        translate: 'navi.company.paymentMethod',
                         icon: NavIcons.Company.paymentMethod,
                         url: '/companies/payment-method'
                     },
@@ -402,6 +335,63 @@ export const defaultNavigation: FuseNavigation[] = [
                 ]
             }
         ]
-    }
+    },
+    // {
+    //     id: 'sales',
+    //     title: '판매',
+    //     type: 'group',
+    //     icon: 'add_shopping_cart',
+    //     permissions: [Permission.assignCompanyMasters],
+    //     children: [
+    //         {
+    //             id: 'salesEntry',
+    //             title: '판매 등록',
+    //             type: 'item',
+    //             icon: 'payment',
+    //             url: '/sales/new'
+    //         },
+    //         {
+    //             id: 'salesShipOut',
+    //             title: '판매 출고',
+    //             type: 'item',
+    //             icon: 'local_shipping',
+    //             url: '/sales/shipout',
+    //             badge: {
+    //                 title: '186',
+    //                 bg: '#F44336',
+    //                 fg: '#FFFFFF'
+    //             }
+    //         },
+    //         {
+    //             id: 'salesViewGroup',
+    //             title: '판매 목록',
+    //             type: 'collapsable',
+    //             icon: 'camera_enhance',
 
+    //             children: [
+    //                 {
+    //                     id: 'salesView',
+    //                     title: '판매 조회',
+    //                     type: 'item',
+    //                     icon: 'account_circle',
+    //                     url: '/sales/view'
+    //                 },
+    //                 {
+    //                     id: 'salesStats',
+    //                     title: '판매 현황',
+    //                     type: 'item',
+    //                     icon: 'all_inclusive',
+    //                     url: '/sales/stats'
+    //                 },
+    //                 {
+    //                     id: 'salesProfit',
+    //                     title: '이익 현황',
+    //                     type: 'item',
+    //                     icon: 'local_atm',
+    //                     url: '/sales/profit'
+    //                 }
+    //             ]
+    //         }
+    //     ]
+    // },
 ];

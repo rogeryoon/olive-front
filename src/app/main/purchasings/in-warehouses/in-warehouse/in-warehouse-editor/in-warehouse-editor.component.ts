@@ -62,6 +62,10 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
       memo: this.item.memo || '',
       warehouseFk: this.item.warehouseFk
     });
+
+    if (this.item.warehouseFk) {
+      this.warehouseChanged.emit({item: this.item.warehouseFk, loading: true});
+    }
   }
 
   createEmptyObject() {
@@ -88,10 +92,14 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
 
   onWarehouseChanged(input: any) {
     if (!this.disableWarehouseChangedEvent) {
-      this.warehouseChanged.emit(input);
+      this.warehouseChanged.emit({item: input, loading: false});
     }
     else {
       this.disableWarehouseChangedEvent = false;
     }
+  }
+
+  lookUp() {
+    this.lookupWarehouse.lookUp();
   }
 }

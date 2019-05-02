@@ -5,11 +5,12 @@ import { String } from 'typescript-string-operations';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { AlertService, MessageSeverity } from '@quick/services/alert.service';
 
-import { locale as english } from '../i18n/en';
 import { UserMessage } from '../models/user-message';
 import { Utilities } from '@quick/services/utilities';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OliveMessageHelperService {
 
   constructor(
@@ -17,7 +18,6 @@ export class OliveMessageHelperService {
     private alertService: AlertService
   ) 
   { 
-    this.translater.loadTranslations(english);
   }
 
   showDeletedSuccess(itemName: string) {
@@ -123,6 +123,16 @@ export class OliveMessageHelperService {
       errorMessage.message,
       errorMessage.messageSeverity, 
       error
+    );
+  }
+
+  showDuplicatedItems(itemStrings: string[]) {
+    if (itemStrings.length === 0) { return; }
+
+    this.alertService.showMessage(
+      this.translater.get('common.title.duplicated'),
+      String.Format(this.translater.get('common.message.duplicated'), itemStrings.join()),
+      MessageSeverity.warn
     );
   }
 }

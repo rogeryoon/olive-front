@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { Subject } from 'rxjs/Subject';
 
-import { AppTranslationService } from './app-translation.service';
 import { LocalStoreManager } from './local-store-manager.service';
 import { DBkeys } from './db-Keys';
 import { Utilities } from './utilities';
@@ -16,6 +15,7 @@ interface UserConfiguration {
     showDashboardNotifications: boolean;
     showDashboardTodo: boolean;
     showDashboardBanner: boolean;
+    warehouseId: number;
 }
 
 @Injectable()
@@ -27,19 +27,12 @@ export class ConfigurationService
     public baseUrl: string = this.appConfigService.getConfig().baseUrl;
     public loginUrl = '/pages/auth/login';
 
-    // tslint:disable-next-line:member-ordering
     public static readonly defaultLanguage: string = 'en';
-    // tslint:disable-next-line:member-ordering
     public static readonly defaultHomeUrl: string = '/';
-    // tslint:disable-next-line:member-ordering
     public static readonly defaultThemeId: number = 1;
-    // tslint:disable-next-line:member-ordering
     public static readonly defaultShowDashboardStatistics: boolean = true;
-    // tslint:disable-next-line:member-ordering
     public static readonly defaultShowDashboardNotifications: boolean = true;
-    // tslint:disable-next-line:member-ordering
     public static readonly defaultShowDashboardTodo: boolean = false;
-    // tslint:disable-next-line:member-ordering
     public static readonly defaultShowDashboardBanner: boolean = true;
 
     private _language: string = null;
@@ -49,13 +42,17 @@ export class ConfigurationService
     private _showDashboardNotifications: boolean = null;
     private _showDashboardTodo: boolean = null;
     private _showDashboardBanner: boolean = null;
+    // roger start
+    private _warehouseId: number = null;
+    // roger end
+
     private onConfigurationImported: Subject<boolean> = new Subject<boolean>();
 
     configurationImported$ = this.onConfigurationImported.asObservable();
 
     constructor(
         private localStorage: LocalStoreManager,
-        private translationService: AppTranslationService,
+        // private translationService: AppTranslationService,
         private appConfigService: OliveAppConfigService
         )
     {
@@ -69,7 +66,7 @@ export class ConfigurationService
         if (this.localStorage.exists(DBkeys.LANGUAGE)) 
         {
             this._language = this.localStorage.getDataObject<string>(DBkeys.LANGUAGE);
-            this.translationService.changeLanguage(this._language);
+            // this.translationService.changeLanguage(this._language);
         }
         else 
         {
@@ -105,6 +102,11 @@ export class ConfigurationService
         {
             this._showDashboardBanner = this.localStorage.getDataObject<boolean>(DBkeys.SHOW_DASHBOARD_BANNER);
         }
+
+        if (this.localStorage.exists(DBkeys.WAREHOUSE_ID))
+        {
+            this._warehouseId = this.localStorage.getDataObject<number>(DBkeys.WAREHOUSE_ID);
+        }        
     }
 
     private saveToLocalStore(data: any, key: string)
@@ -154,6 +156,11 @@ export class ConfigurationService
             {
                 this.showDashboardBanner = importValue.showDashboardBanner;
             }
+
+            if (importValue.warehouseId != null)
+            {
+                this.warehouseId = importValue.warehouseId;
+            }
         }
 
         this.onConfigurationImported.next();
@@ -169,7 +176,8 @@ export class ConfigurationService
                 showDashboardStatistics: changesOnly ? this._showDashboardStatistics : this.showDashboardStatistics,
                 showDashboardNotifications: changesOnly ? this._showDashboardNotifications : this.showDashboardNotifications,
                 showDashboardTodo: changesOnly ? this._showDashboardTodo : this.showDashboardTodo,
-                showDashboardBanner: changesOnly ? this._showDashboardBanner : this.showDashboardBanner
+                showDashboardBanner: changesOnly ? this._showDashboardBanner : this.showDashboardBanner,
+                warehouseId: changesOnly ? this._warehouseId : this.warehouseId
             };
 
         return JSON.stringify(exportValue);
@@ -184,6 +192,7 @@ export class ConfigurationService
         this._showDashboardNotifications = null;
         this._showDashboardTodo = null;
         this._showDashboardBanner = null;
+        this._warehouseId = null;
 
         this.localStorage.deleteData(DBkeys.LANGUAGE);
         this.localStorage.deleteData(DBkeys.HOME_URL);
@@ -192,29 +201,30 @@ export class ConfigurationService
         this.localStorage.deleteData(DBkeys.SHOW_DASHBOARD_NOTIFICATIONS);
         this.localStorage.deleteData(DBkeys.SHOW_DASHBOARD_TODO);
         this.localStorage.deleteData(DBkeys.SHOW_DASHBOARD_BANNER);
+        this.localStorage.deleteData(DBkeys.WAREHOUSE_ID);
 
         this.resetLanguage();
     }
 
     private resetLanguage()
     {
-        const language = this.translationService.useBrowserLanguage();
+        // const language = this.translationService.useBrowserLanguage();
 
-        if (language)
-        {
-            this._language = language;
-        }
-        else
-        {
-            this._language = this.translationService.changeLanguage();
-        }
+        // if (language)
+        // {
+        //     this._language = language;
+        // }
+        // else
+        // {
+        //     this._language = this.translationService.changeLanguage();
+        // }
     }
 
     set language(value: string)
     {
         this._language = value;
         this.saveToLocalStore(value, DBkeys.LANGUAGE);
-        this.translationService.changeLanguage(value);
+        // this.translationService.changeLanguage(value);
     }
     get language()
     {
@@ -279,5 +289,15 @@ export class ConfigurationService
     get showDashboardBanner()
     {
         return this._showDashboardBanner != null ? this._showDashboardBanner : ConfigurationService.defaultShowDashboardBanner;
+    }
+
+    set warehouseId(value: number)
+    {
+        this._warehouseId = value;
+        this.saveToLocalStore(value, DBkeys.WAREHOUSE_ID);
+    }
+    get warehouseId()
+    {
+        return this._warehouseId;
     }
 }

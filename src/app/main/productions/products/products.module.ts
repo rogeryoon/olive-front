@@ -47,10 +47,7 @@ const routes = [
     OliveProductVariantsComponent,
     OliveSearchProductVariantComponent
   ],
-  providers: [
-    OliveProductService,
-    OliveProductVariantService
-  ],
+  providers: [],
   entryComponents: [
     OliveSearchProductComponent,
     OliveSearchProductVariantComponent

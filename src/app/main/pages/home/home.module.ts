@@ -7,7 +7,6 @@ import { OliveHomeComponent } from './home.component';
 import { HomeResolver } from './home-resolver';
 import { OliveHelpModule } from '../../supports/helps/helps.module';
 import { OliveHelpService } from '../../supports/helps/services/help.service';
-import { OliveHelpEndpointService } from '../../supports/helps/services/help-endpoint.service';
 import { OliveSharedModule } from '../../../core/shared.module';
 
 const routes = [
@@ -31,8 +30,7 @@ const routes = [
   declarations: [OliveHomeComponent],
   providers: [
     HomeResolver,
-    OliveHelpService,
-    OliveHelpEndpointService
+    OliveHelpService
   ]
 })
 export class OliveHomeModule { }

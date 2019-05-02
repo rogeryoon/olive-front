@@ -1,19 +1,18 @@
-<div class="page-layout carded fullwidth" fusePerfectScrollbar>
-    <!-- TOP BACKGROUND -->
+<div id="inventories" class="page-layout carded fullwidth" fusePerfectScrollbar>
     <div class="top-bg accent"></div>
-    <!-- / TOP BACKGROUND -->
 
     <!-- CENTER -->
     <div class="center">
 
         <!-- HEADER -->
-        <div class="header accent p-16 p-sm-24 olive-header" fxLayout="column" fxLayoutAlign="start" fxLayout.gt-xs="row"
-            fxLayoutAlign.gt-xs="space-between center">
+        <div class="header accent p-16 p-sm-24 olive-header" fxLayout="column" fxLayoutAlign="start"
+            fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
 
             <!-- APP TITLE -->
             <div fxLayout="row" fxLayoutAlign="start center">
                 <div class="logo" fxLayout="row" fxLayoutAlign="start center">
-                    <mat-icon class="logo-icon mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">{{setting.icon}}
+                    <mat-icon class="logo-icon mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                        {{setting.icon}}
                     </mat-icon>
                     <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
                         {{setting.translateTitleId | translate}}
@@ -31,8 +30,8 @@
                         <span (click)="openSearchDialog()" matTooltip="Advanced Search">
                             <mat-icon>search</mat-icon>
                         </span>
-                        <input type="search" id="search" matInput #filter placeholder="Search" (keyup)="onSearch($event)"
-                            (blur)="onSearch($event)" autocomplete="off">
+                        <input type="search" id="search" matInput #filter placeholder="Search"
+                            (keyup)="onSearch($event)" (blur)="onSearch($event)" autocomplete="off">
                     </div>
 
                 </div>
@@ -41,28 +40,31 @@
             <!-- / SEARCH -->
 
             <!-- ADD FILE BUTTON -->
-            <button [matMenuTriggerFor]="ctxmenu" mat-fab class="add-item-button mat-warn" title="{{'common.menu.menuButton' | translate}}"
-                *fuseIfOnDom [@animate]="{value:'*', params:{delay:'300ms',scale:'0.2'}}">
-                <mat-icon>keyboard_hide</mat-icon>
-            </button>
-            <mat-menu #ctxmenu="matMenu">
-                <button mat-menu-item (click)="editItem()" *ngIf="canManageItems">
-                    <mat-icon>add_box</mat-icon>
-                    <span>{{'common.menu.addNewItem' | translate}}</span>
+            <ng-container *ngIf="visibleContextMenu">
+                <button [matMenuTriggerFor]="ctxmenu" mat-fab
+                    class="add-item-button mat-warn" title="{{'common.menu.menuButton' | translate}}" *fuseIfOnDom
+                    [@animate]="{value:'*', params:{delay:'300ms',scale:'0.2'}}">
+                    <mat-icon>keyboard_hide</mat-icon>
                 </button>
-                <button mat-menu-item (click)="onExcel()">
-                    <mat-icon>cancel_presentation</mat-icon>
-                    <span>{{'common.menu.exportExcelFile' | translate}}</span>
-                </button>
-                <button mat-menu-item (click)="onPrint()">
-                    <mat-icon>print</mat-icon>
-                    <span>{{'common.menu.printList' | translate}}</span>
-                </button>
-                <button mat-menu-item (click)="onUpload()" *ngIf="canManageItems">
-                    <mat-icon>cloud_upload</mat-icon>
-                    <span>{{'common.menu.upload' | translate}}</span>
-                </button>
-            </mat-menu>
+                <mat-menu #ctxmenu="matMenu">
+                    <button mat-menu-item (click)="editItem()" [disabled]="!canManageItems" *ngIf="contextButtonVisible('newItem')">
+                        <mat-icon>add_box</mat-icon>
+                        <span>{{'common.menu.addNewItem' | translate}}</span>
+                    </button>
+                    <button mat-menu-item (click)="onExcel()" *ngIf="contextButtonVisible('excel')">
+                        <mat-icon>cancel_presentation</mat-icon>
+                        <span>{{'common.menu.exportExcelFile' | translate}}</span>
+                    </button>
+                    <button mat-menu-item (click)="onPrint()" *ngIf="contextButtonVisible('print')">
+                        <mat-icon>print</mat-icon>
+                        <span>{{'common.menu.printList' | translate}}</span>
+                    </button>
+                    <button mat-menu-item (click)="onUpload()" [disabled]="!canManageItems" *ngIf="contextButtonVisible('upload')">
+                        <mat-icon>cloud_upload</mat-icon>
+                        <span>{{'common.menu.upload' | translate}}</span>
+                    </button>
+                </mat-menu>
+            </ng-container>
             <!-- / ADD FILE BUTTON -->
         </div>
         <!-- / HEADER -->
@@ -74,13 +76,15 @@
                 <div layout="column" layout-xs="column" style="width: 100%;">
                     <div>
                         <table id="{{setting.dataTableId}}" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
-                            class="row-border hover olive-datatable"> <!--display nowrap 해도 안됨 https://stackoverflow.com/questions/47063834/jquery-datatables-with-scrollx-true-initially-does-not-render-columns-->
+                            [class]="renderTableClass()">
+                            <!--display nowrap 해도 안됨 https://stackoverflow.com/questions/47063834/jquery-datatables-with-scrollx-true-initially-does-not-render-columns-->
                             <thead>
                                 <tr>
                                     <th class="nosort">
                                         <input type="checkbox" [(ngModel)]="selectedAll" (change)="selectAll();" />
                                     </th>
-                                    <th *ngFor="let column of dataColumns" [class]="renderTHClass(column.thClass)">{{column.thName}}</th>
+                                    <th *ngFor="let column of dataColumns" [class]="renderTHClass(column.thClass)">
+                                        {{column.thName}}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -89,11 +93,16 @@
                                         <input class="select" name="select" type="checkbox" [(ngModel)]="item.selected"
                                             (change)="checkIfAllSelected();">
                                     </td>
-                                    <td *ngFor="let column of dataColumns" [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}"
-                                        [class]="renderTDClass(item, column)" (click)="onTdClick($event, item, column.data)" [matTooltip]="renderTdTooltip(item, column.data)">
-                                        <mat-icon *ngIf="icon(item, column.data)" [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}">{{iconName(item,
+                                    <td *ngFor="let column of dataColumns"
+                                        [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}"
+                                        [class]="renderTDClass(item, column)"
+                                        (click)="onTdClick($event, item, column.data)"
+                                        [matTooltip]="renderTdTooltip(item, column.data)">
+                                        <mat-icon *ngIf="icon(item, column.data)"
+                                            [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}">{{iconName(item,
                                             column.data)}}</mat-icon>
-                                        <span [innerHTML]="renderItem(item, column.data)" [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}"></span>
+                                        <span [innerHTML]="renderItem(item, column.data)"
+                                            [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}"></span>
                                     </td>
                                 </tr>
                                 <tr *ngIf="items?.length == 0">
@@ -101,6 +110,16 @@
                                         | translate}}</td>
                                 </tr>
                             </tbody>
+                            <tfoot *ngIf="setting.footerColumns">
+                                <tr>
+                                    <td *ngFor="let column of setting.footerColumns"
+                                        [attr.colspan]="column.colSpan ? column.colSpan : 1"
+                                        class="{{(column.class ? column.class : '')}}"
+                                        style="text-align: right; padding-right: 10px; font-weight: 600">
+                                        {{column.value ? column.value : renderFooterItem(column)}}
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>

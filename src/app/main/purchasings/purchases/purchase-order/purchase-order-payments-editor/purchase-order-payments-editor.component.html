@@ -11,11 +11,11 @@
     </mat-row>
 
     <ng-container matColumnDef="paymentMethodId">
-      <mat-header-cell *matHeaderCellDef>{{'purchasing.purchaseOrderPayments.paymentMethodId' | translate}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{'common.word.paymentMethod' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <mat-select name="paymentMethodId" formControlName="paymentMethodId" required (selectionChange)="onSelectionChange($event)" (blur)="onBlur($event)">
-            <mat-option value="">Choose an option</mat-option>
+            <mat-option value="">{{'common.message.chooseOption' | translate}}</mat-option>
             <mat-option *ngFor="let method of paymentMethods" [value]="method.id">{{method.name}}</mat-option>
           </mat-select>
           <mat-error *ngIf="hasArrayEntryError('paymentMethodId',i)">{{arrayErrorMessage('paymentMethodId',i)}}</mat-error>
@@ -25,7 +25,7 @@
     </ng-container>
 
     <ng-container matColumnDef="amount">
-      <mat-header-cell *matHeaderCellDef>{{'purchasing.purchaseOrderPayments.amount' | translate}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{(isVoidMode ? 'common.word.refundAmount' : 'common.word.paymentAmount') | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <input name="inputAmount{{row.ObjId}}" matInput class="right" formControlName="amount" 

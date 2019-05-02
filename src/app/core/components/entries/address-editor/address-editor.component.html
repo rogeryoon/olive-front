@@ -1,9 +1,4 @@
 ﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-      <mat-form-field appearance="outline" class="w-100-p" *ngIf="isIdVisible">
-        <mat-label>Id</mat-label>
-        <input matInput name="id" formControlName="id" readonly="readonly">
-      </mat-form-field>
-
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Address 1</mat-label>
         <input matInput name="address1" formControlName="address1" required maxlength="1000">
@@ -39,7 +34,7 @@
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>Select a country</mat-label>        
         <mat-select name="country" formControlName="country" required>
-          <mat-option>---</mat-option>
+          <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
           <mat-option *ngFor="let country of countries" [value]="country.id">{{country.name}}</mat-option>
         </mat-select>
         <mat-error *ngIf="hasEntryError('country')">{{errorMessage('country')}}</mat-error>

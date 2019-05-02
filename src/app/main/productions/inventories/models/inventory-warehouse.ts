@@ -1,14 +1,15 @@
-import { InventoryWarehouseUnit } from './inventory-warehouse-unit';
+
+import { IdValue } from 'app/core/models/id-value';
 
 export class InventoryWarehouse {
-    variantId: number;
+    id: number;
     productId: number;
     productName: string;
     productCode: string;
     variantName: string;
-    stockQtyDue: number;
+    totalQuantity: number;
     
-    inventories?: InventoryWarehouseUnit[];
+    inventories?: IdValue[];
 
     selected?: boolean;
 }

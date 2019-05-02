@@ -39,8 +39,8 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
       dataService
     );
 
-    this.saveConfirmTitle = translater.get('common.title.inWarehouseConfirm');
-    this.saveConfirmMessage = translater.get('common.message.inWarehouseConfirm');
+    this.saveConfirmTitle = translater.get('purchasing.inWarehouseManager.saveConfirmTitle');
+    this.saveConfirmMessage = translater.get('purchasing.inWarehouseManager.saveConfirmMessage');
   }
 
   registerSubControl() {
@@ -56,7 +56,7 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
       itemCount: this.inWarehouseItemsEditor.totalQuantity,
       memo: inWarehouse.memo,
       warehouseId: inWarehouse.warehouseId,
-      inWarehouseItems: inWarehouseItems.inWarehouseItems
+      inWarehouseItems: inWarehouseItems
     } as InWarehouse);
   }
 
@@ -74,11 +74,13 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
         inWarehouseItems: this.item.inWarehouseItems
       });
     }
-
-    this.inWarehouseItemsEditor.setParentItem(this.item);
   }
 
-  onWarehouseChanged(item: any) {
-    this.inWarehouseItemsEditor.setWarehouse(item);
+  onWarehouseChanged(event: any) {
+    this.inWarehouseItemsEditor.setWarehouse(event);
+  }
+
+  onRequiredWarehouse() {
+    this.inWarehouseEditor.lookUp();
   }
 }

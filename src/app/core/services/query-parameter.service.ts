@@ -8,7 +8,9 @@ import { OliveUtilities } from '../classes/utilities';
 import { AuthService } from '@quick/services/auth.service';
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OliveQueryParameterService {
   constructor(
     protected route: ActivatedRoute,

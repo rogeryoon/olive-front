@@ -1,0 +1,7 @@
+  <mat-form-field appearance="outline" class="w-100-p" [floatLabel]="floatLabels" fxFlex>
+    <mat-label>{{placeholder}}</mat-label>
+    <input matInput #lookupCtrl [formControl]="lookupName" [readonly]="true" [value]="getValue()" [type]="type"
+    (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" (dblclick)="lookUp()"/>
+    <span matPrefix *ngIf="value"><mat-icon class="secondary-text link-cursor" (click)="lookUp()">search</mat-icon>&nbsp;&nbsp;</span>
+  </mat-form-field>
+

@@ -50,7 +50,6 @@ export class OliveInWarehousePendingComponent extends OliveEntityListComponent {
 
   initializeChildComponent() {
     this.setting = {
-      name: 'PurchaseOrder',
       icon: NavIcons.Purchase.inWarehousePending,
       translateTitleId: NavTranslates.Purchase.inWarehousePending,
       managePermission: null,

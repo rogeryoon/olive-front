@@ -6,7 +6,9 @@ export interface AppConfig {
   baseUrl: string;
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OliveAppConfigService {
   private _appConfig: AppConfig;
 

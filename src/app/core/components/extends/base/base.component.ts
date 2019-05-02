@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormArray, AbstractControl } from '@angular/forms';
+import { String } from 'typescript-string-operations';
+
 import { Currency } from 'app/main/supports/bases/models/currency.model';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { Address } from 'app/core/models/core/address.model';
+
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 @Component({
   selector: 'olive-base',
@@ -11,11 +16,16 @@ export class OliveBaseComponent implements OnInit {
   standCurrency: Currency;
   currencies: Currency[];
 
-  constructor() { }
+  oForm: FormGroup;
+  oFormArray: FormArray;
+  isNewItem = false;
+
+  constructor(protected translater: FuseTranslationLoaderService) { }
 
   ngOnInit() {
   }
 
+  //#region Utilities
   commaNumber(amount: number) {
     return OliveUtilities.numberFormat(amount, 0, null);
   }
@@ -41,13 +51,8 @@ export class OliveBaseComponent implements OnInit {
   }  
 
   dateCode(date: any, id: number = 0): string {
-    if (id === 0) {
-      return OliveUtilities.getDateCode(date);
-    }
-    else {
-      return this.id36(id) + '-' + OliveUtilities.getDateCode(date);
-    }
-  }
+    return OliveUtilities.dateCode(date, id);
+  }  
 
   boolValue(value?: boolean): boolean {
     return value == null ? true : value;
@@ -56,4 +61,95 @@ export class OliveBaseComponent implements OnInit {
   address(address: Address): string {
     return OliveUtilities.showAddress(address);
   }
+  //#endregion Utilities
+
+  //#region Forms
+  getControl(name): any {
+    return this.oForm.get(name);
+  }
+
+  get oFArray(): FormArray {
+    return <FormArray>this.getControl('formarray');
+  }
+
+  protected arrayErrorMessage(name: string, index: number): string {
+    const formGroup = this.oFArray.controls[index] as FormGroup;
+    return this.controlErrorMessage(formGroup.get(name));
+  }
+  
+  protected errorMessage(name: string): string {
+    return this.controlErrorMessage(this.getControl(name));
+  }
+
+  private controlErrorMessage(control: AbstractControl): string {
+    let message = '';
+
+    if (OliveUtilities.testIsUndefined(control.errors) || !control.touched) {
+      return '';
+    }
+
+    if (control.errors.hasOwnProperty('required')) {
+      message = this.translater.get('common.validate.required');
+    }
+    else
+    if (control.errors.hasOwnProperty('pattern')) {
+      message = this.translater.get('common.validate.pattern');
+    }    
+    else
+    if (control.errors.hasOwnProperty('number')) {
+      let decimal = '';
+      decimal = String.Format(this.translater.get('common.validate.decimal'), control.errors.number);
+      message = String.Format(this.translater.get('common.validate.number'), decimal);
+    }
+    else
+    if (control.errors.hasOwnProperty('min')) {
+      message = String.Format(this.translater.get('common.validate.minNumber'), control.errors.min);
+    }
+    else
+    if (control.errors.hasOwnProperty('max') ) {
+      message = String.Format(this.translater.get('common.validate.maxNumber'), control.errors.max);
+    }
+
+    return message;
+  }
+
+  hasArrayEntryError(name: string, index: number): boolean {
+    const formGroup = (<FormArray>this.getControl('formarray')).controls[index] as FormGroup;
+    return this.controlHasEntryError(formGroup.get(name));
+  }
+
+  hasEntryError(name: string): boolean {
+    return this.controlHasEntryError(this.getControl(name));
+  }
+
+  private controlHasEntryError(control: any): boolean {
+    let hasError = false;
+
+    if (OliveUtilities.testIsUndefined(control.errors)) {
+      return hasError = false;
+    }
+    else 
+    if (control.errors.hasOwnProperty('required')) {
+      hasError = true;
+    }
+    else
+    if (control.errors.hasOwnProperty('pattern')) {
+      hasError = true;
+    }
+    else
+    if (control.errors.hasOwnProperty('number')) {
+      hasError = true;
+    }
+    else
+    if (control.errors.hasOwnProperty('min')) {
+      hasError = true;
+    }
+    else
+    if (control.errors.hasOwnProperty('max')) {
+      hasError = true;
+    }
+
+    return control.touched && hasError;
+  }
+  //#endregion Forms
 }

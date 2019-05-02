@@ -6,7 +6,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { AlertService } from '@quick/services/alert.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { locale as english } from '../../../../core/i18n/en';
 import { OliveDocumentService } from '../../../services/document.service';
 
 @Component({
@@ -27,7 +26,6 @@ export class OliveImportFileDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<OliveImportFileDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {importType: string}
   ) { 
-    this.translater.loadTranslations(english);
   }
 
   ngOnInit() {

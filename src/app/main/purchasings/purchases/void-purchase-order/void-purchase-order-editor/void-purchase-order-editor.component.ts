@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
@@ -10,8 +10,14 @@ import { OliveWarehouseService } from 'app/main/supports/companies/services/ware
 import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/warehouse/warehouse-manager/warehouse-manager.component';
 import { Warehouse } from 'app/main/supports/companies/models/warehouse.model';
 import { Permission } from '@quick/models/permission.model';
-import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { LookupListerSetting, ReferHostSetting } from 'app/core/interfaces/lister-setting';
 import { InWarehouse } from 'app/main/purchasings/in-warehouses/models/in-warehouse.model';
+import { OliveReferHostComponent } from 'app/core/components/entries/refer-host/refer-host.component';
+import { OlivePurchaseOrderService } from '../../services/purchase-order.service';
+import { VoidPurchaseOrder } from '../../models/void-purchase-order.model';
+import { PurchaseOrder } from '../../models/purchase-order.model';
+import { OlivePurchaseOrderManagerComponent } from '../../purchase-order/purchase-order-manager/purchase-order-manager.component';
+import { OliveUtilities } from 'app/core/classes/utilities';
 
 @Component({
   selector: 'olive-void-purchase-order-editor',
@@ -22,50 +28,69 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
   @ViewChild('warehouse')
   lookupWarehouse: OliveLookupHostComponent;
 
+  @ViewChild('purchaseOrder') 
+  referPurchaseOrder: OliveReferHostComponent;
+
   disableWarehouseChangedEvent = false;
 
   @Output() warehouseChanged = new EventEmitter();
 
   constructor(
     formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
-    private warehouseService: OliveWarehouseService
+    private warehouseService: OliveWarehouseService, private purchaseOrderService: OlivePurchaseOrderService
   ) {
     super(
       formBuilder, translater
     );
   }
 
-  getEditedItem(): any {
+  get warehousId() {
+    return this.getControl('purchaseOrderFk').value.warehouseId;
+  }
+
+  getEditedItem(): VoidPurchaseOrder {
     const formModel = this.oForm.value;
 
     return this.itemWithIdNAudit({
-      memo: formModel.memo,
-      warehouseId: formModel.warehouseFk.id
+      inWarehouseFk: {
+        memo : formModel.memo,
+        warehouseId : this.warehousId
+      },
+      purchaseOrderFk: this.item.purchaseOrderFk,
+      returnTrackings: this.item.returnTrackings
     });
   }
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      id: '',
-      memo: '',
       warehouseFk: null,
+      purchaseOrderFk: null,
+      supplierName: '',
+      memo: '',
     });
   }
 
   resetForm() {
-    if (!this.isNull(this.item.warehouseFk)) {
+    const row = this.item as VoidPurchaseOrder;
+
+    if (row.inWarehouseFk && !this.isNull(row.inWarehouseFk.warehouseFk)) {
       this.disableWarehouseChangedEvent = true;
     }
 
     this.oForm.reset({
-      id: this.id36(this.item.id),
-      memo: this.item.memo || '',
-      warehouseFk: this.item.warehouseFk
+      warehouseFk: row.inWarehouseFk && row.inWarehouseFk.warehouseFk ? row.inWarehouseFk.warehouseFk : null,
+      purchaseOrderFk: row.purchaseOrderFk,
+      supplierName: row.purchaseOrderFk && row.purchaseOrderFk.supplierFk && row.purchaseOrderFk.supplierFk.name ? row.purchaseOrderFk.supplierFk : '',
+      memo: row.inWarehouseFk ? row.inWarehouseFk.memo : ''
     });
+
+    if (this.item.warehouseFk) {
+      this.warehouseChanged.emit({item: this.item.warehouseFk, loading: true});
+    }
   }
 
   createEmptyObject() {
-    return new InWarehouse();
+    return new VoidPurchaseOrder();
   }
 
   initializeChildComponent() {
@@ -80,6 +105,26 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
       managePermission: Permission.assignCompanyGroups,
       translateTitleId: NavTranslates.Company.warehouse
     } as LookupListerSetting;
+
+    this.referPurchaseOrder.setting = {
+      itemType: PurchaseOrder,
+      dataService: this.purchaseOrderService,
+      managerComponent: OlivePurchaseOrderManagerComponent,
+      managePermission: null,
+      translateTitleId: NavTranslates.Purchase.entry,
+      customTitleTemplate: this.translater.get('navi.purchase.group') + ' ID : {0}',
+      customTitleCallback: this.customTitle,
+      customNameCallback: this.customName,
+      readonly: true
+    } as ReferHostSetting;
+  }
+
+  customName(order: PurchaseOrder): string {
+    return OliveUtilities.dateCode(order.date, order.id);
+  }
+
+  customTitle(order: PurchaseOrder, template: string): string {
+    return OliveUtilities.showParamMessage(template, OliveUtilities.dateCode(order.date, order.id));
   }
 
   markCustomControlsTouched() {
@@ -88,10 +133,14 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
 
   onWarehouseChanged(input: any) {
     if (!this.disableWarehouseChangedEvent) {
-      this.warehouseChanged.emit(input);
+      this.warehouseChanged.emit({item: input, loading: false});
     }
     else {
       this.disableWarehouseChangedEvent = false;
     }
+  }
+
+  lookUp() {
+    this.lookupWarehouse.lookUp();
   }
 }

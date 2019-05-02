@@ -1,0 +1,64 @@
+﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <input matInput name="code" formControlName="code" maxlength="100" class="to-uppercase">
+            <mat-label>{{'common.word.code'|translate}}</mat-label>
+            <mat-hint align="end">{{getControl('code').value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100-p">
+            <input matInput name="name" formControlName="name" required maxlength="200">
+            <mat-label>{{'common.word.name'|translate}}</mat-label>
+            <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
+            <mat-error *ngIf="hasEntryError('name')">{{errorMessage('name')}}</mat-error>
+        </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-label>{{'support.marketEditor.standMarket' | translate}}</mat-label>
+            <mat-select name="standMarket" formControlName="standMarket">
+                <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
+                <mat-option *ngFor="let item of standMarkets" [value]="item.id">{{item.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100-p">
+            <input matInput name="phoneNumber" formControlName="phoneNumber" maxlength="100">
+            <mat-label>{{'common.word.phoneNumber'|translate}}</mat-label>
+            <mat-hint align="end">{{getControl('phoneNumber').value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <input matInput name="email" formControlName="email" maxlength="200">
+            <mat-label>{{'common.word.email'|translate}}</mat-label>
+            <mat-hint align="end">{{getControl('email').value?.length || 0}}/200</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100-p">
+            <input matInput name="webSite" formControlName="webSite" maxlength="400">
+            <mat-label>{{'common.word.webSite'|translate}}</mat-label>
+            <mat-hint align="end">{{getControl('webSite').value?.length || 0}}/400</mat-hint>
+        </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-label>{{'common.word.memo'|translate}}</mat-label>
+            <textarea matInput name="memo" formControlName="memo" rows="2">
+        </textarea>
+        </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <div class="w-100-p">
+            <mat-checkbox formControlName="activated">Activated</mat-checkbox>
+        </div>
+        <div class="w-100-p">
+            <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+        </div>
+    </div>
+</form>

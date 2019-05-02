@@ -8,26 +8,32 @@ import { FuseSharedModule } from '@fuse/shared.module';
 import { AuthGuard } from '@quick/services/auth-guard.service';
 
 import { OliveSharedModule } from '../../../core/shared.module';
-import { OliveInventoryService } from './services/inventory.service';
-import { OliveInventoryEndpointService } from './services/inventory-endpoint.service';
-import { OliveInventoryBalanceComponent } from './inventory-balance/inventory-balance.component';
-import { OliveInventoryWarehouseComponent } from './inventory-warehouse/inventory-warehouse.component';
-import { OliveInventoryHistoryComponent } from './inventory-history/inventory-history.component';
+import { OliveInventoryBalancesComponent } from './inventory-balances/inventory-balances.component';
+import { OliveInventoryWarehousesComponent } from './inventory-warehouses/inventory-warehouses.component';
+import { OliveInventoryHistoriesComponent } from './inventory-histories/inventory-histories.component';
+import { OliveInventoryBalanceSaveComponent } from './inventory-balance-save/inventory-balance-save.component';
+import { OliveInventoryResolverService } from './services/inventory-resolver.service';
 
 const routes = [
   {
+    path     : 'history',
+    component: OliveInventoryBalanceSaveComponent,
+    canActivate: [AuthGuard]
+  },  
+  {
       path     : 'balance',
-      component: OliveInventoryBalanceComponent,
+      component: OliveInventoryBalancesComponent,
       canActivate: [AuthGuard]
   },
   {
     path     : 'warehouse',
-    component: OliveInventoryWarehouseComponent,
-    canActivate: [AuthGuard]
+    component: OliveInventoryWarehousesComponent,
+    canActivate: [AuthGuard],
+    resolve: { warehouses: OliveInventoryResolverService }    
   },
   {
-    path     : 'history',
-    component: OliveInventoryHistoryComponent,
+    path     : 'history-old',
+    component: OliveInventoryHistoriesComponent,
     canActivate: [AuthGuard]
   }
 ];
@@ -41,18 +47,12 @@ const routes = [
     OliveSharedModule
   ],
   declarations: [
-    OliveInventoryBalanceComponent,
-    OliveInventoryWarehouseComponent,
-    OliveInventoryHistoryComponent
+    OliveInventoryBalanceSaveComponent,
+    OliveInventoryBalancesComponent,
+    OliveInventoryWarehousesComponent,
+    OliveInventoryHistoriesComponent
   ],
-  providers: [
-    OliveInventoryService,
-    OliveInventoryEndpointService,
-    // OliveProductService,
-    // OliveProductEndpointService
-  ],
-  entryComponents: [
-    // OliveEditProductDialogComponent
-  ]
+  providers: [],
+  entryComponents: []
 })
 export class OliveInventoriesModule { }

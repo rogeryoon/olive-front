@@ -25,9 +25,24 @@ export class OliveConstants {
 
     static iconStatus = class {
         static checked = 'check';
-        static unchecked = 'remove';
+        static unchecked = 'clear';
         static pending = 'access_time';
         static error = 'error_outline';
         static completed = 'check';
     };
+
+    static style = class {
+        static footerCell = 'text-align: right; padding-right: 0px;';
+    };
+
+    static contextMenu = class {
+        static all = 'all';
+        static newItem = 'newItem';
+        static excel = 'excel';
+        static print = 'print';
+        static upload = 'upload';
+    };
 }
+
+
+

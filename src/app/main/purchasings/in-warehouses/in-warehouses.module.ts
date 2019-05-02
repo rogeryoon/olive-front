@@ -45,9 +45,7 @@ const routes = [
     OliveInWarehouseEditorPageComponent
   ],
   providers: [
-    OliveInWarehouseService,
-    OliveInWarehouseEditorPageResolver,
-    OliveInWarehouseItemService
+    OliveInWarehouseEditorPageResolver
   ],
   entryComponents: [
     OliveSearchInWarehouseComponent

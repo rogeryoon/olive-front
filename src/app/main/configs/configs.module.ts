@@ -10,11 +10,7 @@ import { OliveCompaniesModule } from '../supports/companies/companies.module';
     OliveRolesModule,
     OliveCompaniesModule
   ],
-  declarations: [
-
-  ],
-  providers: [
-
-  ],
+  declarations: [],
+  providers: [],
 })
 export class OliveConfigsModule { }

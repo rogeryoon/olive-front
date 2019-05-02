@@ -58,12 +58,16 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
     this.purchaseOrderItems.onCurrencyExchangeRateChanged(exchangeRate);
   }
 
+  onPaymentAmountChanged(amount) {
+    this.purchaseOrderPayments.onTotalItemEntryAmountChanged(amount);
+  }
+
   getEditedItem(): any {
     const purchaseOrder = this.purchaseOrderEditor.getEditedItem();
     const itemsEditor = this.purchaseOrderItems.getEditedItem();
 
     return this.itemWithIdNAudit({
-      vendorOrderId: purchaseOrder.vendorOrderId,
+      supplierOrderId: purchaseOrder.supplierOrderId,
       date: purchaseOrder.date,
       memo: purchaseOrder.memo,
       totalAmount: this.purchaseOrderItems.totalAmount,
@@ -77,7 +81,7 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
       closedDate: purchaseOrder.closedDate,
       printOutCount: purchaseOrder.printOutCount,
       lastPrintOutUser: purchaseOrder.lastPrintOutUser,
-      vendorId: purchaseOrder.vendorId,
+      supplierId: purchaseOrder.supplierId,
       warehouseId: purchaseOrder.warehouseId,
       currencyId: purchaseOrder.currencyId,
       purchaseOrderPayments: this.purchaseOrderPayments.items,

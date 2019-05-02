@@ -4,7 +4,9 @@ import { OliveHelpEndpointService } from './help-endpoint.service';
 import { Help } from '../models/Help';
 import { CategoryHelps } from '../models/CategoryHelps';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OliveHelpService {
 
     constructor(private helpEndpoint: OliveHelpEndpointService) {} 

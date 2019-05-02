@@ -70,7 +70,7 @@
                                 <tr>
                                     <th style="width:120px;">{{'purchasing.inWarehousePendingHeader.id' | translate}}</th>
                                     <th style="width:130px;">{{'purchasing.inWarehousePendingHeader.warehouse' | translate}}</th>
-                                    <th>{{'purchasing.inWarehousePendingHeader.vendor' | translate}}</th>
+                                    <th>{{'purchasing.inWarehousePendingHeader.supplier' | translate}}</th>
                                     <th colspan="4">{{'purchasing.inWarehousePendingHeader.memo' | translate}}</th>
                                     <th>{{'purchasing.inWarehousePendingHeader.finishLink' | translate}}</th>
                                 </tr>
@@ -87,7 +87,7 @@
                                 <tr *ngFor="let item of items" (click)="editItem(item, $event)" class="print" [ngClass]="{'row-accent': isMaster(item)}">
                                     <td *ngIf="isMaster(item)">{{dateCode(item.date,item.id)}}</td>
                                     <td *ngIf="isMaster(item)">{{item.warehouseFk.code}}</td>
-                                    <td *ngIf="isMaster(item)">{{item.vendorFk.name}}</td>
+                                    <td *ngIf="isMaster(item)">{{item.supplierFk.name}}</td>
                                     <td *ngIf="isMaster(item)" colspan="4"><span class="text-truncate">{{item.memo}}</span></td>
                                     <td *ngIf="isMaster(item)">종결</td>
 

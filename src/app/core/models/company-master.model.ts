@@ -5,7 +5,8 @@ export class CompanyMaster extends OliveTrackingAttribute {
     code: string;
     name: string;
     purchasingEnabled?: boolean;
-    thirdpartyEnabled?: boolean;
+    thirdPartyEnabled?: boolean;
     shippingAgentEnabled?: boolean;
     shippingEnabled?: boolean;
+    applicationTimeZoneId: string;
 }

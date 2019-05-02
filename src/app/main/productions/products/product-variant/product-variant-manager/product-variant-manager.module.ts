@@ -20,9 +20,7 @@ import { OliveProductService } from '../../services/product.service';
     OliveProductVariantManagerComponent,
     OliveProductVariantEditorComponent
   ],
-  providers: [
-    OliveProductService
-  ],
+  providers: [],
   entryComponents: [OliveProductVariantManagerComponent]
 })
 export class OliveProductVariantManagerModule { }

@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{userName ? ('management.EditUser' | translate:userName) : ('management.NewUser' | translate)}}</h1>
+<h1 mat-dialog-title>{{userName ? ('configs.userManagement.EditUser' | translate:userName) : ('configs.userManagement.NewUser' | translate)}}</h1>
 <div mat-dialog-content>
     <olive-user-editor [user]="data.user" [roles]="data.roles" isEditMode="true"></olive-user-editor>
 </div>

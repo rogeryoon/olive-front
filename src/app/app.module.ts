@@ -25,12 +25,10 @@ import { AuthService } from '@quick/services/auth.service';
 import { AuthGuard } from '@quick/services/auth-guard.service';
 import { ConfigurationService } from '@quick/services/configuration.service';
 import { LocalStoreManager } from '@quick/services/local-store-manager.service';
-import { AppTranslationService } from '@quick/services/app-translation.service';
 import { EndpointFactory } from '@quick/services/endpoint-factory.service';
 import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
 import { AccountEndpoint } from '@quick/services/account-endpoint.service';
-import { OliveNavigationSelectorService } from './core/services/navigation-selector.service';
 import { Error404Module } from './main/pages/errors/404/error-404.module';
 import { OliveSharedModule } from './core/shared.module';
 import { LoginModule } from './main/pages/authentication/login/login.module';
@@ -132,12 +130,10 @@ const appInitializerFn = (appConfig: OliveAppConfigService) => {
         AuthGuard,
         ConfigurationService,
         LocalStoreManager,
-        AppTranslationService,
         EndpointFactory,
         AlertService,
         AccountService,
         AccountEndpoint,
-        OliveNavigationSelectorService,
         OliveAppConfigService,
         {
             provide: APP_INITIALIZER,

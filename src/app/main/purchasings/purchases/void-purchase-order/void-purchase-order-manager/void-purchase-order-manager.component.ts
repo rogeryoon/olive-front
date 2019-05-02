@@ -2,6 +2,8 @@
 import { FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 
+import * as _ from 'lodash';
+
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { AlertService } from '@quick/services/alert.service';
@@ -10,8 +12,13 @@ import { AccountService } from '@quick/services/account.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveVoidPurchaseOrderEditorComponent } from '../void-purchase-order-editor/void-purchase-order-editor.component';
-import { OliveVoidPurchaseOrderItemsEditorComponent } from '../void-purchase-order-items-editor/void-purchase-order-items-editor.component';
-import { OliveInWarehouseService } from 'app/main/purchasings/in-warehouses/services/in-warehouse.service';
+import { OliveInWarehouseItemsEditorComponent } from 'app/main/purchasings/in-warehouses/in-warehouse/in-warehouse-items-editor/in-warehouse-items-editor.component';
+import { PurchaseOrder } from '../../models/purchase-order.model';
+import { VoidPurchaseOrder } from '../../models/void-purchase-order.model';
+import { OlivePurchaseOrderPaymentsEditorComponent } from '../../purchase-order/purchase-order-payments-editor/purchase-order-payments-editor.component';
+import { InWarehouseItem } from 'app/main/purchasings/in-warehouses/models/in-warehouse-item.model';
+import { PurchaseOrderPayment } from '../../models/purchase-order-payment.model';
+import { OliveVoidPurchaseOrderService } from '../../services/void-purchase-order.service';
 
 @Component({
   selector: 'olive-void-purchase-order-manager',
@@ -22,14 +29,17 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
   @ViewChild(OliveVoidPurchaseOrderEditorComponent) 
   private voidPurchaseOrderEditor: OliveVoidPurchaseOrderEditorComponent;
 
-  @ViewChild(OliveVoidPurchaseOrderItemsEditorComponent)
-  private voidPurchaseOrderItemsEditor: OliveVoidPurchaseOrderItemsEditorComponent;
+  @ViewChild(OliveInWarehouseItemsEditorComponent)
+  private inWarehouseItemsEditor: OliveInWarehouseItemsEditorComponent;
 
+  @ViewChild(OlivePurchaseOrderPaymentsEditorComponent)
+  purchaseOrderPaymentsEditor: OlivePurchaseOrderPaymentsEditorComponent;
+  
   constructor(
     translater: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
-    dataService: OliveInWarehouseService
+    dataService: OliveVoidPurchaseOrderService
   ) {
     super(
       translater, alertService,
@@ -38,30 +48,46 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
       dataService
     );
 
-    this.saveConfirmTitle = translater.get('common.title.inWarehouseConfirm');
-    this.saveConfirmMessage = translater.get('common.message.inWarehouseConfirm');
+    this.saveConfirmTitle = translater.get('purchasing.voidPurchaseOrderManager.saveConfirmTitle');
+    this.saveConfirmMessage = translater.get('purchasing.voidPurchaseOrderManager.saveConfirmMessage');
   }
 
   registerSubControl() {
     this.subControls.push(this.voidPurchaseOrderEditor);
-    this.subControls.push(this.voidPurchaseOrderItemsEditor);
+    this.subControls.push(this.inWarehouseItemsEditor);
+    this.subControls.push(this.purchaseOrderPaymentsEditor);
   }
 
-  getEditedItem(): any {
-    const inWarehouse = this.voidPurchaseOrderEditor.getEditedItem();
-    const inWarehouseItems = this.voidPurchaseOrderItemsEditor.getEditedItem();
+  getEditedItem(): VoidPurchaseOrder {
+    const voidPurchaseOrder = this.voidPurchaseOrderEditor.getEditedItem();
+    const inWarehouseItems = _.cloneDeep(this.inWarehouseItemsEditor.getEditedItem());
+    const purchaseOrderPayments = _.cloneDeep(this.purchaseOrderPaymentsEditor.items);
+
+    // 저장전에 Minus값으로 전환한다.
+    inWarehouseItems.forEach(item => {
+      item.quantity = item.quantity * -1;
+    });
+
+    purchaseOrderPayments.forEach(payment => {
+      payment.amount = payment.amount * -1;
+    });
+    
+    voidPurchaseOrder.inWarehouseFk.itemCount = this.inWarehouseItemsEditor.totalQuantity * -1;
+    voidPurchaseOrder.inWarehouseFk.inWarehouseItems = inWarehouseItems;
+    voidPurchaseOrder.purchaseOrderFk.purchaseOrderPayments = purchaseOrderPayments;
 
     return this.itemWithIdNAudit({
-      itemCount: this.voidPurchaseOrderItemsEditor.totalQuantity,
-      memo: inWarehouse.memo,
-      warehouseId: inWarehouse.warehouseId,
-      inWarehouseItems: inWarehouseItems.inWarehouseItems
+      closedDate: this.item.closedDate,
+      confirmedDate: this.item.confirmedDate,
+      purchaseOrderFk: voidPurchaseOrder.purchaseOrderFk,
+      inWarehouseFk: voidPurchaseOrder.inWarehouseFk
     });
   }
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      inWarehouseItems: null
+      inWarehouseItems: null,
+      purchaseOrderPayments: null
     });
   }
 
@@ -70,14 +96,94 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
 
     if (this.item) {
       this.oForm.patchValue({
-        inWarehouseItems: this.item.inWarehouseItems
+        inWarehouseItems: this.changeInWarehouseItemsSignWhenLoading(),
+        purchaseOrderPayments: this.changePaymentsSignWhenLoading()
       });
     }
-
-    this.voidPurchaseOrderItemsEditor.setParentItem(this.item);
   }
 
-  onWarehouseChanged(item: any) {
-    this.voidPurchaseOrderItemsEditor.setWarehouse(item);
+  changeInWarehouseItemsSignWhenLoading(): InWarehouseItem[] {
+    if (!this.item.inWarehouseItems) { return null; }
+
+    const items = this.item.inWarehouseItems as InWarehouseItem[];
+
+    items.forEach(item => {
+      item.quantity = item.quantity * -1;
+    });
+
+    return items;
+  }
+
+  changePaymentsSignWhenLoading(): PurchaseOrderPayment[] {
+    if (!this.item.purchaseOrderFk || !this.item.purchaseOrderFk.purchaseOrderPayments) { return null; }
+
+    const items = this.item.purchaseOrderFk.purchaseOrderPayments as PurchaseOrderPayment[];
+
+    items.forEach(item => {
+      item.amount = item.amount * -1;
+    });
+
+    return items;
+  }
+
+  onWarehouseChanged(event: any) {
+    this.inWarehouseItemsEditor.setWarehouse(event);
+
+    if (!event.loading) {
+      this.setOrderData(null);
+    }
+  }
+
+  onRequiredWarehouse() {
+    this.voidPurchaseOrderEditor.lookUp();
+  }
+
+  onInWarehouseItemAdded(order: PurchaseOrder) {
+    this.setOrderData(order);
+  }
+
+  setOrderData(order: PurchaseOrder) {
+    this.voidPurchaseOrderEditor.setControlValue('purchaseOrderFk', order);
+    this.voidPurchaseOrderEditor.setControlValue('supplierName', order ? order.supplierFk.name : null);
+    this.voidPurchaseOrderEditor.item.purchaseOrderFk = order;
+    this.oForm.patchValue({purchaseOrderPayments : order ? this.calculateByPaymentMethod(order) : null});
+  }
+
+  // 결제수단 별로 결제와 환불을 계산해서 결제수단별로 정리해서 반환
+  // 합산값이 0이하 인경우 환불가능한 금액이 없으므로 삭제한다.
+  calculateByPaymentMethod(order: PurchaseOrder): PurchaseOrderPayment[] {
+    const payments = _.cloneDeep(order.purchaseOrderPayments);
+
+    const balanceByPamentMethod = new Map<number, number>();
+    const keysForUniqueOrPlusValueCheck = new Set();
+
+    payments.forEach(payment => {
+      if (!balanceByPamentMethod.has(payment.paymentMethodId)) {
+        balanceByPamentMethod.set(payment.paymentMethodId, payment.amount);
+      }
+      else {
+        balanceByPamentMethod.set(payment.paymentMethodId, balanceByPamentMethod.get(payment.paymentMethodId) + payment.amount);
+      }
+    });
+
+    payments.forEach(payment => {
+      if (balanceByPamentMethod.get(payment.paymentMethodId) <= 0) {
+        keysForUniqueOrPlusValueCheck.add(payment.paymentMethodId);
+      }
+    });
+
+    const finalPayments: PurchaseOrderPayment[] = [];
+
+    payments.forEach(payment => {
+      if (!keysForUniqueOrPlusValueCheck.has(payment.paymentMethodId)) {
+        payment.id = null;
+        payment.amount = balanceByPamentMethod.get(payment.paymentMethodId);
+        payment.remarkId = null;
+        finalPayments.push(payment);
+        keysForUniqueOrPlusValueCheck.add(payment.paymentMethodId);
+      }
+    });
+
+    return finalPayments;
   }
 }

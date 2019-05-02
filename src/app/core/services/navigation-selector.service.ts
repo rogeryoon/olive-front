@@ -7,9 +7,11 @@ import { AuthService } from '@quick/services/auth.service';
 
 import { defaultNavigation } from '../navigations/defaut-navigation';
 import { reserveNavigation } from '../navigations/reserve-navigation';
-import { OliveUtilities } from '../classes/utilities';
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OliveNavigationSelectorService implements OnInit, OnDestroy {
     onNavigationChanged: Subject<any> = new Subject;
     loginStatusSubscription: any;
@@ -17,7 +19,7 @@ export class OliveNavigationSelectorService implements OnInit, OnDestroy {
     protected isAuthenticNavigation?: boolean;
     protected navigationMap: { [name: string]: FuseNavigation[]; } = {};
 
-    constructor(private authService: AuthService) {
+    constructor(private authService: AuthService, private translater: FuseTranslationLoaderService) {
         this.navigationMap['default'] = defaultNavigation;
         this.navigationMap['reserve'] = reserveNavigation;
     }
@@ -45,6 +47,7 @@ export class OliveNavigationSelectorService implements OnInit, OnDestroy {
     }
 
     private refresh(name: string = 'default') {
+        console.log('refresh', name);
         const navis = this.navigationMap[name];
         this.navigation = this.load(navis);
     }
@@ -64,6 +67,13 @@ export class OliveNavigationSelectorService implements OnInit, OnDestroy {
 
             // Deep Copy
             returnNavi = jQuery.extend(true, {}, navi);
+            // if (returnNavi.translate) {
+            //     const returnValue = this.translater.get(returnNavi.translate);
+            //     console.log(returnNavi.translate, returnValue);                
+            //     if (returnNavi.translate !== returnValue) {
+            //         returnNavi.title = this.translater.get(returnNavi.translate);
+            //     }
+            // }
 
             if (navi.children != null) {
                 returnNavi.children = this.load(navi.children);

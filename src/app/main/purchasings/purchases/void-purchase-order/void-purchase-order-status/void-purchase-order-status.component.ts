@@ -30,7 +30,7 @@ const InWarehouseId = 'inWarehouseId';
 @Component({
   selector: 'olive-void-purchase-order-status',
   templateUrl: '../../../../../core/components/dialogs/lookup-dialog/lookup-dialog.component.html',
-  styleUrls: ['./in-warehouse-status.component.scss']
+  styleUrls: ['./void-purchase-order-status.component.scss']
 })
 export class OliveVoidPurchaseOrderStatusComponent extends OliveLookupDialogComponent {
   private inWarehouses = new Map<number, InWarehouse>();

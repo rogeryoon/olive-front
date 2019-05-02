@@ -1,0 +1,35 @@
+@import "src/@fuse/scss/fuse";
+:host {
+  table {
+    th:nth-child(1) {
+      width: 20px;
+    }
+    th:nth-child(2) {
+      width: 50px;
+    }
+    th:nth-child(4) {
+      width: 100px;
+    }
+    th:nth-child(5) {
+      width: 60px;
+    }
+    th:nth-child(n+6) {
+      width: 40px;
+    }
+    td:nth-child(2) {
+      text-transform: uppercase;
+    }
+    td:nth-child(3) {
+      text-align: justify;
+    }
+    td:nth-child(4) {
+      text-align: justify;
+    }
+    td:nth-child(5) {
+      text-align: right;
+    }
+    td:nth-child(n+6) {
+      text-align: right;
+    }
+  }
+}

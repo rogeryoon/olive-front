@@ -1,15 +1,13 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, forwardRef, Output, EventEmitter } from '@angular/core';
 import {
   FormBuilder, FormControl, ValidationErrors,
   NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, FormGroup
 } from '@angular/forms';
 import { MatSnackBar, MatDialog } from '@angular/material';
-import { String } from 'typescript-string-operations';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { Permission } from '@quick/models/permission.model';
-import { AlertService, MessageSeverity } from '@quick/services/alert.service';
 
 import { PurchaseOrder } from '../../models/purchase-order.model';
 import { PurchaseOrderItem } from '../../models/purchase-order-item.model';
@@ -31,6 +29,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
 import { numberValidator } from 'app/core/classes/validators';
 import { OliveUtilities } from 'app/core/classes/utilities';
+import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 
 @Component({
   selector: 'olive-purchase-order-items-editor',
@@ -58,12 +57,15 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   value: PurchaseOrderItem[] = null;
 
   otherCurrencyDisplay = 'none';
+  savedPaymentAmount = 0;
+  @Output() paymentAmountChanged = new EventEmitter();
 
   constructor(
     formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
     private snackBar: MatSnackBar, private dialog: MatDialog,
-    private alertService: AlertService, private cacheService: OliveCacheService,
-    private productVariantService: OliveProductVariantService, private purchaseOrderService: OlivePurchaseOrderService
+    private messageHelperService: OliveMessageHelperService, private cacheService: OliveCacheService,
+    private productVariantService: OliveProductVariantService, private purchaseOrderService: OlivePurchaseOrderService,
+
   ) {
     super(
       formBuilder, translater
@@ -100,8 +102,8 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     return this.getMoney(this.oForm.value.addedDiscountAmount);
   }  
 
-  get extraAmount() {
-    return this.freight - this.addedDiscount + this.tax;
+  get extraAmount(): number {
+    return +(this.freight - this.addedDiscount + this.tax).toFixed(this.standCurrency.decimalPoint);
   }
 
   get extraCostPerUnit(): number {
@@ -109,6 +111,34 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       return 0;
     }
     return +(this.extraAmount / this.totalQuantity).toFixed(this.standCurrency.decimalPoint);
+  }
+
+  get totalQuantity(): number {
+    let quantity = 0;
+
+    this.itemsDataSource.items.forEach(item => {
+      if (!isNaN(item.quantity)) {
+        quantity += +item.quantity;
+      }
+    });
+
+    return quantity;
+  }
+
+  get totalAmount(): number {
+    let amount = 0;
+
+    this.itemsDataSource.items.forEach(item => {
+      if (!isNaN(item.quantity) && !isNaN(item.price)) {
+        amount += item.quantity * item.price;
+      }
+    });
+
+    return +(amount).toFixed(this.standCurrency.decimalPoint);
+  }
+
+  get paymentAmount(): number {
+    return this.totalAmount + this.extraAmount;
   }
 
   onCurrencyChanged(id) {
@@ -178,7 +208,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   private deleteItem(item: any) {
     if (item.Obj.id || item.Obj.name || item.Obj.quantity || item.Obj.price || item.Obj.remark) {
       this.snackBar.open(
-        OliveUtilities.showParamMessage(this.translater.get('common.message.confirmDelete'), ''),
+        OliveUtilities.showParamMessage(this.translater.get('common.message.confirmDelete')),
         this.translater.get('common.button.delete'),
         { duration: 5000 }
       )
@@ -199,30 +229,6 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     this.updateCosts();    
   }
 
-  get totalQuantity(): number {
-    let quantity = 0;
-
-    this.itemsDataSource.items.forEach(item => {
-      if (!isNaN(item.quantity)) {
-        quantity += +item.quantity;
-      }
-    });
-
-    return quantity;
-  }
-
-  get totalAmount(): number {
-    let amount = 0;
-
-    this.itemsDataSource.items.forEach(item => {
-      if (!isNaN(item.quantity) && !isNaN(item.price)) {
-        amount += item.quantity * item.price;
-      }
-    });
-
-    return amount;
-  }
-
   canEditQuantity(item: PurchaseOrderItem): boolean {
     return this.isNull(item) || this.isNull(item.id) || isNaN(item.quantity) || item.balance >= item.quantity;
   }
@@ -236,13 +242,13 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
         data: {
           name: 'ProductVariant',
           columnType: 'id',
-          dialogTitle: this.translater.get(NavTranslates.Product.ProductVariant),
+          dialogTitle: this.translater.get(NavTranslates.Product.productVariant),
           dataService: this.productVariantService,
           maxSelectItems: 10,
           newComponent: OliveProductVariantManagerComponent,
           itemType: ProductVariant,
           managePermission: Permission.manageProductsPermission,
-          translateTitleId: NavTranslates.Product.ProductVariant,
+          translateTitleId: NavTranslates.Product.productVariant,
           maxNameLength: 10
         } as LookupListerSetting
       });
@@ -251,22 +257,24 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       if (!pvItems || pvItems.length === 0) { return; }
 
       const duplicatedIdStrings: string[] = [];
-      const dupCheckset = new Set();
+      const dupProductVariantIdCheckset = new Set();
 
       this.itemsDataSource.items.forEach((dsItem: PurchaseOrderItem) => {
         pvItems
           .filter((pvItem: ProductVariant) => dsItem.productVariantId === pvItem.id)
           .forEach((pvItem: ProductVariant) => {
-            dupCheckset.add(pvItem.id);
-            duplicatedIdStrings.push(
-              `${this.id36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trimRight());
+            if (!dupProductVariantIdCheckset.has(pvItem.id)) {
+              dupProductVariantIdCheckset.add(pvItem.id);
+              duplicatedIdStrings.push(
+                `${this.id36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trimRight());
+            }
           });
       });
 
       let needToRender = false;
 
       pvItems
-        .filter((pvItem: ProductVariant) => !dupCheckset.has(pvItem.id))
+        .filter((pvItem: ProductVariant) => !dupProductVariantIdCheckset.has(pvItem.id))
         .forEach((pvItem: ProductVariant) => {
           this.itemsDataSource.addNewItem({
             price: pvItem.standPrice,
@@ -285,7 +293,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     
       this.updateCosts();
 
-      this.showDuplicatedItems(duplicatedIdStrings);
+      this.messageHelperService.showDuplicatedItems(duplicatedIdStrings);
     });
   }
 
@@ -314,15 +322,17 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       if (!pItems || pItems.length === 0) { return; }
 
       const duplicatedIdStrings: string[] = [];
-      const dupCheckset = new Set();
+      const dupPOItemIdCheckset = new Set();
 
       this.itemsDataSource.items.forEach((dsItem: PurchaseOrderItem) => {
         pItems.forEach((fItem: PurchaseOrder) => {
           fItem.purchaseOrderItems
             .filter((sItem: PurchaseOrderItem) => dsItem.productVariantId === sItem.productVariantId)
             .forEach((sItem: PurchaseOrderItem) => {
-              dupCheckset.add(sItem.productVariantId);
-              duplicatedIdStrings.push(`${this.id36(sItem.id)}: ${sItem.name}`);
+              if (!dupPOItemIdCheckset.has(sItem.id)) {
+                dupPOItemIdCheckset.add(sItem.productVariantId);
+                duplicatedIdStrings.push(`${this.id36(sItem.id)}: ${sItem.name}`);
+              }
             });
         });
       });
@@ -332,7 +342,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       pItems
         .forEach((fItem: PurchaseOrder) => {
           fItem.purchaseOrderItems
-            .filter((sItem: PurchaseOrderItem) => !dupCheckset.has(sItem.productVariantId))
+            .filter((sItem: PurchaseOrderItem) => !dupPOItemIdCheckset.has(sItem.productVariantId))
             .forEach((sItem: PurchaseOrderItem) => {
               this.itemsDataSource.addNewItem({
                 price: sItem.price,
@@ -352,22 +362,12 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   
       this.updateCosts();        
 
-      this.showDuplicatedItems(duplicatedIdStrings);
+      this.messageHelperService.showDuplicatedItems(duplicatedIdStrings);
     });
   }
 
-  showDuplicatedItems(idStrings: string[]) {
-    if (idStrings.length === 0) { return; }
-
-    this.alertService.showMessage(
-      this.translater.get('common.title.duplicated'),
-      String.Format(this.translater.get('common.message.duplicated'), idStrings.join()),
-      MessageSeverity.warn
-    );
-  }
-
   get productVariantIcon() {
-    return NavIcons.Product.ProductVariant;
+    return NavIcons.Product.productVariant;
   }
 
   get purchaseOrderIcon() {
@@ -394,6 +394,11 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
         formGroup.patchValue({appliedCost: appliedCost.toFixed(this.standCurrency.decimalPoint)});
       }
     });
+
+    if (this.savedPaymentAmount !== this.paymentAmount) {
+      this.savedPaymentAmount = this.paymentAmount;
+      this.paymentAmountChanged.emit(this.paymentAmount);
+    }
   }
 
   private _onChange = (_: any) => { };

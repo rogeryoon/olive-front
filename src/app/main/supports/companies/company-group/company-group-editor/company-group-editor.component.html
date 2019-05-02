@@ -1,11 +1,6 @@
 ﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-      <mat-form-field appearance="outline" class="w-100-p" *ngIf="isIdVisible">
-        <mat-label>Id</mat-label>
-        <input matInput name="id" formControlName="id" readonly="readonly">
-      </mat-form-field>
-
       <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Name</mat-label>
+        <mat-label>{{'common.word.name' | translate}}</mat-label>
         <input matInput name="name" formControlName="name" required maxlength="200">
         <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
         <mat-error *ngIf="hasEntryError('name')">{{errorMessage('name')}}</mat-error>
@@ -14,7 +9,7 @@
       <mat-checkbox name="activated" formControlName="activated">Activated</mat-checkbox>
 
       <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Memo</mat-label>
+        <mat-label>{{'common.word.memo' | translate}}</mat-label>
         <textarea matInput name="memo" formControlName="memo" rows="5">
         </textarea>
       </mat-form-field>

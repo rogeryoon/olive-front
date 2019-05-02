@@ -5,7 +5,9 @@ import { ConfigurationService } from '@quick/services/configuration.service';
 import { OliveEntityEndpointService } from './entity-endpoint.service';
 import { OliveEntityService } from './entity-service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OliveChunkDataService extends OliveEntityService {
 
   constructor

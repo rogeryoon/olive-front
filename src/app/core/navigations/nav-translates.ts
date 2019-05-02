@@ -21,16 +21,16 @@ export class NavTranslates {
     };
 
     static Product = class {
-        static Home = 'navi.product.home';
+        static home = 'navi.product.home';
                 
-        static ProductHome = 'navi.product.productHome';
-        static ProductGroup = 'navi.product.productGroup';
-        static ProductVariant = 'navi.product.productVariant';
+        static productHome = 'navi.product.productHome';
+        static productGroup = 'navi.product.productGroup';
+        static productVariant = 'navi.product.productVariant';
 
-        static InventoryGroup = '';
-        static InventoriesBalance = '';
-        static InventoriesWarehouse = '';
-        static InventoriesHistory = '';
+        static inventoryGroup = 'navi.product.invetoryGroup';
+        static inventoriesBalance = 'navi.product.inventoriesBalance';
+        static inventoriesWarehouse = 'navi.product.inventoriesWarehouse';
+        static inventoriesHistory = 'navi.product.inventoriesHistory';
     };
 
     static Company = class {
@@ -39,9 +39,11 @@ export class NavTranslates {
         static list = 'navi.company.list';
         static groupList = 'navi.company.groupList';
         static branch = 'navi.company.branch';
-        static vendor = 'navi.company.vendor';
+        static supplier = 'navi.company.supplier';
         static warehouse = 'navi.company.warehouse';
         static paymentMethod = 'navi.company.paymentMethod';
+        static market = 'navi.company.market';
+        static marketSeller = 'navi.company.marketSeller';
     };
 
     static Basic = class {
@@ -50,7 +52,14 @@ export class NavTranslates {
         static currency = 'navi.basic.currency';
         static country = 'navi.basic.country';
         static carrier = 'navi.basic.carrier';
+        static standCarrier = 'navi.basic.standCarrier';
     };
+
+    static Sales = class {
+        static group = 'navi.sales.group';
+
+        static orderList = 'navi.sales.orderList';
+    };    
 
     static Secure = class {
         static group = 'navi.secure.group';

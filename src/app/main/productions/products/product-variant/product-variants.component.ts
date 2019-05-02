@@ -52,9 +52,8 @@ export class OliveProductVariantsComponent extends OliveEntityListComponent {
 
   initializeChildComponent() {
     this.setting = {
-      name: 'ProductVariant',
-      icon: NavIcons.Product.ProductVariant,
-      translateTitleId: NavTranslates.Product.ProductVariant,
+      icon: NavIcons.Product.productVariant,
+      translateTitleId: NavTranslates.Product.productVariant,
       managePermission: null,
       columns: [
         { data: Selected },

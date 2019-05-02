@@ -48,7 +48,6 @@ export class OliveCountriesComponent extends OliveEntityListComponent {
 
   initializeChildComponent() {
     this.setting = {
-      name: 'Country',
       icon: NavIcons.Basic.country,
       translateTitleId: NavTranslates.Basic.country,
       managePermission: null,

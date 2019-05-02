@@ -27,7 +27,7 @@ export class OliveCompanyGroupSettingEditorComponent extends OliveEntityFormComp
 
     return this.itemWithIdNAudit({
       purchasingEnabled: formModel.purchasingEnabled,
-      thirdpartyEnabled: formModel.thirdpartyEnabled,
+      thirdPartyEnabled: formModel.thirdPartyEnabled,
       shippingAgentEnabled: formModel.shippingAgentEnabled,
       productWeightTypeCode: formModel.productWeightType
     });
@@ -37,7 +37,7 @@ export class OliveCompanyGroupSettingEditorComponent extends OliveEntityFormComp
     this.oForm = this.formBuilder.group({
       id: '',
       purchasingEnabled: false,
-      thirdpartyEnabled: false,
+      thirdPartyEnabled: false,
       shippingAgentEnabled: false,
       productWeightType: ['', Validators.required]
     });
@@ -47,7 +47,7 @@ export class OliveCompanyGroupSettingEditorComponent extends OliveEntityFormComp
     this.oForm.reset({
       id: this.id36(this.item.id),
       purchasingEnabled: this.item.purchasingEnabled || false,
-      thirdpartyEnabled: this.item.thirdpartyEnabled || false,
+      thirdpPartyEnabled: this.item.thirdPartyEnabled || false,
       shippingAgentEnabled: this.item.shippingAgentEnabled || false,
       productWeightType: this.item.productWeightTypeCode || ''
     });

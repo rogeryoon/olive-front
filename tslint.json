@@ -33,7 +33,7 @@
         ],
         "member-access": false,
         "member-ordering": [
-            true,
+            false,
             {
                 "order": [
                     "static-field",
@@ -47,11 +47,8 @@
         "no-bitwise": true,
         "no-console": [
             true,
-            "debug",
-            "info",
             "time",
-            "timeEnd",
-            "trace"
+            "timeEnd"
         ],
         "no-construct": true,
         "no-debugger": true,
@@ -105,7 +102,7 @@
             }
         ],
         "typeof-compare": true,
-        "unified-signatures": true,
+        "unified-signatures": false,
         "variable-name": false,
         "whitespace": [
             true,

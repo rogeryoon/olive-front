@@ -8,10 +8,10 @@ import { Permission } from '@quick/models/permission.model';
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
 import { PurchaseOrder } from '../../models/purchase-order.model';
-import { OliveVendorService } from 'app/main/supports/companies/services/vendor.service';
+import { OliveSupplierService } from 'app/main/supports/companies/services/supplier.service';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
-import { OliveVendorManagerComponent } from 'app/main/supports/companies/vendor/vendor-manager/vendor-manager.component';
-import { Vendor } from 'app/main/supports/companies/models/vendor.model';
+import { OliveSupplierManagerComponent } from 'app/main/supports/companies/supplier/supplier-manager/supplier-manager.component';
+import { Supplier } from 'app/main/supports/companies/models/supplier.model';
 import { OliveWarehouseService } from 'app/main/supports/companies/services/warehouse.service';
 import { Warehouse } from 'app/main/supports/companies/models/warehouse.model';
 import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/warehouse/warehouse-manager/warehouse-manager.component';
@@ -26,8 +26,8 @@ import { OliveUtilities } from 'app/core/classes/utilities';
   styleUrls: ['./purchase-order-editor.component.scss']
 })
 export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent {
-  @ViewChild('vendor')
-  lookupVendor: OliveLookupHostComponent;
+  @ViewChild('supplier')
+  lookupSupplier: OliveLookupHostComponent;
 
   @ViewChild('warehouse')
   lookupWarehouse: OliveLookupHostComponent;
@@ -40,8 +40,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
 
   constructor(
     formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
-    private vendorService: OliveVendorService,
-    private warehouseService: OliveWarehouseService,
+    private supplierService: OliveSupplierService, private warehouseService: OliveWarehouseService,
     private cacheService: OliveCacheService
   ) {
     super(
@@ -65,7 +64,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     const formModel = this.oForm.value;
 
     return this.itemWithIdNAudit({
-      vendorOrderId: formModel.vendorOrderId,
+      supplierOrderId: formModel.supplierOrderId,
       date: formModel.poDate,
       memo: formModel.memo,
       addedDiscountAmount: formModel.addedDiscountAmount,
@@ -75,7 +74,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       closedDate: this.item.closedDate,
       printOutCount: this.item.printOutCount,
       lastPrintOutUser: this.item.lastPrintOutUser,
-      vendorId: formModel.vendorFk.id,
+      supplierId: formModel.supplierFk.id,
       warehouseId: formModel.warehouseFk.id,
       currencyId: formModel.currency
     });
@@ -83,11 +82,11 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      vendorOrderId: '',
+      supplierOrderId: '',
       poDate: ['', Validators.required],
       memo: '',
       currencyExchangeRate: ['', [numberValidator(2, false)]],
-      vendorFk: null,
+      supplierFk: null,
       warehouseFk: null,
       currency: ''
     });
@@ -97,11 +96,11 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     const currency = this.item.currencyFk ? this.item.currencyFk : this.standCurrency;
 
     this.oForm.reset({
-      vendorOrderId: this.item.vendorOrderId || '',
+      supplierOrderId: this.item.supplierOrderId || '',
       poDate: this.item.date || '',
       memo: this.item.memo || '',
       currencyExchangeRate: this.item.currencyExchangeRate,
-      vendorFk: this.item.vendorFk,
+      supplierFk: this.item.supplierFk,
       warehouseFk: this.item.warehouseFk,
       currency: currency.id
     });
@@ -122,16 +121,16 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     this.currencies = this.cacheService.currencies;
     this.standCurrencyCode = this.standCurrency.code;
 
-    this.lookupVendor.setting = {
-      name: 'Vendor',
+    this.lookupSupplier.setting = {
+      name: 'Supplier',
       columnType: 'code',
-      dialogTitle: this.translater.get(NavTranslates.Company.vendor),
-      dataService: this.vendorService,
+      dialogTitle: this.translater.get(NavTranslates.Company.supplier),
+      dataService: this.supplierService,
       maxSelectItems: 1,
-      newComponent: OliveVendorManagerComponent,
-      itemType: Vendor,
+      newComponent: OliveSupplierManagerComponent,
+      itemType: Supplier,
       managePermission: Permission.assignCompanyGroups,
-      translateTitleId: NavTranslates.Company.vendor
+      translateTitleId: NavTranslates.Company.supplier
     } as LookupListerSetting;
 
     this.lookupWarehouse.setting = {
@@ -148,7 +147,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   }
 
   markCustomControlsTouched() {
-    this.lookupVendor.markAsTouched();
+    this.lookupSupplier.markAsTouched();
     this.lookupWarehouse.markAsTouched();
   }
 

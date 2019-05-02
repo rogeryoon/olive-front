@@ -1,7 +1,7 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, forwardRef, Output, EventEmitter, Input } from '@angular/core';
 import {
   FormBuilder, FormControl, ValidationErrors,
-  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, 
+  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor,
   Validator, FormGroup
 } from '@angular/forms';
 import { MatSnackBar, MatDialog } from '@angular/material';
@@ -25,6 +25,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { Warehouse } from 'app/main/supports/companies/models/warehouse.model';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { PurchaseOrderItem } from 'app/main/purchasings/purchases/models/purchase-order-item.model';
+import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 
 @Component({
   selector: 'olive-in-warehouse-items-editor',
@@ -44,18 +45,22 @@ import { PurchaseOrderItem } from 'app/main/purchasings/purchases/models/purchas
   ]
 })
 export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
-  displayedColumns = ['productVariantId', 'vendor', 'name', 'balance', 'price', 'quantityDue', 'quantity', 'remark', 'actions'];
+  displayedColumns = ['productVariantId', 'name', 'balance', 'price', 'quantityDue', 'quantity', 'remark', 'actions'];
   itemsDataSource: OliveInWarehouseItemDatasource = new OliveInWarehouseItemDatasource(this.cacheService);
 
-  parentItem: InWarehouse;
-  wareHouse: Warehouse;
+  warehouse: Warehouse;
   value: InWarehouseItem[] = null;
+
+  @Input() isVoidMode = false;
+
+  @Output() requiredWarehouse = new EventEmitter();
+  @Output() inWarehouseItemAdded = new EventEmitter();
 
   constructor(
     formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
     private purchaseOrderService: OlivePurchaseOrderService, private snackBar: MatSnackBar,
     private dialog: MatDialog, private alertService: AlertService,
-    private cacheService: OliveCacheService
+    private cacheService: OliveCacheService, private messageHelperService: OliveMessageHelperService,
   ) {
     super(
       formBuilder, translater
@@ -64,19 +69,19 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
   initializeChildComponent() {
     this.standCurrency = this.cacheService.standCurrency;
+
+    if (!this.isVoidMode) {
+      this.displayedColumns.splice(1, 0, 'supplier');
+    }
   }
 
-  getEditedItem(): any {
-    const formModel = this.oForm.value;
-
-    return {
-      inWarehouseItems: this.itemsDataSource.items
-    };
+  getEditedItem(): InWarehouseItem[] {
+    return this.itemsDataSource.items;
   }
 
   buildForm() {
     this.oFormArray = this.formBuilder.array([]);
-    this.oForm = this.formBuilder.group({ 
+    this.oForm = this.formBuilder.group({
       formarray: this.oFormArray
     });
     this.itemsDataSource.formGroup = this.oForm;
@@ -87,17 +92,18 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     });
   }
 
-  setParentItem(parentItem: any) {
-    this.parentItem = parentItem;
-  }
-  
-  setWarehouse(warehouse: Warehouse) {
-    this.wareHouse = warehouse;
+  setWarehouse(event: any) {
+    this.warehouse = event.item;
+
+    if (event.loading) {
+      return;
+    }
 
     let needToClearItems = false;
 
-    if (this.isNull(this.wareHouse) || 
-      this.wareHouse.id === warehouse.id || 
+    if (
+      this.isNull(this.warehouse) ||
+      this.warehouse.id === this.warehouse.id ||
       this.itemsDataSource.items.length === 0
     ) {
       needToClearItems = true;
@@ -106,7 +112,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     if (needToClearItems) {
       this.clearAllItemsDataSource();
 
-      if (!this.isNull(this.wareHouse)) {
+      if (!this.isNull(this.warehouse)) {
         this.lookupPurchaseOrder();
       }
     }
@@ -114,7 +120,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
   clearAllItemsDataSource() {
     this.oFormArray.controls = [];
-    this.itemsDataSource.deleteAll();     
+    this.itemsDataSource.deleteAll();
   }
 
   createEmptyObject() {
@@ -124,7 +130,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   private deleteItem(item: any) {
     if (item.Obj.id || item.Obj.name || item.Obj.quantity || item.Obj.price || item.Obj.remark) {
       this.snackBar.open(
-        OliveUtilities.showParamMessage(this.translater.get('common.message.confirmDelete'), ''),
+        OliveUtilities.showParamMessage(this.translater.get('common.message.confirmDelete')),
         this.translater.get('common.button.delete'),
         { duration: 5000 }
       )
@@ -181,11 +187,9 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   }
 
   lookupPurchaseOrder() {
-    if (this.isNull(this.wareHouse)) {
-      this.alertService.showMessageBox(
-        this.translater.get('common.title.confirm'),
-        this.translater.get('purchasing.inWarehouseItems.selectWarehouseFirst')
-      );
+    // 창고가 선택되지 않았다면 창고 먼저 선택한다.
+    if (this.isNull(this.warehouse)) {
+      this.requiredWarehouse.emit();
       return;
     }
 
@@ -205,8 +209,10 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
           translateTitleId: NavTranslates.Purchase.list,
           maxNameLength: 10,
           extraSearches: [
-            { name: 'InWarehousePending', value: 'true' }, 
-            { name: 'Warehouse', value: this.wareHouse.id }
+            this.isVoidMode ? 
+            { name: 'Cancelable', value: 'true' } :
+            { name: 'InWarehousePending', value: 'true' },
+            { name: 'Warehouse', value: this.warehouse.id }
           ] as NameValue[]
         } as LookupListerSetting
       });
@@ -214,33 +220,85 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     dialogRef.afterClosed().subscribe(pItems => {
       if (!pItems || pItems.length === 0) { return; }
 
+      const duplicatedIdStrings: string[] = [];
+      const dupPOItemIdCheckset = new Set();
+      let onePurchaseOrderId = 0;
+
+      // 발주서 하나만 선택가능, 이후 추가 버튼을 눌러도 다른 발주서를 로딩 못하게 막음 (VoidMode)
+      if (this.itemsDataSource.items.length > 0) {
+        onePurchaseOrderId = ((this.itemsDataSource.items[0]) as InWarehouseItem).id;
+      }
+
+      this.itemsDataSource.items.forEach((dsItem: InWarehouseItem) => {
+        pItems
+          .forEach((pItem: PurchaseOrder) => {
+            pItem.purchaseOrderItems
+              .filter((sItem: PurchaseOrderItem) => 
+                dsItem.purchaseOrderItemId === sItem.id || 
+                (this.isVoidMode && onePurchaseOrderId !== 0 && onePurchaseOrderId !== pItem.id)
+              )
+              .forEach((sItem: PurchaseOrderItem) => {
+                if (!dupPOItemIdCheckset.has(sItem.id)) {
+                  dupPOItemIdCheckset.add(sItem.id);
+                  duplicatedIdStrings.push(
+                    `${this.id36(sItem.id)}: ${sItem.name}`.trimRight());
+                }
+              });
+          });
+      });
+
       let needToRender = false;
+
+      let firstAddedPurchaseOrder: PurchaseOrder = null; 
 
       pItems
         .forEach((pItem: PurchaseOrder) => {
           pItem.purchaseOrderItems
-            .filter((sItem: PurchaseOrderItem) => sItem.balance > 0)
+            .filter((sItem: PurchaseOrderItem) => 
+              (
+                ( !this.isVoidMode && sItem.balance > 0 ) ||
+                ( this.isVoidMode && sItem.quantity - sItem.balance + sItem.cancelQuantity > 0)
+              ) && 
+              !dupPOItemIdCheckset.has(sItem.id)
+            )
             .forEach((sItem: PurchaseOrderItem) => {
+              let quantity = 0;
+
+              if (this.isVoidMode) {
+                quantity = sItem.quantity - sItem.balance + sItem.cancelQuantity;
+              }
+              else {
+                quantity = sItem.balance;
+              }
+
+              if (!firstAddedPurchaseOrder) {
+                firstAddedPurchaseOrder = pItem;
+              }
+
               this.itemsDataSource.addNewItem({
-                quantity: sItem.balance,
+                quantity: quantity,
                 balance: 0,
 
                 purchaseOrderItemId: sItem.id,
 
-                name: sItem.name,                
-                originalBalance: sItem.balance,
+                name: sItem.name,
+                originalBalance: quantity,
                 price: sItem.price,
                 productVariantId: sItem.productVariantId,
-                vendorName: pItem.vendorFk.name
+                supplierName: pItem.supplierFk.name
               } as InWarehouseItem);
               needToRender = true;
             });
         });
 
+      this.inWarehouseItemAdded.emit(firstAddedPurchaseOrder);
+
       if (needToRender) {
         this.itemsDataSource.renderItems();
         this.oForm.markAsDirty();
       }
+
+      this.messageHelperService.showDuplicatedItems(duplicatedIdStrings);
     });
   }
 
@@ -289,7 +347,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
   get showBalanceIsMinusError(): boolean {
     return this.balanceIsMinusError && this.oForm.touched;
-  }  
+  }
 
   private _onChange = (_: any) => { };
   private _onTouched = () => { };

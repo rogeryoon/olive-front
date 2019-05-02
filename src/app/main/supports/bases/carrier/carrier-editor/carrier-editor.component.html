@@ -1,17 +1,20 @@
 ﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
       <mat-form-field appearance="outline" class="w-100-p">
         <input matInput name="code" formControlName="code" required maxlength="20" class="to-uppercase">
-        <mat-label>Code</mat-label>
+        <mat-label>{{'common.word.code' | translate}}</mat-label>
         <mat-hint align="end">{{getControl('code').value?.length || 0}}/20</mat-hint>
         <mat-error *ngIf="hasEntryError('code')">{{errorMessage('code')}}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
         <input matInput name="name" formControlName="name" required maxlength="200">
-        <mat-label>Name</mat-label>
+        <mat-label>{{'common.word.name' | translate}}</mat-label>
         <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
         <mat-error *ngIf="hasEntryError('name')">{{errorMessage('name')}}</mat-error>
       </mat-form-field>
+
+      <olive-lookup-host #standCarrier formControlName="standCarrierFk" required 
+        [placeholder]="'support.carrier.standCarrier' | translate" [isEditMode]="true" (selected)="onStandCarrierSelected($event)"></olive-lookup-host>      
 
       <mat-form-field appearance="outline" class="w-100-p">
         <input matInput name="webSite" formControlName="webSite" maxlength="3000">
@@ -20,7 +23,7 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Memo</mat-label>
+        <mat-label>{{'common.word.memo' | translate}}</mat-label>
         <textarea matInput name="memo" formControlName="memo" rows="5">
         </textarea>
       </mat-form-field>

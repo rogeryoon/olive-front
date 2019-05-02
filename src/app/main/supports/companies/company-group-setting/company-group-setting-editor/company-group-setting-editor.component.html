@@ -1,13 +1,8 @@
 <form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-  <mat-form-field appearance="outline" class="w-100-p" *ngIf="isIdVisible">
-    <mat-label>Id</mat-label>
-    <input matInput name="id" formControlName="id" readonly="readonly">
-  </mat-form-field>
-
   <mat-form-field appearance="outline" class="w-100-p">
     <mat-label>Type of Product Weight</mat-label>
     <mat-select name="productWeightType" formControlName="productWeightType" required>
-      <mat-option>---</mat-option>
+      <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
       <mat-option *ngFor="let unit of weightTypes" [value]="unit.code">{{unit.name}} {{unit.code}}</mat-option>
     </mat-select>
     <mat-error *ngIf="hasEntryError('productWeightType')">{{errorMessage('productWeightType')}}</mat-error>
@@ -15,7 +10,7 @@
 
   <div class="w-100-p mt-15">
     <mat-checkbox formControlName="purchasingEnabled">구매 업무</mat-checkbox>&nbsp;
-    <mat-checkbox formControlName="thirdpartyEnabled">Thirdparty</mat-checkbox>&nbsp;
+    <mat-checkbox formControlName="thirdPartyEnabled">Thirdparty</mat-checkbox>&nbsp;
     <mat-checkbox formControlName="shippingAgentEnabled">배송대행</mat-checkbox>
   </div>
 

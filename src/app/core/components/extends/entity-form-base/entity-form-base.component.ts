@@ -25,18 +25,12 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
   
   @Output() formReady = new EventEmitter<FormGroup>();
 
-  oForm: FormGroup; 
-  
-  isNewItem: boolean;
-
-  oFormArray: FormArray;
-  
   constructor(
     protected formBuilder: FormBuilder, 
-    protected translater: FuseTranslationLoaderService
+    translater: FuseTranslationLoaderService
   ) 
   { 
-    super();
+    super(translater);
   }
 
   get isIdVisible(): boolean {
@@ -114,93 +108,7 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
     return invalid;
   }
 
-  getControl(name) {
-    return this.oForm.get(name);
-  }
 
-  get oFArray(): FormArray {
-    return <FormArray>this.getControl('formarray');
-  }
-
-  protected arrayErrorMessage(name: string, index: number): string {
-    const formGroup = this.oFArray.controls[index] as FormGroup;
-    return this.controlErrorMessage(formGroup.get(name));
-  }
-  
-  protected errorMessage(name: string): string {
-    return this.controlErrorMessage(this.getControl(name));
-  }
-
-  private controlErrorMessage(control: AbstractControl): string {
-    let message = '';
-
-    if (OliveUtilities.testIsUndefined(control.errors) || !control.touched) {
-      return '';
-    }
-
-    if (control.errors.hasOwnProperty('required')) {
-      message = this.translater.get('common.validate.required');
-    }
-    else
-    if (control.errors.hasOwnProperty('pattern')) {
-      message = this.translater.get('common.validate.pattern');
-    }    
-    else
-    if (control.errors.hasOwnProperty('number')) {
-      let decimal = '';
-      decimal = String.Format(this.translater.get('common.validate.decimal'), control.errors.number);
-      message = String.Format(this.translater.get('common.validate.number'), decimal);
-    }
-    else
-    if (control.errors.hasOwnProperty('min')) {
-      message = String.Format(this.translater.get('common.validate.minNumber'), control.errors.min);
-    }
-    else
-    if (control.errors.hasOwnProperty('max') ) {
-      message = String.Format(this.translater.get('common.validate.maxNumber'), control.errors.max);
-    }
-
-    return message;
-  }
-
-  hasArrayEntryError(name: string, index: number): boolean {
-    const formGroup = (<FormArray>this.getControl('formarray')).controls[index] as FormGroup;
-    return this.controlHasEntryError(formGroup.get(name));
-  }
-
-  hasEntryError(name: string): boolean {
-    return this.controlHasEntryError(this.getControl(name));
-  }
-
-  private controlHasEntryError(control: any): boolean {
-    let hasError = false;
-
-    if (OliveUtilities.testIsUndefined(control.errors)) {
-      return hasError = false;
-    }
-    else 
-    if (control.errors.hasOwnProperty('required')) {
-      hasError = true;
-    }
-    else
-    if (control.errors.hasOwnProperty('pattern')) {
-      hasError = true;
-    }
-    else
-    if (control.errors.hasOwnProperty('number')) {
-      hasError = true;
-    }
-    else
-    if (control.errors.hasOwnProperty('min')) {
-      hasError = true;
-    }
-    else
-    if (control.errors.hasOwnProperty('max')) {
-      hasError = true;
-    }
-
-    return control.touched && hasError;
-  }
 
   getMoney(value: any) {
     let amount = 0;
@@ -216,5 +124,17 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
       amount = +value;
     }
     return amount;
+  }
+
+  setControlValue(name: string, value: any) {
+    this.oForm.controls[name].setValue(value);
+  }
+
+  getControlValue(name: string): string {
+    return this.getControl(name).value;
+  }
+
+  isControlValueEmpty(name: string): boolean {
+    return this.getControlValue(name).trim().length === 0;
   }
 }

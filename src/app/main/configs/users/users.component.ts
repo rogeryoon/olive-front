@@ -12,7 +12,6 @@ import { Utilities } from '@quick/services/utilities';
 import { fadeInOut } from '@quick/services/animations';
 
 import { OliveEditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
-import { locale as english } from './i18n/en';
 
 @Component({
   selector: 'olive-users',
@@ -43,8 +42,6 @@ export class OliveUsersComponent implements OnInit, AfterViewInit {
 
       // Assign the data to the data source for the table to render
       this.dataSource = new MatTableDataSource();
-
-      this.translater.loadTranslations(english);
   }
 
   ngOnInit() {

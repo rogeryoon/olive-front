@@ -17,13 +17,16 @@ import { OliveDataService } from '../interfaces/data-service';
 import { OliveUtilities } from '../classes/utilities';
 import { UserName } from '../models/user-name';
 import { OliveConstants } from '../classes/constants';
+import { StandMarket } from 'app/main/supports/companies/models/stand-market';
 
 interface CacheContent {
   expiry: number;
   value: any;
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OliveCacheService {
   private cache = new Map<string, CacheContent>();
   readonly DEFAULT_MAX_AGE: number = 600000; // 10 Minutes
@@ -36,6 +39,7 @@ export class OliveCacheService {
   private _currencies: Currency[];
   private _standCurrency: Currency;
   private _branches: Branch[];
+  private _standMarkets: StandMarket[];
 
   constructor(
     private companyGroupSettingService: OliveCompanyGroupSettingService,
@@ -113,6 +117,33 @@ export class OliveCacheService {
       if (!this.exist(cacheKey)) {
         try {
           const response = await dataService.getItem(id).toPromise();
+          item = this.set(cacheKey, response.model);
+        }
+        catch (error) {
+          this.messageHelper.showLoadFaild(error);
+        }
+      }
+      else {
+        item = this.get(cacheKey);
+      }
+    unlock();
+
+    return item;
+  }
+
+  async getItems(dataService: OliveDataService, key: string, postData: any = null): Promise<any> {
+    let item: any = null;
+
+    const cacheKey = key + this.queryParams.CompanyGroupId;
+
+    if (!this.dataMutexes.has(cacheKey)) {
+      this.dataMutexes.set(cacheKey, new Mutex());
+    }
+
+    const unlock = await this.dataMutexes.get(cacheKey).lock();
+      if (!this.exist(cacheKey)) {
+        try {
+          const response = await dataService.getItems(postData).toPromise();
           item = this.set(cacheKey, response.model);
         }
         catch (error) {
@@ -219,6 +250,13 @@ export class OliveCacheService {
       this._branches = this.authService.branches; 
     }
     return this._branches;
+  }
+
+  get standMarkets() {
+    if (!this._standMarkets) { 
+      this._standMarkets = this.authService.standMarkets; 
+    }
+    return this._standMarkets;
   }
   
   showMoney(amount: number): string {

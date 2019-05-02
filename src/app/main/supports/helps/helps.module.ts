@@ -34,8 +34,6 @@ const routes = [
     OliveHelpArticleComponent
   ],
   providers: [
-    OliveHelpService,
-    OliveHelpEndpointService
   ],
   exports: [
     OliveHelpByCategoryComponent

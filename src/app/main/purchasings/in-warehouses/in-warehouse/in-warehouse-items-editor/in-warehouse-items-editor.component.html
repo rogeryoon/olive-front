@@ -16,9 +16,9 @@
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>
 
-    <ng-container matColumnDef="vendor">
-      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.vendor' | translate}}</mat-header-cell>
-      <mat-cell *matCellDef="let row" class="justify-center">{{row.Obj.vendorName}}</mat-cell>
+    <ng-container matColumnDef="supplier">
+      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.supplier' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="justify-center">{{row.Obj.supplierName}}</mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>    
 
@@ -29,7 +29,7 @@
     </ng-container>
 
     <ng-container matColumnDef="balance">
-      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.balance' | translate}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{(isVoidMode ? 'purchasing.voidPurchaseOrderItems.balance' : 'purchasing.inWarehouseItems.balance') | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row" class="justify-end pr-4">{{row.Obj.balance|number:'1.0-0'}}</mat-cell>
       <mat-footer-cell *matFooterCellDef class="justify-end pr-4">{{totalBalance|number:'1.0-0'}}</mat-footer-cell>
     </ng-container>
@@ -47,7 +47,7 @@
     </ng-container>
 
     <ng-container matColumnDef="quantity">
-      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.quantity' | translate}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{(isVoidMode ? 'purchasing.voidPurchaseOrderItems.quantity' : 'purchasing.inWarehouseItems.quantity') | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('quantity',i)">
         <mat-form-field fxFlex='95%'>
           <input name="inputQuantity{{row.ObjId}}" class="right olive-error" matInput formControlName="quantity"

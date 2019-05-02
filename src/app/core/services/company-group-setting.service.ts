@@ -4,7 +4,9 @@ import { ConfigurationService } from '@quick/services/configuration.service';
 import { OliveEntityService } from './entity-service';
 import { OliveEntityEndpointService } from './entity-endpoint.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OliveCompanyGroupSettingService extends OliveEntityService {
 
   constructor

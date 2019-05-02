@@ -1,4 +1,17 @@
-﻿<form #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()" class="w-100-p" fxLayout="column" fxFlex>
-    <olive-void-purchase-order-editor #main [item]="item" (warehouseChanged)="onWarehouseChanged($event)"></olive-void-purchase-order-editor>
-    <olive-void-purchase-order-items-editor #items formControlName="inWarehouseItems"></olive-void-purchase-order-items-editor>
+﻿<form #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()" class="w-100-p" fxLayout="column"
+    fxFlex>
+    <div class="entry-max-width">
+        <olive-void-purchase-order-editor #main [item]="item" (warehouseChanged)="onWarehouseChanged($event)">
+        </olive-void-purchase-order-editor>
+    </div>
+    <div class="entry-max-width">
+        <olive-in-warehouse-items-editor #items formControlName="inWarehouseItems"
+            (requiredWarehouse)="onRequiredWarehouse()" (inWarehouseItemAdded)="onInWarehouseItemAdded($event)"
+            [isVoidMode]="true"></olive-in-warehouse-items-editor>
+    </div>
+    <div class="entry-max-width">
+        <olive-purchase-order-payments-editor style="float: right;" #payments [item]="item"
+            formControlName="purchaseOrderPayments" [isVoidMode]="true"> 
+        </olive-purchase-order-payments-editor>
+    </div>
 </form>

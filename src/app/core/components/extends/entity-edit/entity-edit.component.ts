@@ -1,7 +1,6 @@
 import { Component, OnInit, OnChanges, AfterViewInit, ViewChild, Input } from '@angular/core';
 import { NgForm, FormGroup, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
-import { String } from 'typescript-string-operations';
 import { Subject } from 'rxjs';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -12,7 +11,6 @@ import { PermissionValues } from '@quick/models/permission.model';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDataService } from 'app/core/interfaces/data-service';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
-import { locale as english } from 'app/core/i18n/en';
 import { Creator } from 'app/core/classes/dynamic-type';
 import { OliveEntityDateComponent } from '../../entries/entity-date/entity-date.component';
 import { OliveUtilities } from 'app/core/classes/utilities';
@@ -29,7 +27,6 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   @ViewChild(OliveEntityDateComponent)
   private dateComponent: OliveEntityDateComponent;
 
-  isNewItem = false;
   private onItemSaved = new Subject<any>();
   private onItemDeleted = new Subject<any>();
   subControls: any = [];
@@ -48,21 +45,18 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   @Input()
   private inputItem: any = null;
 
-  oForm: FormGroup;
-
   constructor(
-    protected translater: FuseTranslationLoaderService, protected alertService: AlertService,
+    translater: FuseTranslationLoaderService, protected alertService: AlertService,
     protected accountService: AccountService, protected messageHelper: OliveMessageHelperService,
     protected snackBar: MatSnackBar, protected formBuilder: FormBuilder,
     protected dataService: OliveDataService
   ) {
-    super();
+    super(translater);
     this.initializeComponent();
     this.initializeChildComponent();
   }
 
   private initializeComponent() {
-    this.translater.loadTranslations(english);
   }
 
   initializeChildComponent() { }

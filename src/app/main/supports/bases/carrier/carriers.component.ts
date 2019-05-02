@@ -50,7 +50,6 @@ export class OliveCarriersComponent extends OliveEntityListComponent {
 
   initializeChildComponent() {
     this.setting = {
-      name: 'Carrier',
       icon: NavIcons.Basic.carrier,
       translateTitleId: NavTranslates.Basic.carrier,
       managePermission: null,

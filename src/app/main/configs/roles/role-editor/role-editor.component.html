@@ -2,15 +2,15 @@
 
     <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1em">
         <mat-form-field appearance="outline" fxFlex>
-            <mat-label>{{'editor.Name' | translate}}</mat-label>
+            <mat-label>{{'configs.roleEditor.Name' | translate}}</mat-label>
             <input matInput formControlName="name" [readonly]="!canManageRoles" />
             <mat-error *ngIf="name.hasError('required')">
-                {{'editor.RoleNameRequired' | translate}}
+                {{'configs.roleEditor.RoleNameRequired' | translate}}
             </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxFlex>
-            <mat-label>{{'editor.Description' | translate}}</mat-label>
+            <mat-label>{{'configs.roleEditor.Description' | translate}}</mat-label>
             <input matInput formControlName="description" [readonly]="!canManageRoles" />
         </mat-form-field>
     </div>

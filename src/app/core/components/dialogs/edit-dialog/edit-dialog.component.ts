@@ -5,7 +5,6 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { AccountService } from '@quick/services/account.service';
 
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
-import { locale as english } from '../../../../core/i18n/en';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OlivePlaceHolderDirective } from 'app/core/directives/place-holder.directive';
 import { OliveBaseComponent } from '../../extends/base/base.component';
@@ -47,13 +46,12 @@ export class OliveEditDialogComponent extends OliveBaseComponent implements OnIn
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
-    private translater: FuseTranslationLoaderService,
+    translater: FuseTranslationLoaderService,
     public dialogRef: MatDialogRef<OliveEditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public setting: OliveDialogSetting,
     private accountService: AccountService
   ) {
-    super();
-    this.translater.loadTranslations(english);
+    super(translater);
   }
 
   ngOnInit() {

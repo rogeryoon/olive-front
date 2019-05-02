@@ -64,7 +64,7 @@ export class OliveUtilities {
     public static getDateCode(date: any): string {
         moment.locale();
         return moment(date).format('YYMMDD');
-    }    
+    }
 
     public static getMomentDate(date: any): string {
         if (!date) { return ''; }
@@ -256,11 +256,11 @@ export class OliveUtilities {
         if (address.postalCode) {
             values.push(address.postalCode);
         }
-        
+
         return values.join(' ');
     }
 
-    public static showParamMessage(template: string, firstValue: string, secondValue: string = null): string {
+    public static showParamMessage(template: string, firstValue: string = null, secondValue: string = null): string {
         let message = null;
         if (!this.testIsUndefined(firstValue)) {
             message = String.Format(template, ` [${firstValue}]`);
@@ -273,6 +273,15 @@ export class OliveUtilities {
         }
 
         return message;
+    }
+
+    public static dateCode(date: any, id: number = 0): string {
+        if (id === 0) {
+            return OliveUtilities.getDateCode(date);
+        }
+        else {
+            return this.convertToBase36(id) + '-' + OliveUtilities.getDateCode(date);
+        }
     }
 }
 

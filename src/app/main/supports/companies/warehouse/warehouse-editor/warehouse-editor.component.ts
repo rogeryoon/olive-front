@@ -48,7 +48,7 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
       companyId: formModel.companyFk.id,
       companyMasterBranchId: formModel.companyMasterBranchFk.id,
       activated: formModel.activated
-    });
+    } as Warehouse);
   }
 
   buildForm() {
@@ -79,7 +79,6 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
 
   initializeChildComponent() {
     this.lookupCompany.setting = {
-      name: 'Company',
       columnType: 'code',
       dialogTitle: this.translater.get(NavTranslates.Company.list),
       dataService: this.companyService,
@@ -91,7 +90,6 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
     };
 
     this.lookupBranch.setting = {
-      name: 'Branch',
       columnType: 'code',
       dialogTitle: this.translater.get(NavTranslates.Company.branch),
       dataService: this.branchService,

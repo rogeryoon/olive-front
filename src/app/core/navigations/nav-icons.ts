@@ -23,16 +23,16 @@ export class NavIcons {
     };
 
     static Product = class {
-        static Home = 'offline_pin';
+        static home = 'offline_pin';
        
-        static ProductHome = 'shopping_basket';
-        static ProductGroup = 'add_shopping_cart';
-        static ProductVariant = 'card_giftcard';
+        static productHome = 'shopping_basket';
+        static productGroup = 'add_shopping_cart';
+        static productVariant = 'card_giftcard';
 
-        static InventoryGroup = 'check_box';
-        static InventoriesBalance = 'compare';
-        static InventoriesWarehouse = 'import_contacts';
-        static InventoriesHistory = 'class';
+        static inventoryGroup = 'check_box';
+        static inventoriesBalance = 'compare';
+        static inventoriesWarehouse = 'import_contacts';
+        static inventoriesHistory = 'class';
     };
 
     static Company = class {
@@ -41,9 +41,11 @@ export class NavIcons {
         static list = 'domain';
         static groupList = 'dns';
         static branch = 'account_balance';
-        static vendor = 'forum';
+        static supplier = 'forum';
         static warehouse = 'store';
-        static paymentMethod = 'card_membership';        
+        static paymentMethod = 'card_membership';
+        static market = 'business';
+        static marketSeller = 'how_to_reg';
     };
 
     static Basic = class {
@@ -53,6 +55,12 @@ export class NavIcons {
         static country = 'landscape';
         static carrier = 'local_shipping';
     };
+
+    static Sales = class {
+        static group = 'file_copy';
+
+        static orderList = 'list_alt';
+    }; 
     
     static Secure = class {
         static group = 'person';

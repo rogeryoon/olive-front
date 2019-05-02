@@ -4,22 +4,18 @@ import { NameValue } from '../models/name-value';
 
 export interface IListerSetting {
 
-    dataTableId?: string;    
-
-    name: string;
-
-    extraSearches?: NameValue[];
+    itemType: any;
 }
 
 export class ListerSetting implements IListerSetting {
 
     dataTableId?: string;   
 
-    name: string;
-
-    columns?: any;
+    itemType: any;
 
     extraSearches?: NameValue[];
+
+    columns?: any[];
 
     translateTitleId: string;
 
@@ -31,8 +27,6 @@ export class ListerSetting implements IListerSetting {
 
     searchComponent?: any;
 
-    itemType: any;
-
     loadDetail?: boolean;
 
     // Dialog Title Overriding
@@ -42,13 +36,17 @@ export class ListerSetting implements IListerSetting {
     order?: any;
 
     isEditDialogReadOnly?: boolean;
+
+    footerColumns?: any[];
+
+    disabledContextMenus?: string[];
 }
 
 export class LookupListerSetting implements IListerSetting {
 
     dataTableId?: string;   
 
-    name: string;
+    itemType: any;
 
     columnType?: string;
 
@@ -73,10 +71,38 @@ export class LookupListerSetting implements IListerSetting {
     // For New Item Support - Start
     newComponent?: any;
 
-    itemType?: any;
-
     managePermission?: PermissionValues;
 
     translateTitleId?: string;
     // For New Item Support - End
+}
+
+export class DropDownSetting implements IListerSetting {
+    itemType: any;    
+    
+    extraSearches?: NameValue[];
+
+    required: boolean;
+
+    dataService?: OliveDataService;
+}
+
+export class ReferHostSetting implements IListerSetting {
+    itemType: any;
+
+    dataService: OliveDataService;
+
+    managerComponent: any;
+
+    managePermission?: PermissionValues;
+
+    translateTitleId?: string;
+
+    customTitleTemplate?: string;
+
+    customTitleCallback?: any;
+
+    customNameCallback?: any;
+
+    readonly: boolean;
 }

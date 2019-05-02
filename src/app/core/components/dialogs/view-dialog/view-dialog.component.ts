@@ -7,7 +7,6 @@ import { AccountService } from '@quick/services/account.service';
 import { OliveBaseComponent } from '../../extends/base/base.component';
 import { OlivePlaceHolderDirective } from 'app/core/directives/place-holder.directive';
 import { OliveOnRefer } from 'app/core/interfaces/on-refer';
-import { locale as english } from '../../../i18n/en';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 
 @Component({
@@ -23,13 +22,12 @@ export class OliveViewDialogComponent extends OliveBaseComponent implements OnIn
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
-    private translater: FuseTranslationLoaderService,
+    translater: FuseTranslationLoaderService,
     public dialogRef: MatDialogRef<OliveViewDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public setting: OliveDialogSetting,
     private accountService: AccountService
   ) {
-    super();
-    this.translater.loadTranslations(english);
+    super(translater);
   }
 
   ngOnInit() {

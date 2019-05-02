@@ -17,11 +17,11 @@ export class OliveEntityDateComponent extends OliveEntityFormBaseComponent {
   visible = true;
 
   @Input() mode = 'textbox';
-  
+
   constructor(
     formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
     private cacheService: OliveCacheService
-  ) { 
+  ) {
     super(formBuilder, translater);
   }
 
@@ -72,6 +72,11 @@ export class OliveEntityDateComponent extends OliveEntityFormBaseComponent {
   }
 
   resetForm() {
+    if (this.isNewItem) { 
+      this.visible = false;
+      return; 
+    }
+
     const userNameKeys: string[] = [];
 
     if (this.createrExists) {
@@ -84,64 +89,55 @@ export class OliveEntityDateComponent extends OliveEntityFormBaseComponent {
 
     if (userNameKeys.length > 0) {
       this.cacheService.getUserNames(userNameKeys)
-      .then(userNames => {
-        let user: UserName;
-  
-        if (this.createrExists) {
-          user = userNames.find(item => item.userAuditKey === this.item.createdUser);
+        .then(userNames => {
+          let userName: UserName;
 
-          this.createrTitle = user.fullName;
+          userName = userNames.find(item => item.userAuditKey === this.item.createdUser);
+          this.createrTitle =
+            this.setUnitTitle(userName, this.item.createdUtc, this.translater.get('common.title.creater'));
+      
+          userName = userNames.find(item => item.userAuditKey === this.item.updatedUser);
+          this.updaterTitle =
+            this.setUnitTitle(userName, this.item.updatedUtc, this.translater.get('common.title.lastUpdater'));
 
-          if (this.createdDateExists) {
-            this.createrTitle += ` - ${this.moment(this.item.createdUtc)}`;
-          }
-        }
-
-        if (this.updaterExists) {
-          user = userNames.find(item => item.userAuditKey === this.item.updatedUser);
-
-          this.updaterTitle = user.fullName;
-
-          if (this.updatedDateExists) {
-            this.updaterTitle += ` - ${this.moment(this.item.updatedUtc)}`;
-          }
-        }
-
-        if (this.mode === 'button') {
-          this.createrTitle = this.translater.get('common.title.creater') + ' : ' + this.createrTitle;
-          this.updaterTitle = this.translater.get('common.title.lastUpdater') + ' : ' + this.updaterTitle;
-        }
-
-        this.setUpdateInfoMode();
-      });
+          this.setUpdateInfoMode();
+        });
     }
     else {
-      if (this.mode === 'button') {
-        if (this.createdDateExists) {
-          this.createrTitle = `${this.translater.get('common.title.creater')} : ${this.moment(this.item.createdUtc)}`;
-        }
-  
-        if (this.updatedDateExists) {
-          this.updaterTitle = `${this.translater.get('common.title.lastUpdater')} : ${this.moment(this.item.updatedUtc)}`;
-        }
-      }
-      else {
-        if (this.createdDateExists) {
-          this.createrTitle = `${this.date(this.item.createdUtc)} (${this.moment(this.item.createdUtc)})`;
-        }
-  
-        if (this.updatedDateExists) {
-          this.updaterTitle = `${this.date(this.item.updatedUtc)} (${this.moment(this.item.updatedUtc)})`;
-        }
-      }
-
-      this.visible = this.createdDateExists || this.updatedDateExists;
+      this.createrTitle =
+            this.setUnitTitle(null, this.item.createdUtc, this.translater.get('common.title.creater'));
+      
+      this.updaterTitle =
+        this.setUnitTitle(null, this.item.updatedUtc, this.translater.get('common.title.lastUpdater'));
 
       this.setUpdateInfoMode();
     }
   }
 
-  setUpdateInfoMode() {
+  private setUnitTitle(userName: UserName, date: any, personTitle: string): string {
+    let title = null;
+
+    if (userName && userName.fullName) {
+      title = userName.fullName;
+    }
+
+    if (date) {
+      if (title) {
+        title += ` - ${this.moment(date)}`;
+      }
+      else {
+        title = this.moment(date);
+      }
+    }
+
+    if (this.mode === 'button' && title) {
+      title = personTitle + ' : ' + title;
+    }
+
+    return title;
+  }
+
+  private setUpdateInfoMode() {
     if (this.updaterTitle && this.createrTitle) {
       this.isUpdaterInfo = true;
     }
@@ -150,7 +146,9 @@ export class OliveEntityDateComponent extends OliveEntityFormBaseComponent {
     }
     else if (this.createrTitle) {
       this.isUpdaterInfo = false;
-    }  
+    }
+
+    this.visible = this.createdDateExists || this.updatedDateExists;
   }
 }
 

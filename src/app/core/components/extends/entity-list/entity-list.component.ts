@@ -11,7 +11,6 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { AlertService, DialogType } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
-import { Utilities } from '@quick/services/utilities';
 
 import { OliveDialogSetting } from '../../../classes/dialog-setting';
 import { OliveImportFileDialogComponent } from '../../dialogs/import-file-dialog/import-file-dialog.component';
@@ -22,11 +21,11 @@ import { NameValue } from 'app/core/models/name-value';
 import { OliveDataService } from 'app/core/interfaces/data-service';
 import { ListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveUtilities } from 'app/core/classes/utilities';
-import { locale as english } from '../../../../core/i18n/en';
 import { OliveEditDialogComponent } from '../../dialogs/edit-dialog/edit-dialog.component';
 import * as _ from 'lodash';
 import { OliveBaseComponent } from '../../extends/base/base.component';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
+import { OliveConstants } from 'app/core/classes/constants';
 
 @Component({
   selector: 'olive-entity-list',
@@ -51,18 +50,15 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
 
   _setting: ListerSetting;
 
-  constructor(protected translater: FuseTranslationLoaderService,
+  constructor(translater: FuseTranslationLoaderService,
     protected deviceService: DeviceDetectorService,
     protected alertService: AlertService,
     protected accountService: AccountService,
     protected messageHelper: OliveMessageHelperService,
     protected documentService: OliveDocumentService,
     protected dialog: MatDialog,
-    protected dataService: OliveDataService)
-  {
-    super();
-    this.initializeComponent();
-    this.initializeChildComponent();
+    protected dataService: OliveDataService) {
+    super(translater);
   }
 
   get setting(): ListerSetting {
@@ -71,29 +67,47 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   set setting(theSetting: ListerSetting) {
     this._setting = theSetting;
     this._setting.dataTableId = OliveUtilities
-      .splitStickyWords(theSetting.name, '-')
+      .splitStickyWords(this.setting.itemType.name, '-')
       .toLowerCase() + '-table';
   }
 
-  initializeChildComponent() {}
+  get canManageItems() {
+    if (this.isNull(this.setting.managePermission)) { return true; }
+    return this.accountService.userHasPermission(this.setting.managePermission);
+  }
+
+  get visibleContextMenu(): boolean {
+    if (!this.setting.disabledContextMenus) { return true; }
+
+    if (this.setting.disabledContextMenus.find(f => f === OliveConstants.contextMenu.all)) { return false; }
+
+    if (this.setting.disabledContextMenus.length === 4) { return false; }
+
+    return true;
+  }
+
+  contextButtonVisible(name: string): boolean {
+    if (!this.visibleContextMenu) { return false; }
+    if (!this.setting.disabledContextMenus) { return true; }
+    return this.setting.disabledContextMenus.find(f => f === name) == null;
+  }
+
+  initializeChildComponent() { }
   icon(item: any, columnName: string) { return false; }
   iconName(item: any, columnName: string) { return ''; }
   onTdClick(event: any, item: any, columnName: string): boolean { return false; }
   getEditorCustomTitle(item: any): string { return null; }
   convertModel(model: any): any { return model; }
   getEditDialogReadOnly(item: any): boolean { return this.setting.isEditDialogReadOnly; }
-  
+
+  renderItem(item: any, columnName: string): string { return ''; }
+  renderFooterItem(column: any): string { return ''; }
+
   setTdId(id: number, columnName: string) {
     this.tdId = id.toString() + columnName;
   }
-  
-  private initializeComponent() {
-    this.translater.loadTranslations(english);
-  }
 
-  get canManageItems() {
-    if (this.isNull(this.setting.managePermission)) { return true; }
-    return this.accountService.userHasPermission(this.setting.managePermission);
+  private initializeComponent() {
   }
 
   onSearch(event: any) {
@@ -111,6 +125,14 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   }
 
   ngOnInit() {
+    this.initializeComponent();
+    this.initializeChildComponent();
+    this.initializeDataTable();
+  }
+
+  initializeDataTable() {
+    if (!this.setting) { return; }
+
     this.dtOptions = {
       pagingType: 'full_numbers',
       serverSide: true,
@@ -122,25 +144,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
 
         dataTablesParameters['extsearch'] = this.getExtraSearch();
 
-        this.dataService.getItems(dataTablesParameters)
-          .subscribe(response => {
-            this.alertService.stopLoadingMessage();
-            this.loadingIndicator = false;
-
-            this.items = this.convertModel(response.model);
-
-            callback({
-              recordsTotal: response.itemsCount,
-              recordsFiltered: response.itemsCount,
-              data: []
-            });
-          },
-            error => {
-              this.alertService.stopLoadingMessage();
-              this.loadingIndicator = false;
-
-              this.messageHelper.showLoadFaild(error);
-            });
+        this.loadItems(dataTablesParameters, callback);
       },
       columns: this.setting.columns,
       dom: 'ltip',
@@ -155,9 +159,34 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
     });
   }
 
-  protected getExtraSearch(): NameValue[] { 
+  loadHandler(handler: any, callback): void {
+    handler.subscribe(response => {
+      this.alertService.stopLoadingMessage();
+      this.loadingIndicator = false;
+
+      this.items = this.convertModel(response.model);
+
+      callback({
+        recordsTotal: response.itemsCount,
+        recordsFiltered: response.itemsCount,
+        data: []
+      });
+    },
+      error => {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+
+        this.messageHelper.showLoadFaild(error);
+      });
+  }
+
+  loadItems(dataTablesParameters: any, callback) {
+    this.loadHandler(this.dataService.getItems(dataTablesParameters), callback);
+  }
+
+  protected getExtraSearch(): NameValue[] {
     if (!this.setting.extraSearches) { return []; }
-    return this.setting.extraSearches; 
+    return this.setting.extraSearches;
   }
 
   dataTable(): any {
@@ -175,7 +204,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   reRender(): void {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       // Destroy the table first
-      dtInstance.destroy();
+      dtInstance.clear().destroy();
       // Call the dtTrigger to rerender again
       this.dtTrigger.next();
     });
@@ -191,11 +220,15 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
     }
   }
 
-  protected editItem(item?: any, event?: Event, startTabIndex = 0) {
+  protected editItem(item?: any, event?: any, startTabIndex = 0) {
     if (event && event.srcElement && event.srcElement.getAttribute('type') === 'checkbox') { return; }
 
-    if 
-    (
+    if (!this.setting.editComponent) {
+      return;
+    }
+
+    if
+      (
       // NewItem
       (!item && !event) ||
       // TD Click과 TR Click이 이중으로 Fire되어서 TD Click 'ov-td-click' Class를 추가
@@ -212,21 +245,20 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
         this.dataService.getItem(item.id).subscribe(
           response => {
             this.loadingIndicator = false;
-  
+
             response.model.loadDetail = true;
-  
+
             Object.assign(this.sourceItem, response.model);
-  
+
             this.openDialog(startTabIndex);
           },
           error => {
-            this.loadingIndicator = false;            
+            this.loadingIndicator = false;
             this.messageHelper.showLoadFaild(error);
           }
         );
       }
-      else
-      {
+      else {
         this.openDialog(startTabIndex);
       }
     }
@@ -234,7 +266,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
 
   openDialog(startTabIndex) {
     const setting = new OliveDialogSetting(
-      this.setting.editComponent, 
+      this.setting.editComponent,
       {
         item: _.cloneDeep(this.sourceItem),
         itemType: this.setting.itemType,
@@ -313,7 +345,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
       {
         disableClose: true,
         panelClass: 'mat-dialog-md',
-        data: { importType: this.setting.name }
+        data: { importType: this.setting.itemType.name }
       });
 
     dialogRef.componentInstance.onSave.subscribe(data => {
@@ -325,12 +357,12 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
 
           this.alertService.showDialog
             (
-            this.translater.get('common.title.success'),
-            this.translater.get('common.message.uploadSaved'),
-            DialogType.alert,
-            () => this.reRender(),
-            null,
-            this.translater.get('common.button.refresh')
+              this.translater.get('common.title.success'),
+              this.translater.get('common.message.uploadSaved'),
+              DialogType.alert,
+              () => this.reRender(),
+              null,
+              this.translater.get('common.button.refresh')
             );
         },
         error => {
@@ -346,10 +378,14 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   renderTDClass(item: any, column: any, addedClass: string) {
     let classString = this.isNull(column.tdClass) ? '' : column.tdClass;
 
+    if (!this.setting.editComponent) {
+      classString = 'normal-cursor';
+    }
+
     if (addedClass) {
       classString += ' ' + addedClass;
     }
-    
+
     return classString;
   }
 
@@ -359,5 +395,9 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
 
   get dataColumns() {
     return this.setting.columns.filter(c => c.data !== 'selected');
+  }
+
+  renderTableClass(): string{
+    return 'hover olive-datatable row-border';
   }
 }

@@ -15,11 +15,9 @@ import { OliveCountriesComponent } from './country/countries.component';
 import { OliveCountryManagerComponent } from './country/country-manager/country-manager.component';
 import { OliveCountryEditorComponent } from './country/country-editor/country-editor.component';
 import { OliveSearchCountryComponent } from './country/search-country/search-country.component';
-import { OliveCountryService } from './services/country.service';
 import { OliveCarrierManagerModule } from './carrier/carrier-manager/carrier-manager.module';
 import { OliveCarriersComponent } from './carrier/carriers.component';
 import { OliveSearchCarrierComponent } from './carrier/search-carrier/search-carrier.component';
-import { OliveCarrierService } from './services/carrier.service';
 
 const routes = [
   {
@@ -62,10 +60,7 @@ const routes = [
     OliveCarriersComponent,
     OliveSearchCarrierComponent      
   ],
-  providers: [
-    OliveCountryService,
-    OliveCarrierService
-  ],
+  providers: [],
   entryComponents: [
     OliveCurrencyManagerComponent,    
     OliveSearchCurrencyComponent,

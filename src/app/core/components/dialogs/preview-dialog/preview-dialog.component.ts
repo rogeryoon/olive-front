@@ -3,7 +3,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { locale as english } from '../../../i18n/en';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OliveSearchDialogComponent } from '../search-dialog/search-dialog.component';
 import { OlivePlaceHolderDirective } from 'app/core/directives/place-holder.directive';
@@ -23,10 +22,8 @@ export class OlivePreviewDialogComponent implements OnInit, OnDestroy {
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
     public dialogRef: MatDialogRef<OliveSearchDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public dialog: OliveDialogSetting,
-    private translater: FuseTranslationLoaderService
+    @Inject(MAT_DIALOG_DATA) public dialog: OliveDialogSetting
   ) { 
-    this.translater.loadTranslations(english);
   }
 
   ngOnInit() {

@@ -8,9 +8,9 @@ import * as FileSaver from 'file-saver';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { AlertService } from '@quick/services/alert.service';
 
-import { locale as english } from '../../core/i18n/en';
-
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OliveDocumentService {
 
   onImportTableRendered: Subject<any> = new Subject;
@@ -19,7 +19,6 @@ export class OliveDocumentService {
     private translater: FuseTranslationLoaderService,
     private alertService: AlertService
   ) {
-    this.translater.loadTranslations(english);
   }
 
   private get stylesheet(): string {

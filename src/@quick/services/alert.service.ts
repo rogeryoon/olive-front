@@ -1,17 +1,13 @@
-﻿// ebenmonney
-/* tslint:disable */
-
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpResponseBase } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 
-import { AppTranslationService } from './app-translation.service';
 import { Utilities } from './utilities';
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 @Injectable()
-export class AlertService
-{
+export class AlertService {
     private messages = new Subject<AlertMessage>();
     private stickyMessages = new Subject<AlertMessage>();
     private dialogs = new Subject<AlertDialog>();
@@ -19,80 +15,72 @@ export class AlertService
     private _isLoading = false;
     private loadingMessageId: any;
 
-    constructor(private translationService: AppTranslationService) { }
+    constructor(private translater: FuseTranslationLoaderService) { }
 
     showMessageBox(title: string, message: string) {
         this.showDialog(title, message, DialogType.alert, () => null);
     }
 
-    showDialog(title: string, message: string)
-    showDialog(title: string, message: string, type: DialogType, okCallback: (val?: any) => any)
-    showDialog(title: string, message: string, type: DialogType, okCallback?: (val?: any) => any, cancelCallback?: () => any, okLabel?: string, cancelLabel?: string, defaultValue?: string)
-    showDialog(title: string, message: string, type?: DialogType, okCallback?: (val?: any) => any, cancelCallback?: () => any, okLabel?: string, cancelLabel?: string, defaultValue?: string) 
-    {
+    showDialog(title: string, message: string);
+    showDialog(title: string, message: string, type: DialogType, okCallback: (val?: any) => any);
+    showDialog(title: string, message: string, type: DialogType, okCallback?: (val?: any) => any,
+        cancelCallback?: () => any, okLabel?: string, cancelLabel?: string, defaultValue?: string);
+    showDialog(title: string, message: string, type?: DialogType, okCallback?: (val?: any) => any,
+        cancelCallback?: () => any, okLabel?: string, cancelLabel?: string, defaultValue?: string) {
 
-        if (!type)
-        {
+        if (!type) {
             type = DialogType.alert;
         }
 
-        this.dialogs.next({title, message: message, type: type, okCallback: okCallback, cancelCallback: cancelCallback, okLabel: okLabel, cancelLabel: cancelLabel, defaultValue: defaultValue });
+        this.dialogs.next({
+            title, message: message, type: type, okCallback: okCallback, cancelCallback: cancelCallback,
+            okLabel: okLabel, cancelLabel: cancelLabel, defaultValue: defaultValue
+        });
     }
 
-    showMessage(summary: string)
-    showMessage(summary: string, detail: string, severity: MessageSeverity)
-    showMessage(summaryAndDetails: string[], summaryAndDetailsSeparator: string, severity: MessageSeverity)
-    showMessage(response: HttpResponseBase, ignoreValue_useNull: string, severity: MessageSeverity)
-    showMessage(data: any, separatorOrDetail?: string, severity?: MessageSeverity)
-    {
-        if (!severity)
-        {
+    showMessage(summary: string);
+    showMessage(summary: string, detail: string, severity: MessageSeverity);
+    showMessage(summaryAndDetails: string[], summaryAndDetailsSeparator: string, severity: MessageSeverity);
+    showMessage(response: HttpResponseBase, ignoreValue_useNull: string, severity: MessageSeverity);
+    showMessage(data: any, separatorOrDetail?: string, severity?: MessageSeverity) {
+        if (!severity) {
             severity = MessageSeverity.default;
         }
 
-        if (data instanceof HttpResponseBase)
-        {
+        if (data instanceof HttpResponseBase) {
             data = Utilities.getHttpResponseMessage(data);
             separatorOrDetail = Utilities.captionAndMessageSeparator;
         }
 
-        if (data instanceof Array)
-        {
-            for (let message of data)
-            {
-                let msgObject = Utilities.splitInTwo(message, separatorOrDetail);
+        if (data instanceof Array) {
+            for (const message of data) {
+                const msgObject = Utilities.splitInTwo(message, separatorOrDetail);
 
                 this.showMessageHelper(msgObject.firstPart, msgObject.secondPart, severity, false);
             }
         }
-        else
-        {
+        else {
             this.showMessageHelper(data, separatorOrDetail, severity, false);
         }
     }
 
-    showStickyMessage(summary: string)
-    showStickyMessage(summary: string, detail: string, severity: MessageSeverity, error?: any)
-    showStickyMessage(summaryAndDetails: string[], summaryAndDetailsSeparator: string, severity: MessageSeverity)
-    showStickyMessage(response: HttpResponseBase, ignoreValue_useNull: string, severity: MessageSeverity)
-    showStickyMessage(data: string | string[] | HttpResponseBase, separatorOrDetail?: string, severity?: MessageSeverity, error?: any)
-    {
-        if (!severity)
-        {
+    showStickyMessage(summary: string);
+    showStickyMessage(summary: string, detail: string, severity: MessageSeverity, error?: any);
+    showStickyMessage(summaryAndDetails: string[], summaryAndDetailsSeparator: string, severity: MessageSeverity);
+    showStickyMessage(response: HttpResponseBase, ignoreValue_useNull: string, severity: MessageSeverity);
+    showStickyMessage(data: string | string[] | HttpResponseBase, separatorOrDetail?: string, severity?: MessageSeverity, error?: any) {
+        if (!severity) {
             severity = MessageSeverity.default;
         }
 
-        if (data instanceof HttpResponseBase)
-        {
+        if (data instanceof HttpResponseBase) {
             data = Utilities.getHttpResponseMessage(data);
             separatorOrDetail = Utilities.captionAndMessageSeparator;
         }
 
-        if (data instanceof Array)
-        {
-            for (let message of data)
-            {
-                let msgObject = Utilities.splitInTwo(message, separatorOrDetail);
+        if (data instanceof Array) {
+            for (const message of data) {
+                const msgObject = Utilities.splitInTwo(message, separatorOrDetail);
 
                 // Roger 2018.08.16
                 if (
@@ -100,18 +88,15 @@ export class AlertService
                     msgObject.secondPart !== 'true' &&
                     msgObject.secondPart !== 'false'
                 ) {
-                    this.showMessageHelper(msgObject.firstPart, msgObject.secondPart, severity, true);    
+                    this.showMessageHelper(msgObject.firstPart, msgObject.secondPart, severity, true);
                 }
             }
         }
-        else
-        {
-            if (error)
-            {
-                let msg = `Severity: "${MessageSeverity[severity]}", Summary: "${data}", Detail: "${separatorOrDetail}", Error: "${Utilities.safeStringify(error)}"`;
+        else {
+            if (error) {
+                const msg = `Severity: "${MessageSeverity[severity]}", Summary: "${data}", Detail: "${separatorOrDetail}", Error: "${Utilities.safeStringify(error)}"`;
 
-                switch (severity)
-                {
+                switch (severity) {
                     case MessageSeverity.default:
                         this.logInfo(msg);
                         break;
@@ -137,104 +122,83 @@ export class AlertService
         }
     }
 
-    
-
-    showValidationError()
-    {
+    showValidationError() {
         this.resetStickyMessage();
-        this.showStickyMessage(this.translationService.getTranslation('form.ErrorCaption'), this.translationService.getTranslation('form.ErrorMessage'), MessageSeverity.error);
+        this.showStickyMessage(this.translater.get('common.title.validationError'), this.translater.get('common.message.validationError'), MessageSeverity.error);
     }
 
-    private showMessageHelper(summary: string, detail: string, severity: MessageSeverity, isSticky: boolean)
-    {
+    private showMessageHelper(summary: string, detail: string, severity: MessageSeverity, isSticky: boolean) {
 
-        if (isSticky)
-        {
+        if (isSticky) {
             this.stickyMessages.next({ severity: severity, summary: summary, detail: detail });
         }
-        else
-        {
+        else {
             this.messages.next({ severity: severity, summary: summary, detail: detail });
         }
     }
 
-    startLoadingMessage(message = "Loading...", caption = "")
-    {
+    startLoadingMessage(message = 'Loading...', caption = '') {
         this._isLoading = true;
         clearTimeout(this.loadingMessageId);
 
-        this.loadingMessageId = setTimeout(() =>
-        {
+        this.loadingMessageId = setTimeout(() => {
             this.showStickyMessage(caption, message, MessageSeverity.wait);
         }, 1000);
     }
 
-    stopLoadingMessage()
-    {
+    stopLoadingMessage() {
         this._isLoading = false;
         clearTimeout(this.loadingMessageId);
         this.resetStickyMessage();
     }
 
-    logDebug(msg)
-    {
+    logDebug(msg) {
         console.debug(msg);
     }
 
-    logError(msg)
-    {
+    logError(msg) {
         console.error(msg);
     }
 
-    logInfo(msg)
-    {
+    logInfo(msg) {
         console.info(msg);
     }
 
-    logMessage(msg)
-    {
+    logMessage(msg) {
         console.log(msg);
     }
 
-    logTrace(msg)
-    {
+    logTrace(msg) {
         console.trace(msg);
     }
 
-    logWarning(msg)
-    {
+    logWarning(msg) {
         console.warn(msg);
     }
 
-    resetStickyMessage()
-    {
+    resetStickyMessage() {
         this.stickyMessages.next();
     }
 
-    getDialogEvent(): Observable<AlertDialog>
-    {
+    getDialogEvent(): Observable<AlertDialog> {
         return this.dialogs.asObservable();
     }
 
-    getMessageEvent(): Observable<AlertMessage>
-    {
+    getMessageEvent(): Observable<AlertMessage> {
         return this.messages.asObservable();
     }
 
-    getStickyMessageEvent(): Observable<AlertMessage>
-    {
+    getStickyMessageEvent(): Observable<AlertMessage> {
         return this.stickyMessages.asObservable();
     }
 
-    get isLoadingInProgress(): boolean
-    {
+    get isLoadingInProgress(): boolean {
         return this._isLoading;
     }
 }
 
-//******************** Dialog ********************//
-export class AlertDialog
-{
+// ******************** Dialog ******************** //
+export class AlertDialog {
     constructor(
         public title: string,
         public message: string,
@@ -243,28 +207,24 @@ export class AlertDialog
         public cancelCallback: () => any,
         public defaultValue: string,
         public okLabel: string,
-        public cancelLabel: string)
-    {
+        public cancelLabel: string) {
 
     }
 }
 
-export enum DialogType
-{
+export enum DialogType {
     alert,
     confirm,
     prompt
 }
-//******************** End ********************//
+// ******************** End ******************** //
 
-//******************** Growls ********************//
-export class AlertMessage
-{
+// ******************** Growls ******************** //
+export class AlertMessage {
     constructor(public severity: MessageSeverity, public summary: string, public detail: string) { }
 }
 
-export enum MessageSeverity
-{
+export enum MessageSeverity {
     default,
     info,
     success,
@@ -272,4 +232,4 @@ export enum MessageSeverity
     warn,
     wait
 }
-//******************** End ********************//
+// ******************** End ******************** //

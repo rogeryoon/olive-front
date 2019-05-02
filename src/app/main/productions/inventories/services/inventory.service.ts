@@ -1,63 +1,33 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
 
-import { OliveInventoryEndpointService } from './inventory-endpoint.service';
-import { InventoryWarehouse } from '../models/inventory-warehouse';
+import { ConfigurationService } from '@quick/services/configuration.service';
 
-export type InventoryChangedOperation = 'add' | 'delete' | 'modify';
-export interface InventoriesChangedEventArg { inventories: InventoryWarehouse[] | string[]; operation: InventoryChangedOperation; }
+import { OliveEntityService } from 'app/core/services/entity-service';
+import { OliveEntityEndpointService } from 'app/core/services/entity-endpoint.service';
 
-@Injectable()
-export class OliveInventoryService {
-  public static readonly inventoryAddedOperation: InventoryChangedOperation = 'add';
-  public static readonly inventoryDeletedOperation: InventoryChangedOperation = 'delete';
-  public static readonly inventoryModifiedOperation: InventoryChangedOperation = 'modify';
+@Injectable({
+  providedIn: 'root'
+})
+export class OliveInventoryService extends OliveEntityService {
 
-  private _inventoryChanged = new Subject<InventoriesChangedEventArg>();
+  constructor
+    (
+    endpoint: OliveEntityEndpointService,
+    configurations: ConfigurationService
+    ) {
+    super(
+      endpoint,
+      configurations
+    );
 
-  constructor(private inventoryEndpoint: OliveInventoryEndpointService) { }
+    this.setApiUrl('inventories');
+  }
 
   getInventoryBalance(dataTablesParameters: any) {
-    return this.inventoryEndpoint.getInventoryBalanceEndpoint<any>(dataTablesParameters);
+    return this.post('balance/', dataTablesParameters);
   }
 
   getInventoryWarehouse(dataTablesParameters: any) {
-    return this.inventoryEndpoint.getInventoryWarehouseEndpoint<any>(dataTablesParameters);
+    return this.post('warehouse/', dataTablesParameters);
   }
-
-//   getInventory(inventoryId: number) {
-//     return this.inventoryEndpoint.getInventoryEndpoint<any>(inventoryId);
-//   }
-
-//   getInventories(dataTablesParameters: any) {
-//     return this.inventoryEndpoint.getInventoriesEndpoint<any>(dataTablesParameters);
-//   }
-
-//   newInventory(inventory: Inventory) {
-//     return this.inventoryEndpoint.getNewInventoryEndpoint<any>(inventory)
-//             .do(data => this.onInventoriesChanged([inventory], OliveInventoryService.inventoryAddedOperation));
-//   }
-
-//   updateInventory(inventory: Inventory, inventoryId: number) {
-//     return this.inventoryEndpoint.getUpdateInventoryEndpoint(inventory, inventoryId)
-//             .do(data => this.onInventoriesChanged([inventory], OliveInventoryService.inventoryModifiedOperation));
-//   }
-
-//   deleteInventory(inventoryId: number | Inventory): Observable<Inventory>
-//   {
-//     if (typeof inventoryId === 'number' || inventoryId instanceof Number)
-//     {
-//       return this.inventoryEndpoint.getDeleteInventoryEndpoint<Inventory>(<number>inventoryId)
-//         .do(data => this.onInventoriesChanged([data], OliveInventoryService.inventoryDeletedOperation));
-//     }
-//     else
-//     {
-//       return this.deleteInventory(inventoryId.id);
-//     }
-//   }
-
-//   private onInventoriesChanged(inventories: Inventory[] | string[], op: InventoryChangedOperation) {
-//     this._inventoryChanged.next({ inventories: inventories, operation: op });
-//   }
 }

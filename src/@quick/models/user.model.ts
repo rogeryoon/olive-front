@@ -2,7 +2,8 @@ export class User {
     // Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
     constructor(id?: string, userName?: string, fullName?: string, email?: string, 
         jobTitle?: string, phoneNumber?: string, roles?: string[],
-        companyMasterCode?: string, companyGroupId?: number, userAuditKey?: string
+        companyMasterCode?: string, companyGroupId?: number, 
+        userAuditKey?: string, timeZoneId?: string
     ) {
         this.id = id;
         this.userName = userName;
@@ -14,6 +15,7 @@ export class User {
         this.companyMasterCode = companyMasterCode;
         this.companyGroupId = companyGroupId;
         this.userAuditKey = userAuditKey;
+        this.timeZoneId = timeZoneId;
     }
 
     get friendlyName(): string {
@@ -39,4 +41,5 @@ export class User {
     public companyGroupId: number;
     public companyGroupName?: string;
     public userAuditKey?: string;
+    public timeZoneId?: string;
 }

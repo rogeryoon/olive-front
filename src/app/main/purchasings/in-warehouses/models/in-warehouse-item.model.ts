@@ -7,9 +7,11 @@ export class InWarehouseItem extends OliveTrackingAttribute {
     purchaseOrderItemId?: number;
     inWarehouseId?: number;
 
+    productVariantId?: number;    
     name?: string;    
     originalBalance?: number;
     price?: number;
-    vendorName?: string;
-    productVariantId?: number;
+    supplierName?: string;
+    purchaseOrderId?: number;
+    purchaseOrderDate?: any;
 }

@@ -29,7 +29,7 @@ export class NavUrls {
         // static List = 'domain';
         // static Group = 'dns';
         // static Branch = 'account_balance';
-        // static Vendor = 'forum';
+        // static Supplier = 'forum';
         // static Warehouse = 'store';
     };
 

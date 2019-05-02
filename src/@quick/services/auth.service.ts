@@ -18,6 +18,7 @@ import { CompanyMaster } from 'app/core/models/company-master.model';
 import { Currency } from 'app/main/supports/bases/models/currency.model';
 import { Branch } from 'app/main/supports/companies/models/branch.model';
 import { CompanyGroupSetting } from 'app/core/models/company-group-setting.model';
+import { StandMarket } from 'app/main/supports/companies/models/stand-market';
 
 @Injectable()
 export class AuthService {
@@ -147,7 +148,8 @@ export class AuthService {
             Array.isArray(decodedAccessToken.role) ? decodedAccessToken.role : [decodedAccessToken.role],
             decodedAccessToken.companymastercode,
             decodedAccessToken.companygroupid,
-            decodedAccessToken.userauditKey);
+            decodedAccessToken.userauditkey,
+            decodedAccessToken.timezoneid);
         user.isEnabled = true;
 
         this.saveUserDetails(user, permissions, accessToken, refreshToken, accessTokenExpiry, rememberMe);
@@ -169,18 +171,21 @@ export class AuthService {
         const companyGroupSetting = data.companyGroupSetting;
         const currencies = data.currencies;
         const branches = data.branches;
+        const standMarkets = data.standMarkets;
 
         // if (this.rememberMe) {
             this.localStorage.savePermanentData(companyMaster, DBkeys.COMPANY_MASTER);
             this.localStorage.savePermanentData(companyGroupSetting, DBkeys.COMPANY_GROUP_SETTING);
             this.localStorage.savePermanentData(currencies, DBkeys.CURRENCIES);
             this.localStorage.savePermanentData(branches, DBkeys.BRANCHES);
+            this.localStorage.savePermanentData(standMarkets, DBkeys.STAND_MARKETS);
         // }
         // else {
         //     this.localStorage.saveSyncedSessionData(companyMaster, DBkeys.COMPANY_MASTER);
         //     this.localStorage.saveSyncedSessionData(companyGroupSetting, DBkeys.COMPANY_GROUP_SETTING);
         //     this.localStorage.saveSyncedSessionData(currencies, DBkeys.CURRENCIES);
         //     this.localStorage.saveSyncedSessionData(branches, DBkeys.BRANCHES);
+        //     this.localStorage.saveSyncedSessionData(standMarkets, DBkeys.STAND_MARKETS);
         // }
 
         this._isLoadingPreLoadData = false;
@@ -222,6 +227,7 @@ export class AuthService {
         this.localStorage.deleteData(DBkeys.COMPANY_MASTER);
         this.localStorage.deleteData(DBkeys.CURRENCIES);
         this.localStorage.deleteData(DBkeys.BRANCHES);
+        this.localStorage.deleteData(DBkeys.STAND_MARKETS);
 
         this.configurations.clearLocalChanges();
     }
@@ -316,6 +322,10 @@ export class AuthService {
     get branches(): Branch[] {
         return this.localStorage.getDataObject<Branch[]>(DBkeys.BRANCHES) || [];
     }
+
+    get standMarkets(): StandMarket[] {
+        return this.localStorage.getDataObject<StandMarket[]>(DBkeys.STAND_MARKETS) || [];
+    }    
 
     userHasPermission(permissionValue: PermissionValues): boolean {
         return this.userPermissions.some(p => p === permissionValue);

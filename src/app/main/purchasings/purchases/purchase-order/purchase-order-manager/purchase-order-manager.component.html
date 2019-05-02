@@ -1,28 +1,16 @@
 ﻿<form #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()">
-  <mat-tab-group [selectedIndex]="startTabIndex">
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <olive-tab-label [hasError]="main.hasError" [tabTitleId]="'tab.title.main'"></olive-tab-label>
-      </ng-template>
-      <div class="tab-content p-24" fusePerfectScrollbar>
-        <olive-purchase-order-editor #main [item]="item" (currencyChanged)="onCurrencyChanged($event)" (exchangeRateChanged)="onCurrencyExchangeRateChanged($event)"></olive-purchase-order-editor>
-      </div>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <olive-tab-label [hasError]="items.hasError" [tabTitleId]="'tab.title.items'"></olive-tab-label>
-      </ng-template>
-      <div class="tab-content p-24" fusePerfectScrollbar>
-        <olive-purchase-order-items-editor #items formControlName="purchaseOrderItems"></olive-purchase-order-items-editor>
-      </div>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <olive-tab-label [hasError]="payments.hasError" [tabTitleId]="'tab.title.payments'"></olive-tab-label>
-      </ng-template>
-      <div class="tab-content p-24" fusePerfectScrollbar>
-        <olive-purchase-order-payments-editor #payments [item]="item" formControlName="purchaseOrderPayments"></olive-purchase-order-payments-editor>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
+    <div class="entry-max-width">
+        <olive-purchase-order-editor #main [item]="item" (currencyChanged)="onCurrencyChanged($event)"
+            (exchangeRateChanged)="onCurrencyExchangeRateChanged($event)"></olive-purchase-order-editor>
+    </div>
+    <div class="entry-max-width">
+        <olive-purchase-order-items-editor #items formControlName="purchaseOrderItems"
+        (paymentAmountChanged)="onPaymentAmountChanged($event)">
+        </olive-purchase-order-items-editor>
+    </div>
+    <div class="entry-max-width">
+        <olive-purchase-order-payments-editor style="float: right;" #payments [item]="item"
+            formControlName="purchaseOrderPayments">
+        </olive-purchase-order-payments-editor>
+    </div>
 </form>

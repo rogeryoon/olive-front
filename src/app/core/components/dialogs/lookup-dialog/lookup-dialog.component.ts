@@ -7,10 +7,8 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { Utilities } from '@quick/services/utilities';
 import { AlertService } from '@quick/services/alert.service';
 
-import { locale as english } from '../../../../core/i18n/en';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
@@ -64,12 +62,12 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     protected formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<OliveLookupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public setting: LookupListerSetting,
-    protected translater: FuseTranslationLoaderService,
+    translater: FuseTranslationLoaderService,
     protected alertService: AlertService,
     protected messageHelper: OliveMessageHelperService,
     protected deviceService: DeviceDetectorService
   ) {
-    super();
+    super(translater);
     this.initializeComponent();
   }
 
@@ -166,10 +164,8 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
   protected createChip(item: any) { return item; }
 
   private initializeComponent() {
-    this.translater.loadTranslations(english);
-
     this.setting.dataTableId = OliveUtilities
-      .splitStickyWords(this.setting.name, '-')
+      .splitStickyWords(this.setting.itemType.name, '-')
       .toLowerCase() + '-table';
   }
 
@@ -231,7 +227,7 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     this.dialogRef.close(this.selectedItems);
   }
 
-  clickItem(item?: any, event?: Event) {
+  clickItem(item?: any, event?: any) {
     if (event && event.srcElement.getAttribute('type') === 'checkbox' || this.setting.maxSelectItems === 0) { return; }
 
     if (this.setting.customClick) {

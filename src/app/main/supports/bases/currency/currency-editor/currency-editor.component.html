@@ -1,17 +1,12 @@
 ﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-      <mat-form-field appearance="outline" class="w-100-p" *ngIf="isIdVisible">
-        <mat-label>Id</mat-label>
-        <input matInput name="id" formControlName="id" readonly="readonly">
-      </mat-form-field>
-
       <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Code</mat-label>
+        <mat-label>{{'common.word.code' | translate}}</mat-label>
         <input matInput name="code" formControlName="code" required maxlength="3" class="to-uppercase">
         <mat-error *ngIf="hasEntryError('code')">{{errorMessage('code')}}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Name</mat-label>
+        <mat-label>{{'common.word.memo' | translate}}</mat-label>
         <input matInput name="name" formControlName="name" required maxlength="200">
         <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
         <mat-error *ngIf="hasEntryError('name')">{{errorMessage('name')}}</mat-error>

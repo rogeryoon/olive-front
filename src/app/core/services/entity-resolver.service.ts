@@ -4,7 +4,9 @@ import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/r
 import { OliveDataService } from '../interfaces/data-service';
 import { OliveUtilities } from '../classes/utilities';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class OliveEntityResolverService implements Resolve<any> {
 
   constructor(protected dataService: OliveDataService) { }

@@ -29,10 +29,11 @@ import { OliveInWarehouseStatusComponent } from '../../../in-warehouses/in-wareh
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { NameValue } from 'app/core/models/name-value';
 import { OliveInWarehouseItemService } from '../../../in-warehouses/services/in-warehouse-items.service';
+import { InWarehouseItem } from 'app/main/purchasings/in-warehouses/models/in-warehouse-item.model';
 
 const Selected = 'selected';
 const Id = 'id';
-const VendorName = 'vendorName';
+const SupplierName = 'supplierName';
 const ItemsName = 'itemsName';
 const Warehouse = 'warehouse';
 const TotalAmount = 'totalAmount';
@@ -70,24 +71,23 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
   initializeChildComponent() {
     this.setting = {
-      name: 'PurchaseOrder',
       icon: NavIcons.Purchase.list,
       translateTitleId: NavTranslates.Purchase.list,
       managePermission: null,
       columns: [
         // 1
         { data: Selected },
-        // 2
-        { data: Id, thName: this.translater.get('purchasing.purchaseOrdersHeader.id'), 
+        // 2ㄴ
+        { data: Id, thName: this.translater.get('common.tableHeader.id'), 
           tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: VendorName, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.vendorName'), 
+        { data: SupplierName, orderable: false, thName: this.translater.get('common.tableHeader.supplier'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 4
-        { data: ItemsName, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.itemsName'), 
+        { data: ItemsName, orderable: false, thName: this.translater.get('common.tableHeader.itemsName'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 5
-        { data: Warehouse, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.warehouse'), 
+        { data: Warehouse, orderable: false, thName: this.translater.get('common.tableHeader.warehouse'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },        
         // 6
         { data: TotalAmount, thName: this.translater.get('purchasing.purchaseOrdersHeader.totalAmount'), 
@@ -132,8 +132,8 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         retValue = this.dateCode(item.date, item.id);
         break;
 
-      case VendorName:
-        retValue = item.vendorFk.name;
+      case SupplierName:
+        retValue = item.supplierFk.name;
         break;
 
       case ItemsName:
@@ -202,7 +202,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
       case InWarehouseStatusLink:
         if (item.purchaseOrderItems.length) {
-          retValue = item.inWareHouseCompletedDate ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
+          retValue = item.inWarehouseCompletedDate ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
         }
         else {
           retValue = OliveConstants.iconStatus.error;
@@ -223,7 +223,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     switch (columnName) {
       case InWarehouseStatusLink:
         if (item.purchaseOrderItems.length) {
-          retValue = item.inWareHouseCompletedDate ?
+          retValue = item.inWarehouseCompletedDate ?
           this.translater.get('common.status.inWarehouseComplete') :
           this.translater.get('common.status.inWarehousePending');
         }
@@ -245,10 +245,8 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     if (
       columnName === FinishLink ||
       columnName === InWarehouseStatusLink ||
-      columnName === PrintLink || 
-      columnName === ItemsName || 
-      columnName === TotalAmount ||
-      columnName === PaymentsName) {
+      columnName === PrintLink
+    ) {
       this.setTdId(item.id, columnName);
       retValue = true;
     }
@@ -265,17 +263,6 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       case PrintLink:
         this.onPOPrint(item);
         break;
-
-      case ItemsName:
-      case TotalAmount:
-        const itemsTabIndex = 1;
-        this.editItem(item, new Event('custom'), itemsTabIndex);
-        break;
-
-      case PaymentsName:
-        const paymentsTabIndex = 2;
-        this.editItem(item, new Event('custom'), paymentsTabIndex);
-        break;
     }
 
     return retValue;
@@ -291,7 +278,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
       case InWarehouseStatusLink:
         if (item.purchaseOrderItems.length) {
-          addedClass = item.inWareHouseCompletedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
+          addedClass = item.inWarehouseCompletedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
         }
         else {
           addedClass = OliveConstants.foregroundColor.red;
@@ -333,7 +320,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
           item.lastPrintOutUser = this.accountService.currentUser.userAuditKey;
         }
         else {
-          item.inWareHouseCompletedDate = transactionType === 'close' ? response.model : null;
+          item.inWarehouseCompletedDate = transactionType === 'close' ? response.model : null;
         }
       },
       error => {
@@ -364,7 +351,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         errorDialogMessage = this.translater.get('purchasing.purchaseOrders.noPayment');
         startTabIndex = 2;
       }
-      else if (item.inWareHouseCompletedDate) { // 입고완료
+      else if (item.inWarehouseCompletedDate) { // 입고완료
         transactionType = 'close';
       }
       else { // 입고중
@@ -407,6 +394,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
           disableSearchInput: true,
           customClick: true,
           dialogTitle: this.translater.get(NavTranslates.InWarehouse.status),
+          itemType: InWarehouseItem,
           dataService: this.inWarehouseItemService,
           extraSearches: [{ name: 'status', value: item.id }] as NameValue[]
         } as LookupListerSetting

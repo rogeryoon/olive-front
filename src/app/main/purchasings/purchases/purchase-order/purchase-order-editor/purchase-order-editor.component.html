@@ -1,58 +1,65 @@
 ﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutGap="1em" autocomplete="off">
-  <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
-    <div flex>
-      <mat-form-field appearance="outline" fxFlex class="w-100-p">
-        <mat-label>Date</mat-label>
-        <input matInput [matDatepicker]="dateCtrl" formControlName="poDate" readonly>
-        <mat-datepicker-toggle matSuffix [for]="dateCtrl"></mat-datepicker-toggle>
-        <mat-datepicker #dateCtrl></mat-datepicker>
-        <mat-error *ngIf="hasEntryError('poDate')">{{errorMessage('poDate')}}</mat-error>
-      </mat-form-field>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <div flex>
+            <mat-form-field appearance="outline" fxFlex class="w-100-p">
+                <mat-label>{{'common.word.date' | translate}}</mat-label>
+                <input matInput [matDatepicker]="dateCtrl" formControlName="poDate" readonly>
+                <mat-datepicker-toggle matSuffix [for]="dateCtrl"></mat-datepicker-toggle>
+                <mat-datepicker #dateCtrl></mat-datepicker>
+                <mat-error *ngIf="hasEntryError('poDate')">{{errorMessage('poDate')}}</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div flex>
+            <olive-lookup-host #supplier formControlName="supplierFk" required [placeholder]="'common.word.supplier' | translate"
+                [isEditMode]="canAssignPurchaseOrder"></olive-lookup-host>
+        </div>
+
+        <div flex>
+            <olive-lookup-host #warehouse formControlName="warehouseFk" required
+                [placeholder]="'common.word.warehouse' | translate" [isEditMode]="canAssignPurchaseOrder">
+            </olive-lookup-host>
+        </div>
+
+        <div flex>
+            <mat-form-field appearance="outline" class="w-100-p" [floatLabel]="floatLabels" fxFlex>
+                <mat-label>{{'purchasing.purchaseOrder.supplierOrderNo' | translate}}</mat-label>
+                <input matInput name="supplierOrderId" formControlName="supplierOrderId" maxlength="100">
+                <mat-hint align="end">{{getControl('supplierOrderId').value?.length || 0}}/100</mat-hint>
+            </mat-form-field>
+        </div>
     </div>
 
-    <div flex>
-      <olive-lookup-host #vendor formControlName="vendorFk" required [placeholder]="'Vendor'" [isEditMode]="canAssignPurchaseOrder"></olive-lookup-host>
-    </div>
-  </div>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
 
-  <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
-    <div flex>
-      <olive-lookup-host #warehouse formControlName="warehouseFk" required [placeholder]="'Warehouse'" [isEditMode]="canAssignPurchaseOrder"></olive-lookup-host>
-    </div>
-    <div flex>
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Currency</mat-label>
-        <mat-select name="currency" formControlName="currency" required (valueChange)="onCurrencyValueChanged($event)">
-          <mat-option *ngFor="let item of currencies" [value]="item.id">{{item.name}}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="hasEntryError('currency')">{{errorMessage('currency')}}</mat-error>
-      </mat-form-field>
-    </div>
-  </div>
+        <div flex style="width: 200px">
+            <mat-form-field appearance="outline" class="w-100-p">
+                <mat-label>{{'purchasing.purchaseOrder.currency' | translate}}</mat-label>
+                <mat-select name="currency" formControlName="currency" required
+                    (valueChange)="onCurrencyValueChanged($event)">
+                    <mat-option *ngFor="let item of currencies" [value]="item.id">{{item.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="hasEntryError('currency')">{{errorMessage('currency')}}</mat-error>
+            </mat-form-field>
+        </div>
 
-  <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
-    <div flex>
-      <mat-form-field appearance="outline" class="w-100-p" [floatLabel]="floatLabels" fxFlex>
-        <mat-label>Vendor Order #</mat-label>
-        <input matInput name="vendorOrderId" formControlName="vendorOrderId" maxlength="100">
-        <mat-hint align="end">{{getControl('vendorOrderId').value?.length || 0}}/100</mat-hint>
-      </mat-form-field>
-    </div>
-    <div flex>
-      <mat-form-field *ngIf="!isMasterCurrency" appearance="outline" class="w-100-p">
-        <mat-label>Currency Exchange Rate</mat-label>
-        <input matInput name="currencyExchangeRate" formControlName="currencyExchangeRate" class="right" (change)="onCurrencyExchangeRateChanged($event.target.value)">
-        <mat-error *ngIf="hasEntryError('currencyExchangeRate')">{{errorMessage('currencyExchangeRate')}}</mat-error>
-      </mat-form-field>
-    </div>
-  </div>
+        <div flex *ngIf="!isMasterCurrency" style="width: 200px">
+            <mat-form-field appearance="outline" class="w-100-p">
+                <mat-label>{{'purchasing.purchaseOrder.currencyRate' | translate}}</mat-label>
+                <input matInput name="currencyExchangeRate" formControlName="currencyExchangeRate" class="right"
+                    (change)="onCurrencyExchangeRateChanged($event.target.value)">
+                <mat-error *ngIf="hasEntryError('currencyExchangeRate')">{{errorMessage('currencyExchangeRate')}}
+                </mat-error>
+            </mat-form-field>
+        </div>
 
-  <div flex>
-    <mat-form-field appearance="outline" class="w-100-p">
-      <mat-label>Memo</mat-label>
-      <textarea matInput name="memo" formControlName="memo" rows="3"></textarea>
-    </mat-form-field>
-  </div>
+        <div flex *ngIf="!isNewItem" style="width: 200px">
+            <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+        </div>
 
-  <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-label>{{'common.word.memo' | translate}}</mat-label>
+            <textarea matInput name="memo" formControlName="memo" rows="1"></textarea>
+        </mat-form-field>
+    </div>
 </form>

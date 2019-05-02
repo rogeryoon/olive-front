@@ -1,6 +1,6 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, ValidationErrors, 
-  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator } from '@angular/forms';
+  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -11,9 +11,9 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { OlivePaymentMethodService } from 'app/main/supports/companies/services/payment-method.service';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OlivePurchaseOrderPaymentDatasource } from './purchase-order-payment-datasource';
-import { PurchaseOrder } from '../../models/purchase-order.model';
 import { PaymentMethod } from 'app/main/supports/companies/models/payment-method.model';
 import { OliveUtilities } from 'app/core/classes/utilities';
+import { PurchaseOrderPayment } from '../../models/purchase-order-payment.model';
 
 @Component({
   selector: 'olive-purchase-order-payments-editor',
@@ -38,6 +38,8 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   paymentMethods: PaymentMethod[];
 
   value: any = null;  
+
+  @Input() isVoidMode = false;
 
   constructor(
     formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
@@ -74,7 +76,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     let amount = 0;
 
     this.paymentsDataSource.items.forEach(item => {
-      if (!isNaN(item.amount)) {
+      if (!isNaN(item.amount) && item.amount > 0) {
         amount += +item.amount;
       }
     });
@@ -89,11 +91,25 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   }
 
   createEmptyObject() {
-    return new PurchaseOrder();
+    return new PurchaseOrderPayment();
   }
 
-  private newItem() {
-    this.paymentsDataSource.addNewItem(null);
+  onTotalItemEntryAmountChanged(amount) {
+    if (this.paymentsDataSource.items.length === 0) {
+      const payment = new PurchaseOrderPayment();
+      payment.amount = amount;
+      this.newItem(payment);
+    }
+    else 
+    if (this.paymentsDataSource.items.length === 1) {
+      this.oFArray.controls.forEach((formGroup: FormGroup) => {
+        formGroup.patchValue({amount: amount.toFixed(this.standCurrency.decimalPoint)});
+      });
+    }
+  }
+
+  private newItem(payment: PurchaseOrderPayment = null) {
+    this.paymentsDataSource.addNewItem(payment);
     this.paymentsDataSource.renderItems();
     this.oForm.markAsDirty();
   }
@@ -101,7 +117,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   private deleteItem(item: any) {
     if (item.Obj.id || item.Obj.amount || item.Obj.paymentMethodId || item.Obj.remarkId) {
       this.snackBar.open(
-        OliveUtilities.showParamMessage(this.translater.get('common.message.confirmDelete'), ''),
+        OliveUtilities.showParamMessage(this.translater.get('common.message.confirmDelete')),
         this.translater.get('common.button.delete'),
         { duration: 5000 }
       )
@@ -127,7 +143,6 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
 
   writeValue(obj: any): void {
     this.value = obj;
-    this.item = obj;
 
     if (obj) {
       this.paymentsDataSource.loadItems(obj);

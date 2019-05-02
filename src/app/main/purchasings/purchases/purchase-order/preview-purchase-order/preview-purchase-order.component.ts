@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
@@ -9,7 +8,8 @@ import { OliveBaseComponent } from 'app/core/components/extends/base/base.compon
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveCompanyService } from 'app/main/supports/companies/services/company.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Branch } from 'app/main/supports/companies/models/branch.model';
+import { OliveBranchService } from 'app/main/supports/companies/services/branch.service';
 
 @Component({
   selector: 'olive-preview-purchase-order',
@@ -20,13 +20,14 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
   order: PurchaseOrder;
   digits: number;
   companyHtml: string;
+  warehouseHtml: string;
 
   constructor(
-    private translater: FuseTranslationLoaderService, private cacheService: OliveCacheService,
+    translater: FuseTranslationLoaderService, private cacheService: OliveCacheService,
     private companyService: OliveCompanyService, private documentService: OliveDocumentService,
-    private http: HttpClient, protected sanitizer: DomSanitizer
+    private branchService: OliveBranchService
   ) {
-    super();
+    super(translater);
   }
 
   ngOnInit() {
@@ -41,6 +42,14 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
     this.cacheService.getItem(this.companyService, 'company', this.order.warehouseFk.companyId)
     .then(item => {
       this.renderCompanyHtml(item);  
+    });  
+
+    this.cacheService.getItems(this.branchService, 'branches')
+    .then(items => {
+      const branch = items.find(b => b.id === this.order.warehouseFk.companyMasterBranchId);
+      if (branch) {
+        this.renderWarehouseHtml(branch);  
+      }
     });  
   }
 
@@ -90,10 +99,10 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
     return values.join(' / ');
   }
 
-  get vendor(): string {
+  get supplierHtml(): string {
     const values = [];
 
-    const fk = this.order.vendorFk;
+    const fk = this.order.supplierFk;
 
     values.push(`<strong>${fk.name} [${fk.code}]</strong>`);
 
@@ -108,7 +117,7 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
     return values.join('<br>');
   }
 
-  get warehouse(): string {
+  renderWarehouseHtml(branch: Branch) {
     const values = [];
 
     const fk = this.order.warehouseFk;
@@ -116,7 +125,7 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
     values.push(`<strong>${fk.name} [${fk.code}]</strong>`);
 
     if (fk.companyMasterBranchId) {
-      const branch = this.cacheService.branches.find(b => b.id === fk.companyMasterBranchId);
+      // const branch = this.cacheService.branches.find(b => b.id === fk.companyMasterBranchId);
 
       if (branch.addressFk) {
         values.push(this.address(branch.addressFk));
@@ -127,7 +136,7 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
       }
     }
 
-    return values.join('<br>');
+    this.warehouseHtml = values.join('<br>');
   }
 
   onPrint() {
@@ -143,8 +152,8 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
     summaries.push(`PO # : ${this.dateCode(this.order.date, this.order.id)}`);
     summaries.push(`Date : ${this.date(this.order.date)}`);
 
-    const vfk = this.order.vendorFk;
-    summaries.push(`Vendor : ${vfk.name} [${vfk.code}]`);
+    const vfk = this.order.supplierFk;
+    summaries.push(`Supplier : ${vfk.name} [${vfk.code}]`);
 
     const wfk = this.order.warehouseFk;
     summaries.push(`Warehouse : ${wfk.name} [${wfk.code}]`);

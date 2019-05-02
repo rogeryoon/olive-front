@@ -357,13 +357,13 @@
 
     <div id="fromto">
         <div id="from">
-            <div>Vendor</div>
-            <p [innerHTML]="vendor">
+            <div>Supplier</div>
+            <p [innerHTML]="supplierHtml">
             </p>
         </div>
         <div id="to">
             <div>Ship To</div>
-            <p [innerHTML]="warehouse">
+            <p [innerHTML]="warehouseHtml">
             </p>
         </div>
     </div>
@@ -389,7 +389,8 @@
                     <td class="print -ex-type-number">{{commaNumber(item.quantity)}}</td>
                     <td class="print -ex-type-number">{{numberFormat(item.price, digits)}}</td>
                     <td class="print -ex-type-number">{{numberFormat(item.discount*-1, digits, '0')}}</td>
-                    <td class="print -ex-type-number">{{numberFormat(item.quantity*item.price-item.discount, digits)}}</td>
+                    <td class="print -ex-type-number">{{numberFormat(item.quantity*item.price-item.discount, digits)}}
+                    </td>
                     <td class="print -ex-type-text">{{item.remarks}}</td>
                 </tr>
             </tbody>
