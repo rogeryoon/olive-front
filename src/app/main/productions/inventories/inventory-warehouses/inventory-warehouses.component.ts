@@ -15,12 +15,11 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { OliveInventoryService } from '../services/inventory.service';
-import { InventoryBalance } from '../models/inventory-balance';
+import { OliveInventoryService } from '../../services/inventory.service';
+import { InventoryBalance } from '../../models/inventory-balance';
 import { OliveConstants } from 'app/core/classes/constants';
-import { Warehouse } from 'app/main/supports/companies/models/warehouse.model';
-import { InventoryWarehouse } from '../models/inventory-warehouse';
-import { GridColumnStyleBuilder } from '@angular/flex-layout/grid/typings/column/column';
+import { Warehouse } from 'app/main/supports/models/warehouse.model';
+import { InventoryWarehouse } from '../../models/inventory-warehouse';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -112,7 +111,7 @@ export class OliveInventoryWarehousesComponent extends OliveEntityListComponent 
   }
 
   loadItems(dataTablesParameters: any, callback) {
-    this.loadHandler((this.dataService as OliveInventoryService).getInventoryWarehouse(dataTablesParameters), callback);
+    this.itemsLoader((this.dataService as OliveInventoryService).getInventoryWarehouse(dataTablesParameters), callback);
   }
 
   renderItem(item: InventoryWarehouse, columnName: string): string {

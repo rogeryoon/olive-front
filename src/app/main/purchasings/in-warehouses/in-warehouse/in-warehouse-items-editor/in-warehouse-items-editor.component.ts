@@ -16,15 +16,15 @@ import { OliveEntityFormComponent } from 'app/core/components/extends/entity-for
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { NameValue } from 'app/core/models/name-value';
-import { InWarehouseItem } from '../../models/in-warehouse-item.model';
-import { InWarehouse } from '../../models/in-warehouse.model';
+import { InWarehouseItem } from '../../../models/in-warehouse-item.model';
+import { InWarehouse } from '../../../models/in-warehouse.model';
 import { OlivePurchaseOrderLookupDialogComponent } from 'app/main/purchasings/purchases/purchase-order/purchase-order-lookup-dialog/purchase-order-lookup-dialog.component';
-import { OlivePurchaseOrderService } from 'app/main/purchasings/purchases/services/purchase-order.service';
-import { PurchaseOrder } from 'app/main/purchasings/purchases/models/purchase-order.model';
+import { OlivePurchaseOrderService } from 'app/main/purchasings/services/purchase-order.service';
+import { PurchaseOrder } from 'app/main/purchasings/models/purchase-order.model';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { Warehouse } from 'app/main/supports/companies/models/warehouse.model';
+import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { OliveUtilities } from 'app/core/classes/utilities';
-import { PurchaseOrderItem } from 'app/main/purchasings/purchases/models/purchase-order-item.model';
+import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 
 @Component({
@@ -303,9 +303,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   }
 
   updateBalace(index: number) {
-    const formGroup = this.oFArray.controls[index] as FormGroup;
-
-    const quantityValue = formGroup.get('quantity').value;
+    const quantityValue = this.getArrayFormGroup(index).get('quantity').value;
 
     if (OliveUtilities.isNumberPattern(quantityValue)) {
       const item = this.itemsDataSource.items[index];

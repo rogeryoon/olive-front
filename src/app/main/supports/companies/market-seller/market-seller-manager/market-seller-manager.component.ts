@@ -7,11 +7,11 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
 
-import { OliveMarketSellerService } from '../../services/market-seller.service';
+import { OliveMarketSellerService } from '../../../services/market-seller.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveMarketSellerEditorComponent } from '../market-seller-editor/market-seller-editor.component';
-import { MarketSeller } from '../../models/market-seller.model';
+import { MarketSeller } from '../../../models/market-seller.model';
 
 @Component({
   selector: 'olive-market-seller-manager',

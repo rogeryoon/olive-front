@@ -5,11 +5,13 @@ import { Subscription } from 'rxjs';
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { Address } from 'app/core/models/core/address.model';
 
-import { Country } from 'app/main/supports/bases/models/country.model';
-import { OliveCountryService } from 'app/main/supports/bases/services/country.service';
+import { Country } from 'app/main/supports/models/country.model';
+import { OliveCountryService } from 'app/main/supports/services/country.service';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
+import { OliveUtilities } from 'app/core/classes/utilities';
+import { NameValue } from 'app/core/models/name-value';
 
 @Component({
   selector: 'olive-address-editor',
@@ -23,7 +25,7 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
 
   constructor(
     formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
-    private dictionaryService: OliveCacheService,
+    private cacheService: OliveCacheService,
     private messageHelper: OliveMessageHelperService,
     private countryService: OliveCountryService
   ) {
@@ -47,7 +49,6 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      id: '',
       address1: ['', Validators.required],
       address2: '',
       city: '',
@@ -59,7 +60,6 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
 
   resetForm() {
     this.oForm.reset({
-      id: this.id36(this.item.id),
       address1: this.item.address1 || '',
       address2: this.item.address2 || '',
       city: this.item.city || '',
@@ -75,20 +75,20 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
 
   initializeChildComponent() {
     const itemKey = 'country';
-    const dataOptions = null;
+    const searchOption = OliveUtilities.searchOption([{name: 'activated', value: true} as NameValue], 'name');
 
-    if (!this.dictionaryService.exist(itemKey)) {
-      this.countryService.getItems(dataOptions)
+    if (!this.cacheService.exist(itemKey)) {
+      this.countryService.getItems(searchOption)
         .subscribe(res => {
-          this.dictionaryService.set(itemKey, res.model);
+          this.cacheService.set(itemKey, res.model);
           this.countries = res.model;
         },
           error => {
-            this.messageHelper.showLoadFaild(error);
+            this.messageHelper.showLoadFaildSticky(error);
           });
     }
     else {
-      this.countries = this.dictionaryService.get(itemKey);
+      this.countries = this.cacheService.get(itemKey);
     }
   }
 }

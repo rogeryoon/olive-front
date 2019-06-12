@@ -12,7 +12,7 @@ import { OliveLookupDialogComponent } from 'app/core/components/dialogs/lookup-d
 
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
-import { ProductVariant } from '../../models/product-variant.model';
+import { ProductVariant } from '../../../models/product-variant.model';
 import { IIDName } from 'app/core/models/id-name';
 
 const Id = 'id';

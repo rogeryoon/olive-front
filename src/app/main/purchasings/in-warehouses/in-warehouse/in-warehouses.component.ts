@@ -15,8 +15,8 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { OliveDocumentService } from 'app/core/services/document.service';
 
 import { OliveSearchInWarehouseComponent } from './search-in-warehouse/search-in-warehouse.component';
-import { OliveInWarehouseService } from '../services/in-warehouse.service';
-import { InWarehouse } from '../models/in-warehouse.model';
+import { OliveInWarehouseService } from '../../services/in-warehouse.service';
+import { InWarehouse } from '../../models/in-warehouse.model';
 import { OliveInWarehouseManagerComponent } from './in-warehouse-manager/in-warehouse-manager.component';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveCacheService } from 'app/core/services/cache.service';

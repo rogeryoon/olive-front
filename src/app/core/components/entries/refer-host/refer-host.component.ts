@@ -81,7 +81,7 @@ export class OliveReferHostComponent implements ControlValueAccessor, OnInit, Va
         },
         error => {
           this.loadingIndicator = false;            
-          this.messageHelper.showLoadFaild(error);
+          this.messageHelper.showLoadFaildSticky(error);
         }
       );
     }
@@ -94,7 +94,6 @@ export class OliveReferHostComponent implements ControlValueAccessor, OnInit, Va
         item: item,
         itemType: this.setting.itemType,
         managePermission: this.setting.managePermission,
-        translateTitleId: this.setting.translateTitleId,
         customTitle: this.getCustomTitle(item),
         readOnly : this.setting.readonly
       } as OliveOnEdit

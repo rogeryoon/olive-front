@@ -158,8 +158,20 @@ export class OliveUtilities {
     }
 
     public static convertBase36ToNumber(input: string): number {
-        if (this.isValid36Id(input)) { return 0; }
+        if (!this.isValid36Id(input)) { return 0; }
         return parseInt(input, 36);
+    }
+
+    public static isNumber(input: string, maxDigits: number): boolean {
+        let decimalPattern = '';
+
+        if (maxDigits > 0) {
+            decimalPattern = `(\\.\\d{1,${maxDigits}})?`;
+        }
+
+        const patt = new RegExp(`^\\s*\\d*${decimalPattern}\\s*$`);
+
+        return patt.test(input);
     }
 
     public static minNumber(array: number[]): string {
@@ -282,6 +294,72 @@ export class OliveUtilities {
         else {
             return this.convertToBase36(id) + '-' + OliveUtilities.getDateCode(date);
         }
+    }
+
+    public static volume(volumeString: string): number | null {
+        const stringValues = volumeString.trim().split(/[ ,]+/).filter(Boolean);
+
+        if (
+            stringValues.length === 3 &&
+            this.isNumber(stringValues[0], 2) &&
+            this.isNumber(stringValues[1], 2) &&
+            this.isNumber(stringValues[2], 2)
+        ) {
+            return +(+stringValues[0] * +stringValues[1] * +stringValues[2]).toFixed(2);
+        }
+
+        return null;
+    }
+
+    public static volumeWeight(volume: number, lengthTypeCode: string, weightTypeCode: string): number {
+
+        let inchVolume = volume;
+        // Centimeter
+        if (lengthTypeCode === 'C') {
+            inchVolume = volume * OliveConstants.unitConversionRate.centimeterToInchVolume;
+        }
+
+        const poundVolumeWeight = +(inchVolume / 166).toFixed(2);
+
+        let returnVolumeWeight = poundVolumeWeight;
+        // Kilogram
+        if (weightTypeCode === 'K') {
+            returnVolumeWeight = poundVolumeWeight * OliveConstants.unitConversionRate.poundToKilo;
+        }
+
+        return +(returnVolumeWeight).toFixed(2);
+    }
+
+    public static renderVolumeWeight(volumeCtrl: any, weightTypeCtrl: any, lengthTypeCtrl: any) {
+        if (volumeCtrl && weightTypeCtrl && weightTypeCtrl.selected && lengthTypeCtrl && lengthTypeCtrl.selected) {
+            const volumeValue = this.volume(volumeCtrl.value);
+            const weightTypeCode = weightTypeCtrl.selected.value;
+            const lengthTypeCode = lengthTypeCtrl.selected.value;
+
+            if (volumeValue != null) {
+                const symbol = OliveConstants.weightTypes.find(e => e.code === weightTypeCode).symbol;
+
+                const volumeWeight = this.numberFormat(this.volumeWeight(volumeValue, lengthTypeCode, weightTypeCode), 2);
+
+                return `${volumeWeight} ${symbol}`;
+            }
+        }
+        return '';
+    }
+
+    public static searchOption(extSearches: NameValue[], orderColumnName: string, sort: string = 'asc'): any {
+        const option = 
+        {
+            columns: [{data: orderColumnName}],
+            order: [{column: 0, dir: sort}],
+            length: 0
+        };
+
+        if (extSearches && extSearches.length > 0) {
+            option['extSearch'] = extSearches;
+        }
+
+        return option;
     }
 }
 

@@ -18,7 +18,6 @@ export const locale = {
                 'updated' : '"{0}"(이)가 저장되었습니다.', // '"{0}" was saved successfully'
                 'updatedGeneral' : '데이터가 저장되었습니다.', // 'The item was saved successfully'
                 'saveError' : 'The below errors occured whilst saving your changes:',
-                'noExcelFile' : 'Please upload a valid Excel file (.xlsx)!',
                 'selectItem' : '원하는 항목을 체크 선택해주세요.',
                 'notSupportHtml5' : 'Sorry! Your browser does not support HTML5.',
                 'invalidSelectedFiles' : '선택한 파일이 없습니다.',
@@ -34,12 +33,19 @@ export const locale = {
                 'requestFinished': '요청한 작업을 완료하였습니다.',
                 'noItemCreated' : '1개 이상의 항목을 등록하십시오.',
                 'balanceIsMinus' : '잔량이 음수인 값이 있습니다.',
-                'validationError' : '입력 오류가 있습니다. 기입항목(들)을 확인하십시오s.',
-                'chooseOption' : '선택' // 'Choose an option'
+                'validationError' : '입력 오류가 있습니다. 기입항목(들)을 확인하십시오.',
+                'chooseOption' : '선택', // 'Choose an option',
+                'emptyFile' : '내용이 없는 빈 파일입니다.',
+                'invalidFile' : '업로드 형식에 맞지 않는 파일입니다.',
+                'errorOccured' : '작업도중 오류가 발생하였습니다.',
+                'uploadColumnMatchError' : '엑셀{0}열 이름이 매치하지 않습니다. 입력열[{1}] | 설정열[{2}]',
+                'uploadDataSignatureUnregisterd' : '등록되지 않은 양식입니다. 관리자에게 문의하십시오.'
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
+                'concurrencyKeyName' : '입력한 키 \'{0}\'(이)가 기존 데이터값과 중복되어 데이터를 저장할 수 없습니다. \'{0}\'(을)를 다른값으로 변경하십시오.',
                 'deleteByConcurrency' : '해당 데이터를 참조하고 있는 관련 데이터가 존재하여 삭제를 할 수 없습니다. ',
+                'volumeError' : '(예: 12.5 5 9)와 같은 형식으로 입력하십시오.'
             },
             'validate' : {
                 'required' : '필수 입력(선택) 항목입니다.',
@@ -70,7 +76,8 @@ export const locale = {
                 'yesOrNo': '확인',
                 'creater' : '등록',
                 'lastUpdater' : '최종수정',
-                'validationError' : '입력 오류'
+                'validationError' : '입력 오류',
+                'finalConfirm' : '최종확인'
             },
             'button': {
                 'save' : '저장',
@@ -87,14 +94,16 @@ export const locale = {
                 'finish': '종결',
                 'yes': '예',
                 'no': '아니오',
-                'ok': '확인'
+                'ok': '확인',
+                'reset' : '리셋',
+                'addRow' : '행추가'
             },
             'menu': {
                 'menuButton' : '부가 기능',
                 'addNewItem' : '신규 등록', // 'Add New Item',
                 'exportExcelFile' : '엑셀 다운로드', // 'Export Excel File',
                 'printList' : '인쇄', // 'Print List',
-                'upload' : '업로드', // 'Upload',
+                'upload' : '대량 업로드', // 'Upload',
                 'productLookUp' : '상품 조회',
                 'purchaseOrderLookup' : '발주 조회'
             },
@@ -108,13 +117,36 @@ export const locale = {
                 'supplier' : '공급처',
                 'itemsName' : '품명',
                 'name' : '이름',
+                'value' : '값',
                 'webSite' : '웹사이트',
                 'activated' : '활동',
                 'memo' : '메모',
                 'paymentsName' : '결제',
                 'warehouse' : '창고',
                 'createdUtc' : '등록일',
-                'dueAmount' : '합계'
+                'dueAmount' : '합계',
+                'type' : '타입',
+                'min' : '최소',
+                'max' : '최대',
+                'price':  '가격',
+                'interfaceName': '인터페이스',
+                'imported': '상품/주문 연결 완료',
+                'orderNumber':  '마켓 주문 #',
+                'consignee': '수취인',
+                'quantity' : '수량',
+                'productMatched': '상품 연결',
+                'orderTransferred': '주문 전환',
+                'marketProduct' : '마켓 상품명',
+                'linkedProducts' : '연결 상품',
+                'excelColumn': '엑셀 열',
+                'columnName' : '엑셀 열',
+                'matchValue' : '매치 값',
+                'partMatch' : '매치 옵션',
+                'checkPartMatch' : '부분 매치',
+                'matchSearch' : '상품 매치 포함',
+                'checkMatchSearch' : '포함',
+                'resetValue' : '매치 값 복원',
+                'searchLink' : '상품 검색'
             },
             'word': {
                 'id' : 'ID',
@@ -140,7 +172,18 @@ export const locale = {
                 'refundAmount' : '환불금액',
                 'productName' : '품명',
                 'productType' : '타입',
-                'dueAmount' : '합계'
+                'dueAmount' : '합계',
+                'hsCode' : 'HS 코드',
+                'lengthType' : '단위',
+                'volume' : '부피',
+                'volumeWeight' : '부피 무게',
+                'weightType' : '단위',
+                'weight' : '무게',
+                'customsName' : '세관 신고명',
+                'customsPrice' : '세관 가격',
+                'customsTypeCode' : '통관 타입',
+                'excel': '엑셀',
+                'marketSeller' : '판매자'
             }
         },
         'page': {
@@ -207,6 +250,9 @@ export const locale = {
                 'group' : '판매',
 
                 'orderList' : '주문 목록',
+                'marketExcels' : '판매처 엑셀',
+                'marketExcelRows' : '판매처 엑셀',
+                'matchItems': '판매처 상품 연결'
             },
             'secure' : {
                 'group' : '보안 설정',
@@ -305,6 +351,23 @@ export const locale = {
             },
             'inventoryBalances': {
                 'inTransitQuantity' : '주문'
+            }
+        },
+        'sales': {
+            'marketItemMappingExcelColumnsEditor' : {
+                'notMatchOriginalValue' : '최초 엑셀에 저장되어 있던 (부분) 문자열이 아닙니다'
+            },
+            'maketExcelRows' : {
+                'unmappedProductsTitle' : '연결대상 상품수',
+                'linkProductMenu' : '상품 연결',
+                'transferableOrdersTitle' : '주문 전환 대상',
+                'finalTransferOrdersConfirmMessage' : '정말 주문전환 할까요? 확실합니까?',
+                'transferOrdersSuccessMessage' : '{0}건 주문전환이 완료되었습니다.',
+                'transferOrders' : '주문 전환',
+            },
+            'marketItemMappings' : {
+                'linkProductMenuJobDoneTitle' : '상품 연결 완료',
+                'linkProductMenuJobDoneDescription' : '상품 연결 완료되어 업로드한 엑셀 페이지로 다시 돌아갑니다.',
             }
         },
         'purchasing' : {
@@ -407,7 +470,7 @@ export const locale = {
                 'standCarrier' : '시스템 배송사'
             },
             'marketEditor' : {
-                'standMarket' : '인터페이스'
+                'marketExcelInterface' : '인터페이스'
             }
         }
     }

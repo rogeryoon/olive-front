@@ -15,8 +15,8 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { OliveDocumentService } from 'app/core/services/document.service';
 
 import { OliveSearchCountryComponent } from './search-country/search-country.component';
-import { OliveCountryService } from '../services/country.service';
-import { Country } from '../models/country.model';
+import { OliveCountryService } from '../../services/country.service';
+import { Country } from '../../models/country.model';
 import { OliveCountryManagerComponent } from './country-manager/country-manager.component';
 
 const Selected  = 'selected';

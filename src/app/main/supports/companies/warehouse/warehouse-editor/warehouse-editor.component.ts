@@ -5,15 +5,15 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { Warehouse } from '../../models/warehouse.model';
-import { OliveCompanyService } from '../../services/company.service';
+import { Warehouse } from '../../../models/warehouse.model';
+import { OliveCompanyService } from '../../../services/company.service';
 import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
 import { OliveCompanyGroupManagerComponent } from '../../company-group/company-group-manager/company-group-manager.component';
-import { Company } from '../../models/company.model';
+import { Company } from '../../../models/company.model';
 import { Permission } from '@quick/models/permission.model';
 import { OliveBranchManagerComponent } from '../../branch/branch-manager/branch-manager.component';
-import { Branch } from '../../models/branch.model';
-import { OliveBranchService } from '../../services/branch.service';
+import { Branch } from '../../../models/branch.model';
+import { OliveBranchService } from '../../../services/branch.service';
 import { AccountService } from '@quick/services/account.service';
 
 @Component({
@@ -53,7 +53,6 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      id: '',
       code: ['', Validators.required],
       name: ['', Validators.required],
       companyFk: null,
@@ -64,7 +63,6 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
 
   resetForm() {
     this.oForm.reset({
-      id: this.id36(this.item.id),
       code: this.item.code || '',
       name: this.item.name || '',
       companyFk: this.item.companyFk || '',

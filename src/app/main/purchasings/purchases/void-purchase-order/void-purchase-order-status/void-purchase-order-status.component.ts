@@ -14,12 +14,11 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OliveVoidPurchaseOrderManagerComponent } from '../void-purchase-order-manager/void-purchase-order-manager.component';
-import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OliveEditDialogComponent } from 'app/core/components/dialogs/edit-dialog/edit-dialog.component';
-import { InWarehouse } from 'app/main/purchasings/in-warehouses/models/in-warehouse.model';
-import { OliveInWarehouseService } from 'app/main/purchasings/in-warehouses/services/in-warehouse.service';
-import { InWarehouseItem } from 'app/main/purchasings/in-warehouses/models/in-warehouse-item.model';
+import { InWarehouse } from 'app/main/purchasings/models/in-warehouse.model';
+import { OliveInWarehouseService } from 'app/main/purchasings/services/in-warehouse.service';
+import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.model';
 
 const ProductVariantId = 'id';
 const ItemName = 'name';
@@ -118,7 +117,7 @@ export class OliveVoidPurchaseOrderStatusComponent extends OliveLookupDialogComp
         },
         error => {
           this.loadingIndicator = false;            
-          this.messageHelper.showLoadFaild(error);
+          this.messageHelper.showLoadFaildSticky(error);
         }
       );
     }
@@ -131,7 +130,6 @@ export class OliveVoidPurchaseOrderStatusComponent extends OliveLookupDialogComp
         item: item,
         itemType: InWarehouse,
         managePermission: null,
-        translateTitleId: NavTranslates.InWarehouse.list,
         customTitle: `${this.translater.get('navi.inWarehouse.group')} ID : ${this.dateCode(item.createdUtc, item.id)}`,
         readOnly : true
       } as OliveOnEdit

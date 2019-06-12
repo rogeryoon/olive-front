@@ -10,10 +10,10 @@ import { OliveInWarehousesComponent } from './in-warehouse/in-warehouses.compone
 import { OliveSharedModule } from 'app/core/shared.module';
 import { OliveInWarehouseManagerModule } from './in-warehouse/in-warehouse-manager/in-warehouse-manager.module';
 import { OliveSearchInWarehouseComponent } from './in-warehouse/search-in-warehouse/search-in-warehouse.component';
-import { OliveInWarehouseService } from './services/in-warehouse.service';
+import { OliveInWarehouseService } from '../services/in-warehouse.service';
 import { OliveInWarehouseEditorPageComponent } from './in-warehouse/in-warehouse-editor-page/in-warehouse-editor-page.component';
-import { OliveInWarehouseEditorPageResolver } from './services/in-warehouse-editor-page-resolver';
-import { OliveInWarehouseItemService } from './services/in-warehouse-items.service';
+import { OliveInWarehouseEditorPageResolver } from '../services/in-warehouse-editor-page-resolver';
+import { OliveInWarehouseItemService } from '../services/in-warehouse-items.service';
 
 const routes = [
   {

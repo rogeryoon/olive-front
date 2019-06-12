@@ -24,8 +24,6 @@ export class DBkeys {
     public static readonly COMPANY_MASTER = 'company_master';
     public static readonly COMPANY_GROUP_SETTING = 'grop_setting';
     public static readonly CURRENCIES = 'currencies';
-    public static readonly BRANCHES = 'branches';
-    public static readonly STAND_MARKETS = 'standmarkets';
 
     public static readonly WAREHOUSE_ID = 'warehouse_id';
     // roger end

@@ -1,0 +1,45 @@
+<form [formGroup]="oForm" (keydown.enter)="false">
+  <mat-table [dataSource]="excelColumnsDataSource" formArrayName="formarray">
+    <mat-header-row *matHeaderRowDef="displayedColumns">
+    </mat-header-row>
+
+    <mat-row *matRowDef="let row; columns: displayedColumns; let i=index" #cdkrow [ngClass]="{'highlightrow': (currentRow) && row.ObjId == currentRow.ObjId}"
+      (click)="currentRow=row;">
+    </mat-row>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.columnName' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="justify-center">{{row.Obj.name}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="matchValue">
+      <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.matchValue' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
+        <mat-form-field fxFlex='95%' *ngIf="!row.Obj.readOnly">
+          <input name="inputMatchValue{{row.ObjId}}" matInput formControlName="matchValue"
+            (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" autocomplete="off">
+          <mat-error *ngIf="hasArrayEntryError('matchValue',i)">{{arrayErrorMessage('matchValue',i)}}</mat-error>
+          <mat-error *ngIf="hasArrayThisError('matchValue','subset',i)">{{'sales.marketItemMappingExcelColumnsEditor.notMatchOriginalValue' | translate}}</mat-error>
+        </mat-form-field>
+        <span *ngIf="row.Obj.readOnly">{{row.Obj.matchValue}}</span>
+      </mat-cell>
+    </ng-container>    
+
+    <ng-container matColumnDef="matchSearch">
+      <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.matchSearch' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" class="justify-center">
+        <mat-checkbox name="checkMatchSearch{{row.ObjId}}" formControlName="matchSearch">{{'common.tableHeader.checkMatchSearch' | translate}}</mat-checkbox>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.resetValue' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" class="justify-center">
+        <button mat-icon-button matTooltip="{{'common.button.reset' | translate}}" (click)="resetItemValue(i)" [disabled]="row.Obj.readOnly">
+          <mat-icon [color]="row.Obj.readOnly ? '' : 'warn'">loop</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+  </mat-table>
+</form>

@@ -1,0 +1,37 @@
+<h1 mat-dialog-title>{{translate('common.title.importDialog')}}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
+        <div fxLayout="column" fxLayout.lt-sm="column" fxLayoutGap="1em">
+            <mat-form-field appearance="outline" class="w-300">
+                <mat-label>{{'common.word.marketSeller' | translate}}</mat-label>
+                <mat-select name="seller" formControlName="seller" required>
+                    <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
+                    <mat-option *ngFor="let seller of sellers" [value]="seller.id">{{seller.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="hasEntryError('seller')">{{errorMessage('seller')}}</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="!uploadData && sellerSelected" fxLayout="column" fxLayout.lt-sm="column" fxLayoutGap="1em" class="mt-8 mb-8">
+            {{translate('common.message.clickFileButton')}}
+            <button mat-raised-button (click)="excelfile.click()" [disabled]="showLoadingBar" color="primary" class="w-300 mt-4">
+                <mat-icon>ballot</mat-icon> {{translate('common.button.exelFile')}}
+            </button>
+            <input #excelfile type="file" id="excelfile" (change)="onUpload($event)" style="display:none;" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+        </div>
+
+        <div fxLayout="column" fxLayout.lt-sm="column" fxLayoutGap="1em" class="mt-8 mb-8">
+            <mat-progress-bar *ngIf="showLoadingBar" class="loading-bar" color="accent" mode="indeterminate">
+            </mat-progress-bar>
+            <table id="import-table" class="display" style="width:100%"></table>
+        </div>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button [disabled]="!uploadData || showLoadingBar" (click)="save()" color="accent">
+        <mat-icon>save</mat-icon> {{translate('common.button.save')}}
+    </button>
+    <button mat-raised-button (click)="cancel()" [disabled]="showLoadingBar">
+        <mat-icon>cancel</mat-icon>{{translate('common.button.cancel')}}
+    </button>
+</div>

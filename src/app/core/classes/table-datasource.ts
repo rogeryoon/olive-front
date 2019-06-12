@@ -3,7 +3,7 @@ import { FormGroup, FormArray, FormControl } from '@angular/forms';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
-import { Currency } from 'app/main/supports/bases/models/currency.model';
+import { Currency } from 'app/main/supports/models/currency.model';
 import { OliveCacheService } from '../services/cache.service';
 import { OliveUtilities } from './utilities';
 
@@ -24,8 +24,8 @@ export class TableDatasource extends DataSource<any> {
     protected standCurrency: Currency;
     protected currencies: Currency[];
 
-    constructor(protected cacheService: OliveCacheService) { 
-        super(); 
+    constructor(protected cacheService: OliveCacheService) {
+        super();
         this.init();
     }
 
@@ -51,9 +51,11 @@ export class TableDatasource extends DataSource<any> {
     }
 
     get items(): any[] {
-        const array: any[] = [];
-        this._objectStore.forEach(r => array.push(r.Obj));
-        return array;
+        return this.objects.map(root => root.Obj);
+    }
+
+    get objects(): any[] {
+        return this._objectStore;
     }
 
     loadItems(items: any[]) {
@@ -64,18 +66,24 @@ export class TableDatasource extends DataSource<any> {
 
     public renderItems(needReInitialize: boolean = true) {
         if (needReInitialize) {
-            Object.assign(this._saveObjectStore, this._objectStore);
-
-            this._objectStore = [];
-    
-            this._saveObjectStore.forEach(m => {
-                this.addNewItem(m.Obj); 
-            });
-    
-            this._saveObjectStore = [];
+            this.reInitialize();
         }
 
         this._ObjectsSubject$.next(this._objectStore);
+    }
+
+    private reInitialize() {
+        Object.assign(this._saveObjectStore, this._objectStore);
+
+        this._objectStore = [];
+
+        this._saveObjectStore.forEach(m => {
+            this.addNewItem(m.Obj);
+        });
+
+        this._saveObjectStore = [];
+
+        this.onReInitialize();
     }
 
     public addNewItem(m: any): DatasourceObject {
@@ -91,8 +99,8 @@ export class TableDatasource extends DataSource<any> {
 
         const d = res.ObjId;
         this._objectStore.forEach((m, i) => {
-            if (m.ObjId === d) { 
-                this._objectStore.splice(i, 1); 
+            if (m.ObjId === d) {
+                this._objectStore.splice(i, 1);
             }
         });
 
@@ -103,15 +111,37 @@ export class TableDatasource extends DataSource<any> {
     public deleteAll() {
         this._objectStore = [];
         this.renderItems();
-    }    
+    }
 
-    createNewFormContorl(r: any, propName: string, validators: any[]): FormControl {
-        const value = OliveUtilities.testIsUndefined(r.Obj[propName]) ? '' : r.Obj[propName].toString();
-        const m = new FormControl(value, validators.length ? validators : null);
-        m.valueChanges.subscribe(val => { r.Obj[propName] = val; });
-        return m;
+    createNewFormContorl(r: any, propName: string, validators: any[] = null, disabled = false): FormControl {
+        const stringValue = OliveUtilities.testIsUndefined(r.Obj[propName]) ? '' : r.Obj[propName].toString();
+
+        let value: any;
+        if (stringValue === 'true') {
+            value = true;
+        }
+        else if (stringValue === 'false') {
+            value = false;
+        }
+        else {
+            value = stringValue;
+        }
+
+        let formControl: FormControl;
+        const validatorSetting = validators && validators.length > 0 ? validators : null;
+
+        if (disabled) {
+            formControl = new FormControl({ value: value, disabled: disabled }, validatorSetting);
+        }
+        else {
+            formControl = new FormControl(value, validatorSetting);
+        }
+
+        formControl.valueChanges.subscribe(val => { r.Obj[propName] = val; });
+        return formControl;
     }
 
     createRowFormGroup(r: DatasourceObject): FormGroup { return null; }
-    public createNewItem(): any { return null; }
+    createNewItem(): any { return null; }
+    onReInitialize() { }
 }

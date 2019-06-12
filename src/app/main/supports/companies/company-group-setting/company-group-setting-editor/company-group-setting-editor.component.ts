@@ -35,7 +35,6 @@ export class OliveCompanyGroupSettingEditorComponent extends OliveEntityFormComp
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      id: '',
       purchasingEnabled: false,
       thirdPartyEnabled: false,
       shippingAgentEnabled: false,
@@ -45,7 +44,6 @@ export class OliveCompanyGroupSettingEditorComponent extends OliveEntityFormComp
 
   resetForm() {
     this.oForm.reset({
-      id: this.id36(this.item.id),
       purchasingEnabled: this.item.purchasingEnabled || false,
       thirdpPartyEnabled: this.item.thirdPartyEnabled || false,
       shippingAgentEnabled: this.item.shippingAgentEnabled || false,

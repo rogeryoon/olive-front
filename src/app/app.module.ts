@@ -56,6 +56,10 @@ const appRoutes: Routes = [
         loadChildren: './main/supports/bases/bases.module#OliveBasesModule'
     },
     {
+        path: 'data/market',
+        loadChildren: './main/sales/market-datas/market-datas.module#OliveMarketDatasModule'
+    },    
+    {
         path: 'purchases',
         loadChildren: './main/purchasings/purchases/purchases.module#OlivePurchasesModule'
     },

@@ -1,33 +1,44 @@
 ﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>{{'common.word.code' | translate}}</mat-label>
-        <input matInput name="code" formControlName="code" required maxlength="100" class="to-uppercase">
-        <mat-hint align="end">{{getControl('code').value?.length || 0}}/100</mat-hint>
-        <mat-error *ngIf="hasEntryError('code')">{{errorMessage('code')}}</mat-error>
-      </mat-form-field>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-label>{{'common.word.code' | translate}}</mat-label>
+            <input matInput name="code" formControlName="code" required maxlength="100" class="to-uppercase">
+            <mat-hint align="end">{{getControl('code').value?.length || 0}}/100</mat-hint>
+            <mat-error *ngIf="hasEntryError('code')">{{errorMessage('code')}}</mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>{{'common.word.name' | translate}}</mat-label>
-        <input matInput name="name" formControlName="name" required maxlength="200">
-        <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
-        <mat-error *ngIf="hasEntryError('name')">{{errorMessage('name')}}</mat-error>
-      </mat-form-field>
+        <olive-lookup-host #companyGroupFk formControlName="companyGroupFk" required
+            [placeholder]="companyGroupTitle | translate" [isEditMode]="canAssignCompanyGroups"></olive-lookup-host>
+    </div>
 
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Phone</mat-label>
-        <input matInput name="phoneNumber" formControlName="phoneNumber" maxlength="100">
-        <mat-hint align="end">{{getControl('phoneNumber').value?.length || 0}}/100</mat-hint>
-      </mat-form-field>      
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-label>{{'common.word.name' | translate}}</mat-label>
+            <input matInput name="name" formControlName="name" required maxlength="200">
+            <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
+            <mat-error *ngIf="hasEntryError('name')">{{errorMessage('name')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-label>Phone</mat-label>
+            <input matInput name="phoneNumber" formControlName="phoneNumber" maxlength="100">
+            <mat-hint align="end">{{getControl('phoneNumber').value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+    </div>
 
-      <olive-lookup-host #companyGroupFk formControlName="companyGroupFk" required  [placeholder]="companyGroupTitle | translate" [isEditMode]="canAssignCompanyGroups"></olive-lookup-host>      
-
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>{{'common.word.memo' | translate}}</mat-label>     
-        <textarea matInput name="memo" formControlName="memo" rows="5">
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-label>{{'common.word.memo' | translate}}</mat-label>
+            <textarea matInput name="memo" formControlName="memo" rows="2">
         </textarea>
-      </mat-form-field>
+        </mat-form-field>
+    </div>
 
-      <mat-checkbox formControlName="activated">Activated</mat-checkbox>
-
-      <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <div class="w-100-p">
+            <mat-checkbox formControlName="activated">Activated</mat-checkbox>
+        </div>
+        <div class="w-100-p">
+            <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+        </div>
+    </div>
 </form>

@@ -119,7 +119,7 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
               this.alertService.stopLoadingMessage();
               this.loadingIndicator = false;
 
-              this.messageHelper.showLoadFaild(error);
+              this.messageHelper.showLoadFaildSticky(error);
             });
       },
       columns: this.tableColumns,

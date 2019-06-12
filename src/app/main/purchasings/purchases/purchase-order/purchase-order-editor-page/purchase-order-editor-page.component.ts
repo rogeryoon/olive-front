@@ -9,7 +9,7 @@ import { AccountService } from '@quick/services/account.service';
 
 import { OliveEditPageComponent } from 'app/core/components/extends/edit-page/edit-page.component';
 import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/purchase-order-manager.component';
-import { PurchaseOrder } from '../../models/purchase-order.model';
+import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { AlertService } from '@quick/services/alert.service';

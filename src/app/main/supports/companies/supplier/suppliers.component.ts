@@ -16,8 +16,8 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchSupplierComponent } from './search-supplier/search-supplier.component';
-import { OliveSupplierService } from '../services/supplier.service';
-import { Supplier } from '../models/supplier.model';
+import { OliveSupplierService } from '../../services/supplier.service';
+import { Supplier } from '../../models/supplier.model';
 import { OliveSupplierManagerComponent } from './supplier-manager/supplier-manager.component';
 
 const Selected = 'selected';

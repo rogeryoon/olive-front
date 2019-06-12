@@ -69,7 +69,6 @@ export class OliveNavigationSelectorService implements OnInit, OnDestroy {
             returnNavi = jQuery.extend(true, {}, navi);
             // if (returnNavi.translate) {
             //     const returnValue = this.translater.get(returnNavi.translate);
-            //     console.log(returnNavi.translate, returnValue);                
             //     if (returnNavi.translate !== returnValue) {
             //         returnNavi.title = this.translater.get(returnNavi.translate);
             //     }

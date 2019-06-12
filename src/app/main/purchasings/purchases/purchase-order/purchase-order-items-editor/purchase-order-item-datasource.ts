@@ -1,10 +1,10 @@
 import { FormGroup, Validators } from '@angular/forms';
 
 import { TableDatasource } from 'app/core/classes/table-datasource';
-import { PurchaseOrderItem } from '../../models/purchase-order-item.model';
+import { PurchaseOrderItem } from '../../../models/purchase-order-item.model';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator } from 'app/core/classes/validators';
-import { Currency } from 'app/main/supports/bases/models/currency.model';
+import { Currency } from 'app/main/supports/models/currency.model';
 
 export class OlivePurchaseOrderItemDatasource extends TableDatasource {
 

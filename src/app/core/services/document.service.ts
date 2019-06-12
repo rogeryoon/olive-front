@@ -83,7 +83,7 @@ export class OliveDocumentService {
     const worksheet = workbook.addWorksheet(fileName);
 
     const table = $(`#${tableId}`);
-    
+
     let rowIndex = this.setExcelSummaries(worksheet, summaries);
 
     rowIndex = this.setExcelColsHeader(table, worksheet, rowIndex);
@@ -174,8 +174,8 @@ export class OliveDocumentService {
     headerRow.alignment = { vertical: 'middle', horizontal: 'center' };
     headerRow.height = 30;
 
-    headerRow.eachCell(function(cell) {
-      cell.border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+    headerRow.eachCell(function (cell) {
+      cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
     });
 
     return rowIndex;
@@ -228,8 +228,8 @@ export class OliveDocumentService {
             }
           });
 
-          newRow.eachCell(function(cell) {
-            cell.border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+          newRow.eachCell(function (cell) {
+            cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
           });
         }
       }
@@ -318,95 +318,114 @@ export class OliveDocumentService {
     pwin.close();
   }
 
-  uploadExcel(event: any, tableId: string): void {
+  private numToAlpha(num: number): string {
+    let alpha = '';
+  
+    for (; num >= 0; num = parseInt((num / 26).toString(), 10) - 1) {
+      alpha = String.fromCharCode(num % 26 + 0x41) + alpha;
+    }
+  
+    return alpha;
+  }
+
+  uploadExcel(event: any, tableId: string, renameToAlphaColumns: boolean): void {
     const tableIdExp = `#${tableId}`;
 
     $(tableIdExp).empty();
 
-    const fileName = $('#excelfile').val().toString().toLowerCase();
-    const regex = /\.(xlsx|xls)$/;
+    const files = event.target.files;
+    const outThis = this;    
 
-    if (regex.test(fileName)) {
-      const files = event.target.files;
-
-      if (!files || files.length === 0) {
-        this.alertService.showMessageBox(
-          this.translater.get('common.title.errorOccurred'),
-          this.translater.get('common.message.invalidSelectedFiles')
-        );
-      }
-
-      const outThis = this;
-      const excelFile = event.target.files[0];
-
-      // Checks whether the browser supports HTML5
-      if (typeof (FileReader) !== 'undefined') {
-        const reader = new FileReader();
-        let exceljson;
-
-        reader.onload = function (e: any): void {
-          const data = e.target.result;
-
-          // pre-process data
-          let binary = '';
-          const bytes = new Uint8Array(e.target.result);
-          const length = bytes.byteLength;
-          for (let i = 0; i < length; i++) {
-            binary += String.fromCharCode(bytes[i]);
-          }
-
-          const workbook = XLSX.read(binary, { type: 'binary', cellDates: true, cellStyles: true });
-
-          const sheetNames = workbook.SheetNames;
-
-          const target = document.querySelector('#import-table');
-
-          // Browser Thread 동적 Table Append Redering이 끝난후 Datatable을 Render해야 한다.
-          // create an observer instance
-          const observer = new MutationObserver(function (mutations): void {
-            $('#import-table').DataTable().destroy();
-            $('#import-table').DataTable();
-
-            $(tableIdExp).show();
-
-            observer.disconnect();
-
-            outThis.onImportTableRendered.next(exceljson);
-          });
-
-          // configuration of the observer:
-          const config = { attributes: true, childList: true, characterData: true };
-          // pass in the target node, as well as the observer options
-          observer.observe(target, config);
-
-          $(tableIdExp).hide();
-
-          let cnt = 0;
-          sheetNames.forEach(function (y): void {
-            exceljson = XLSX.utils.sheet_to_json(workbook.Sheets[y]);
-
-            if (exceljson.length > 0 && cnt === 0) {
-              outThis.bindTable(exceljson, tableIdExp);
-              cnt++;
-            }
-          });
-        };
-
-        reader.readAsArrayBuffer(excelFile);
-      }
-      else {
-        this.alertService.showMessageBox(
-          this.translater.get('common.title.errorOccurred'),
-          this.translater.get('common.message.notSupportHtml5')
-        );
-      }
+    if (!files || files.length === 0) {
+      outThis.onImportTableRendered.next(this.translater.get('common.message.invalidSelectedFiles'));
+      return;
     }
-    else {
-      this.alertService.showMessageBox(
-        this.translater.get('common.title.notSelected'),
-        this.translater.get('common.message.noExcelFile')
-      );
+
+    const excelFile = event.target.files[0];
+
+    const reader = new FileReader();
+
+    // Checks whether the browser supports HTML5
+    if (typeof (FileReader) === 'undefined') {
+      outThis.onImportTableRendered.next(this.translater.get('common.message.notSupportHtml5'));
+      return;      
     }
+
+    let excelJson;
+    reader.onload = (e: any) => {
+      const data = e.target.result;
+
+      // pre-process data
+      let binary = '';
+      const bytes = new Uint8Array(e.target.result);
+      const length = bytes.byteLength;
+      for (let i = 0; i < length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+
+      const workbook = XLSX.read(binary, { type: 'binary', cellDates: true, cellStyles: true });
+
+      const sheetNames = workbook.SheetNames;
+
+      const sheet = workbook.Sheets[sheetNames[0]];
+
+      let serialNonValueColumnCount = 0;
+
+      const columnNames = [];          
+      // 컬럼 이름 스캔
+      let columnCount = 0;
+      while (serialNonValueColumnCount < 10) {
+        const colIndex = this.numToAlpha(columnCount);
+        const value = sheet[colIndex + '1'] ? sheet[colIndex + '1'].v.toLowerCase().trim() : '';
+        columnNames.push(value);
+        columnCount++;
+        serialNonValueColumnCount = value === '' ? serialNonValueColumnCount + 1 : 0;
+      }
+      columnNames.splice(columnNames.length - 10, 10);
+
+      for (let i = 0; i < columnNames.length; i++) {
+        const colIndex = this.numToAlpha(i);
+        sheet[colIndex + '1'] = { t: 's' /* type: string */, v: colIndex /* value */ };
+      }
+
+      const target = document.querySelector(tableIdExp);
+
+      if (columnNames.length === 0) {
+        outThis.onImportTableRendered.next(this.translater.get('common.message.emptyFile'));
+        return;
+      }
+
+      // Browser Thread 동적 Table Append Redering이 끝난후 Datatable을 Render해야 한다.
+      // create an observer instance
+      const observer = new MutationObserver(function (mutations): void {
+        $(tableIdExp).DataTable().destroy();
+        $(tableIdExp).DataTable();
+        $(tableIdExp).show();
+
+        observer.disconnect();
+
+        outThis.onImportTableRendered.next({excelJson : excelJson, columnNames: columnNames});
+      });
+
+      // configuration of the observer:
+      const config = { attributes: true, childList: true, characterData: true };
+      // pass in the target node, as well as the observers options
+      observer.observe(target, config);
+
+      $(tableIdExp).hide();
+
+      let cnt = 0;
+      sheetNames.forEach(function (y): void {
+        excelJson = XLSX.utils.sheet_to_json(workbook.Sheets[y]);
+
+        if (excelJson.length > 0 && cnt === 0) {
+          outThis.bindTable(excelJson, tableIdExp);
+          cnt++;
+        }
+      });
+    };
+
+    reader.readAsArrayBuffer(excelFile);
   }
 
   private bindTable(jsondata, tableid): void {

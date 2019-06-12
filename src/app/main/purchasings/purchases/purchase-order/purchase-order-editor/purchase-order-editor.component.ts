@@ -7,13 +7,13 @@ import { Permission } from '@quick/models/permission.model';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
-import { PurchaseOrder } from '../../models/purchase-order.model';
-import { OliveSupplierService } from 'app/main/supports/companies/services/supplier.service';
+import { PurchaseOrder } from '../../../models/purchase-order.model';
+import { OliveSupplierService } from 'app/main/supports/services/supplier.service';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveSupplierManagerComponent } from 'app/main/supports/companies/supplier/supplier-manager/supplier-manager.component';
-import { Supplier } from 'app/main/supports/companies/models/supplier.model';
-import { OliveWarehouseService } from 'app/main/supports/companies/services/warehouse.service';
-import { Warehouse } from 'app/main/supports/companies/models/warehouse.model';
+import { Supplier } from 'app/main/supports/models/supplier.model';
+import { OliveWarehouseService } from 'app/main/supports/services/warehouse.service';
+import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/warehouse/warehouse-manager/warehouse-manager.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveCacheService } from 'app/core/services/cache.service';

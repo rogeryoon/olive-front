@@ -7,7 +7,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
 
-import { OliveSupplierService } from '../../services/supplier.service';
+import { OliveSupplierService } from '../../../services/supplier.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveSupplierEditorComponent } from '../supplier-editor/supplier-editor.component';

@@ -12,7 +12,7 @@ import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { AlertService } from '@quick/services/alert.service';
 import { OliveInWarehouseManagerComponent } from '../in-warehouse-manager/in-warehouse-manager.component';
-import { InWarehouse } from '../../models/in-warehouse.model';
+import { InWarehouse } from '../../../models/in-warehouse.model';
 
 @Component({
   selector: 'olive-in-warehouse-editor-page',

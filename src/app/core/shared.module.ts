@@ -28,6 +28,8 @@ import { OliveViewDialogComponent } from './components/dialogs/view-dialog/view-
 import { OliveTabLabelComponent } from './components/entries/tab-label/tab-label.component';
 import { OliveDropDownListComponent } from './components/entries/drop-down-list/drop-down-list.component';
 import { OliveReferHostComponent } from './components/entries/refer-host/refer-host.component';
+import { OliveFloatheadDirective } from './directives/floathead.directive';
+import { OliveTaskCountDialogComponent } from './components/dialogs/task-count-dialog/task-count-dialog.component';
 
 @NgModule({
   imports: [
@@ -65,12 +67,14 @@ import { OliveReferHostComponent } from './components/entries/refer-host/refer-h
     OliveEditDialogComponent,
     OlivePreviewDialogComponent,
     OliveViewDialogComponent,
+    OliveTaskCountDialogComponent,
   
     OliveAddressEditorComponent,
     OliveEditPageComponent,
     OliveTabLabelComponent,
 
-    OlivePlaceHolderDirective
+    OlivePlaceHolderDirective,
+    OliveFloatheadDirective
   ],
   declarations: [
     OliveBaseComponent,
@@ -91,12 +95,14 @@ import { OliveReferHostComponent } from './components/entries/refer-host/refer-h
     OliveEditDialogComponent,
     OlivePreviewDialogComponent,
     OliveViewDialogComponent,
+    OliveTaskCountDialogComponent,
 
     OliveAddressEditorComponent,
     OliveEditPageComponent,
     OliveTabLabelComponent,
 
-    OlivePlaceHolderDirective
+    OlivePlaceHolderDirective,
+    OliveFloatheadDirective
   ],
   providers: [],
   entryComponents: [
@@ -106,7 +112,8 @@ import { OliveReferHostComponent } from './components/entries/refer-host/refer-h
     OliveLookupDialogComponent,
     OliveEditDialogComponent,
     OlivePreviewDialogComponent,
-    OliveViewDialogComponent
+    OliveViewDialogComponent,
+    OliveTaskCountDialogComponent
   ]
 })
 export class OliveSharedModule { }

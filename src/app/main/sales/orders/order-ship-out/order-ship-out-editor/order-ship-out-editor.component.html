@@ -1,0 +1,20 @@
+﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
+      <mat-form-field appearance="outline" class="w-100-p">
+        <input matInput name="shipOutDate" formControlName="shipOutDate">
+        <mat-label>{{'common.word.shipOutDate'|translate}}</mat-label>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100-p">
+        <input matInput name="canceledDate" formControlName="canceledDate">
+        <mat-label>{{'common.word.canceledDate'|translate}}</mat-label>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-100-p">
+        <input matInput name="canceledUser" formControlName="canceledUser" maxlength="10">
+        <mat-label>{{'common.word.canceledUser'|translate}}</mat-label>
+        <mat-hint align="end">{{getControl('canceledUser').value?.length || 0}}/10</mat-hint>
+      </mat-form-field>
+
+
+      <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+</form>

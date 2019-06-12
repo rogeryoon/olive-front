@@ -4,7 +4,7 @@ import { FormBuilder } from '@angular/forms';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { Product } from '../../models/product.model';
+import { Product } from '../../../models/product.model';
 import { OliveChipInputComponent } from 'app/core/components/entries/chip-input/chip-input.component';
 
 @Component({

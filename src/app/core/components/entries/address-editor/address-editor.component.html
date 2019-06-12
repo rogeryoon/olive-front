@@ -1,44 +1,52 @@
-﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Address 1</mat-label>
-        <input matInput name="address1" formControlName="address1" required maxlength="1000">
-        <mat-hint align="end">{{getControl('address1').value?.length || 0}}/1000</mat-hint>
-        <mat-error *ngIf="hasEntryError('address1')">{{errorMessage('address1')}}</mat-error>
-      </mat-form-field>
+﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxFlex autocomplete="off">
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <input matInput name="address1" formControlName="address1" required maxlength="1000">
+            <mat-label>Address 1</mat-label>            
+            <mat-hint align="end">{{getControl('address1').value?.length || 0}}/1000</mat-hint>
+            <mat-error *ngIf="hasEntryError('address1')">{{errorMessage('address1')}}</mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Address 2</mat-label>
-        <input matInput name="address2" formControlName="address2" maxlength="400">
-        <mat-hint align="end">{{getControl('address2').value?.length || 0}}/400</mat-hint>
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="w-100-p">
+            <input matInput name="address2" formControlName="address2" maxlength="400">
+            <mat-label>Address 2</mat-label>            
+            <mat-hint align="end">{{getControl('address2').value?.length || 0}}/400</mat-hint>
+        </mat-form-field>
+    </div>
 
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>City</mat-label>
-        <input matInput name="city" formControlName="city" maxlength="100">
-        <mat-hint align="end">{{getControl('city').value?.length || 0}}/100</mat-hint>
-      </mat-form-field>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <input matInput name="city" formControlName="city" maxlength="100">
+            <mat-label>City</mat-label>            
+            <mat-hint align="end">{{getControl('city').value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>State Province</mat-label>       
-        <input matInput name="stateProvince" formControlName="stateProvince" maxlength="100">
-        <mat-hint align="end">{{getControl('stateProvince').value?.length || 0}}/100</mat-hint>
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="w-100-p">
+            <input matInput name="stateProvince" formControlName="stateProvince" maxlength="100">
+            <mat-label>State Province</mat-label>            
+            <mat-hint align="end">{{getControl('stateProvince').value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+    </div>
 
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Postal Code</mat-label>        
-        <input matInput name="postalCode" formControlName="postalCode" required maxlength="100" class="to-uppercase">
-        <mat-hint align="end">{{getControl('postalCode').value?.length || 0}}/100</mat-hint>
-        <mat-error *ngIf="hasEntryError('postalCode')">{{errorMessage('postalCode')}}</mat-error>
-      </mat-form-field>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <input matInput name="postalCode" formControlName="postalCode" required maxlength="100"
+                class="to-uppercase">
+            <mat-label>Postal Code</mat-label>                
+            <mat-hint align="end">{{getControl('postalCode').value?.length || 0}}/100</mat-hint>
+            <mat-error *ngIf="hasEntryError('postalCode')">{{errorMessage('postalCode')}}</mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Select a country</mat-label>        
-        <mat-select name="country" formControlName="country" required>
-          <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
-          <mat-option *ngFor="let country of countries" [value]="country.id">{{country.name}}</mat-option>
-        </mat-select>
-        <mat-error *ngIf="hasEntryError('country')">{{errorMessage('country')}}</mat-error>
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-select name="country" formControlName="country" required>
+                <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
+                <mat-option *ngFor="let country of countries" [value]="country.id">{{country.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasEntryError('country')">{{errorMessage('country')}}</mat-error>
+        </mat-form-field>
+    </div>
 
-      <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+    </div>
 </form>

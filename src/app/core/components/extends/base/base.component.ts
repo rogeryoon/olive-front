@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormArray, AbstractControl } from '@angular/forms';
 import { String } from 'typescript-string-operations';
 
-import { Currency } from 'app/main/supports/bases/models/currency.model';
+import { Currency } from 'app/main/supports/models/currency.model';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { Address } from 'app/core/models/core/address.model';
 
@@ -73,8 +73,7 @@ export class OliveBaseComponent implements OnInit {
   }
 
   protected arrayErrorMessage(name: string, index: number): string {
-    const formGroup = this.oFArray.controls[index] as FormGroup;
-    return this.controlErrorMessage(formGroup.get(name));
+    return this.controlErrorMessage(this.getArrayFormGroup(index).get(name));
   }
   
   protected errorMessage(name: string): string {
@@ -113,9 +112,22 @@ export class OliveBaseComponent implements OnInit {
     return message;
   }
 
+  getArrayFormGroup(index: number): FormGroup {
+    return this.oFArray.controls[index] as FormGroup;
+  }
+
   hasArrayEntryError(name: string, index: number): boolean {
-    const formGroup = (<FormArray>this.getControl('formarray')).controls[index] as FormGroup;
-    return this.controlHasEntryError(formGroup.get(name));
+    return this.controlHasEntryError(this.getArrayFormGroup(index).get(name));
+  }
+
+  hasArrayThisError(name: string, errorName: string, index: number): boolean {
+    const control = this.getArrayFormGroup(index).get(name);
+    
+    if (OliveUtilities.testIsUndefined(control.errors)) {
+      return false;
+    }
+
+    return control.errors.hasOwnProperty(errorName);
   }
 
   hasEntryError(name: string): boolean {

@@ -16,10 +16,9 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchMarketComponent } from './search-market/search-market.component';
-import { OliveMarketService } from '../services/market.service';
-import { Market } from '../models/market.model';
+import { OliveMarketService } from '../../services/market.service';
+import { Market } from '../../models/market.model';
 import { OliveMarketManagerComponent } from './market-manager/market-manager.component';
-import { ActivatedRoute } from '@angular/router';
 
 const Selected  = 'selected';
 const Code = 'code';
@@ -56,11 +55,16 @@ export class OliveMarketsComponent extends OliveEntityListComponent {
       managePermission: null,
       columns: [
         { data: Selected },
-        { data: Code, thName: this.translater.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
-        { data: Name, thName: this.translater.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
-        { data: WebSite, thName: this.translater.get('common.tableHeader.webSite'), tdClass: 'print left -ex-type-text link', thClass: 'print -ex-type-text' }, 
-        { data: Activated, thName: this.translater.get('common.tableHeader.activated'), tdClass: '', thClass: '' },
-        { data: CreatedUtc, thName: this.translater.get('common.tableHeader.createdUtc'), tdClass: '', thClass: '' }
+        { data: Code, thName: this.translater.get('common.tableHeader.code'), 
+          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: Name, thName: this.translater.get('common.tableHeader.name'), 
+          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
+        { data: WebSite, thName: this.translater.get('common.tableHeader.webSite'), 
+          tdClass: 'print left -ex-type-text link', thClass: 'print -ex-type-text' }, 
+        { data: Activated, thName: this.translater.get('common.tableHeader.activated'), 
+          tdClass: '', thClass: '' },
+        { data: CreatedUtc, thName: this.translater.get('common.tableHeader.createdUtc'), 
+          tdClass: '', thClass: '' }
       ],
       editComponent: OliveMarketManagerComponent,
       searchComponent: OliveSearchMarketComponent,

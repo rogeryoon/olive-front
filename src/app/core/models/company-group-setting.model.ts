@@ -6,4 +6,5 @@ export class CompanyGroupSetting extends OliveTrackingAttribute {
     thirdPartyEnabled?: boolean;
     shippingAgentEnabled?: boolean;
     productWeightTypeCode: string;
+    productLengthTypeCode: string;
 }

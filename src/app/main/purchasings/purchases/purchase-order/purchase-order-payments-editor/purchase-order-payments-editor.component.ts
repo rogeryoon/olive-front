@@ -8,12 +8,12 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { OlivePaymentMethodService } from 'app/main/supports/companies/services/payment-method.service';
+import { OlivePaymentMethodService } from 'app/main/supports/services/payment-method.service';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OlivePurchaseOrderPaymentDatasource } from './purchase-order-payment-datasource';
-import { PaymentMethod } from 'app/main/supports/companies/models/payment-method.model';
+import { PaymentMethod } from 'app/main/supports/models/payment-method.model';
 import { OliveUtilities } from 'app/core/classes/utilities';
-import { PurchaseOrderPayment } from '../../models/purchase-order-payment.model';
+import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.model';
 
 @Component({
   selector: 'olive-purchase-order-payments-editor',
@@ -60,7 +60,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
           this.paymentMethods = this.cacheService.set(key, response.model);
         },
           error => {
-            this.messageHelper.showLoadFaild(error);
+            this.messageHelper.showLoadFaildSticky(error);
           });
     }
     else {
@@ -146,6 +146,10 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
 
     if (obj) {
       this.paymentsDataSource.loadItems(obj);
+    }
+
+    if (!obj || obj.length === 0) {
+      this.newItem();
     }
   }
   registerOnChange(fn: any): void {

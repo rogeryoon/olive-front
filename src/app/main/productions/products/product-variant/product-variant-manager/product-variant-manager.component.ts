@@ -7,7 +7,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
 
-import { OliveProductVariantService } from '../../services/product-variant.service';
+import { OliveProductVariantService } from '../../../services/product-variant.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveProductVariantEditorComponent } from '../product-variant-editor/product-variant-editor.component';
@@ -45,9 +45,13 @@ export class OliveProductVariantManagerComponent extends OliveEntityEditComponen
     return this.itemWithIdNAudit({
       code: productVariant.code,
       name: productVariant.name,
+      activated: productVariant.activated,
+      memo: productVariant.memo,
       standPrice: productVariant.standPrice,
       weight: productVariant.weight,
       weightTypeCode: productVariant.weightTypeCode,
+      volume: productVariant.volume,
+      lengthTypeCode: productVariant.lengthTypeCode,
       productId: productVariant.productId
     });
   }

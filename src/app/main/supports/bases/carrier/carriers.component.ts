@@ -15,8 +15,8 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchCarrierComponent } from './search-carrier/search-carrier.component';
-import { OliveCarrierService } from '../services/carrier.service';
-import { Carrier } from '../models/carrier.model';
+import { OliveCarrierService } from '../../services/carrier.service';
+import { Carrier } from '../../models/carrier.model';
 import { OliveCarrierManagerComponent } from './carrier-manager/carrier-manager.component';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 

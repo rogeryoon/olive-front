@@ -17,8 +17,8 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchMarketSellerComponent } from './search-market-seller/search-market-seller.component';
-import { OliveMarketSellerService } from '../services/market-seller.service';
-import { MarketSeller } from '../models/market-seller.model';
+import { OliveMarketSellerService } from '../../services/market-seller.service';
+import { MarketSeller } from '../../models/market-seller.model';
 import { OliveMarketSellerManagerComponent } from './market-seller-manager/market-seller-manager.component';
 
 const Selected  = 'selected';

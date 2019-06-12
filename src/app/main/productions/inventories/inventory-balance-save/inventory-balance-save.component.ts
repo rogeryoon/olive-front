@@ -13,8 +13,8 @@ import { AlertService, DialogType } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
 import { Permission } from '@quick/models/permission.model';
 
-import { InventoryBalance } from '../models/inventory-balance';
-import { OliveInventoryService } from '../services/inventory.service';
+import { InventoryBalance } from '../../models/inventory-balance';
+import { OliveInventoryService } from '../../services/inventory.service';
 import { OliveDocumentService } from '../../../../core/services/document.service';
 import { OliveMessageHelperService } from '../../../../core/services/message-helper.service';
 
@@ -99,7 +99,7 @@ export class OliveInventoryBalanceSaveComponent implements AfterViewInit, OnDest
               this.alertService.stopLoadingMessage();
               this.loadingIndicator = false;
 
-              this.messageHelper.showLoadFaild(error);
+              this.messageHelper.showLoadFaildSticky(error);
             });
       },
       columns: [

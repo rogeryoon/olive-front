@@ -1,0 +1,5 @@
+﻿<form #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()" class="w-100-p" fxLayout="column"
+    fxFlex>
+    <olive-market-item-mapping-product-variants-editor #products formControlName="products"></olive-market-item-mapping-product-variants-editor>
+    <olive-market-item-mapping-excel-columns-editor class="mt-20" #excelColumns formControlName="excelColumns"></olive-market-item-mapping-excel-columns-editor>
+</form>

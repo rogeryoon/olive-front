@@ -15,8 +15,8 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { OliveDocumentService } from 'app/core/services/document.service';
 
 import { OliveSearchPurchaseOrderComponent } from '../search-purchase-order/search-purchase-order.component';
-import { OlivePurchaseOrderService } from '../../services/purchase-order.service';
-import { PurchaseOrder } from '../../models/purchase-order.model';
+import { OlivePurchaseOrderService } from '../../../services/purchase-order.service';
+import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/purchase-order-manager.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { NameValue } from 'app/core/models/name-value';

@@ -40,6 +40,7 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
   initializeChildComponent() {}
   buildForm() {}
   resetForm() {}
+  onChanges() {}
   createEmptyObject(): any {
     return null;
   }
@@ -61,6 +62,7 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
 
   ngOnChanges() {
     this.checkItemExists();
+    this.onChanges();
   }
 
   ngOnDestroy() {
@@ -107,8 +109,6 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
     }
     return invalid;
   }
-
-
 
   getMoney(value: any) {
     let amount = 0;

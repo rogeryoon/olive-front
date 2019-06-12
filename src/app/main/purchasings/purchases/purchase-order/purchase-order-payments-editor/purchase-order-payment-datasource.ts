@@ -1,12 +1,10 @@
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import { PurchaseOrderPayment } from '../../models/purchase-order-payment.model';
+import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.model';
 import { TableDatasource } from 'app/core/classes/table-datasource';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator } from 'app/core/classes/validators';
 export class OlivePurchaseOrderPaymentDatasource extends TableDatasource {
-
-    amountRegexPattern: string;
 
     constructor(cacheService: OliveCacheService) { super(cacheService); }
 

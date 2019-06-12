@@ -3,12 +3,12 @@ import { FormBuilder, Validators } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { Carrier } from '../../models/carrier.model';
+import { Carrier } from '../../../models/carrier.model';
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
-import { OliveStandCarrierService } from '../../services/stand-carrier.service';
-import { StandCarrier } from '../../models/stand-carrier.model';
+import { OliveStandCarrierService } from '../../../services/stand-carrier.service';
+import { StandCarrier } from '../../../models/stand-carrier.model';
 import { NameValue } from 'app/core/models/name-value';
 
 @Component({
@@ -44,7 +44,6 @@ export class OliveCarrierEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      id: '',
       code: ['', Validators.required],
       name: ['', Validators.required],
       webSite: '',
@@ -56,7 +55,6 @@ export class OliveCarrierEditorComponent extends OliveEntityFormComponent {
 
   resetForm() {
     this.oForm.reset({
-      id: this.id36(this.item.id),
       code: this.item.code || '',
       name: this.item.name || '',
       webSite: this.item.webSite || '',
@@ -92,7 +90,6 @@ export class OliveCarrierEditorComponent extends OliveEntityFormComponent {
 
   setValueWhenControlIsEmpty(name: string, value: any) {
     if (this.isControlValueEmpty(name)) {
-      console.log('empty', name);
       this.setControlValue(name, value);
     }
   }

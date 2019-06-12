@@ -16,10 +16,10 @@
 
     <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
         <mat-form-field appearance="outline" class="w-100-p">
-            <mat-label>{{'support.marketEditor.standMarket' | translate}}</mat-label>
-            <mat-select name="standMarket" formControlName="standMarket">
+            <mat-label>{{'support.marketEditor.marketExcelInterface' | translate}}</mat-label>
+            <mat-select name="marketExcelInterface" formControlName="marketExcelInterface">
                 <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
-                <mat-option *ngFor="let item of standMarkets" [value]="item.id">{{item.name}}</mat-option>
+                <mat-option *ngFor="let item of marketExcelInterfaces" [value]="item.id">{{item.name}}</mat-option>
             </mat-select>
         </mat-form-field>
 

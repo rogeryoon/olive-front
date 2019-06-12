@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Subject } from 'rxjs';
+import { String } from 'typescript-string-operations';
 
 import { DeviceDetectorService } from 'ngx-device-detector';
 
@@ -41,6 +42,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   tdId: string;
 
   items: any;
+  recordsTotal: number;
   sourceItem: any;
 
   loadingIndicator: boolean;
@@ -59,6 +61,10 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
     protected dialog: MatDialog,
     protected dataService: OliveDataService) {
     super(translater);
+  }
+
+  get title() {
+    return this.listTitle();
   }
 
   get setting(): ListerSetting {
@@ -86,6 +92,10 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
     return true;
   }
 
+  listTitle() {
+    return this.translater.get(this.setting.translateTitleId);
+  }
+
   contextButtonVisible(name: string): boolean {
     if (!this.visibleContextMenu) { return false; }
     if (!this.setting.disabledContextMenus) { return true; }
@@ -99,7 +109,12 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   getEditorCustomTitle(item: any): string { return null; }
   convertModel(model: any): any { return model; }
   getEditDialogReadOnly(item: any): boolean { return this.setting.isEditDialogReadOnly; }
-
+  navigateDetailPage(item: any) { }
+  onDestroy() {}
+  onItemsLoaded() {}
+  onSaved(model: any) {}
+  customContextMenu(id: string) { }
+  
   renderItem(item: any, columnName: string): string { return ''; }
   renderFooterItem(column: any): string { return ''; }
 
@@ -159,12 +174,16 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
     });
   }
 
-  loadHandler(handler: any, callback): void {
-    handler.subscribe(response => {
+  itemsLoader(getItemsService: any, callback): void {
+    getItemsService.subscribe(response => {
       this.alertService.stopLoadingMessage();
       this.loadingIndicator = false;
 
       this.items = this.convertModel(response.model);
+
+      this.recordsTotal = response.itemsCount;
+
+      this.onItemsLoaded();
 
       callback({
         recordsTotal: response.itemsCount,
@@ -176,12 +195,12 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
-        this.messageHelper.showLoadFaild(error);
+        this.messageHelper.showLoadFaildSticky(error);
       });
   }
 
   loadItems(dataTablesParameters: any, callback) {
-    this.loadHandler(this.dataService.getItems(dataTablesParameters), callback);
+    this.itemsLoader(this.dataService.getItems(dataTablesParameters), callback);
   }
 
   protected getExtraSearch(): NameValue[] {
@@ -199,6 +218,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
 
   ngOnDestroy(): void {
     this.dtTrigger.unsubscribe();
+    this.onDestroy();
   }
 
   reRender(): void {
@@ -218,12 +238,17 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
     else {
       this.items.push(item);
     }
+
+    this.onSaved(item);    
   }
 
   protected editItem(item?: any, event?: any, startTabIndex = 0) {
     if (event && event.srcElement && event.srcElement.getAttribute('type') === 'checkbox') { return; }
 
     if (!this.setting.editComponent) {
+      if (this.setting.navigateDetailPage) {
+        this.navigateDetailPage(item);
+      }
       return;
     }
 
@@ -254,7 +279,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
           },
           error => {
             this.loadingIndicator = false;
-            this.messageHelper.showLoadFaild(error);
+            this.messageHelper.showLoadFaildSticky(error);
           }
         );
       }
@@ -271,7 +296,6 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
         item: _.cloneDeep(this.sourceItem),
         itemType: this.setting.itemType,
         managePermission: this.setting.managePermission,
-        translateTitleId: this.setting.translateTitleId,
         customTitle: this.getEditorCustomTitle(this.sourceItem),
         startTabIndex: startTabIndex,
         readOnly: this.getEditDialogReadOnly(this.sourceItem)
@@ -332,11 +356,15 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   }
 
   onExcel() {
-    this.documentService.exportExcel(this.translater.get(this.setting.translateTitleId), this.setting.dataTableId);
+    this.documentService.exportExcel(this.title, this.setting.dataTableId);
   }
 
   onPrint() {
-    this.documentService.printTable(this.translater.get(this.setting.translateTitleId), this.setting.dataTableId);
+    this.documentService.printTable(this.title, this.setting.dataTableId);
+  }
+
+  onUploaded(model: any) {
+    this.reRender();
   }
 
   onUpload() {
@@ -349,28 +377,59 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
       });
 
     dialogRef.componentInstance.onSave.subscribe(data => {
-      this.dataService.uploadItems(data).subscribe(
-        response => {
-          this.messageHelper.showSavedUploadSuccess();
-          dialogRef.componentInstance.closeDialog();
-          dialogRef.componentInstance.showLoadingBar = false;
-
-          this.alertService.showDialog
-            (
-              this.translater.get('common.title.success'),
-              this.translater.get('common.message.uploadSaved'),
-              DialogType.alert,
-              () => this.reRender(),
-              null,
-              this.translater.get('common.button.refresh')
-            );
-        },
-        error => {
-          this.messageHelper.showSaveFailed(error, false);
-          dialogRef.componentInstance.showError(error.error.errorMessage);
-        }
-      );
+      this.uploadItems(data, dialogRef);
     });
+  }
+
+  uploadItems(data: any, dialogRef: any) {
+    this.uploadHandler(this.dataService.uploadItems(data), dialogRef);
+  }
+
+  uploadHandler(handler: any, dialogRef: any): void {
+    handler.subscribe(
+      response => {
+        this.messageHelper.showSavedUploadSuccess();
+        dialogRef.componentInstance.closeDialog();
+        dialogRef.componentInstance.showLoadingBar = false;
+
+        this.alertService.showDialog
+          (
+            this.translater.get('common.title.success'),
+            this.translater.get('common.message.uploadSaved'),
+            DialogType.alert,
+            () => this.onUploaded(response.model),
+            null,
+            this.translater.get('common.button.refresh')
+          );
+      },
+      error => {
+        let errorMessage = null;
+        if (error === 'session expired') {
+          dialogRef.componentInstance.closeDialog();
+        }
+        else if (error.error && error.error.errorCode) {
+          if (error.error.errorCode === 'COLUMNS-MATCH-ERROR') {
+            const diffs = error.error.errorMessage.split('/');
+            if (diffs.length === 3) {
+              errorMessage = String.Format(this.translater.get('common.message.uploadColumnMatchError'), diffs[0], diffs[1], diffs[2]);
+            }
+            else {
+              errorMessage = this.translater.get('common.message.errorOccured');
+            }
+          }
+          else {
+            errorMessage = this.translater.get('common.message.uploadDataSignatureUnregisterd');
+          }
+        }
+        else {
+          errorMessage = error.error.errorMessage;
+        }
+
+        if (errorMessage) {
+          dialogRef.componentInstance.showError(errorMessage);
+        }
+      }
+    );
   }
 
   renderTdTooltip(item: any, column: any) { return null; }
@@ -378,7 +437,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   renderTDClass(item: any, column: any, addedClass: string) {
     let classString = this.isNull(column.tdClass) ? '' : column.tdClass;
 
-    if (!this.setting.editComponent) {
+    if (!this.setting.editComponent && !this.setting.navigateDetailPage) {
       classString = 'normal-cursor';
     }
 

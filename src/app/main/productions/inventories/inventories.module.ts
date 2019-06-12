@@ -12,7 +12,7 @@ import { OliveInventoryBalancesComponent } from './inventory-balances/inventory-
 import { OliveInventoryWarehousesComponent } from './inventory-warehouses/inventory-warehouses.component';
 import { OliveInventoryHistoriesComponent } from './inventory-histories/inventory-histories.component';
 import { OliveInventoryBalanceSaveComponent } from './inventory-balance-save/inventory-balance-save.component';
-import { OliveInventoryResolverService } from './services/inventory-resolver.service';
+import { OliveInventoryResolverService } from '../services/inventory-resolver.service';
 
 const routes = [
   {

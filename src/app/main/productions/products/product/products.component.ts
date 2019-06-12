@@ -16,8 +16,8 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchProductComponent } from './search-product/search-product.component';
-import { OliveProductService } from '../services/product.service';
-import { Product } from '../models/product.model';
+import { OliveProductService } from '../../services/product.service';
+import { Product } from '../../models/product.model';
 import { OliveProductManagerComponent } from './product-manager/product-manager.component';
 
 const Selected = 'selected';
@@ -59,19 +59,19 @@ export class OliveProductsComponent extends OliveEntityListComponent {
         // 1
         { data: Selected },
         // 2
-        { data: Id, thName: 'Id', tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
+        { data: Id, thName: this.translater.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: Name, thName: 'Name', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
+        { data: Name, thName: this.translater.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         // 4
-        { data: MinPrice, thName: 'Min', tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
+        { data: MinPrice, thName: this.translater.get('common.tableHeader.min'), tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 5
-        { data: MaxPrice, thName: 'Max', tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
+        { data: MaxPrice, thName: this.translater.get('common.tableHeader.max'), tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 6
-        { data: VariantCount, thName: 'Types', tdClass: '', thClass: '' },
+        { data: VariantCount, thName: this.translater.get('common.tableHeader.type'), tdClass: '', thClass: '' },
         // 7
-        { data: Activated, thName: 'Activated', tdClass: '', thClass: '' },
+        { data: Activated, thName: this.translater.get('common.tableHeader.activated'), tdClass: '', thClass: '' },
         // 8
-        { data: CreatedUtc, thName: 'CreatedUtc', tdClass: '', thClass: '' }
+        { data: CreatedUtc, thName: this.translater.get('common.tableHeader.createdUtc'), tdClass: '', thClass: '' }
       ],
       editComponent: OliveProductManagerComponent,
       searchComponent: OliveSearchProductComponent,

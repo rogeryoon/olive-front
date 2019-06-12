@@ -17,8 +17,8 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchPaymentMethodComponent } from './search-payment-method/search-payment-method.component';
-import { OlivePaymentMethodService } from '../services/payment-method.service';
-import { PaymentMethod } from '../models/payment-method.model';
+import { OlivePaymentMethodService } from '../../services/payment-method.service';
+import { PaymentMethod } from '../../models/payment-method.model';
 import { OlivePaymentMethodManagerComponent } from './payment-method-manager/payment-method-manager.component';
 
 const Selected  = 'selected';

@@ -5,7 +5,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveUtilities } from 'app/core/classes/utilities';
-import { Supplier } from '../../models/supplier.model';
+import { Supplier } from '../../../models/supplier.model';
 
 @Component({
   selector: 'olive-supplier-editor',
@@ -37,7 +37,6 @@ export class OliveSupplierEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      id: '',
       code: ['', Validators.required],
       name: ['', Validators.required],
       phoneNumber: '',
@@ -51,7 +50,6 @@ export class OliveSupplierEditorComponent extends OliveEntityFormComponent {
 
   resetForm() {
     this.oForm.reset({
-      id: this.id36(this.item.id),
       code: this.item.code || OliveUtilities.make36Id(4),
       name: this.item.name || '',
       phoneNumber: this.item.phoneNumber || '',

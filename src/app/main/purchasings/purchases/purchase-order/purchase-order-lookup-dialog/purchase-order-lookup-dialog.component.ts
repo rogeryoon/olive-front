@@ -13,7 +13,7 @@ import { OliveLookupDialogComponent } from 'app/core/components/dialogs/lookup-d
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveUtilities } from 'app/core/classes/utilities';
-import { PurchaseOrder } from '../../models/purchase-order.model';
+import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { IIDName } from 'app/core/models/id-name';
 
 const Id = 'id';

@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/r
 
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { OliveHelpService } from '../../supports/helps/services/help.service';
+import { OliveHelpService } from '../../supports/services/help.service';
 
 @Injectable({
   providedIn: 'root'

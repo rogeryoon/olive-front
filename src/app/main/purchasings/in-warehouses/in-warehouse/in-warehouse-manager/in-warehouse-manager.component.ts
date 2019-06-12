@@ -7,12 +7,12 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
 
-import { OliveInWarehouseService } from '../../services/in-warehouse.service';
+import { OliveInWarehouseService } from '../../../services/in-warehouse.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveInWarehouseEditorComponent } from '../in-warehouse-editor/in-warehouse-editor.component';
 import { OliveInWarehouseItemsEditorComponent } from '../in-warehouse-items-editor/in-warehouse-items-editor.component';
-import { InWarehouse } from '../../models/in-warehouse.model';
+import { InWarehouse } from '../../../models/in-warehouse.model';
 
 @Component({
   selector: 'olive-in-warehouse-manager',

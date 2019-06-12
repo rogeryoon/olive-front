@@ -3,13 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveOnPreview } from 'app/core/interfaces/on-preview';
-import { PurchaseOrder } from '../../models/purchase-order.model';
+import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { OliveBaseComponent } from 'app/core/components/extends/base/base.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { OliveCompanyService } from 'app/main/supports/companies/services/company.service';
+import { OliveCompanyService } from 'app/main/supports/services/company.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { Branch } from 'app/main/supports/companies/models/branch.model';
-import { OliveBranchService } from 'app/main/supports/companies/services/branch.service';
+import { Branch } from 'app/main/supports/models/branch.model';
+import { OliveBranchService } from 'app/main/supports/services/branch.service';
 
 @Component({
   selector: 'olive-preview-purchase-order',

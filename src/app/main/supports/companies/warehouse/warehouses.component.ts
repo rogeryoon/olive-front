@@ -17,8 +17,8 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchWarehouseComponent } from './search-warehouse/search-warehouse.component';
-import { OliveWarehouseService } from '../services/warehouse.service';
-import { Warehouse } from '../models/warehouse.model';
+import { OliveWarehouseService } from '../../services/warehouse.service';
+import { Warehouse } from '../../models/warehouse.model';
 import { OliveWarehouseManagerComponent } from './warehouse-manager/warehouse-manager.component';
 
 const Selected = 'selected';

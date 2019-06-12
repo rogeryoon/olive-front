@@ -36,7 +36,7 @@ export class OliveEntityService implements OliveDataService {
 
     uploadItems(items: any) {
         const errorCount = {unAuth: 0};
-        return this.endpoint.uploadItemEndpoint<any>(items, this.endpointUrl, errorCount);
+        return this.endpoint.uploadItemsEndpoint<any>(items, this.endpointUrl, errorCount);
     }
 
     updateItem(item: any, id: number) {
@@ -54,9 +54,19 @@ export class OliveEntityService implements OliveDataService {
         }
     }
 
+    get(subUrl: string) {
+        const errorCount = {unAuth: 0};
+        return this.endpoint.getEndpoint<any>(subUrl, this.endpointUrl, errorCount);
+    }
+
     post(subUrl: string, data: any) {
         const errorCount = {unAuth: 0};
         return this.endpoint.postEndpoint<any>(subUrl, this.endpointUrl, data, errorCount);
+    }
+
+    postString(subUrl: string, data: string) {
+        const errorCount = {unAuth: 0};
+        return this.endpoint.postStringEndpoint<any>(subUrl, this.endpointUrl, data, errorCount);
     }
 
     put(subUrl: string, data: any) {

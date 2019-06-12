@@ -13,12 +13,12 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveVoidPurchaseOrderEditorComponent } from '../void-purchase-order-editor/void-purchase-order-editor.component';
 import { OliveInWarehouseItemsEditorComponent } from 'app/main/purchasings/in-warehouses/in-warehouse/in-warehouse-items-editor/in-warehouse-items-editor.component';
-import { PurchaseOrder } from '../../models/purchase-order.model';
-import { VoidPurchaseOrder } from '../../models/void-purchase-order.model';
+import { PurchaseOrder } from '../../../models/purchase-order.model';
+import { VoidPurchaseOrder } from '../../../models/void-purchase-order.model';
 import { OlivePurchaseOrderPaymentsEditorComponent } from '../../purchase-order/purchase-order-payments-editor/purchase-order-payments-editor.component';
-import { InWarehouseItem } from 'app/main/purchasings/in-warehouses/models/in-warehouse-item.model';
-import { PurchaseOrderPayment } from '../../models/purchase-order-payment.model';
-import { OliveVoidPurchaseOrderService } from '../../services/void-purchase-order.service';
+import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.model';
+import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.model';
+import { OliveVoidPurchaseOrderService } from '../../../services/void-purchase-order.service';
 
 @Component({
   selector: 'olive-void-purchase-order-manager',

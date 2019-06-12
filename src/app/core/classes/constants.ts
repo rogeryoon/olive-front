@@ -4,6 +4,17 @@ export class OliveConstants {
         { code: 'K', name: 'Kilogram', symbol: 'Kg' }
     ];
 
+    static lengthTypes = [
+        { code: 'I', name: 'Inch', symbol: 'In' },        
+        { code: 'C', name: 'Centimeter', symbol: 'Cm' }
+    ];
+
+    static unitConversionRate = class {
+        static centimeterToInchVolume = 0.06102374409;
+        static poundToKilo = 0.45359237;
+        static kiloToPound = 2.204622621848787;
+    };
+
     static countries = [
         { value: 'KR', name: 'Korea' },
         { value: 'US', name: 'USA' },

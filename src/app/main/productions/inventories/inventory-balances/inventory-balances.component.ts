@@ -13,8 +13,8 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { OliveInventoryService } from '../services/inventory.service';
-import { InventoryBalance } from '../models/inventory-balance';
+import { OliveInventoryService } from '../../services/inventory.service';
+import { InventoryBalance } from '../../models/inventory-balance';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveConstants } from 'app/core/classes/constants';
 
@@ -105,7 +105,7 @@ export class OliveInventoryBalancesComponent extends OliveEntityListComponent {
   }
 
   loadItems(dataTablesParameters: any, callback) {
-    this.loadHandler((this.dataService as OliveInventoryService).getInventoryBalance(dataTablesParameters), callback);
+    this.itemsLoader((this.dataService as OliveInventoryService).getInventoryBalance(dataTablesParameters), callback);
   }
 
   renderItem(item: InventoryBalance, columnName: string): string {

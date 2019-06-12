@@ -37,6 +37,8 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   customTitle: string;
   startTabIndex = 0;
   readonly = false;
+  isSaving = false;
+  isDeleting = false;
   saveConfirmTitle: string;
   saveConfirmMessage: string;
   itemSaved$ = this.onItemSaved.asObservable();
@@ -103,7 +105,10 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   }
 
   public canSave(): boolean {
-    if (this.isNewItem) {
+    if (this.isSaving || this.isDeleting) {
+      return false;
+    }
+    else if (this.isNewItem) {
       return true;
     }
     else {
@@ -111,6 +116,10 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
         return control.oForm.dirty;
       });
     }
+  }
+
+  public canDelete(): boolean {
+    return !this.isDeleting && !this.isSaving;
   }
 
   get isSubFormsValid(): boolean {
@@ -154,34 +163,36 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
 
     const editedItem = this.getEditedItem();
 
+    this.isSaving = true;
     if (this.isNewItem) {
       this.dataService.newItem(editedItem).subscribe(
-        response => {
-          const result = response.model;
-
-          this.messageHelper.showSavedSuccess(
-            this.isNewItem,
-            result.name
-          );
-
-          this.onItemSaved.next(result);
-        },
-        error => this.messageHelper.showSaveFailed(error, false));
+        response => this.onSaveSuccess(response.model),
+        error => this.onSaveFail(error)
+      );
     }
     else {
       this.dataService.updateItem(editedItem, editedItem.id).subscribe(
-        response => {
-          const result = response.model;
-
-          this.messageHelper.showSavedSuccess(
-            this.isNewItem,
-            result.name
-          );
-
-          this.onItemSaved.next(result);
-        },
-        error => this.messageHelper.showSaveFailed(error, false));
+        response => this.onSaveSuccess(response.model),
+        error => this.onSaveFail(error)
+      );
     }
+  }
+
+  onSaveSuccess(data: any) {
+    const result = data;
+
+    this.messageHelper.showSavedSuccess(
+      this.isNewItem,
+      result.name
+    );
+
+    this.onItemSaved.next(result);
+    this.isSaving = false;    
+  }
+
+  onSaveFail(error: any) {
+    this.messageHelper.showStickySaveFailed(error, false);
+    this.isSaving = false;   
   }
 
   public delete() {
@@ -193,6 +204,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
       { duration: 5000 }
     )
       .onAction().subscribe(() => {
+        this.isDeleting = true;
         this.alertService.startLoadingMessage(this.translater.get('common.message.deleting'));
 
         this.dataService.deleteItem(itemToDelete)
@@ -201,8 +213,12 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
               itemToDelete.name
             );
             this.onItemDeleted.next(itemToDelete);
+            this.isDeleting = false;
           },
-            error => this.messageHelper.showSaveFailed(error, true));
+            error => {
+              this.messageHelper.showStickySaveFailed(error, true);
+              this.isDeleting = false;
+            });
       });
   }
 

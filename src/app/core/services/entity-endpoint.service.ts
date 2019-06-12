@@ -20,7 +20,7 @@ export class OliveEntityEndpointService extends OliveEndpointBaseService {
   }
 
   getItemEndpoint<T>(id: number, apiUrl: string, errorCount = null): Observable<T> {
-    return this.getEndpoint(id, apiUrl, errorCount);
+    return this.getEndpoint(id.toString(), apiUrl, errorCount);
   }
   
   getItemsEndpoint<T>(dataTablesParameters: any, apiUrl: string, errorCount = null): Observable<T> {
@@ -31,7 +31,7 @@ export class OliveEntityEndpointService extends OliveEndpointBaseService {
     return this.postEndpoint('new', apiUrl, item, errorCount);
   }
 
-  uploadItemEndpoint<T>(item: any, apiUrl: string, errorCount = null): Observable<T> {
+  uploadItemsEndpoint<T>(item: any, apiUrl: string, errorCount = null): Observable<T> {
     return this.postEndpoint('upload', apiUrl, item, errorCount);
   }
 
@@ -43,14 +43,23 @@ export class OliveEntityEndpointService extends OliveEndpointBaseService {
     return this.deleteEndpoint(id, apiUrl, errorCount);
   }
 
-  getEndpoint<T>(subUrl: any, apiUrl: string, errorCount = null): Observable<T> {
+  getEndpoint<T>(subUrl: string, apiUrl: string, errorCount = null): Observable<T> {
     const endpointUrl = `${apiUrl}/${subUrl}${this.companyGroupParam}`;
 
     return this.http.get<T>(endpointUrl, this.getRequestHeaders())
       .catch(error => {
         return this.handleError(error, () => this.getEndpoint(subUrl, apiUrl, errorCount), errorCount);
       });
-  }  
+  }
+
+  postStringEndpoint<T>(subUrl: any, apiUrl: string, data: string, errorCount = null): Observable<T> {
+    const endpointUrl = `${apiUrl}/${subUrl}${this.companyGroupParam}`;
+
+    return this.http.post<T>(endpointUrl, data, this.getRequestHeaders())
+      .catch(error => {
+        return this.handleError(error, () => this.postEndpoint(subUrl, apiUrl, data, errorCount), errorCount);
+      });
+  }
 
   postEndpoint<T>(subUrl: any, apiUrl: string, data: any, errorCount = null): Observable<T> {
     const endpointUrl = `${apiUrl}/${subUrl}${this.companyGroupParam}`;

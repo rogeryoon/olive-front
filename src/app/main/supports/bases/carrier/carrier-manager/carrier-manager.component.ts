@@ -7,11 +7,11 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
 
-import { OliveCarrierService } from '../../services/carrier.service';
+import { OliveCarrierService } from '../../../services/carrier.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveCarrierEditorComponent } from '../carrier-editor/carrier-editor.component';
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
-import { Carrier } from '../../models/carrier.model';
+import { Carrier } from '../../../models/carrier.model';
 
 @Component({
   selector: 'olive-carrier-manager',

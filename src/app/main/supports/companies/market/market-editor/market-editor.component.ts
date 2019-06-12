@@ -4,11 +4,11 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { Market } from '../../models/market.model';
+import { Market } from '../../../models/market.model';
 import { OliveUtilities } from 'app/core/classes/utilities';
-import { StandMarket } from '../../models/stand-market';
+import { MarketExcelInterface } from '../../../models/market-excel-interface';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { OliveStandMarketService } from '../../services/stand-market.service';
+import { OliveMarketExcelInterfaceService } from '../../../services/market-excel-interface.service';
 
 @Component({
   selector: 'olive-market-editor',
@@ -16,11 +16,11 @@ import { OliveStandMarketService } from '../../services/stand-market.service';
   styleUrls: ['./market-editor.component.scss']
 })
 export class OliveMarketEditorComponent extends OliveEntityFormComponent {
-  standMarkets: StandMarket[];
+  marketExcelInterfaces: MarketExcelInterface[];
 
   constructor(
     formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
-    private cacheService: OliveCacheService, private standMarketService: OliveStandMarketService
+    private cacheService: OliveCacheService, private marketExcelInterfaceService: OliveMarketExcelInterfaceService
   ) 
   {
     super(
@@ -39,7 +39,7 @@ export class OliveMarketEditorComponent extends OliveEntityFormComponent {
       webSite: formModel.webSite,
       memo: formModel.memo,
       activated: formModel.activated,
-      standMarketId : formModel.standMarket
+      marketExcelInterfaceId : formModel.marketExcelInterface
     } as Market);
   }
 
@@ -52,7 +52,7 @@ export class OliveMarketEditorComponent extends OliveEntityFormComponent {
       webSite: '',
       memo: '',
       activated: false,
-      standMarket: ''
+      marketExcelInterface: ''
     });
   }
 
@@ -65,14 +65,13 @@ export class OliveMarketEditorComponent extends OliveEntityFormComponent {
       webSite: this.item.webSite || '',
       memo: this.item.memo || '',
       activated: this.boolValue(this.item.activated),
-      standMarket: this.item.standMarketFk ? this.item.standMarketFk.id : null
+      marketExcelInterface: this.item.marketExcelInterfaceFk ? this.item.marketExcelInterfaceFk.id : null
     });
 
-    this.cacheService.getItems(this.standMarketService, 'standMarkets', null)
-    .then(items => {
-      const standMarkets = items as StandMarket[];
-      this.standMarkets = standMarkets.filter(e => e.activated);
-      this.oForm.patchValue({standMarket: this.item.standMarketFk ? this.item.standMarketFk.id : null});
+    this.cacheService.getItems(this.marketExcelInterfaceService, 'marketExcelInterfaces', null)
+    .then((items: MarketExcelInterface[]) => {
+      this.marketExcelInterfaces = items.filter(e => e.activated);
+      this.oForm.patchValue({marketExcelInterface: this.item.marketExcelInterfaceFk ? this.item.marketExcelInterfaceFk.id : null});
     });    
   }
 

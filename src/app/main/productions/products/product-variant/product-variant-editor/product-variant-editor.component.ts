@@ -7,14 +7,15 @@ import { AccountService } from '@quick/services/account.service';
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { ProductVariant } from '../../models/product-variant.model';
+import { ProductVariant } from '../../../models/product-variant.model';
 import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
-import { OliveProductService } from '../../services/product.service';
+import { OliveProductService } from '../../../services/product.service';
 import { OliveProductManagerComponent } from '../../product/product-manager/product-manager.component';
-import { Product } from '../../models/product.model';
+import { Product } from '../../../models/product.model';
 import { Permission } from '@quick/models/permission.model';
-import { numberValidator } from 'app/core/classes/validators';
+import { numberValidator, volumeValidator } from 'app/core/classes/validators';
+import { OliveUtilities } from 'app/core/classes/utilities';
 
 @Component({
   selector: 'olive-product-variant-editor',
@@ -26,12 +27,11 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
   lookupProduct: OliveLookupHostComponent;
 
   weightTypes: any[] = OliveConstants.weightTypes;
+  lenghtTypes: any[] = OliveConstants.lengthTypes;
 
   constructor(
-    formBuilder: FormBuilder,
-    translater: FuseTranslationLoaderService,
-    private accountService: AccountService,
-    private productService: OliveProductService,
+    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    private accountService: AccountService, private productService: OliveProductService,
     private cacheService: OliveCacheService
   ) 
   {
@@ -46,39 +46,56 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
     return this.itemWithIdNAudit({
       code: formModel.code,
       name: formModel.name,
+      activated: formModel.activated,
+      memo: formModel.memo,      
       standPrice: formModel.standPrice,
       weight: formModel.weight,
       weightTypeCode: formModel.weightTypeCode,
-      productId: formModel.productFk.id
-    });
+      volume: formModel.volume,
+      lengthTypeCode: formModel.lengthTypeCode,
+      productId: formModel.productFk.id      
+    } as ProductVariant);
   }
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      id: '',
       code: '',
       name: '',
+      activated: false,
+      memo: '',      
       standPrice: ['', [numberValidator(this.standCurrency.decimalPoint, false)]],
       weight: ['', [numberValidator(2, false)]],
       weightTypeCode: ['', Validators.required],
+      volume: ['', [volumeValidator()]],
+      volumeWeight: '',
+      lengthTypeCode: ['', Validators.required],
       productFk: null
     });
   }
 
   resetForm() {
     this.oForm.reset({
-      id: this.id36(this.item.id),
       code: this.item.code || '',
       name: this.item.name || '',
+      activated: this.boolValue(this.item.activated),
+      memo: this.item.memo || '',      
       standPrice: this.item.standPrice || '',
       weight: this.item.weight || '',
       weightTypeCode: this.item.weightTypeCode || '',
+      volume: this.item.volume || '',
+      volumeWeight: this.item.volume || '',
+      lengthTypeCode: this.item.lengthTypeCode || '',
       productFk: this.item.productFk || ''
     });
 
-    if (!this.item.weightTypeCode) {
+    if (!this.item.weightTypeCode || !this.item.lengthTypeCode) {
       this.cacheService.GetCompanyGroupSetting()
-        .then(setting => this.oForm.patchValue({weightTypeCode: setting.productWeightTypeCode}));  
+        .then(setting => {
+          this.oForm.patchValue({
+            weightTypeCode: setting.productWeightTypeCode,
+            lengthTypeCode: setting.productLengthTypeCode
+          });
+        });  
     }
   }
 
@@ -107,5 +124,9 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
 
   markCustomControlsTouched() {
     this.lookupProduct.markAsTouched();   
+  }
+
+  renderVolumeWeight(volumeCtrl: any, weightTypeCtrl: any, lengthTypeCtrl: any) {
+    return OliveUtilities.renderVolumeWeight(volumeCtrl, weightTypeCtrl, lengthTypeCtrl);
   }
 }

@@ -2,7 +2,7 @@
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { Currency } from '../../models/currency.model';
+import { Currency } from '../../../models/currency.model';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { numberValidator } from 'app/core/classes/validators';
 
@@ -33,7 +33,6 @@ export class OliveCurrencyEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      id: '',
       code: ['', Validators.required],
       name: ['', Validators.required],
       symbol: ['', Validators.required],
@@ -44,7 +43,6 @@ export class OliveCurrencyEditorComponent extends OliveEntityFormComponent {
 
   resetForm() {
     this.oForm.reset({
-      id: this.id36(this.item.id),
       code: this.item.code || '',
       name: this.item.name || '',
       symbol: this.item.symbol || '',

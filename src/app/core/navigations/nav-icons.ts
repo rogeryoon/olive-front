@@ -59,7 +59,11 @@ export class NavIcons {
     static Sales = class {
         static group = 'file_copy';
 
-        static orderList = 'list_alt';
+        static orderList = 'list_alt';        
+
+        static marketExcels = 'cloud_upload';
+        static marketExcelRows = 'cloud_done';
+        static matchItems = 'keyboard_tab';
     }; 
     
     static Secure = class {

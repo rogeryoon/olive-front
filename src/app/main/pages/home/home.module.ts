@@ -6,7 +6,7 @@ import { FuseSharedModule } from '@fuse/shared.module';
 import { OliveHomeComponent } from './home.component';
 import { HomeResolver } from './home-resolver';
 import { OliveHelpModule } from '../../supports/helps/helps.module';
-import { OliveHelpService } from '../../supports/helps/services/help.service';
+import { OliveHelpService } from '../../supports/services/help.service';
 import { OliveSharedModule } from '../../../core/shared.module';
 
 const routes = [

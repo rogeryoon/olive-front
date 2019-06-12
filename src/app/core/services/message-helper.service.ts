@@ -72,10 +72,19 @@ export class OliveMessageHelperService {
       errorMessage.messageSeverity = MessageSeverity.info;
     }
     else 
-    if (error.error !== null && error.error.errorCode !== null) {
+    if (error.error && error.error.errorCode) {
+      const concurrencyError = 'CONCURRENCY_ERROR';
       switch (error.error.errorCode) {
-        case 'CONCURRENCY_ERROR':
+        case concurrencyError:
           errorMessage.message = this.translater.get(isDelete ? 'common.entryError.deleteByConcurrency' : 'common.entryError.concurrency');
+          errorMessage.messageSeverity = MessageSeverity.error;        
+          break;
+
+        default:
+          if (error.error.errorCode.includes(concurrencyError)) {
+            const duplicatedKey = error.error.errorCode.replace(concurrencyError + '-', '');
+            errorMessage.message = String.Format(this.translater.get('common.entryError.concurrencyKeyName'), duplicatedKey);
+          }
           errorMessage.messageSeverity = MessageSeverity.error;        
           break;
       }
@@ -84,7 +93,7 @@ export class OliveMessageHelperService {
     return errorMessage;
   }
 
-  showLoadFaild(error: any) {
+  showLoadFaildSticky(error: any) {
     const errorMessage = this.translateError(error);
 
     if (errorMessage.title == null) {
@@ -104,7 +113,7 @@ export class OliveMessageHelperService {
     );
   }
 
-  showSaveFailed(error: any, isDelete: boolean) {
+  showStickySaveFailed(error: any, isDelete: boolean) {
     this.alertService.stopLoadingMessage();
 
     const errorMessage = this.translateError(error, isDelete);

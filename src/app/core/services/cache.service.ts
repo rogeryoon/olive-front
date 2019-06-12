@@ -11,13 +11,11 @@ import { OliveQueryParameterService } from './query-parameter.service';
 import { OliveMessageHelperService } from './message-helper.service';
 import { OliveChunkDataService } from './chunk-data.service';
 import { CompanyMaster } from '../models/company-master.model';
-import { Currency } from 'app/main/supports/bases/models/currency.model';
-import { Branch } from 'app/main/supports/companies/models/branch.model';
+import { Currency } from 'app/main/supports/models/currency.model';
 import { OliveDataService } from '../interfaces/data-service';
 import { OliveUtilities } from '../classes/utilities';
 import { UserName } from '../models/user-name';
 import { OliveConstants } from '../classes/constants';
-import { StandMarket } from 'app/main/supports/companies/models/stand-market';
 
 interface CacheContent {
   expiry: number;
@@ -38,9 +36,7 @@ export class OliveCacheService {
   private _companyMaster: CompanyMaster;
   private _currencies: Currency[];
   private _standCurrency: Currency;
-  private _branches: Branch[];
-  private _standMarkets: StandMarket[];
-
+  
   constructor(
     private companyGroupSettingService: OliveCompanyGroupSettingService,
     private chunkDataService: OliveChunkDataService,
@@ -93,7 +89,7 @@ export class OliveCacheService {
           setting = this.set(key, response.model);
         }
         catch (error) {
-          this.messageHelper.showLoadFaild(error);
+          this.messageHelper.showLoadFaildSticky(error);
         }
       }
       else {
@@ -120,7 +116,7 @@ export class OliveCacheService {
           item = this.set(cacheKey, response.model);
         }
         catch (error) {
-          this.messageHelper.showLoadFaild(error);
+          this.messageHelper.showLoadFaildSticky(error);
         }
       }
       else {
@@ -147,7 +143,7 @@ export class OliveCacheService {
           item = this.set(cacheKey, response.model);
         }
         catch (error) {
-          this.messageHelper.showLoadFaild(error);
+          this.messageHelper.showLoadFaildSticky(error);
         }
       }
       else {
@@ -174,7 +170,7 @@ export class OliveCacheService {
           items = this.set(cacheKey, response.model);
         }
         catch (error) {
-          this.messageHelper.showLoadFaild(error);
+          this.messageHelper.showLoadFaildSticky(error);
         }
       }
       else {
@@ -210,7 +206,7 @@ export class OliveCacheService {
         });
       }
       catch (error) {
-        this.messageHelper.showLoadFaild(error);
+        this.messageHelper.showLoadFaildSticky(error);
       }
     }
 
@@ -245,20 +241,6 @@ export class OliveCacheService {
     return this._standCurrency;
   }
 
-  get branches() {
-    if (!this._branches) { 
-      this._branches = this.authService.branches; 
-    }
-    return this._branches;
-  }
-
-  get standMarkets() {
-    if (!this._standMarkets) { 
-      this._standMarkets = this.authService.standMarkets; 
-    }
-    return this._standMarkets;
-  }
-  
   showMoney(amount: number): string {
     return OliveUtilities.numberFormat(amount, this.standCurrency.decimalPoint);
   }

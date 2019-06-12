@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Help } from '../models/Help';
+import { Help } from '../../models/Help';
 
 @Component({
   selector: 'olive-help-article',

@@ -1,0 +1,19 @@
+:host {
+    .my-fab {
+     width: 200px;
+     height: 200px;
+     line-height: 72px;
+     font-size: 72px;
+
+     &::ng-deep .mat-button-wrapper{
+         line-height: 72px;
+         padding: 0;
+
+          .mat-icon {
+              font-size: 72px;
+              padding-right: 4px;
+              padding-top: 4px;
+          }
+    }
+}
+}

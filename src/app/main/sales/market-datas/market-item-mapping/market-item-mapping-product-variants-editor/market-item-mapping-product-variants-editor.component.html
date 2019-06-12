@@ -1,0 +1,80 @@
+<form [formGroup]="oForm" (keydown.enter)="false">
+    <mat-table [dataSource]="productDataSource" formArrayName="formarray">
+        <mat-header-row *matHeaderRowDef="displayedColumns">
+        </mat-header-row>
+
+        <mat-footer-row *matFooterRowDef="displayedColumns">
+        </mat-footer-row>
+
+        <mat-row *matRowDef="let row; columns: displayedColumns; let i=index" #cdkrow
+            [ngClass]="{'highlightrow': (currentRow) && row.ObjId == currentRow.ObjId}" (click)="currentRow=row;">
+        </mat-row>
+
+        <ng-container matColumnDef="productVariantId36">
+            <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.id' | translate}}</mat-header-cell>
+            <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="hasArrayEntryError('productVariantId36',i) ? arrayErrorMessage('productVariantId36',i) : row.Obj['productName']?.name">
+                <mat-form-field fxFlex='95%'>
+                    <input name="inputProductVariantId36{{row.ObjId}}" matInput formControlName="productVariantId36" class="center" readonly="true">
+                    <mat-error *ngIf="hasArrayEntryError('productVariantId36',i)">{{'common.validate.error' | translate}}</mat-error>
+                </mat-form-field>
+            </mat-cell>
+            <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="productName">
+            <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.itemsName' | translate}}</mat-header-cell>
+            <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
+                <mat-form-field fxFlex='95%'>
+                    <input type="search" name="inputProductName{{row.ObjId}}" matInput formControlName="productName"
+                        (focus)="currentRow=row" (change)="onChange($event, i)" (keyup)="onKeyup($event)"
+                        (blur)="onBlur($event)" autocomplete="off" [matAutocomplete]="auto">
+                    <mat-error *ngIf="hasArrayEntryError('productName',i)">{{arrayErrorMessage('productName',i)}}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onProductSelected($event, i)">
+                    <mat-option *ngIf="isLoading" class="is-loading">
+                        <mat-spinner diameter="50"></mat-spinner>
+                    </mat-option>
+                    <ng-container *ngIf="!isLoading">
+                        <mat-option *ngFor="let item of getProducts(i)" [value]="item.name" [dir]="item.id">{{ item.name }}
+                        </mat-option>
+                    </ng-container>
+                </mat-autocomplete>
+            </mat-cell>
+            <mat-footer-cell *matFooterCellDef class="justify-center"><mat-icon (click)="searchLinkProducts()" class="link-cursor">zoom_in</mat-icon><span (click)="searchLinkProducts()" class="link-cursor">{{'common.tableHeader.searchLink' | translate}}</span></mat-footer-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="quantity">
+            <mat-header-cell *matHeaderCellDef>{{'common.word.quantity' | translate}}</mat-header-cell>
+            <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i"
+                [matTooltip]="arrayErrorMessage('quantity',i)">
+                <mat-form-field fxFlex='95%'>
+                    <input name="inputAmount{{row.ObjId}}" matInput class="right" formControlName="quantity"
+                        (focus)="currentRow=row" (change)="onChange($event, i)" (keyup)="onKeyup($event)"
+                        (blur)="onBlur($event)">
+                    <mat-error *ngIf="hasArrayEntryError('quantity',i)">{{'common.validate.error' | translate}}
+                    </mat-error>
+                </mat-form-field>
+            </mat-cell>
+            <mat-footer-cell *matFooterCellDef class="justify-end pr-40">{{totalQuantity|number:'1.0-0'}}
+            </mat-footer-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef>
+                <button mat-button color="primary" matTooltip="{{'common.button.addRow' | translate}}" (click)="newItem()">
+                    <mat-icon class="mat-button-icon">add</mat-icon>{{'common.button.addRow' | translate}}
+                </button>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row" class="justify-center">
+                <button mat-icon-button matTooltip="{{'common.button.delete' | translate}}" (click)="deleteItem(row)">
+                    <mat-icon color="warn">delete</mat-icon>
+                </button>
+            </mat-cell>
+            <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
+        </ng-container>
+
+    </mat-table>
+    <mat-error *ngIf="showNoItemCreatedError">{{'common.message.noItemCreated' | translate}}</mat-error>
+</form>

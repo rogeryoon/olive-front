@@ -12,11 +12,11 @@ import { OliveLookupDialogComponent } from 'app/core/components/dialogs/lookup-d
 
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
-import { InWarehouseItem } from '../../models/in-warehouse-item.model';
+import { InWarehouseItem } from '../../../models/in-warehouse-item.model';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
-import { OliveInWarehouseService } from '../../services/in-warehouse.service';
+import { OliveInWarehouseService } from '../../../services/in-warehouse.service';
 import { OliveInWarehouseManagerComponent } from '../in-warehouse-manager/in-warehouse-manager.component';
-import { InWarehouse } from '../../models/in-warehouse.model';
+import { InWarehouse } from '../../../models/in-warehouse.model';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OliveEditDialogComponent } from 'app/core/components/dialogs/edit-dialog/edit-dialog.component';
@@ -118,7 +118,7 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
         },
         error => {
           this.loadingIndicator = false;            
-          this.messageHelper.showLoadFaild(error);
+          this.messageHelper.showLoadFaildSticky(error);
         }
       );
     }
@@ -131,7 +131,6 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
         item: item,
         itemType: InWarehouse,
         managePermission: null,
-        translateTitleId: NavTranslates.InWarehouse.list,
         customTitle: `${this.translater.get('navi.inWarehouse.group')} ID : ${this.dateCode(item.createdUtc, item.id)}`,
         readOnly : true
       } as OliveOnEdit

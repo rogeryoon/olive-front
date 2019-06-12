@@ -1,6 +1,7 @@
 import { PermissionValues } from '@quick/models/permission.model';
 import { OliveDataService } from './data-service';
 import { NameValue } from '../models/name-value';
+import { OliveOnContextMenu } from './on-context-menu';
 
 export interface IListerSetting {
 
@@ -40,6 +41,12 @@ export class ListerSetting implements IListerSetting {
     footerColumns?: any[];
 
     disabledContextMenus?: string[];
+
+    noSearchBox?: boolean;
+
+    navigateDetailPage?: boolean;
+
+    customContextMenus?: OliveOnContextMenu[];
 }
 
 export class LookupListerSetting implements IListerSetting {

@@ -105,6 +105,10 @@ export class OliveEditDialogComponent extends OliveBaseComponent implements OnIn
     return this.createdComponent.canSave();
   }
 
+  get canDelete(): boolean {
+    return this.createdComponent.canDelete();
+  }
+
   get canManageItems() {
     return !this.createdComponent.readOnly && this.accountService.userHasPermission(this.setting.data.managePermission);
   }

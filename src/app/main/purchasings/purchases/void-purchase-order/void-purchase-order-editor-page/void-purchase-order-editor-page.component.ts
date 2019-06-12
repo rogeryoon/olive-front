@@ -12,7 +12,7 @@ import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { AlertService } from '@quick/services/alert.service';
 import { OliveVoidPurchaseOrderManagerComponent } from '../void-purchase-order-manager/void-purchase-order-manager.component';
-import { VoidPurchaseOrder } from '../../models/void-purchase-order.model';
+import { VoidPurchaseOrder } from '../../../models/void-purchase-order.model';
 
 @Component({
   selector: 'olive-void-purchase-order-editor-page',

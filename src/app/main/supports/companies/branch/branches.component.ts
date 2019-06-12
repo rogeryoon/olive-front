@@ -17,8 +17,8 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchBranchComponent } from './search-branch/search-branch.component';
-import { OliveBranchService } from '../services/branch.service';
-import { Branch } from '../models/branch.model';
+import { OliveBranchService } from '../../services/branch.service';
+import { Branch } from '../../models/branch.model';
 import { OliveBranchManagerComponent } from './branch-manager/branch-manager.component';
 
 const Selected  = 'selected';

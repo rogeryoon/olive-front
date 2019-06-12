@@ -18,9 +18,9 @@ import { OliveSearchVoidPurchaseOrderComponent } from './search-void-purchase-or
 import { OliveVoidPurchaseOrderManagerComponent } from './void-purchase-order-manager/void-purchase-order-manager.component';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { OliveInWarehouseService } from '../../in-warehouses/services/in-warehouse.service';
-import { InWarehouse } from '../../in-warehouses/models/in-warehouse.model';
-import { VoidPurchaseOrder } from '../models/void-purchase-order.model';
+import { OliveInWarehouseService } from '../../services/in-warehouse.service';
+import { InWarehouse } from '../../models/in-warehouse.model';
+import { VoidPurchaseOrder } from '../../models/void-purchase-order.model';
 
 const Selected  = 'selected';
 const Id = 'id';

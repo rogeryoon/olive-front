@@ -4,7 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { Branch } from '../../models/branch.model';
+import { Branch } from '../../../models/branch.model';
 
 @Component({
   selector: 'olive-branch-editor',
@@ -38,7 +38,6 @@ export class OliveBranchEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      id: '',
       code: ['', Validators.required],
       name: ['', Validators.required],
       outsourcing: false,
@@ -54,7 +53,6 @@ export class OliveBranchEditorComponent extends OliveEntityFormComponent {
 
   resetForm() {
     this.oForm.reset({
-      id: this.id36(this.item.id),
       code: this.item.code || '',
       name: this.item.name || '',
       outsourcing: this.item.outsourcing,

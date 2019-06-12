@@ -159,6 +159,22 @@ export const defaultNavigation: FuseNavigation[] = [
                         icon: NavIcons.Sales.orderList,
                         url: '/orders/list'
                     },
+                    {
+                        id: 'excelList',
+                        title: '판매처 엑셀',
+                        translate: NavTranslates.Sales.marketExcels,
+                        type: 'item',
+                        icon: NavIcons.Sales.marketExcels,
+                        url: '/data/market/excels/list'
+                    },
+                    {
+                        id: 'matchItems',
+                        title: '판매처 상품 연결',
+                        translate: NavTranslates.Sales.matchItems,
+                        type: 'item',
+                        icon: NavIcons.Sales.matchItems,
+                        url: '/data/market/excels/matches'
+                    },                    
                 ]
             }            
         ]

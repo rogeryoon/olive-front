@@ -17,8 +17,8 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchCurrencyComponent } from './search-currency/search-currency.component';
-import { OliveCurrencyService } from '../services/currency.service';
-import { Currency } from '../models/currency.model';
+import { OliveCurrencyService } from '../../services/currency.service';
+import { Currency } from '../../models/currency.model';
 import { OliveCurrencyManagerComponent } from './currency-manager/currency-manager.component';
 
 const Selected  = 'selected';

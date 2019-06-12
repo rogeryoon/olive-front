@@ -2,8 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { OliveHelpArticleComponent } from '../help-article/help-article.component';
 import { ActivatedRoute } from '@angular/router';
-import { CategoryHelps } from '../models/CategoryHelps';
-import { OliveHelpService } from '../services/help.service';
+import { CategoryHelps } from '../../models/CategoryHelps';
+import { OliveHelpService } from '../../services/help.service';
 
 @Component({
   selector: 'olive-help-by-category',

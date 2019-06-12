@@ -9,11 +9,13 @@ export interface OliveOnEdit {
 
     customTitle?: string;
 
-    translateTitleId?: string;
-
     startTabIndex?: number;
 
     readOnly?: boolean;
+
+    isSaving?: boolean;
+
+    isDeleting?: boolean;
 
     itemSaved$: any;
 
@@ -24,4 +26,6 @@ export interface OliveOnEdit {
     delete(): void;
 
     canSave(): boolean;
+
+    canDelete(): boolean;
 }

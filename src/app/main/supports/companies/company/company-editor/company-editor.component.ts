@@ -6,11 +6,11 @@ import { Permission } from '@quick/models/permission.model';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { Company } from '../../models/company.model';
+import { Company } from '../../../models/company.model';
 import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
-import { OliveCompanyGroupService } from '../../services/company-group.service';
-import { CompanyGroup } from '../../models/company-group.model';
+import { OliveCompanyGroupService } from '../../../services/company-group.service';
+import { CompanyGroup } from '../../../models/company-group.model';
 import { OliveCompanyGroupManagerComponent } from '../../company-group/company-group-manager/company-group-manager.component';
 
 @Component({
@@ -52,7 +52,6 @@ export class OliveCompanyEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      id: '',
       code: ['', Validators.required],
       name: ['', Validators.required],
       phoneNumber: '',
@@ -64,7 +63,6 @@ export class OliveCompanyEditorComponent extends OliveEntityFormComponent {
 
   resetForm() {
     this.oForm.reset({
-      id: this.id36(this.item.id),
       code: this.item.code || '',
       name: this.item.name || '',
       phoneNumber: this.item.phoneNumber || '',

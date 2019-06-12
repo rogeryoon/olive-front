@@ -10,7 +10,7 @@ import { AccountService } from '@quick/services/account.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
-import { OliveProductService } from '../../services/product.service';
+import { OliveProductService } from '../../../services/product.service';
 import { OliveProductEditorComponent } from '../product-editor/product-editor.component';
 import { OliveProductClassEditorComponent } from '../product-class-editor/product-class-editor.component';
 
@@ -53,12 +53,19 @@ export class OliveProductManagerComponent extends OliveEntityEditComponent {
       code: product.code,
       name: product.name,
       activated: product.activated,
-      memo: product.memo,
       hsCode: product.hsCode,
+      customsName: product.customsName,
+      customsPrice: product.customsPrice,
+      customsTypeCode: product.customsTypeCode,
+      memo: product.memo,
+      standPrice: product.standPrice,
+      weight: product.weight,
+      weightTypeCode: product.weightTypeCode,
+      volume: product.volume,
+      lengthTypeCode: product.lengthTypeCode,      
       brands: productClass.brands,
       categories: productClass.categories,
-      tags: productClass.tags,
-      companyGroupId: this.queryParams.CompanyGroupId
+      tags: productClass.tags
     });
   }
 

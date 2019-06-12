@@ -4,7 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { PaymentMethod } from '../../models/payment-method.model';
+import { PaymentMethod } from '../../../models/payment-method.model';
 
 @Component({
   selector: 'olive-payment-method-editor',
@@ -32,7 +32,6 @@ export class OlivePaymentMethodEditorComponent extends OliveEntityFormComponent 
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      id: '',
       code: ['', Validators.required],
       name: ['', Validators.required],
       memo: '',
@@ -42,7 +41,6 @@ export class OlivePaymentMethodEditorComponent extends OliveEntityFormComponent 
 
   resetForm() {
     this.oForm.reset({
-      id: this.id36(this.item.id),
       code: this.item.code || '',
       name: this.item.name || '',
       memo: this.item.memo || '',

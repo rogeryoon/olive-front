@@ -17,10 +17,10 @@ import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveConstants } from 'app/core/classes/constants';
 
 import { OliveSearchPurchaseOrderComponent } from '../search-purchase-order/search-purchase-order.component';
-import { OlivePurchaseOrderService } from '../../services/purchase-order.service';
-import { PurchaseOrder } from '../../models/purchase-order.model';
+import { OlivePurchaseOrderService } from '../../../services/purchase-order.service';
+import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/purchase-order-manager.component';
-import { OlivePurchasingMiscService } from '../../services/purchasing-misc.service';
+import { OlivePurchasingMiscService } from '../../../services/purchasing-misc.service';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OlivePreviewPurchaseOrderComponent } from '../preview-purchase-order/preview-purchase-order.component';
 import { OlivePreviewDialogComponent } from 'app/core/components/dialogs/preview-dialog/preview-dialog.component';
@@ -28,8 +28,8 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveInWarehouseStatusComponent } from '../../../in-warehouses/in-warehouse/in-warehouse-status/in-warehouse-status.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { NameValue } from 'app/core/models/name-value';
-import { OliveInWarehouseItemService } from '../../../in-warehouses/services/in-warehouse-items.service';
-import { InWarehouseItem } from 'app/main/purchasings/in-warehouses/models/in-warehouse-item.model';
+import { OliveInWarehouseItemService } from '../../../services/in-warehouse-items.service';
+import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.model';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -121,7 +121,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
   }
 
   getEditDialogReadOnly(item: PurchaseOrder): boolean {
-    return item.closedDate;
+    return item && item.closedDate;
   }
 
   renderItem(item: PurchaseOrder, columnName: string): string {
@@ -325,7 +325,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       },
       error => {
         this.loadingIndicator = false;
-        this.messageHelper.showSaveFailed(error, false);
+        this.messageHelper.showStickySaveFailed(error, false);
       }
     );
   }

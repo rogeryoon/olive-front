@@ -1,37 +1,77 @@
 ﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-      <olive-lookup-host #product formControlName="productFk" required  [placeholder]="'Product'" [isEditMode]="canAssignItem"></olive-lookup-host>
+    <olive-lookup-host #product formControlName="productFk" required [placeholder]="'Product'"
+        [isEditMode]="canAssignItem"></olive-lookup-host>
 
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Type Name</mat-label>
-        <input matInput name="name" formControlName="name" maxlength="200">
-        <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
-      </mat-form-field>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-label>Type Name</mat-label>
+            <input matInput name="name" formControlName="name" maxlength="200">
+            <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>{{'common.word.code' | translate}}</mat-label>
-        <input matInput name="code" formControlName="code" maxlength="100" class="to-uppercase">
-        <mat-hint align="end">{{getControl('code').value?.length || 0}}/100</mat-hint>
-      </mat-form-field>
+        <mat-form-field appearance="outline" style="width:200px">
+            <mat-label>{{'common.word.code' | translate}}</mat-label>
+            <input matInput name="code" formControlName="code" maxlength="100" class="to-uppercase">
+            <mat-hint align="end">{{getControl('code').value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Stand Price</mat-label>
-        <input matInput name="standPrice" formControlName="standPrice" type="number">
-        <mat-error *ngIf="hasEntryError('standPrice')">{{errorMessage('standPrice')}}</mat-error>
-      </mat-form-field>
+        <mat-form-field appearance="outline" style="width:100px">
+            <mat-label>{{'common.word.price' | translate}}</mat-label>
+            <input matInput name="standPrice" formControlName="standPrice">
+            <mat-error *ngIf="hasEntryError('standPrice')">{{errorMessage('standPrice')}}</mat-error>
+        </mat-form-field>
+    </div>
 
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Weight</mat-label>        
-        <input matInput name="weight" formControlName="weight" type="number">
-        <mat-error *ngIf="hasEntryError('weight')">{{errorMessage('weight')}}</mat-error>
-      </mat-form-field>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-label>{{'common.word.weightType' | translate}}</mat-label>
+            <mat-select #weightTypeCode name="weightTypeCode" formControlName="weightTypeCode" required>
+                <mat-option *ngFor="let unit of weightTypes" [value]="unit.code">{{unit.name}} ({{unit.symbol}})
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasEntryError('weightTypeCode')">{{errorMessage('weightTypeCode')}}</mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>Type of Product Weight</mat-label>        
-        <mat-select name="weightTypeCode" formControlName="weightTypeCode" required>
-          <mat-option *ngFor="let unit of weightTypes" [value]="unit.code">{{unit.name}} ({{unit.symbol}})</mat-option>
-        </mat-select>
-        <mat-error *ngIf="hasEntryError('weightTypeCode')">{{errorMessage('weightTypeCode')}}</mat-error>
-      </mat-form-field>
+        <mat-form-field appearance="outline" style="width:90px">
+            <mat-label>{{'common.word.weight' | translate}}</mat-label>
+            <input matInput name="weight" formControlName="weight">
+            <mat-error *ngIf="hasEntryError('weight')">{{errorMessage('weight')}}</mat-error>
+        </mat-form-field>
 
-      <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-label>{{'common.word.lengthType' | translate}}</mat-label>
+            <mat-select #lengthTypeCode name="lengthTypeCode" formControlName="lengthTypeCode" required>
+                <mat-option *ngFor="let unit of lenghtTypes" [value]="unit.code">{{unit.name}} ({{unit.symbol}})
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasEntryError('lengthTypeCode')">{{errorMessage('lengthTypeCode')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-label>{{'common.word.volume' | translate}}</mat-label>
+            <input #volume matInput name="volume" formControlName="volume">
+            <mat-error *ngIf="hasEntryError('volume')">{{'common.entryError.volumeError' | translate}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-label>{{'common.word.volumeWeight' | translate}}</mat-label>
+            <input matInput name="volumeWeight" formControlName="volumeWeight" readonly
+                [value]="renderVolumeWeight(volume, weightTypeCode, lengthTypeCode)">
+        </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="w-100-p">
+        <mat-label>{{'common.word.memo' | translate}}</mat-label>
+        <textarea matInput name="memo" formControlName="memo" rows="2">
+        </textarea>
+    </mat-form-field>
+
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <div class="w-100-p">
+            <mat-checkbox formControlName="activated">Activated</mat-checkbox>
+        </div>
+        <div class="w-100-p">
+            <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+        </div>
+    </div>
 </form>
