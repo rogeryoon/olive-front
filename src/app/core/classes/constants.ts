@@ -42,6 +42,12 @@ export class OliveConstants {
         static completed = 'check';
     };
 
+    static orderStatus = class {
+        static pending = 'access_time';
+        static canceled = 'cancel';
+        static shipped = 'local_shipping';
+    };    
+
     static style = class {
         static footerCell = 'text-align: right; padding-right: 0px;';
     };

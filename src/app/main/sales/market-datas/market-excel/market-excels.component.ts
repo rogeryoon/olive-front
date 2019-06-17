@@ -112,7 +112,7 @@ export class OliveMarketExcelsComponent extends OliveEntityListComponent {
   }
 
   navigateDetailPage(item: MarketExcel) { 
-    this.router.navigateByUrl(`/data/market/excels/${this.id36(item.id)}?name=${encodeURI(item.interfaceName)}`);
+    this.router.navigateByUrl(`/data/market/orders/${this.id36(item.id)}?name=${encodeURI(item.interfaceName)}`);
   }
 
   onUploaded(item: MarketExcel) {

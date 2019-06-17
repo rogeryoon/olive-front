@@ -165,7 +165,7 @@ export const defaultNavigation: FuseNavigation[] = [
                         translate: NavTranslates.Sales.marketExcels,
                         type: 'item',
                         icon: NavIcons.Sales.marketExcels,
-                        url: '/data/market/excels/list'
+                        url: '/data/market/orders/list'
                     },
                     {
                         id: 'matchItems',
@@ -173,7 +173,7 @@ export const defaultNavigation: FuseNavigation[] = [
                         translate: NavTranslates.Sales.matchItems,
                         type: 'item',
                         icon: NavIcons.Sales.matchItems,
-                        url: '/data/market/excels/matches'
+                        url: '/data/market/orders/matches'
                     },                    
                 ]
             }            

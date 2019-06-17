@@ -13,7 +13,7 @@ import { OliveSearchOrderShipOutComponent } from './order-ship-out/search-order-
 
 const routes = [
   {
-    path: 'orders/list',
+    path: 'list',
     component: OliveOrderShipOutsComponent,
     canActivate: [AuthGuard]
   }, 

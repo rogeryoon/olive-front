@@ -20,22 +20,22 @@ import { OliveMarketExcelRowManagerComponent } from './market-excel-row/market-e
 
 const routes = [
   {
-    path: 'excels/list',
+    path: 'orders/list',
     component: OliveMarketExcelsComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'excels/matches',
+    path: 'orders/matches',
     component: OliveMarketItemMappingsComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'excels/matches/:id',
+    path: 'orders/matches/:id',
     component: OliveMarketItemMappingsComponent,
     canActivate: [AuthGuard]
   },    
   {
-    path: 'excels/:id',
+    path: 'orders/:id',
     component: OliveMarketExcelRowsComponent,
     canActivate: [AuthGuard]
   },

@@ -155,7 +155,7 @@ export class OliveMarketItemMappingsComponent extends OliveEntityListComponent {
         this.translater.get('sales.marketItemMappings.linkProductMenuJobDoneTitle'),
         this.translater.get('sales.marketItemMappings.linkProductMenuJobDoneDescription'),
         DialogType.alert,
-        () => this.router.navigateByUrl(`/data/market/excels/${this.id36(this.excelId)}?name=${encodeURI(this.interfaceName)}`)
+        () => this.router.navigateByUrl(`/data/market/orders/${this.id36(this.excelId)}?name=${encodeURI(this.interfaceName)}`)
       ); 
     }
   }

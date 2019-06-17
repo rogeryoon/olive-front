@@ -167,7 +167,7 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
             });
       
           dialogRef.componentInstance.onTask.subscribe(data => {
-            this.router.navigateByUrl(`/data/market/excels/matches/${this.id36(this.excelId)}?name=${this.interfaceName}`);
+            this.router.navigateByUrl(`/data/market/orders/matches/${this.id36(this.excelId)}?name=${this.interfaceName}`);
           });
         }
         else if (this.excelRowsStatus.transferableOrders > 0) {
@@ -285,7 +285,7 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
   }
 
   navigateDetailPage(item: MarketExcel) { 
-    this.router.navigateByUrl(`/data/market/excels/${this.id36(item.id)}?name=${encodeURI(item.interfaceName)}`);
+    this.router.navigateByUrl(`/data/market/orders/${this.id36(item.id)}?name=${encodeURI(item.interfaceName)}`);
   }
 
   onUploaded(item: MarketExcel) {

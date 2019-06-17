@@ -146,7 +146,10 @@ export const locale = {
                 'matchSearch' : '상품 매치 포함',
                 'checkMatchSearch' : '포함',
                 'resetValue' : '매치 값 복원',
-                'searchLink' : '상품 검색'
+                'searchLink' : '상품 검색',
+                'status' : '상태',
+                'orderer' : '주문인',
+                'seller' : '판매자'
             },
             'word': {
                 'id' : 'ID',
