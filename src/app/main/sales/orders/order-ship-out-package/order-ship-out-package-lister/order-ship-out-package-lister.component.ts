@@ -10,11 +10,11 @@ import { OliveUtilities } from 'app/core/classes/utilities';
 import { Order } from 'app/main/sales/models/order.model';
 
 @Component({
-  selector: 'olive-order-ship-out-editor',
-  templateUrl: './order-ship-out-editor.component.html',
-  styleUrls: ['./order-ship-out-editor.component.scss']
+  selector: 'olive-order-ship-out-package-lister',
+  templateUrl: './order-ship-out-package-lister.component.html',
+  styleUrls: ['./order-ship-out-package-lister.component.scss']
 })
-export class OliveOrderShipOutEditorComponent extends OliveEntityFormComponent {
+export class OliveOrderShipOutPackageListerComponent extends OliveEntityFormComponent {
   readOnly = true;
 
   constructor(

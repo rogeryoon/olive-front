@@ -4,7 +4,7 @@ import { DeliveryTag } from 'app/core/models/delivery-tag.model';
 import { OrderShipOutDetail } from './order-ship-out-detail.model';
 import { Order } from './order.model';
 
-export class OrderShipOut extends OliveTrackingAttribute {
+export class OrderShipOutPackage extends OliveTrackingAttribute {
     id?: number;
     shipOutDate?: any;
     canceledDate?: any;

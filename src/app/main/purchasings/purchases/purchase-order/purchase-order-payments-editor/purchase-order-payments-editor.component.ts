@@ -34,7 +34,7 @@ import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.mod
 })
 export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
   displayedColumns = ['paymentMethodId', 'amount', 'remarkId', 'actions'];
-  paymentsDataSource: OlivePurchaseOrderPaymentDatasource = new OlivePurchaseOrderPaymentDatasource(this.cacheService);
+  dataSource: OlivePurchaseOrderPaymentDatasource = new OlivePurchaseOrderPaymentDatasource(this.cacheService);
   paymentMethods: PaymentMethod[];
 
   value: any = null;  
@@ -69,13 +69,13 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   }
 
   get items(): any {
-    return this.paymentsDataSource.items;
+    return this.dataSource.items;
   }
 
   get totalAmount(): number {
     let amount = 0;
 
-    this.paymentsDataSource.items.forEach(item => {
+    this.dataSource.items.forEach(item => {
       if (!isNaN(item.amount) && item.amount > 0) {
         amount += +item.amount;
       }
@@ -87,7 +87,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   buildForm() {
     this.oFormArray = this.formBuilder.array([]);
     this.oForm = this.formBuilder.group({ formarray: this.oFormArray });
-    this.paymentsDataSource.formGroup = this.oForm;
+    this.dataSource.formGroup = this.oForm;
   }
 
   createEmptyObject() {
@@ -95,13 +95,13 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   }
 
   onTotalItemEntryAmountChanged(amount) {
-    if (this.paymentsDataSource.items.length === 0) {
+    if (this.dataSource.items.length === 0) {
       const payment = new PurchaseOrderPayment();
       payment.amount = amount;
       this.newItem(payment);
     }
     else 
-    if (this.paymentsDataSource.items.length === 1) {
+    if (this.dataSource.items.length === 1) {
       this.oFArray.controls.forEach((formGroup: FormGroup) => {
         formGroup.patchValue({amount: amount.toFixed(this.standCurrency.decimalPoint)});
       });
@@ -109,8 +109,8 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   }
 
   private newItem(payment: PurchaseOrderPayment = null) {
-    this.paymentsDataSource.addNewItem(payment);
-    this.paymentsDataSource.renderItems();
+    this.dataSource.addNewItem(payment);
+    this.dataSource.renderItems();
     this.oForm.markAsDirty();
   }
   
@@ -131,8 +131,8 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   }
 
   private deleteUnit(item: any) {
-    this.paymentsDataSource.deleteItem(item);
-    if (this.paymentsDataSource.items.length === 0) {
+    this.dataSource.deleteItem(item);
+    if (this.dataSource.items.length === 0) {
       const fa = <FormArray>this.oForm.get('formarray');
       fa.removeAt(0);
     }    
@@ -145,7 +145,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     this.value = obj;
 
     if (obj) {
-      this.paymentsDataSource.loadItems(obj);
+      this.dataSource.loadItems(obj);
     }
 
     if (!obj || obj.length === 0) {

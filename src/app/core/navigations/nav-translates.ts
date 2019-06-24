@@ -59,6 +59,7 @@ export class NavTranslates {
         static group = 'navi.sales.group';
 
         static orderList = 'navi.sales.orderList';
+        static shipOutPackageLister = 'navi.sales.shipOutPackageLister';
         
         static marketExcels = 'navi.sales.marketExcels';
         static marketExcelRows = 'navi.sales.marketExcelRows';

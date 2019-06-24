@@ -8,6 +8,8 @@ export class Order extends OliveTrackingAttribute {
     marketOrdererName: string;
     marketOrderDate?: any;
     marketOrderDescription: string;
+    memo: string;    
+    itemsChanged?: boolean;
     marketSellerFk?: MarketSeller;
     orderOriginalDetails?: OrderOriginalDetail[];
 }

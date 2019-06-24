@@ -47,7 +47,6 @@ export class OliveMarketItemMappingManagerComponent extends OliveEntityEditCompo
 
   getEditedItem(): any {
     return this.itemWithIdNAudit({
-      id: this.item.id,
       interfaceId: this.item.interfaceId,
       interfaceName: this.item.interfaceName,
       excelColumns: this.excelColumnsEditor.items,

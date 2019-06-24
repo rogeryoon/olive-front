@@ -3,7 +3,7 @@
 export class MarketExcelRow extends OliveTrackingAttribute {
     id?: number;
     orderNumber?: string;
-    consignee?: string;
+    consigneeName?: string;
     productName?: string;
     quantity?: number;
     marketItemMappingId?: number;

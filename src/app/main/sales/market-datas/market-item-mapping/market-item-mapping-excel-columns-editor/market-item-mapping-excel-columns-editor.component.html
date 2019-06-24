@@ -1,5 +1,5 @@
 <form [formGroup]="oForm" (keydown.enter)="false">
-  <mat-table [dataSource]="excelColumnsDataSource" formArrayName="formarray">
+  <mat-table [dataSource]="dataSource" formArrayName="formarray">
     <mat-header-row *matHeaderRowDef="displayedColumns">
     </mat-header-row>
 

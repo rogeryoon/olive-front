@@ -31,7 +31,7 @@ import { MarketItemMappingExcelColumn } from '../../../models/market-item-mappin
 })
 export class OliveMarketItemMappingExcelColumnsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
   displayedColumns = ['name', 'matchValue', 'matchSearch', 'actions'];
-  excelColumnsDataSource: OliveMarketItemMappingExcelColumnDatasource = new OliveMarketItemMappingExcelColumnDatasource(this.cacheService);
+  dataSource: OliveMarketItemMappingExcelColumnDatasource = new OliveMarketItemMappingExcelColumnDatasource(this.cacheService);
 
   value: any = null;  
 
@@ -48,13 +48,13 @@ export class OliveMarketItemMappingExcelColumnsEditorComponent extends OliveEnti
   }
 
   get items(): any {
-    return this.excelColumnsDataSource.items;
+    return this.dataSource.items;
   }
 
   buildForm() {
     this.oFormArray = this.formBuilder.array([]);
     this.oForm = this.formBuilder.group({ formarray: this.oFormArray });
-    this.excelColumnsDataSource.formGroup = this.oForm;
+    this.dataSource.formGroup = this.oForm;
   }
 
   createEmptyObject() {
@@ -73,7 +73,7 @@ export class OliveMarketItemMappingExcelColumnsEditorComponent extends OliveEnti
     this.value = obj;
 
     if (obj) {
-      this.excelColumnsDataSource.loadItems(obj);
+      this.dataSource.loadItems(obj);
     }
   }
   registerOnChange(fn: any): void {

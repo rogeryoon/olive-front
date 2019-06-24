@@ -160,6 +160,14 @@ export const defaultNavigation: FuseNavigation[] = [
                         url: '/orders/list'
                     },
                     {
+                        id: 'listShipOut',
+                        title: '판매 출고 작성',
+                        translate: NavTranslates.Sales.shipOutPackageLister,
+                        type: 'item',
+                        icon: NavIcons.Sales.shipOutPackageLister,
+                        url: '/orders/ship-out-package-lister'
+                    },
+                    {
                         id: 'excelList',
                         title: '판매처 엑셀',
                         translate: NavTranslates.Sales.marketExcels,

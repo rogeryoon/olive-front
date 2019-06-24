@@ -30,7 +30,7 @@ import { OliveConstants } from 'app/core/classes/constants';
 
 @Component({
   selector: 'olive-entity-list',
-  templateUrl: './entity-list.component.html',
+  template: '',
   animations: fuseAnimations
 })
 export class OliveEntityListComponent extends OliveBaseComponent implements AfterViewInit, OnDestroy, OnInit {
@@ -298,7 +298,8 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
         managePermission: this.setting.managePermission,
         customTitle: this.getEditorCustomTitle(this.sourceItem),
         startTabIndex: startTabIndex,
-        readOnly: this.getEditDialogReadOnly(this.sourceItem)
+        readOnly: this.getEditDialogReadOnly(this.sourceItem),
+        customButtons: this.setting.editCustomButtons
       } as OliveOnEdit
     );
 

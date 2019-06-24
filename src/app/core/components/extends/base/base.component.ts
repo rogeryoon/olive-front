@@ -4,7 +4,7 @@ import { String } from 'typescript-string-operations';
 
 import { Currency } from 'app/main/supports/models/currency.model';
 import { OliveUtilities } from 'app/core/classes/utilities';
-import { Address } from 'app/core/models/core/address.model';
+import { Address } from 'app/core/models/address.model';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 

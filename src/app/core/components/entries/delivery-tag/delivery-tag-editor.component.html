@@ -1,0 +1,49 @@
+﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="mr-4">
+            <input matInput name="consigneeName" formControlName="consigneeName" maxlength="100">
+            <mat-label>{{'common.word.consigneeName'|translate}}</mat-label>
+            <mat-hint align="end">{{getControl('consigneeName').value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <input matInput name="customsName" formControlName="customsName" maxlength="100">
+            <mat-label>{{'common.word.customsName'|translate}}</mat-label>
+            <mat-hint align="end">{{getControl('customsName').value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="ml-4">
+            <input matInput name="customsId" formControlName="customsId" maxlength="100">
+            <mat-label>{{'common.word.customsId'|translate}}</mat-label>
+            <mat-hint align="end">{{getControl('customsId').value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="mr-4">
+            <input matInput name="buyerCellPhoneNumber" formControlName="buyerCellPhoneNumber" maxlength="100">
+            <mat-label>{{'common.word.buyerCellPhoneNumber'|translate}}</mat-label>
+            <mat-hint align="end">{{getControl('buyerCellPhoneNumber').value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <input matInput name="consigneeCellPhoneNumber" formControlName="consigneeCellPhoneNumber" maxlength="100">
+            <mat-label>{{'common.word.consigneeCellPhoneNumber'|translate}}</mat-label>
+            <mat-hint align="end">{{getControl('consigneeCellPhoneNumber').value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="ml-4">
+            <input matInput name="consigneePhoneNumber2" formControlName="consigneePhoneNumber2" maxlength="100">
+            <mat-label>{{'common.word.consigneePhoneNumber2'|translate}}</mat-label>
+            <mat-hint align="end">{{getControl('consigneePhoneNumber2').value?.length || 0}}/100</mat-hint>
+        </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <input matInput name="deliveryMemo" formControlName="deliveryMemo" maxlength="400">
+            <mat-label>{{'common.word.deliveryMemo'|translate}}</mat-label>
+            <mat-hint align="end">{{getControl('deliveryMemo').value?.length || 0}}/400</mat-hint>
+        </mat-form-field>
+    </div>
+</form>

@@ -22,4 +22,12 @@ export class OliveOrderShipOutService extends OliveEntityService {
 
     this.setApiUrl('ordershipouts');
   }
+
+  cancelOrder(id: number) {
+    return this.post(`cancelOrder/${id}`, null);
+  }
+
+  restoreOrder(id: number) {
+    return this.post(`restoreOrder/${id}`, null);
+  }
 }

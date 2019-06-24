@@ -21,6 +21,8 @@ export class EditPageSetting {
   iconName: string;
   translateTitleId?: string;
   customTitle?: string;
+
+  // 저장후 이동할 아이템 리스트 페이지
   itemListPath: string;
 }
 

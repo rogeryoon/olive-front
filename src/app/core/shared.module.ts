@@ -30,6 +30,7 @@ import { OliveDropDownListComponent } from './components/entries/drop-down-list/
 import { OliveReferHostComponent } from './components/entries/refer-host/refer-host.component';
 import { OliveFloatheadDirective } from './directives/floathead.directive';
 import { OliveTaskCountDialogComponent } from './components/dialogs/task-count-dialog/task-count-dialog.component';
+import { OliveDeliveryTagEditorComponent } from './components/entries/delivery-tag/delivery-tag-editor.component';
 
 @NgModule({
   imports: [
@@ -70,6 +71,7 @@ import { OliveTaskCountDialogComponent } from './components/dialogs/task-count-d
     OliveTaskCountDialogComponent,
   
     OliveAddressEditorComponent,
+    OliveDeliveryTagEditorComponent,
     OliveEditPageComponent,
     OliveTabLabelComponent,
 
@@ -98,6 +100,7 @@ import { OliveTaskCountDialogComponent } from './components/dialogs/task-count-d
     OliveTaskCountDialogComponent,
 
     OliveAddressEditorComponent,
+    OliveDeliveryTagEditorComponent,
     OliveEditPageComponent,
     OliveTabLabelComponent,
 

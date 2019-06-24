@@ -8,7 +8,8 @@ import * as moment from 'moment';
 import { NameValue } from '../models/name-value';
 
 import { OliveConstants } from './constants';
-import { Address } from '../models/core/address.model';
+import { Address } from '../models/address.model';
+import { UserName } from '../models/user-name';
 
 export class OliveUtilities {
     public static isNullOrWhitespace(input): boolean {
@@ -348,10 +349,10 @@ export class OliveUtilities {
     }
 
     public static searchOption(extSearches: NameValue[], orderColumnName: string, sort: string = 'asc'): any {
-        const option = 
+        const option =
         {
-            columns: [{data: orderColumnName}],
-            order: [{column: 0, dir: sort}],
+            columns: [{ data: orderColumnName }],
+            order: [{ column: 0, dir: sort }],
             length: 0
         };
 
@@ -360,6 +361,29 @@ export class OliveUtilities {
         }
 
         return option;
+    }
+
+    public static showEventDateAndName(date: any, userName: UserName) {
+        let value = null;
+
+        if (!date && !userName) {
+            return null;
+        }
+
+        if (userName && userName.fullName) {
+            value = userName.fullName;
+        }
+
+        if (date) {
+            if (value) {
+                value = `${this.getMomentDate(date)} - ${value}`;
+            }
+            else {
+                value = this.getMomentDate(date);
+            }
+        }
+
+        return value;
     }
 }
 

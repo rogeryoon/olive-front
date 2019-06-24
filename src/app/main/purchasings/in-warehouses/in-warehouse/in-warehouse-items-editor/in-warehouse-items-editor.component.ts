@@ -46,7 +46,7 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 })
 export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
   displayedColumns = ['productVariantId', 'name', 'balance', 'price', 'quantityDue', 'quantity', 'remark', 'actions'];
-  itemsDataSource: OliveInWarehouseItemDatasource = new OliveInWarehouseItemDatasource(this.cacheService);
+  dataSource: OliveInWarehouseItemDatasource = new OliveInWarehouseItemDatasource(this.cacheService);
 
   warehouse: Warehouse;
   value: InWarehouseItem[] = null;
@@ -76,7 +76,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   }
 
   getEditedItem(): InWarehouseItem[] {
-    return this.itemsDataSource.items;
+    return this.dataSource.items;
   }
 
   buildForm() {
@@ -84,7 +84,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     this.oForm = this.formBuilder.group({
       formarray: this.oFormArray
     });
-    this.itemsDataSource.formGroup = this.oForm;
+    this.dataSource.formGroup = this.oForm;
   }
 
   resetForm() {
@@ -104,7 +104,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     if (
       this.isNull(this.warehouse) ||
       this.warehouse.id === this.warehouse.id ||
-      this.itemsDataSource.items.length === 0
+      this.dataSource.items.length === 0
     ) {
       needToClearItems = true;
     }
@@ -120,7 +120,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
   clearAllItemsDataSource() {
     this.oFormArray.controls = [];
-    this.itemsDataSource.deleteAll();
+    this.dataSource.deleteAll();
   }
 
   createEmptyObject() {
@@ -144,8 +144,8 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   }
 
   private deleteUnit(item: any) {
-    this.itemsDataSource.deleteItem(item);
-    if (this.itemsDataSource.items.length === 0) {
+    this.dataSource.deleteItem(item);
+    if (this.dataSource.items.length === 0) {
       this.oFArray.removeAt(0);
     }
   }
@@ -153,7 +153,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   get totalQuantity(): number {
     let quantity = 0;
 
-    this.itemsDataSource.items.forEach(item => {
+    this.dataSource.items.forEach(item => {
       if (!isNaN(item.quantity)) {
         quantity += +item.quantity;
       }
@@ -165,7 +165,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   get totalBalance(): number {
     let balance = 0;
 
-    this.itemsDataSource.items.forEach(item => {
+    this.dataSource.items.forEach(item => {
       if (!isNaN(item.balance)) {
         balance += +item.balance;
       }
@@ -177,7 +177,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   get totalQuantityDue(): number {
     let due = 0;
 
-    this.itemsDataSource.items.forEach(item => {
+    this.dataSource.items.forEach(item => {
       if (!isNaN(item.quantity) && !isNaN(item.price)) {
         due += +item.quantity * +item.price;
       }
@@ -225,11 +225,11 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
       let onePurchaseOrderId = 0;
 
       // 발주서 하나만 선택가능, 이후 추가 버튼을 눌러도 다른 발주서를 로딩 못하게 막음 (VoidMode)
-      if (this.itemsDataSource.items.length > 0) {
-        onePurchaseOrderId = ((this.itemsDataSource.items[0]) as InWarehouseItem).id;
+      if (this.dataSource.items.length > 0) {
+        onePurchaseOrderId = ((this.dataSource.items[0]) as InWarehouseItem).id;
       }
 
-      this.itemsDataSource.items.forEach((dsItem: InWarehouseItem) => {
+      this.dataSource.items.forEach((dsItem: InWarehouseItem) => {
         pItems
           .forEach((pItem: PurchaseOrder) => {
             pItem.purchaseOrderItems
@@ -275,7 +275,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
                 firstAddedPurchaseOrder = pItem;
               }
 
-              this.itemsDataSource.addNewItem({
+              this.dataSource.addNewItem({
                 quantity: quantity,
                 balance: 0,
 
@@ -294,7 +294,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
       this.inWarehouseItemAdded.emit(firstAddedPurchaseOrder);
 
       if (needToRender) {
-        this.itemsDataSource.renderItems();
+        this.dataSource.renderItems();
         this.oForm.markAsDirty();
       }
 
@@ -306,17 +306,17 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     const quantityValue = this.getArrayFormGroup(index).get('quantity').value;
 
     if (OliveUtilities.isNumberPattern(quantityValue)) {
-      const item = this.itemsDataSource.items[index];
+      const item = this.dataSource.items[index];
       item.balance = item.originalBalance - this.getNumber(quantityValue);
     }
   }
 
   get noItemSelectedError(): boolean {
-    return this.itemsDataSource.items.length === 0;
+    return this.dataSource.items.length === 0;
   }
 
   get balanceIsMinusError(): boolean {
-    return this.itemsDataSource.items.some((item: InWarehouseItem) => item.balance < 0);
+    return this.dataSource.items.some((item: InWarehouseItem) => item.balance < 0);
   }
 
   protected hasOtherError(): boolean {
@@ -355,7 +355,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     this.item = obj;
 
     if (obj) {
-      this.itemsDataSource.loadItems(obj);
+      this.dataSource.loadItems(obj);
     }
   }
   registerOnChange(fn: any): void {

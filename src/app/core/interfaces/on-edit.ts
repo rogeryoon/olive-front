@@ -1,4 +1,5 @@
 import { PermissionValues } from '@quick/models/permission.model';
+import { OliveOnButton } from './on-buttons';
 export interface OliveOnEdit {
 
     item: any;
@@ -28,4 +29,14 @@ export interface OliveOnEdit {
     canSave(): boolean;
 
     canDelete(): boolean;
+
+    customButtonActionEnded$: any;    
+
+    customButtons?: OliveOnButton[];    
+
+    customButtonAction(buttonId: string): void;
+
+    customButtonVisible(buttonId: string): boolean;
+
+    customButtonEnable(buttonId: string): boolean;
 }

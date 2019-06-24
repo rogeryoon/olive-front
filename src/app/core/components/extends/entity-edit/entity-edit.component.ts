@@ -29,6 +29,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
 
   private onItemSaved = new Subject<any>();
   private onItemDeleted = new Subject<any>();
+  private onCustomButtonActionEnded = new Subject<any>();
   subControls: any = [];
 
   item: any = null;
@@ -43,6 +44,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   saveConfirmMessage: string;
   itemSaved$ = this.onItemSaved.asObservable();
   itemDeleted$ = this.onItemDeleted.asObservable();
+  customButtonActionEnded$ = this.onCustomButtonActionEnded.asObservable();
 
   @Input()
   private inputItem: any = null;
@@ -103,6 +105,14 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
 
     this.resetForm();
   }
+
+  public customButtonAction(buttonId: string): void { 
+    this.onCustomButtonActionEnded.next({id: buttonId, item: this.item});
+  }
+
+  customButtonVisible(buttonId: string): boolean { return true; }
+
+  customButtonEnable(buttonId: string): boolean { return true; }
 
   public canSave(): boolean {
     if (this.isSaving || this.isDeleting) {

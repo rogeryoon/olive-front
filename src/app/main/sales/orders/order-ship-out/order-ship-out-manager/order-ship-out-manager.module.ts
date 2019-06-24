@@ -7,6 +7,7 @@ import { FuseSharedModule } from '@fuse/shared.module';
 import { OliveSharedModule } from 'app/core/shared.module';
 import { OliveOrderShipOutManagerComponent } from './order-ship-out-manager.component';
 import { OliveOrderShipOutEditorComponent } from '../order-ship-out-editor/order-ship-out-editor.component';
+import { OliveOrderShipOutDetailsEditorComponent } from './order-ship-out-details-editor/order-ship-out-details-editor.component';
 
 @NgModule({
   imports: [
@@ -17,9 +18,13 @@ import { OliveOrderShipOutEditorComponent } from '../order-ship-out-editor/order
   ],
   declarations: [
     OliveOrderShipOutManagerComponent,
-    OliveOrderShipOutEditorComponent
+    OliveOrderShipOutEditorComponent,
+    OliveOrderShipOutDetailsEditorComponent
   ],
-  exports: [OliveOrderShipOutManagerComponent],
+  exports: [
+    OliveOrderShipOutManagerComponent,
+    OliveOrderShipOutDetailsEditorComponent
+  ],
   entryComponents: [OliveOrderShipOutManagerComponent]
 })
 export class OliveOrderShipOutManagerModule { }

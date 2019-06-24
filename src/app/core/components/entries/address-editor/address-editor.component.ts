@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { Address } from 'app/core/models/core/address.model';
+import { Address } from 'app/core/models/address.model';
 
 import { Country } from 'app/main/supports/models/country.model';
 import { OliveCountryService } from 'app/main/supports/services/country.service';
@@ -34,7 +34,7 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
     );
   }
 
-  getEditedItem(): any {
+  getEditedItem(): Address {
     const formModel = this.oForm.value;
 
     return this.itemWithIdNAudit({
@@ -44,7 +44,7 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
       stateProvince: formModel.stateProvince,
       postalCode: formModel.postalCode,
       countryId: this.countries.find(item => item.id === formModel.country).id
-    });
+    } as Address);
   }
 
   buildForm() {

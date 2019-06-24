@@ -28,7 +28,7 @@
 
     <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
         <mat-form-field appearance="outline" class="w-100-p">
-            <mat-label>{{'common.word.customsName' | translate}}</mat-label>
+            <mat-label>{{'common.word.customsItemName' | translate}}</mat-label>
             <input matInput name="customsName" formControlName="customsName" maxlength="400">
             <mat-hint align="end">{{getControl('customsName').value?.length || 0}}/400</mat-hint>
         </mat-form-field>

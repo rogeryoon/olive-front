@@ -1,50 +1,23 @@
 ﻿<form #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()" class="w-100-p" fxLayout="column" fxFlex>
-    <!-- <mat-tab-group>
+    <mat-tab-group>
         <mat-tab>
             <ng-template mat-tab-label>
-                <olive-tab-label [hasError]="main.hasError" [tabTitleId]="'tab.title.item'"></olive-tab-label>
+                <olive-tab-label [hasError]="main.hasError" [tabTitleId]="'tab.title.order'"></olive-tab-label>
             </ng-template>
-            <div class="tab-content p-24" fusePerfectScrollbar> -->
+            <div class="tab-content p-24" fusePerfectScrollbar>
                 <olive-order-ship-out-editor #main [item]="item"></olive-order-ship-out-editor>
-            <!-- </div>
-        </mat-tab>
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <olive-tab-label [hasError]="deliveryTag.hasError" [tabTitleId]="'tab.title.item'"></olive-tab-label>
-            </ng-template>
-            <div class="tab-content p-24" fusePerfectScrollbar>s
-                <olive-delivery-tag #deliveryTag [item]="item.deliveryTagFk"></olive-delivery-tag>
+                <olive-order-ship-out-details-editor #orderShipOutDetails formControlName="orderShipOutDetails"></olive-order-ship-out-details-editor>
             </div>
         </mat-tab>
 
-
         <mat-tab>
             <ng-template mat-tab-label>
-                <olive-tab-label [hasError]="address.hasError" [tabTitleId]="'tab.title.item'"></olive-tab-label>
+                <olive-tab-label [hasError]="deliveryAddress.hasError || deliveryTag.hasError" [tabTitleId]="'tab.title.delivery'"></olive-tab-label>
             </ng-template>
             <div class="tab-content p-24" fusePerfectScrollbar>
-                <olive-address #address [item]="item.addressFk"></olive-address>
+                <olive-delivery-tag-editor #deliveryTag [item]="item.deliveryTagFk"></olive-delivery-tag-editor>
+                <olive-address-editor #deliveryAddress [item]="item.deliveryAddressFk"></olive-address-editor> 
             </div>
         </mat-tab>
-
-
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <olive-tab-label [hasError]="order.hasError" [tabTitleId]="'tab.title.item'"></olive-tab-label>
-            </ng-template>
-            <div class="tab-content p-24" fusePerfectScrollbar>
-                <olive-order #order [item]="item.orderFk"></olive-order>
-            </div>
-        </mat-tab>
-
-
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <olive-tab-label [hasError]="iCollection<OrderShipOutDetail>.hasError" [tabTitleId]="'tab.title.item'"></olive-tab-label>
-            </ng-template>
-            <div class="tab-content p-24" fusePerfectScrollbar>
-                <olive-collection-order-ship-out-detail #iCollection<OrderShipOutDetail> [item]="item.iCollection<OrderShipOutDetail>Fk"></olive-collection-order-ship-out-detail>
-            </div>
-        </mat-tab>
-    </mat-tab-group> -->
+    </mat-tab-group>
 </form>

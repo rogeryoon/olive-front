@@ -50,7 +50,7 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 })
 export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
   displayedColumns = ['productVariantId', 'name', 'quantity', 'price', 'amount', 'discount', 'appliedCost', 'otherCurrencyPrice', 'remark', 'actions'];
-  itemsDataSource: OlivePurchaseOrderItemDatasource = new OlivePurchaseOrderItemDatasource(this.cacheService);
+  dataSource: OlivePurchaseOrderItemDatasource = new OlivePurchaseOrderItemDatasource(this.cacheService);
   paymentMethods: PaymentMethod[];
 
   parentItem: PurchaseOrder;
@@ -73,21 +73,21 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   }
 
   get poCurrency() {
-    return this.itemsDataSource.poCurrency;
+    return this.dataSource.poCurrency;
   }
   set poCurrency(value: Currency) {
-    this.itemsDataSource.poCurrency = value;
+    this.dataSource.poCurrency = value;
   }
 
   get exchangeRate() {
-    return this.itemsDataSource.exchangeRate;
+    return this.dataSource.exchangeRate;
   }
   set exchangeRate(value: number) {
-    this.itemsDataSource.exchangeRate = value;
+    this.dataSource.exchangeRate = value;
   }
 
   get otherCurrencyPriceRequired() {
-    return this.itemsDataSource.otherCurrencyPriceRequired;
+    return this.dataSource.otherCurrencyPriceRequired;
   }
 
   get freight() {
@@ -116,7 +116,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   get totalQuantity(): number {
     let quantity = 0;
 
-    this.itemsDataSource.items.forEach(item => {
+    this.dataSource.items.forEach(item => {
       if (!isNaN(item.quantity)) {
         quantity += +item.quantity;
       }
@@ -128,7 +128,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   get totalAmount(): number {
     let amount = 0;
 
-    this.itemsDataSource.items.forEach(item => {
+    this.dataSource.items.forEach(item => {
       if (!isNaN(item.quantity) && !isNaN(item.price)) {
         amount += item.quantity * item.price;
       }
@@ -174,7 +174,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       addedDiscountAmount: formModel.addedDiscountAmount,
       freightAmount: formModel.freightAmount,
       taxAmount: formModel.taxAmount,
-      items: this.itemsDataSource.items
+      items: this.dataSource.items
     };
   }
 
@@ -186,7 +186,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       freightAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
       taxAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]]
     });
-    this.itemsDataSource.formGroup = this.oForm;
+    this.dataSource.formGroup = this.oForm;
   }
 
   resetForm() {
@@ -222,8 +222,8 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   }
 
   private deleteUnit(item: any) {
-    this.itemsDataSource.deleteItem(item);
-    if (this.itemsDataSource.items.length === 0) {
+    this.dataSource.deleteItem(item);
+    if (this.dataSource.items.length === 0) {
       this.oFArray.removeAt(0);
     }
     this.updateCosts();    
@@ -259,7 +259,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       const duplicatedIdStrings: string[] = [];
       const dupProductVariantIdCheckset = new Set();
 
-      this.itemsDataSource.items.forEach((dsItem: PurchaseOrderItem) => {
+      this.dataSource.items.forEach((dsItem: PurchaseOrderItem) => {
         pvItems
           .filter((pvItem: ProductVariant) => dsItem.productVariantId === pvItem.id)
           .forEach((pvItem: ProductVariant) => {
@@ -276,7 +276,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       pvItems
         .filter((pvItem: ProductVariant) => !dupProductVariantIdCheckset.has(pvItem.id))
         .forEach((pvItem: ProductVariant) => {
-          this.itemsDataSource.addNewItem({
+          this.dataSource.addNewItem({
             price: pvItem.standPrice,
             discount: 0,
             appliedCost: pvItem.standPrice,
@@ -287,7 +287,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
         });
 
       if (needToRender) {
-        this.itemsDataSource.renderItems();
+        this.dataSource.renderItems();
         this.oForm.markAsDirty();
       }
     
@@ -324,7 +324,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       const duplicatedIdStrings: string[] = [];
       const dupPOItemIdCheckset = new Set();
 
-      this.itemsDataSource.items.forEach((dsItem: PurchaseOrderItem) => {
+      this.dataSource.items.forEach((dsItem: PurchaseOrderItem) => {
         pItems.forEach((fItem: PurchaseOrder) => {
           fItem.purchaseOrderItems
             .filter((sItem: PurchaseOrderItem) => dsItem.productVariantId === sItem.productVariantId)
@@ -344,7 +344,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
           fItem.purchaseOrderItems
             .filter((sItem: PurchaseOrderItem) => !dupPOItemIdCheckset.has(sItem.productVariantId))
             .forEach((sItem: PurchaseOrderItem) => {
-              this.itemsDataSource.addNewItem({
+              this.dataSource.addNewItem({
                 price: sItem.price,
                 discount: 0,                
                 appliedCost: sItem.price,
@@ -356,7 +356,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
         });
 
       if (needToRender) {
-        this.itemsDataSource.renderItems();
+        this.dataSource.renderItems();
         this.oForm.markAsDirty();
       }
   
@@ -409,7 +409,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     this.item = obj;
 
     if (obj) {
-      this.itemsDataSource.loadItems(obj);
+      this.dataSource.loadItems(obj);
     }
   }
   registerOnChange(fn: any): void {

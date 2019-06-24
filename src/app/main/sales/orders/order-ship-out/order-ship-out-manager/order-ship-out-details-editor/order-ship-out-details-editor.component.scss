@@ -1,0 +1,52 @@
+:host {
+    .is-loading ::ng-deep .mat-option-text {
+        display: flex;
+        justify-content: center;
+    }
+
+    .right {
+        text-align: right;
+    }
+
+    .center {
+        text-align: center;
+    }
+
+    .justify-end {
+        justify-content: flex-end;
+    }
+
+    .justify-center {
+        justify-content: center;
+    }
+
+    .mat-column-productVariantId36 {
+        flex: 0 1 120px;
+    }
+
+    .mat-column-quantity {
+        flex: 0 1 60px;
+    }
+
+    .mat-column-actions {
+        flex: 0 1 110px;
+    }
+
+    .mat-table {
+        min-width: 1000px;
+        max-width: 1200px;
+    }
+
+    .highlightrow {
+        background: cornsilk;
+    }
+
+    .justify-end {
+        justify-content: flex-end;
+    }
+
+    .mat-input-element.ng-invalid.ng-touched {
+        border: 1px solid red;
+        color: red;
+    }
+}

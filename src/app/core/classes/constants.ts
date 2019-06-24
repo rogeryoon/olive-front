@@ -59,6 +59,11 @@ export class OliveConstants {
         static print = 'print';
         static upload = 'upload';
     };
+
+    static customButton = class {
+        static cancelOrder = 'cancelOrder';
+        static restoreOrder = 'restoreOrder';
+    };
 }
 
 

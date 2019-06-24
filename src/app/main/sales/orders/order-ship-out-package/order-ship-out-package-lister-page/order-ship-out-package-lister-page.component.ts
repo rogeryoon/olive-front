@@ -11,16 +11,16 @@ import { OliveEditPageComponent } from 'app/core/components/extends/edit-page/ed
 import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { AlertService } from '@quick/services/alert.service';
-import { OliveVoidPurchaseOrderManagerComponent } from '../void-purchase-order-manager/void-purchase-order-manager.component';
-import { VoidPurchaseOrder } from '../../../models/void-purchase-order.model';
+import { OrderShipOutPackage } from 'app/main/sales/models/order-ship-out-package.model';
+import { OliveOrderShipOutPackageListerComponent } from '../order-ship-out-package-lister/order-ship-out-package-lister.component';
 
 @Component({
-  selector: 'olive-void-purchase-order-editor-page',
+  selector: 'olive-order-ship-out-package-lister-page',
   templateUrl: '../../../../../core/components/extends/edit-page/edit-page.component.html',
   styleUrls: ['../../../../../core/components/extends/edit-page/edit-page.component.scss'],
   animations: fuseAnimations
 })
-export class OliveVoidPurchaseOrderEditorPageComponent extends OliveEditPageComponent {
+export class OliveOrderShipOutPackageListerPageComponent extends OliveEditPageComponent {
   constructor(
     private route: ActivatedRoute, componentFactoryResolver: ComponentFactoryResolver,
     translater: FuseTranslationLoaderService, accountService: AccountService,
@@ -34,12 +34,12 @@ export class OliveVoidPurchaseOrderEditorPageComponent extends OliveEditPageComp
 
   initializeChildComponent() {
     this.setting = {
-      component: OliveVoidPurchaseOrderManagerComponent,
-      itemType: VoidPurchaseOrder,
+      component: OliveOrderShipOutPackageListerComponent,
+      itemType: OrderShipOutPackage,
       managePermission: null,
-      iconName: NavIcons.Purchase.cancelEntry,
-      translateTitleId: NavTranslates.Purchase.cancelEntry,
-      itemListPath: 'purchases/cancel/list'
+      iconName: NavIcons.Sales.shipOutPackageLister,
+      translateTitleId: NavTranslates.Sales.shipOutPackageLister,
+      itemListPath: 'inwarehouses/list'
     };
 
     this.route.data.subscribe(({ item }) => {

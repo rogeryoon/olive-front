@@ -5,7 +5,11 @@ export const locale = {
             'status': {
                 'inWarehousePending' : '입고 대기',
                 'inWarehouseComplete' : '입고 완료',
-                'inItemEntry' : '상품 등록'
+                'inItemEntry' : '상품 등록',
+                'canceled': '취소',
+                'shipped': '배송중',
+                'pending': '준비',
+                'itemChanged': '상품변경'
             },
             'message' : {
                 'noRecordsFound' : '해당 데이터가 존재하지 않습니다.', // 'No matching records found',
@@ -39,7 +43,8 @@ export const locale = {
                 'invalidFile' : '업로드 형식에 맞지 않는 파일입니다.',
                 'errorOccured' : '작업도중 오류가 발생하였습니다.',
                 'uploadColumnMatchError' : '엑셀{0}열 이름이 매치하지 않습니다. 입력열[{1}] | 설정열[{2}]',
-                'uploadDataSignatureUnregisterd' : '등록되지 않은 양식입니다. 관리자에게 문의하십시오.'
+                'uploadDataSignatureUnregisterd' : '등록되지 않은 양식입니다. 관리자에게 문의하십시오.',
+                'areYouSure' : '정말로 요청작업을 진행하겠습니까?'
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
@@ -146,7 +151,7 @@ export const locale = {
                 'matchSearch' : '상품 매치 포함',
                 'checkMatchSearch' : '포함',
                 'resetValue' : '매치 값 복원',
-                'searchLink' : '상품 검색',
+                'addProductsLink' : '상품 검색 / 추가',
                 'status' : '상태',
                 'orderer' : '주문인',
                 'seller' : '판매자'
@@ -182,11 +187,35 @@ export const locale = {
                 'volumeWeight' : '부피 무게',
                 'weightType' : '단위',
                 'weight' : '무게',
-                'customsName' : '세관 신고명',
+                'customsItemName' : '세관 신고명',
                 'customsPrice' : '세관 가격',
                 'customsTypeCode' : '통관 타입',
                 'excel': '엑셀',
-                'marketSeller' : '판매자'
+                'marketSeller' : '판매자',
+                'consigneeName' : '받는사람',
+                'customsName' : '통관인',
+                'customsId' : '통관부호',
+                'buyerCellPhoneNumber': '구매자 휴대폰',
+                'consigneeCellPhoneNumber': '받는사람 휴대폰',
+                'consigneePhoneNumber2': '받는사람 전화번호',
+                'deliveryMemo': '배송 메모',
+                'address1': '주소 1',
+                'address2': '주소 2',
+                'city': '구/군',
+                'state': '시/도',
+                'postalCode': '우편번호',
+                'country': '국가',
+                'orderStatus': '상태',
+                'marketOrderNumber': '마켓 주문번호',
+                'marketSellerCode': '마켓 셀러 코드',
+                'marketOrdererName': '마켓 주문인',
+                'marketOrderDate': '마켓 주문일',
+                'marketOrderDescription': '마켓 품명',
+                'canceledUser': '취소정보',
+                'return': '반품',
+                'purchaseReturnOrCancel': '발주 반품/취소',
+                'cancelOrder': '주문 취소',
+                'restoreOrder': '변경 (배송준비)',
             }
         },
         'page': {
@@ -194,6 +223,7 @@ export const locale = {
                 'login': 'LOGIN TO YOUR ACCOUNT'
             }
         },
+        // 메뉴 카테고리로 구분
         'navi' : {
             'group' : {
                 'product': '바보',
@@ -253,6 +283,7 @@ export const locale = {
                 'group' : '판매',
 
                 'orderList' : '주문 목록',
+                'shipOutPackageLister' : '출고 리스팅',
                 'marketExcels' : '판매처 엑셀',
                 'marketExcelRows' : '판매처 엑셀',
                 'matchItems': '판매처 상품 연결'
@@ -270,7 +301,9 @@ export const locale = {
                 'address' : '주소',
                 'sort' : '분류',
                 'payments': '결제',
-                'items': '상품'
+                'items': '상품',
+                'delivery': '배송',
+                'order': '주문'
             },
             'error' : {
                 'entryTooltip' : '입력오류가 있습니다.'

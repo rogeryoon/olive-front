@@ -60,6 +60,7 @@ export class NavIcons {
         static group = 'file_copy';
 
         static orderList = 'list_alt';        
+        static shipOutPackageLister = 'send';
 
         static marketExcels = 'cloud_upload';
         static marketExcelRows = 'cloud_done';

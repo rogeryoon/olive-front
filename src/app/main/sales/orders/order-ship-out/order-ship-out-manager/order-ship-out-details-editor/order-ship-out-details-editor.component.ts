@@ -11,8 +11,6 @@ import { AlertService } from '@quick/services/alert.service';
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
-import { OliveMarketItemMappingProductVariantDatasource } from './market-item-mapping-product-variant.datasource';
-import { MarketItemMappingProductVariant } from '../../../models/market-item-mapping-product-variant.model';
 import { OliveProductVariantLookupDialogComponent } from 'app/main/productions/products/product-variant/product-variant-lookup-dialog/product-variant-lookup-dialog.component';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveProductVariantService } from 'app/main/productions/services/product-variant.service';
@@ -21,29 +19,30 @@ import { ProductVariant } from 'app/main/productions/models/product-variant.mode
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { IdName } from 'app/core/models/id-name';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
+import { OliveOrderShipOutDetailDatasource } from './order-ship-out-detail.datasource';
+import { OrderShipOutDetail } from 'app/main/sales/models/order-ship-out-detail.model';
 
 @Component({
-  selector: 'olive-market-item-mapping-product-variants-editor',
-  templateUrl: './market-item-mapping-product-variants-editor.component.html',
-  styleUrls: ['./market-item-mapping-product-variants-editor.component.scss'],
+  selector: 'olive-order-ship-out-details-editor',
+  templateUrl: './order-ship-out-details-editor.component.html',
+  styleUrls: ['./order-ship-out-details-editor.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => OliveMarketItemMappingProductVariantsEditorComponent),
+      useExisting: forwardRef(() => OliveOrderShipOutDetailsEditorComponent),
       multi: true,
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => OliveMarketItemMappingProductVariantsEditorComponent),
+      useExisting: forwardRef(() => OliveOrderShipOutDetailsEditorComponent),
       multi: true,
     }
   ]
 })
-export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
+export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
   displayedColumns = ['productVariantId36', 'productName', 'quantity', 'actions'];
   dataSource: 
-  OliveMarketItemMappingProductVariantDatasource = 
-  new OliveMarketItemMappingProductVariantDatasource(this.cacheService, this.productVariantService);
+  OliveOrderShipOutDetailDatasource = new OliveOrderShipOutDetailDatasource(this.cacheService, this.productVariantService);
 
   value: any = null;
 
@@ -87,7 +86,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
     const foundItem = this.getProducts(index).find(item => item.name === event.option.value);
 
     const dupStrings: string[] = [];
-    this.dataSource.items.forEach((dsItem: MarketItemMappingProductVariant) => {
+    this.dataSource.items.forEach((dsItem: OrderShipOutDetail) => {
       if (dsItem.productVariantId === foundItem.id) {
         dupStrings.push(`${this.id36(foundItem.id)}: ${foundItem.name}`);
         return;
@@ -129,7 +128,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
   }
 
   createEmptyObject() {
-    return new MarketItemMappingProductVariant();
+    return new OrderShipOutDetail();
   }
 
   addProductsLink() {
@@ -158,7 +157,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
         const duplicatedIdStrings: string[] = [];
         const dupProductVariantIdCheckset = new Set();
   
-        this.dataSource.items.forEach((dsItem: MarketItemMappingProductVariant) => {
+        this.dataSource.items.forEach((dsItem: OrderShipOutDetail) => {
           pvItems
             .filter((pvItem: ProductVariant) => dsItem.productVariantId === pvItem.id)
             .forEach((pvItem: ProductVariant) => {
@@ -178,8 +177,8 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
             this.dataSource.addNewItem({
               quantity: 1,
               productVariantId: pvItem.id,
-              productName: `${pvItem.productFk.name} ${pvItem.name}`.trimRight()
-            } as MarketItemMappingProductVariant);
+              name: `${pvItem.productFk.name} ${pvItem.name}`.trimRight()
+            } as OrderShipOutDetail);
             needToRender = true;
           });
   
@@ -204,9 +203,9 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
     return quantity;
   }
 
-  private newItem(product: MarketItemMappingProductVariant = null) {
+  private newItem(product: OrderShipOutDetail = null) {
     if (!product) {
-      product = new MarketItemMappingProductVariant();
+      product = new OrderShipOutDetail();
       product.quantity = 1;
     }
 

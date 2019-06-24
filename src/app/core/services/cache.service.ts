@@ -189,20 +189,19 @@ export class OliveCacheService {
 
     const queryKeys = new Set();
     uniqueKeys.forEach(key => {
-      if (!this.exist(OliveConstants.cacheKeys.paymentMethod + '!' + key)) {
+      if (!this.exist(OliveConstants.cacheKeys.userName + '!' + key)) {
         queryKeys.add(key);
       }
     });
 
-    const returnUserNames: UserName[] = [];
     if (queryKeys.size > 0) {
       try {
-        const response = await this.chunkDataService.getUserNames(Array.from(queryKeys)).toPromise();
+        const response = await this.chunkDataService.getUserNames(Array.from(queryKeys) as string[]).toPromise();
 
         const userNames = response.model;
 
         userNames.forEach(user => {
-          this.set(OliveConstants.cacheKeys.paymentMethod + '!' + user.userAuditKey, user);
+          this.set(OliveConstants.cacheKeys.userName + '!' + user.userAuditKey, user);
         });
       }
       catch (error) {
@@ -210,8 +209,9 @@ export class OliveCacheService {
       }
     }
 
+    const returnUserNames: UserName[] = [];    
     uniqueKeys.forEach(key => {
-      const cacheKey: string = OliveConstants.cacheKeys.paymentMethod + '!' + key;
+      const cacheKey: string = OliveConstants.cacheKeys.userName + '!' + key;
       if (this.exist(cacheKey)) {
         returnUserNames.push(this.get(cacheKey));
       }

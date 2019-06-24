@@ -9,7 +9,7 @@ import { DataTableDirective } from 'angular-datatables';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { AlertService, DialogType } from '@quick/services/alert.service';
+import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
 import { Permission } from '@quick/models/permission.model';
 

@@ -1,5 +1,5 @@
 ﻿import { OliveTrackingAttribute } from 'app/core/classes/tracking-attribute';
-import { Address } from 'app/core/models/core/address.model';
+import { Address } from 'app/core/models/address.model';
 
 export class Branch extends OliveTrackingAttribute {
     id?: number;

@@ -61,6 +61,9 @@ export class OliveEditDialogComponent extends OliveBaseComponent implements OnIn
   ngAfterViewInit() {
     this.createdComponent.itemSaved$.subscribe(item => this.dialogRef.close(item));
     this.createdComponent.itemDeleted$.subscribe(item => this.dialogRef.close(item.id));
+    this.createdComponent.customButtonActionEnded$.subscribe(param => {
+      this.dialogRef.close(param.item);
+    });
   }
 
   ngOnDestroy() {
@@ -99,6 +102,18 @@ export class OliveEditDialogComponent extends OliveBaseComponent implements OnIn
 
   delete(): void {
     this.createdComponent.delete();
+  }
+
+  customButtonAction(buttonId: string): void {
+    this.createdComponent.customButtonAction(buttonId);
+  }
+
+  customButtonVisible(buttonId: string): boolean {
+    return this.createdComponent.customButtonVisible(buttonId);
+  }
+
+  customButtonEnable(buttonId: string): boolean {
+    return this.createdComponent.customButtonEnable(buttonId);
   }
 
   get canSave(): boolean {

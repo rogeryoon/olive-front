@@ -214,7 +214,7 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: MarketExcelRow) {
     if (item) {
-      return `${item.orderNumber}-${item.consignee}`;
+      return `${item.orderNumber}-${item.consigneeName}`;
     }
     else {
       return this.listTitle();
@@ -240,7 +240,7 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
         retValue = item.orderNumber;
         break;
       case Consignee:
-        retValue = item.consignee;
+        retValue = item.consigneeName;
         break;
       case ProductName:
         retValue = item.productName;
@@ -309,7 +309,7 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
           this.translater.get('common.title.success'),
           String.Format(this.translater.get('sales.maketExcelRows.transferOrdersSuccessMessage'), transferredOrderCount),
           DialogType.alert,
-          () => this.router.navigateByUrl('/excels/list')
+          () => this.router.navigateByUrl('/orders/list')
         );          
       },
       error => {

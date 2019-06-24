@@ -82,8 +82,17 @@ export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
       ],
       editComponent: OliveOrderShipOutManagerComponent,
       searchComponent: OliveSearchOrderShipOutComponent,
-      itemType: OrderShipOut
+      itemType: OrderShipOut,
+      disabledContextMenus: [ OliveConstants.contextMenu.newItem, OliveConstants.contextMenu.upload ],
+      editCustomButtons : [
+        {id : OliveConstants.customButton.cancelOrder, iconName: 'cancel', titleId: 'common.word.cancelOrder'},
+        {id : OliveConstants.customButton.restoreOrder, iconName: 'cached', titleId: 'common.word.restoreOrder'}
+      ]
     };
+  }
+
+  getEditDialogReadOnly(item: OrderShipOut): boolean {
+    return item && item.shipOutDate;
   }
 
   renderItem(item: OrderShipOut, columnName: string): string {
@@ -100,10 +109,10 @@ export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
         retValue = item.orderFk.marketOrdererName;
         break;
       case ProductName:
-        retValue = OliveUtilities.getItemsFirstName(item.orderShipOutDetails.map(x => x.product));
+        retValue = OliveUtilities.getItemsFirstName(item.orderShipOutDetails);
         break;
       case Quantity:
-        retValue = this.commaNumber(item.orderShipOutDetails.map(x => x.quantity).reduce((a, b) => a + b));
+        retValue = this.getOrderCount(item);
         break;
       case CreatedUtc:
         retValue = this.date(item.createdUtc);
@@ -111,6 +120,10 @@ export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
     }
 
     return retValue;
+  }
+
+  getOrderCount(item: OrderShipOut): string {
+    return this.commaNumber(item.orderShipOutDetails.map(x => x.quantity).reduce((a, b) => a + b));
   }
 
   icon(item: OrderShipOut, columnName: string): boolean {
@@ -135,5 +148,35 @@ export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
     }
 
     return retValue;
+  }
+
+  getEditorCustomTitle(item: OrderShipOut) {
+    if (item) {
+      return `${item.orderFk.marketSellerFk.code} - ${item.orderFk.marketOrdererName} (${this.getOrderCount(item)})`;
+    }
+    else {
+      return this.translater.get(NavTranslates.Sales.orderList);
+    }
+  }
+
+  renderTDClass(item: OrderShipOut, column: any): string {
+    let addedClass = '';
+
+    if (column.data === Status) {
+      if (item.canceledDate) {
+        addedClass = OliveConstants.foregroundColor.red;
+      }
+      else if (item.shipOutDate) {
+        addedClass = OliveConstants.foregroundColor.blue;
+      }
+      else {
+        addedClass = OliveConstants.foregroundColor.orange;
+      }
+    }
+    else if (column.data === ProductName && item.orderFk.itemsChanged) {
+      addedClass = OliveConstants.foregroundColor.red;
+    }
+
+    return super.renderTDClass(item, column, addedClass);
   }
 }
