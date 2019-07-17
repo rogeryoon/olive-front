@@ -1,0 +1,20 @@
+﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxFlex autocomplete="off">
+    <div>
+        <table>
+            <tr>
+                <td class="w-50-p" style="vertical-align: top">
+                    <olive-pending-order-ship-out-list [warehouse]="warehouse" [index]="index"
+                        (shipOutFinished)="onShipOutFinished($event)" (reload)="onReload()">
+                    </olive-pending-order-ship-out-list>
+                </td>
+
+                <td class="w-20"></td>
+
+                <td class="w-50-p" style="vertical-align: top">
+                    <olive-pending-order-ship-out-package-list [warehouse]="warehouse" 
+                        (packagesCanceled)="onShipOutPackageCanceled()"></olive-pending-order-ship-out-package-list>
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>

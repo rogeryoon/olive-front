@@ -44,7 +44,8 @@ export const locale = {
                 'errorOccured' : '작업도중 오류가 발생하였습니다.',
                 'uploadColumnMatchError' : '엑셀{0}열 이름이 매치하지 않습니다. 입력열[{1}] | 설정열[{2}]',
                 'uploadDataSignatureUnregisterd' : '등록되지 않은 양식입니다. 관리자에게 문의하십시오.',
-                'areYouSure' : '정말로 요청작업을 진행하겠습니까?'
+                'areYouSure' : '정말로 요청작업을 진행하겠습니까?',
+                'outOfStock' : '{0}건이 재고부족으로 출고가 되지 않았습니다.'
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
@@ -82,7 +83,12 @@ export const locale = {
                 'creater' : '등록',
                 'lastUpdater' : '최종수정',
                 'validationError' : '입력 오류',
-                'finalConfirm' : '최종확인'
+                'finalConfirm' : '최종확인',
+                'selectWarehouses': '창고 선택',
+                'selectDeselectAll': '모두 선택/해제', // Select/Deselect All
+                'select': '선택',
+                'pendingShipOut' : '대기',
+                'shipOut' : '출고'
             },
             'button': {
                 'save' : '저장',
@@ -101,7 +107,19 @@ export const locale = {
                 'no': '아니오',
                 'ok': '확인',
                 'reset' : '리셋',
-                'addRow' : '행추가'
+                'addRow' : '행추가',
+                'load' : '불러오기',
+                'shipOut' : '출고',
+                'combineShip' : '합배송',
+                'cancelCombineShip' : '합배송 취소',
+                'cancelShipOut' : '출고 취소',
+                'finishShipOutPackage' : '출고 완료',
+                'preAssignTrackingNumber' : '송장 선발급',
+                'misc' : '기타',
+                'printPackingList' : '패킹 리스트',
+                'printShippingLable' : '운송장',
+                'exportForTrackingNumberUpdate' : '엑셀 (판매 사이트 송장번호)',
+                'exportForLogistic' : '엑셀 (택배사 인계)',
             },
             'menu': {
                 'menuButton' : '부가 기능',
@@ -154,7 +172,11 @@ export const locale = {
                 'addProductsLink' : '상품 검색 / 추가',
                 'status' : '상태',
                 'orderer' : '주문인',
-                'seller' : '판매자'
+                'seller' : '판매자',
+                'inventory' : '재고',
+                'weightKiloGram' : '무게(Kg)',
+                'combinedShipping': '합배송',
+                'select' : '선택'
             },
             'word': {
                 'id' : 'ID',
@@ -390,6 +412,11 @@ export const locale = {
             }
         },
         'sales': {
+            'pendingOrderShipOutList' : {
+                'selectDeliveryInfoTitle' : '다중 배달 정보 발견',
+                'selectDeliveryInfoDescription' : '어떤 배달 정보를 사용할것인지 선택하세요',
+                'confirmCombinedShipExists' : '합배송 처리 하지 않은 합배송 대상건이 있습니다. 합배송처리하지 않고 그냥 출고하겠습니까?'
+            },
             'marketItemMappingExcelColumnsEditor' : {
                 'notMatchOriginalValue' : '최초 엑셀에 저장되어 있던 (부분) 문자열이 아닙니다'
             },

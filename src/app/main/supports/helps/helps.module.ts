@@ -8,7 +8,6 @@ import { OliveHelpByCategoryComponent } from './help-by-category/help-by-categor
 import { OliveHelpArticleComponent } from './help-article/help-article.component';
 import { OliveHelpService } from '../services/help.service';
 import { OliveSharedModule } from '../../../core/shared.module';
-import { OliveHelpEndpointService } from '../services/help-endpoint.service';
 
 const routes = [
   {

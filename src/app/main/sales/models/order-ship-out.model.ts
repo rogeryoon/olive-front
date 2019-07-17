@@ -15,4 +15,10 @@ export class OrderShipOut extends OliveTrackingAttribute {
     deliveryAddressFk?: Address;
     orderFk?: Order;
     orderShipOutDetails?: OrderShipOutDetail[];
+
+    dupAddressName?: string;
+    combinedShipAddressName?: string;
+    combinedShipDeliveryInfoSelected?: boolean;
+
+    selecteds?: boolean[];
 }

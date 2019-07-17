@@ -1,0 +1,91 @@
+﻿<mat-progress-bar *ngIf="isloading" mode="query"></mat-progress-bar>
+<table class="w-100-p">
+    <tr>
+        <td>
+            <table class="w-100-p">
+                <tr>
+                    <td class="w-30-p title">
+                        <mat-icon>access_time</mat-icon><span
+                            class="ml-4">{{'common.title.pendingShipOut' | translate}}{{remarkAllOrders}}</span>
+                    </td>
+                    <td class="w-70-p right">
+                        <button [matMenuTriggerFor]="misc" [disabled]="isloading" mat-raised-button class="right ml-4"
+                            matTooltip="{{'common.button.misc' | translate}}">
+                            <mat-icon>dialpad</mat-icon>
+                        </button>
+                        <button [disabled]="!(canCombineShip || canReleaseCombineShip) || isloading" mat-raised-button
+                            color="basic" class="right ml-4" (click)="combineShip()">
+                            <mat-icon>{{canReleaseCombineShip ? 'link_off' : 'insert_link'}}</mat-icon>
+                            {{(canReleaseCombineShip ? 'common.button.cancelCombineShip' : 'common.button.combineShip') | translate}}
+                        </button>
+                        <button [disabled]="!canListOrders || isloading" mat-raised-button color="warn"
+                            class="right ml-4" (click)="buttonListOrders()">
+                            <mat-icon>arrow_forward</mat-icon>
+                            {{'common.button.shipOut' | translate}}{{remarkSelectedOrders}}
+                        </button>
+
+                        <mat-menu #misc="matMenu">
+                            <button mat-menu-item (click)="buttonPreAssignTrackingNumber()">
+                                <mat-icon>find_replace</mat-icon>
+                                {{'common.button.preAssignTrackingNumber' | translate}}
+                            </button>
+                            <button mat-menu-item (click)="exportForTrackingNumberUpdate()"> 
+                                <mat-icon>view_list</mat-icon>
+                                {{'common.button.exportForTrackingNumberUpdate' | translate}}
+                            </button>
+                        </mat-menu>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="pt-20">
+                <div class="tableFixHead">
+            <table id="ordersTable" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                class="hover olive-datatable row-border">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" [disabled]="(orders && !orders.length) || allCheckboxesDisalbed"
+                                [(ngModel)]="selectedAll" (change)="selectAll();" />
+                        </th>
+                        <th>{{'common.tableHeader.seller' | translate}}</th>
+                        <th>{{'common.tableHeader.consignee' | translate}}</th>
+                        <th>{{'common.tableHeader.inventory' | translate}}</th>
+                        <th>{{'common.tableHeader.weightKiloGram' | translate}}</th>
+                        <th>{{'common.tableHeader.combinedShipping' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let order of orders">
+                        <td>
+                            <input class="select" name="select" type="checkbox" [(ngModel)]="order.selecteds[index]"
+                                (change)="checkIfAllSelected()" (click)="checkSameCombinedShippingGroup(order)" [attr.disabled]="hasShipOutProblems(order) ? true : null">
+                        </td>
+                        <td class="pointer" (click)="editOrder(order, $event)">{{order.orderFk.marketSellerFk.code}}</td>
+                        <td class="pointer" (click)="editOrder(order, $event)">{{order.deliveryTagFk.consigneeName}}</td>
+                        <td>
+                            <span [ngClass]="{'foreground-red': isShortOrderQuantity(order)}">
+                                {{showInventory(order)}}
+                            </span>
+                            <mat-icon *ngIf="true" class="small-icon" (click)="switchInventory(order)">remove_circle_outline</mat-icon>
+                        </td>
+                        <td [ngClass]="{'foreground-red': foundNullWeight(order)}">{{showWeight(order)}}</td>
+                        <td [ngClass]="{'foreground-red': order.dupAddressName}">
+                            <mat-icon *ngIf="order.combinedShipAddressName"
+                                [ngClass]="{'foreground-blue': order.combinedShipAddressName}">insert_link</mat-icon>
+                            {{showCombinedShipping(order)}}
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot *ngIf="orders?.length == 0">
+                    <tr>
+                        <td [attr.colspan]="6" class="no-data-available">{{'common.message.noRecordsFound' | translate}}</td>
+                    </tr>
+                </tfoot>
+            </table>
+            </div>
+        </td>
+    </tr>
+</table>

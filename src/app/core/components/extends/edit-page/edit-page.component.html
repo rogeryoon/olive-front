@@ -32,7 +32,7 @@
                 </div>
             </div>
         </div>
-        <mat-toolbar>
+        <mat-toolbar *ngIf="!setting.disableBottomNavigation">
             <mat-toolbar-row>
                 <button *ngIf="canManageItems" [disabled]="!canSave" mat-raised-button (click)="save()" color="accent">
                     <mat-icon>save</mat-icon> {{'common.button.save' | translate}}

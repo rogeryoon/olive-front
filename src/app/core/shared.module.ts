@@ -31,6 +31,7 @@ import { OliveReferHostComponent } from './components/entries/refer-host/refer-h
 import { OliveFloatheadDirective } from './directives/floathead.directive';
 import { OliveTaskCountDialogComponent } from './components/dialogs/task-count-dialog/task-count-dialog.component';
 import { OliveDeliveryTagEditorComponent } from './components/entries/delivery-tag/delivery-tag-editor.component';
+import { OliveSelectOneDialogComponent } from './components/dialogs/select-one-dialog/select-one-dialog.component';
 
 @NgModule({
   imports: [
@@ -69,6 +70,7 @@ import { OliveDeliveryTagEditorComponent } from './components/entries/delivery-t
     OlivePreviewDialogComponent,
     OliveViewDialogComponent,
     OliveTaskCountDialogComponent,
+    OliveSelectOneDialogComponent,
   
     OliveAddressEditorComponent,
     OliveDeliveryTagEditorComponent,
@@ -98,6 +100,7 @@ import { OliveDeliveryTagEditorComponent } from './components/entries/delivery-t
     OlivePreviewDialogComponent,
     OliveViewDialogComponent,
     OliveTaskCountDialogComponent,
+    OliveSelectOneDialogComponent,
 
     OliveAddressEditorComponent,
     OliveDeliveryTagEditorComponent,
@@ -116,7 +119,8 @@ import { OliveDeliveryTagEditorComponent } from './components/entries/delivery-t
     OliveEditDialogComponent,
     OlivePreviewDialogComponent,
     OliveViewDialogComponent,
-    OliveTaskCountDialogComponent
+    OliveTaskCountDialogComponent,
+    OliveSelectOneDialogComponent
   ]
 })
 export class OliveSharedModule { }

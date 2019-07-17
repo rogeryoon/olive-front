@@ -16,7 +16,7 @@
         </div>
 
         <div flex>
-            <olive-lookup-host #warehouse formControlName="warehouseFk" required
+            <olive-lookup-host #warehouse formControlName="warehouseFk" required [cacheKey]="'warehouse'"
                 [placeholder]="'common.word.warehouse' | translate" [isEditMode]="canAssignPurchaseOrder">
             </olive-lookup-host>
         </div>

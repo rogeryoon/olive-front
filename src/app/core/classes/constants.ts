@@ -23,11 +23,6 @@ export class OliveConstants {
         { value: 'CN', name: 'Germany' }
     ];
 
-    static cacheKeys = class {
-        static paymentMethod = 'paymentmethod';
-        static userName = 'usr';
-    };
-
     static foregroundColor = class {
         static blue = 'foreground-blue';
         static orange = 'foreground-orange';

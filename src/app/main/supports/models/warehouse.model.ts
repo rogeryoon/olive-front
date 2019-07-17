@@ -11,4 +11,6 @@ export class Warehouse extends OliveTrackingAttribute {
     companyFk?: Company;
     companyMasterBranchId?: number;
     companyMasterBranchFk?: Branch;
+
+    selected?: boolean;
 }

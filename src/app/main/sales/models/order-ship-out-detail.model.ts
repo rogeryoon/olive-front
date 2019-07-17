@@ -7,5 +7,6 @@ export class OrderShipOutDetail extends OliveTrackingAttribute {
     quantity?: number;
     productId?: number;
     productVariantId?: number;
+    kiloGramWeight?: number;
     name?: string;
 }

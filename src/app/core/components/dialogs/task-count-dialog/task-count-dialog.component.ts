@@ -3,7 +3,6 @@ import { Subject } from 'rxjs/Subject';
 
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
-import { AlertService } from '@quick/services/alert.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveTaskCountSetting } from 'app/core/interfaces/dialog-setting/task-count-setting';
@@ -20,7 +19,6 @@ export class OliveTaskCountDialogComponent implements OnInit {
   setting: OliveTaskCountSetting;
 
   constructor(
-    private translater: FuseTranslationLoaderService, private alertService: AlertService,
     private dialogRef: MatDialogRef<OliveTaskCountDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) 
@@ -41,10 +39,6 @@ export class OliveTaskCountDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-  }
-
-  translate(key: string) {
-    return this.translater.get(key);
   }
 
   click(): void {

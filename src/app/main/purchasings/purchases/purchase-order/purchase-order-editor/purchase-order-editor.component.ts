@@ -37,7 +37,6 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
 
   standCurrencyCode: string;
 
-
   constructor(
     formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
     private supplierService: OliveSupplierService, private warehouseService: OliveWarehouseService,

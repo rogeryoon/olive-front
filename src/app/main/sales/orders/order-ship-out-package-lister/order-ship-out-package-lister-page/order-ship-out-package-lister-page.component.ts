@@ -11,8 +11,9 @@ import { OliveEditPageComponent } from 'app/core/components/extends/edit-page/ed
 import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { AlertService } from '@quick/services/alert.service';
-import { OrderShipOutPackage } from 'app/main/sales/models/order-ship-out-package.model';
-import { OliveOrderShipOutPackageListerComponent } from '../order-ship-out-package-lister/order-ship-out-package-lister.component';
+import { OliveOrderShipOutPackageListerManagerComponent } from '../order-ship-out-package-lister-manager/order-ship-out-package-lister-manager.component';
+import { Warehouse } from 'app/main/supports/models/warehouse.model';
+import { OrderShipOut } from 'app/main/sales/models/order-ship-out.model';
 
 @Component({
   selector: 'olive-order-ship-out-package-lister-page',
@@ -21,6 +22,8 @@ import { OliveOrderShipOutPackageListerComponent } from '../order-ship-out-packa
   animations: fuseAnimations
 })
 export class OliveOrderShipOutPackageListerPageComponent extends OliveEditPageComponent {
+  warehouses: Warehouse[] = [];
+    
   constructor(
     private route: ActivatedRoute, componentFactoryResolver: ComponentFactoryResolver,
     translater: FuseTranslationLoaderService, accountService: AccountService,
@@ -33,19 +36,18 @@ export class OliveOrderShipOutPackageListerPageComponent extends OliveEditPageCo
   }
 
   initializeChildComponent() {
+    this.warehouses = this.route.snapshot.data.warehouses;
+
     this.setting = {
-      component: OliveOrderShipOutPackageListerComponent,
-      itemType: OrderShipOutPackage,
+      component: OliveOrderShipOutPackageListerManagerComponent,
+      itemType: OrderShipOut,
       managePermission: null,
       iconName: NavIcons.Sales.shipOutPackageLister,
       translateTitleId: NavTranslates.Sales.shipOutPackageLister,
-      itemListPath: 'inwarehouses/list'
+      itemListPath: 'inwarehouses/list',
+      disableBottomNavigation: true
     };
 
-    this.route.data.subscribe(({ item }) => {
-      if (item) {
-        this.setting.item = item;
-      }
-    });
+    this.setting.item = this.warehouses;
   }
 }

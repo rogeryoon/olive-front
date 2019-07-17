@@ -68,6 +68,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   getEditedItem(): any { }
   resetForm() { }
   registerSubControl() { }
+  onAfterViewInit() {}
 
   ngOnInit() {
     this.buildForm();
@@ -88,6 +89,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   }
 
   ngAfterViewInit(): void {
+    this.onAfterViewInit();
   }
 
   setBindData() {

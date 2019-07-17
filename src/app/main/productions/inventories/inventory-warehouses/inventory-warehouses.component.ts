@@ -145,6 +145,7 @@ export class OliveInventoryWarehousesComponent extends OliveEntityListComponent 
 
   renderFooterItem(column: any): string { 
     if (!this.items) { return null; }
+    if (!column.id) { return ''; }
 
     const items = this.items as InventoryWarehouse[];
 

@@ -38,8 +38,8 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
   }
 
   initializeChildComponent() {}
-  buildForm() {}
-  resetForm() {}
+  buildForm() { this.oForm = this.formBuilder.group({}); }
+  resetForm() { this.oForm.reset({}); }
   onChanges() {}
   createEmptyObject(): any {
     return null;

@@ -169,9 +169,7 @@ export class OliveInventoryBalanceSaveComponent implements AfterViewInit, OnDest
   }
 
   checkIfAllSelected() {
-    this.selectedAll = this.inventories.every(function (item: any) {
-      return item.selected === true;
-    });
+    this.selectedAll = this.inventories.every(x => x.selected);
   }
 
   onExcel() {

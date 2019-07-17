@@ -1,0 +1,15 @@
+<h1 *ngIf="dialogTitle" class="text-center" mat-dialog-title>{{dialogTitle}}</h1>
+<div mat-dialog-content>
+<label id="radio-group-label">{{dialogDescription}}</label>
+<mat-radio-group aria-labelledby="radio-group-label" class="radio-group" [(ngModel)]="selectedItem">
+  <mat-radio-button class="radio-button" *ngFor="let item of items" [value]="item">
+    {{item.name}}
+  </mat-radio-button>
+</mat-radio-group>
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="select()" color="primary" [disabled]="!selectedItem">
+    <mat-icon>check_circle</mat-icon> {{'common.button.select' | translate}}</button>
+  <button mat-raised-button (click)="cancel()">
+    <mat-icon>close</mat-icon> {{'common.button.cancel' | translate}}</button>  
+</div>

@@ -53,7 +53,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
 
   initializeChildComponent() {
     this.standCurrency = this.cacheService.standCurrency;
-    const key = OliveConstants.cacheKeys.paymentMethod;
+    const key = OliveCacheService.cacheKeys.paymentMethod;
     if (!this.cacheService.exist(key)) {
       this.paymentMethodService.getItems(null)
         .subscribe(response => {
@@ -112,6 +112,17 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     this.dataSource.addNewItem(payment);
     this.dataSource.renderItems();
     this.oForm.markAsDirty();
+
+    if (!payment) {
+      // Empy행 추가시 전에 선택된 결제수단을 설정해준다
+      this.cacheService.getUserConfig(this.cacheService.keyLastSelectedPaymentMethodId)
+      .then((id: number) => {
+          if (id) {
+            const formGroup = this.oFArray.controls[this.oFArray.controls.length - 1] as FormGroup;
+            formGroup.patchValue({paymentMethodId: id});
+          }
+      });
+    }
   }
   
   private deleteItem(item: any) {
@@ -149,7 +160,9 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     }
 
     if (!obj || obj.length === 0) {
-      this.newItem();
+      if (this.dataSource.items.length === 0) {
+        this.newItem();
+      }
     }
   }
   registerOnChange(fn: any): void {
@@ -162,6 +175,9 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   }
 
   onSelectionChange(event: any) {
+    if (event.value) {
+      this.cacheService.setUserConfig(this.cacheService.keyLastSelectedPaymentMethodId, event.value);
+    }
     this._onChange(event.value);
   }
   onChange(event: any) {

@@ -1,0 +1,90 @@
+﻿<mat-progress-bar *ngIf="isloading" mode="query"></mat-progress-bar>
+<table class="w-100-p">
+    <tr>
+        <td>
+            <table class="w-100-p">
+                <tr>
+                    <td class="w-70-p left">
+                        <button [disabled]="!selectedPackages.length || isloading" mat-raised-button color="basic"
+                            (click)="cancelShipOutPackages()">
+                            <mat-icon>cancel</mat-icon>
+                            {{'common.button.cancelShipOut' | translate}}{{remarkSelectedPackages}}
+                        </button>
+                        <button [disabled]="!selectedPackages.length || isloading" mat-raised-button color="basic"
+                            class="ml-4" (click)="finshiShipOutPackage()">
+                            <mat-icon>local_shipping</mat-icon>
+                            {{'common.button.finishShipOutPackage' | translate}}
+                        </button>
+                        <button [matMenuTriggerFor]="misc" [disabled]="isloading" mat-raised-button class="right ml-4"
+                            matTooltip="{{'common.button.misc' | translate}}">
+                            <mat-icon>dialpad</mat-icon>
+                        </button>
+
+                        <mat-menu #misc="matMenu">
+                            <button mat-menu-item (click)="printPackingList()">
+                                <mat-icon>list</mat-icon>
+                                {{'common.button.printPackingList' | translate}}
+                            </button>
+                            <button mat-menu-item (click)="printShippingLable()">
+                                <mat-icon>label</mat-icon>
+                                {{'common.button.printShippingLable' | translate}}                                
+                            </button>
+                            <button mat-menu-item (click)="exportForTrackingNumberUpdate()">
+                                <mat-icon>view_list</mat-icon>
+                                {{'common.button.exportForTrackingNumberUpdate' | translate}}                                
+                            </button>
+                            <button mat-menu-item (click)="exportForLogistic()">
+                                <mat-icon>toc</mat-icon>
+                                {{'common.button.exportForLogistic' | translate}}                                
+                            </button>
+                        </mat-menu>
+                    </td>
+                    <td class="w-30-p title">
+                        <mat-icon style="vertical-align:middle">assignment_turned_in</mat-icon> <span
+                            class="ml-4">{{'common.title.shipOut' | translate}}{{packageRemark}}</span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="pt-20">
+            <table id="packageTable" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                class="hover olive-datatable row-border">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" [disabled]="warehousePackages && !warehousePackages.length"
+                                [(ngModel)]="selectedAll" (change)="selectAll();" />
+                        </th>
+                        <th>#</th>
+                        <th>{{'common.tableHeader.seller' | translate}}</th>
+                        <th>{{'common.tableHeader.consignee' | translate}}</th>
+                        <th>{{'common.tableHeader.quantity' | translate}}</th>
+                        <th>{{'common.tableHeader.weightKiloGram' | translate}}</th>
+                        <th>{{'common.tableHeader.combinedShipping' | translate}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let package of warehousePackages; let i = index">
+                        <td>
+                            <input class="select" name="select" type="checkbox" [(ngModel)]="package.selected"
+                                (change)="checkIfAllSelected();" [attr.disabled]="false ? true : null">
+                        </td>
+                        <td>{{warehousePackages.length-i}}</td>
+                        <td>{{showSeller(package)}}</td>
+                        <td>{{package.deliveryTagFk.consigneeName}}</td>
+                        <td>{{showQuantity(package)}}</td>
+                        <td>{{showWeight(package)}}</td>
+                        <td>{{package.orderCount}}</td>
+                    </tr>
+                </tbody>
+                <tfoot *ngIf="warehousePackages?.length == 0">
+                    <tr>
+                        <td colspan="7" class="no-data-available">{{'common.message.noRecordsFound' | translate}}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </td>
+    </tr>
+</table>

@@ -137,6 +137,8 @@ const routes = [
     OliveMarketSellersComponent,
     OliveSearchMarketSellerComponent
   ],
+  exports: [
+  ],
   providers: [],
   entryComponents: [
     OliveCompanyGroupManagerComponent,

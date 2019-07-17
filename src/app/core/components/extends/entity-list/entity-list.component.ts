@@ -351,9 +351,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   }
 
   checkIfAllSelected() {
-    this.selectedAll = this.items.every(function (item: any) {
-      return item.selected === true;
-    });
+    this.selectedAll = this.items.every(x => x.selected);
   }
 
   onExcel() {

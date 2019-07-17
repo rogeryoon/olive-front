@@ -5,7 +5,7 @@
   <table id="{{setting.dataTableId}}" datatable [dtOptions]="dtOptions" class="row-border hover olive-datatable">
     <thead>
       <tr>
-        <th *ngIf="checkBoxEnable" class="nosort" style="width:30px;">선택</th>
+        <th *ngIf="checkBoxEnable" class="nosort" style="width:30px;">{{'common.tableHeader.select' | translate}}</th>
         <th *ngFor="let column of dataColumns" [ngStyle]="{'text-width':renderStyle(column.width)}">{{column.name}}</th>
       </tr>
     </thead>

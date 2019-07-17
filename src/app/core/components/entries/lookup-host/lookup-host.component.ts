@@ -2,10 +2,10 @@ import { Component, forwardRef, ViewChild, ElementRef, Renderer2, OnInit, Input,
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, Validators, FormControl, Validator, ValidationErrors, NG_VALIDATORS } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 
-import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-
 import { OliveLookupDialogComponent } from '../../dialogs/lookup-dialog/lookup-dialog.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { OliveCacheService } from 'app/core/services/cache.service';
+import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
 
 @Component({
   selector: 'olive-lookup-host',
@@ -39,17 +39,27 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
 
   lookupName: FormControl;
 
+  @Input() cacheKey: string;
+
   private _setting: LookupListerSetting;
 
   constructor(
-    private dialog: MatDialog,
-    private _renderer: Renderer2,
-    private translater: FuseTranslationLoaderService
-  ) {
+    private dialog: MatDialog, private _renderer: Renderer2,
+    private cacheService: OliveCacheService, private queryParams: OliveQueryParameterService
+  ) 
+  {
   }
 
   ngOnInit(): void {
     this.lookupName = new FormControl(null, Validators.required);
+
+    // Cache Value Loading
+    this.cacheService.getUserConfig(this.companyGroupIdCacheKey)
+      .then(obj => {
+        if (obj) {
+          this.lookupName.setValue(obj.name);
+        }
+      });
   }
 
   get setting(): LookupListerSetting {
@@ -57,6 +67,11 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
   }
   set setting(value: LookupListerSetting) {
     this._setting = value;
+  }
+
+  get companyGroupIdCacheKey(): string {
+    if (!this.cacheKey) { return null; }
+    return OliveCacheService.cacheKeys.userConfig.lookupHost + this.cacheKey + this.queryParams.CompanyGroupId;
   }
 
   lookUp() {
@@ -72,9 +87,13 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
 
     dialogRef.afterClosed().subscribe(items => {
       if (items && items.length > 0) {
-        this.writeValue(items[0]);
-        this._onChange(items[0]);
-        this.selected.emit(items[0]);
+        const item = items[0];
+        this.writeValue(item);
+        this._onChange(item);
+        this.selected.emit(item);
+        if (this.companyGroupIdCacheKey) {
+          this.cacheService.setUserConfig(this.companyGroupIdCacheKey, item);
+        }
       }
     });
   }

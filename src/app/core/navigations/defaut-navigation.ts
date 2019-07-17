@@ -161,7 +161,7 @@ export const defaultNavigation: FuseNavigation[] = [
                     },
                     {
                         id: 'listShipOut',
-                        title: '판매 출고 작성',
+                        title: '출고 리스팅',
                         translate: NavTranslates.Sales.shipOutPackageLister,
                         type: 'item',
                         icon: NavIcons.Sales.shipOutPackageLister,

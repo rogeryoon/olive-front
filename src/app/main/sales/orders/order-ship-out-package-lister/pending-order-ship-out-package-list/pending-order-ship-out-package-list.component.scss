@@ -1,0 +1,21 @@
+﻿:host {
+    table {
+        td {
+            text-align: center;
+        }
+
+        id:nth-child(2) {
+            text-align: right;
+        }
+
+        td.title {
+            font-size: 18px;
+            font-weight: 500;
+            text-align: right;
+        }
+
+        td.left {
+            text-align: left;
+        }
+    }
+}

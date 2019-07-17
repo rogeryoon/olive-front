@@ -1,0 +1,39 @@
+﻿:host {
+    table {
+        td {
+            text-align: center;
+        }
+
+        td.title {
+            font-size: 18px;
+            font-weight: 500;
+            text-align: left;
+        }
+
+        td.right {
+            text-align: right;
+        }
+
+        td mat-icon {
+            vertical-align: middle;
+        }
+    }
+
+    .tableFixHead {
+        overflow: auto;
+        height: 400px;
+    }
+
+    .tableFixHead thead th {
+        position: sticky;
+        top: 0;
+    }
+
+    .olive-datatable tr {
+        cursor: auto ;
+    }
+
+    .olive-datatable td.pointer {
+        cursor: pointer ;
+    }    
+}
