@@ -192,21 +192,16 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     this.orders.forEach(order => {
       const orderQuantities: OrderQuantity[] = [];
 
-      order.orderShipOutDetails.forEach(item => {
+      let shortage = false;
+      for (const item of order.orderShipOutDetails) {
         let allocatedQuantity = 0;
         let currentQuantity = this.inventories.get(item.productVariantId);
 
-        if (currentQuantity) {
-          if (currentQuantity - item.quantity >= 0) {
-            allocatedQuantity = item.quantity;
-            currentQuantity -= item.quantity;
-            this.inventories.set(item.productVariantId, currentQuantity);
-          }
-          else if (currentQuantity > 0) {
-            allocatedQuantity = currentQuantity;
-            currentQuantity = 0;
-            this.inventories.set(item.productVariantId, currentQuantity);
-          }
+        // 부분 품절인 경우 전체 주문은 나갈수 없으므로 재고를 빼면 안됨
+        if (currentQuantity - item.quantity >= 0 && !shortage) {
+          allocatedQuantity = item.quantity;
+          currentQuantity -= item.quantity;
+          this.inventories.set(item.productVariantId, currentQuantity);
         }
 
         orderQuantities.push({
@@ -226,8 +221,10 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
           shortQuantity += item.quantity;
 
           this.shortInventories.set(item.productVariantId, shortQuantity);
+
+          shortage = true;
         }
-      });
+      }
 
       this.orderQuantities.set(order.id, orderQuantities);
     });
@@ -398,8 +395,64 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     });
   }
 
-  allItemOrderedQuantityOk(productVariantId: number) {
+  isEntireItemsQuantityOk(order: OrderShipOut): boolean {
+    return order.orderShipOutDetails.every(item => this.isEntireItemQuantityOk(item.productVariantId));
+  }
+
+  isEntireItemQuantityOk(productVariantId: number): boolean {
     return !this.shortInventories.get(productVariantId);
+  }
+
+  switchInventory(order: OrderShipOut) {
+    if (!this.switchIconVisible(order)) {
+      return;
+    }
+
+    console.log('switchInventory');
+    
+    // 정상 할당된 상품은 인벤토리로 반환
+    if (!this.isShortOrderQuantity(order)) {
+      for (const item of order.orderShipOutDetails) {
+        this.inventories.set(item.productVariantId, this.inventories.get(item.productVariantId) + item.quantity);
+
+      }
+    }
+    else { // 부족상품을 반환된 인벤토리로 
+
+    }
+  }
+
+  switchIconVisible(order: OrderShipOut): boolean {
+    return !this.isEntireItemsQuantityOk(order) && this.getInventorySwitchIconName(order) !== '';
+  }
+
+  getInventorySwitchIconName(order: OrderShipOut): string {
+    // 정상 할당된 상품은 제거 아이콘 표시
+    if (!this.isShortOrderQuantity(order)) {
+      return 'remove_circle_outline';
+    }
+
+    // 부족한 상품은 정상 할당에서 제거된 인벤토리 수량이 있는지 체크 후
+    // 재고가 있으면 추가할수 있는 아이콘 표시
+    if (this.hasAllItemsQuantity(order)) {
+      return 'add_circle_outline';
+    }
+
+    return '';
+  }
+
+  hasAllItemsQuantity(order: OrderShipOut): boolean {
+    return order.orderShipOutDetails.every(item => this.hasQuantity(item.productVariantId, item.quantity));
+  }
+
+  hasQuantity(productVariantId: number, requiredQuantity: number): boolean {
+    const currentQuantity = this.inventories.get(productVariantId);
+
+    if (!currentQuantity) {
+      return false;
+    }
+
+    return currentQuantity - requiredQuantity >= 0;
   }
 
   getOrderCount(order: OrderShipOut): string {

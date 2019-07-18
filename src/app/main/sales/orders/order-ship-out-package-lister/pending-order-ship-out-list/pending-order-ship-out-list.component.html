@@ -63,18 +63,16 @@
                             <input class="select" name="select" type="checkbox" [(ngModel)]="order.selecteds[index]"
                                 (change)="checkIfAllSelected()" (click)="checkSameCombinedShippingGroup(order)" [attr.disabled]="hasShipOutProblems(order) ? true : null">
                         </td>
-                        <td class="pointer" (click)="editOrder(order, $event)">{{order.orderFk.marketSellerFk.code}}</td>
-                        <td class="pointer" (click)="editOrder(order, $event)">{{order.deliveryTagFk.consigneeName}}</td>
-                        <td>
-                            <span [ngClass]="{'foreground-red': isShortOrderQuantity(order)}">
-                                {{showInventory(order)}}
-                            </span>
-                            <mat-icon *ngIf="true" class="small-icon" (click)="switchInventory(order)">remove_circle_outline</mat-icon>
+                        <td class="zoom-in" (click)="editOrder(order, $event)">{{order.orderFk.marketSellerFk.code}}</td>
+                        <td class="zoom-in" (click)="editOrder(order, $event)">{{order.deliveryTagFk.consigneeName}}</td>
+                        <td (click)="switchInventory(order)" 
+                            [ngClass]="{'foreground-red': isShortOrderQuantity(order), 'pointer': switchIconVisible(order)}">
+                            {{showInventory(order)}}
+                            <mat-icon *ngIf="switchIconVisible(order)" class="small-icon">{{getInventorySwitchIconName(order)}}</mat-icon>
                         </td>
                         <td [ngClass]="{'foreground-red': foundNullWeight(order)}">{{showWeight(order)}}</td>
                         <td [ngClass]="{'foreground-red': order.dupAddressName}">
-                            <mat-icon *ngIf="order.combinedShipAddressName"
-                                [ngClass]="{'foreground-blue': order.combinedShipAddressName}">insert_link</mat-icon>
+                            <mat-icon *ngIf="order.combinedShipAddressName" [ngClass]="{'foreground-blue': order.combinedShipAddressName}">insert_link</mat-icon>
                             {{showCombinedShipping(order)}}
                         </td>
                     </tr>
