@@ -53,6 +53,8 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
       weightTypeCode: formModel.weightTypeCode,
       volume: formModel.volume,
       lengthTypeCode: formModel.lengthTypeCode,
+      customsName: formModel.customsName,
+      customsPrice: formModel.customsPrice,
       productId: formModel.productFk.id      
     } as ProductVariant);
   }
@@ -69,6 +71,8 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
       volume: ['', [volumeValidator()]],
       volumeWeight: '',
       lengthTypeCode: ['', Validators.required],
+      customsName: '',
+      customsPrice: ['', [numberValidator(this.standCurrency.decimalPoint, false)]],    
       productFk: null
     });
   }
@@ -85,6 +89,8 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
       volume: this.item.volume || '',
       volumeWeight: this.item.volume || '',
       lengthTypeCode: this.item.lengthTypeCode || '',
+      customsName: this.item.customsName || '',
+      customsPrice: this.item.customsPrice || '',         
       productFk: this.item.productFk || ''
     });
 

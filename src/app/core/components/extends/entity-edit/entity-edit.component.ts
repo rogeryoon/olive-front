@@ -40,6 +40,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   readonly = false;
   isSaving = false;
   isDeleting = false;
+  hideDelete = false;
   saveConfirmTitle: string;
   saveConfirmMessage: string;
   itemSaved$ = this.onItemSaved.asObservable();
@@ -68,7 +69,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   getEditedItem(): any { }
   resetForm() { }
   registerSubControl() { }
-  onAfterViewInit() {}
+  onAfterViewInit() { }
 
   ngOnInit() {
     this.buildForm();
@@ -108,8 +109,8 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
     this.resetForm();
   }
 
-  public customButtonAction(buttonId: string): void { 
-    this.onCustomButtonActionEnded.next({id: buttonId, item: this.item});
+  public customButtonAction(buttonId: string): void {
+    this.onCustomButtonActionEnded.next({ id: buttonId, item: this.item });
   }
 
   customButtonVisible(buttonId: string): boolean { return true; }
@@ -124,7 +125,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
       return true;
     }
     else {
-      return this.subControls.some(control => {
+      return this.oForm.dirty || this.subControls.some(control => {
         return control.oForm.dirty;
       });
     }
@@ -145,7 +146,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   }
 
   public save() {
-    if (!this.form.submitted) {
+    if (this.form && !this.form.submitted) {
       this.form.onSubmit(null);
       return;
     }
@@ -176,14 +177,19 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
     const editedItem = this.getEditedItem();
 
     this.isSaving = true;
+
+    this.sendToEndPoint(editedItem);
+  }
+
+  sendToEndPoint(item: any) {
     if (this.isNewItem) {
-      this.dataService.newItem(editedItem).subscribe(
+      this.dataService.newItem(item).subscribe(
         response => this.onSaveSuccess(response.model),
         error => this.onSaveFail(error)
       );
     }
     else {
-      this.dataService.updateItem(editedItem, editedItem.id).subscribe(
+      this.dataService.updateItem(item, item.id).subscribe(
         response => this.onSaveSuccess(response.model),
         error => this.onSaveFail(error)
       );
@@ -199,12 +205,12 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
     );
 
     this.onItemSaved.next(result);
-    this.isSaving = false;    
+    this.isSaving = false;
   }
 
   onSaveFail(error: any) {
     this.messageHelper.showStickySaveFailed(error, false);
-    this.isSaving = false;   
+    this.isSaving = false;
   }
 
   public delete() {
@@ -244,6 +250,9 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
     return this.accountService.userHasPermission(this.managePermission);
   }
 
+  /**
+   * 공용으로 사용되는 id, updatedUser, updatedUtc, createdUser, createdUtc를 가져옴
+   */
   itemWithIdNAudit(source: any): any {
     return OliveUtilities.itemWithIdNAudit(source, this.item);
   }

@@ -41,7 +41,7 @@ export class OliveEditDialogComponent extends OliveBaseComponent implements OnIn
   }
 
   get title(): any {
-    return { title : this.translater.get(this.setting.data.translateTitleId) } ;
+    return { title : this.setting.data.translateTitleId ? this.translater.get(this.setting.data.translateTitleId) : '' } ;
   }
 
   constructor(
@@ -86,6 +86,7 @@ export class OliveEditDialogComponent extends OliveBaseComponent implements OnIn
     this.createdComponent.customTitle = this.setting.data.customTitle;
     this.createdComponent.startTabIndex = this.setting.data.startTabIndex;
     this.createdComponent.readOnly = this.setting.data.readOnly;
+    this.createdComponent.hideDelete = this.setting.data.hideDelete;
   }
 
   get customTitle() {

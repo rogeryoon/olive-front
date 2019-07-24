@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -16,7 +16,6 @@ import { OliveUtilities } from 'app/core/classes/utilities';
   styleUrls: ['./product-editor.component.scss']
 })
 export class OliveProductEditorComponent extends OliveEntityFormComponent {
-
   weightTypes: any[] = OliveConstants.weightTypes;
   lenghtTypes: any[] = OliveConstants.lengthTypes;
 

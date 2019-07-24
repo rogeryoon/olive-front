@@ -6,7 +6,7 @@
 </div>
 <div mat-dialog-actions>
     <button *ngIf="canManageItems" [disabled]="!canSave" mat-raised-button (click)="save()" color="accent"><mat-icon>save</mat-icon> {{'common.button.save' | translate}}</button>
-    <button *ngIf="canManageItems && name" mat-raised-button (click)="delete()" color="warn" [disabled]="!canDelete"><mat-icon>delete</mat-icon> {{'common.button.delete' | translate}}</button>
+    <button *ngIf="canManageItems && name && !setting.data.hideDelete" mat-raised-button (click)="delete()" color="warn" [disabled]="!canDelete"><mat-icon>delete</mat-icon> {{'common.button.delete' | translate}}</button>
     <ng-container *ngFor="let btn of setting.data.customButtons">
         <button *ngIf="customButtonVisible(btn.id)" mat-raised-button color="accent" (click)="customButtonAction(btn.id)" [disabled]="!customButtonEnable(btn.id)">
             <mat-icon>{{btn.iconName}}</mat-icon> {{btn.titleId | translate}}

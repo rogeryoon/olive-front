@@ -63,9 +63,9 @@ export class OliveProductsComponent extends OliveEntityListComponent {
         // 3
         { data: Name, thName: this.translater.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         // 4
-        { data: MinPrice, thName: this.translater.get('common.tableHeader.min'), tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
+        { data: MinPrice, orderable: false, thName: this.translater.get('common.tableHeader.min'), tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 5
-        { data: MaxPrice, thName: this.translater.get('common.tableHeader.max'), tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
+        { data: MaxPrice, orderable: false, thName: this.translater.get('common.tableHeader.max'), tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 6
         { data: VariantCount, thName: this.translater.get('common.tableHeader.type'), tdClass: '', thClass: '' },
         // 7
@@ -91,10 +91,10 @@ export class OliveProductsComponent extends OliveEntityListComponent {
         retValue = item.name;
         break;
       case MinPrice:
-        retValue = item.variants ? OliveUtilities.minNumber(item.variants.map(x => x.standPrice)) : '';
+        retValue = item.variants ? OliveUtilities.minNumber(item.variants.map(x => x.standPrice), [item.standPrice]) : '';
         break;
       case MaxPrice:
-        retValue = item.variants ? OliveUtilities.maxNumber(item.variants.map(x => x.standPrice)) : '';
+        retValue = item.variants ? OliveUtilities.maxNumber(item.variants.map(x => x.standPrice), [item.standPrice]) : '';
         break;
       case VariantCount:
         retValue = item.variants ? item.variants.length.toString() : '';

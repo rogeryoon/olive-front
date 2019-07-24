@@ -1,0 +1,38 @@
+﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" autocomplete="off">
+    <div class="mb-12">{{'sales.pendingOrderShipOutList.numberTwoOverridesNumberOne' | translate}}</div>
+    <mat-error *ngIf="hasRequiredAnyError">{{requiredAnyErrorMessage(weightInputUserNames)}}</mat-error>
+    <div class="h3 mb-8">1. {{'common.word.productGroupWeight' | translate}}</div>
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <mat-form-field appearance="outline">
+            <mat-label>{{'common.word.weightType' | translate}}</mat-label>
+            <mat-select name="productGroupWeightTypeCode" formControlName="productGroupWeightTypeCode" required>
+                <mat-option *ngFor="let unit of weightTypes" [value]="unit.code">{{unit.name}} ({{unit.symbol}})
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasEntryError('productGroupWeightTypeCode')">{{errorMessage('productGroupWeightTypeCode')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>{{'common.word.weight' | translate}}</mat-label>
+            <input matInput name="productGroupWeight" formControlName="productGroupWeight">
+            <mat-error *ngIf="hasEntryError('productGroupWeight')">{{errorMessage('productGroupWeight')}}</mat-error>
+        </mat-form-field>
+    </div>
+    <div class="h3 mb-8">2. {{'common.word.productVariantWeight' | translate}}</div>
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <mat-form-field appearance="outline">
+            <mat-label>{{'common.word.weightType' | translate}}</mat-label>
+            <mat-select name="productVariantWeightTypeCode" formControlName="productVariantWeightTypeCode" required>
+                <mat-option *ngFor="let unit of weightTypes" [value]="unit.code">{{unit.name}} ({{unit.symbol}})
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasEntryError('productVariantWeightTypeCode')">{{errorMessage('productVariantWeightTypeCode')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>{{'common.word.weight' | translate}}</mat-label>
+            <input matInput name="productVariantWeight" formControlName="productVariantWeight">
+            <mat-error *ngIf="hasEntryError('productVariantWeight')">{{errorMessage('productVariantWeight')}}</mat-error>
+        </mat-form-field>
+    </div>
+</form>

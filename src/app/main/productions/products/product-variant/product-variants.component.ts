@@ -7,14 +7,12 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
-import { Permission } from '@quick/models/permission.model';
 
 import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchProductVariantComponent } from './search-product-variant/search-product-variant.component';
 import { OliveProductVariantService } from '../../services/product-variant.service';
@@ -61,7 +59,7 @@ export class OliveProductVariantsComponent extends OliveEntityListComponent {
         { data: Code, thName: this.translater.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         { data: GroupName, thName: this.translater.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         { data: Name, thName: this.translater.get('common.tableHeader.type'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
-        { data: StandPrice, thName: this.translater.get('common.tableHeader.price'), tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
+        { data: StandPrice, thName: this.translater.get('common.tableHeader.standPrice'), tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         { data: CreatedUtc, thName: this.translater.get('common.tableHeader.createdUtc'), tdClass: '', thClass: '' }
       ],
       editComponent: OliveProductVariantManagerComponent,

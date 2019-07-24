@@ -318,7 +318,7 @@ export class OliveDocumentService {
     pwin.close();
   }
 
-  private numToAlpha(num: number): string {
+  public static numToAlpha(num: number): string {
     let alpha = '';
   
     for (; num >= 0; num = parseInt((num / 26).toString(), 10) - 1) {
@@ -371,20 +371,25 @@ export class OliveDocumentService {
 
       let serialNonValueColumnCount = 0;
 
-      const columnNames = [];          
+      ////////////////////////////////////////////////////////
       // 컬럼 이름 스캔
+      // 컬럼 이름을 모두 스캔하고 넉넉하게 10열정도 값이 있는지 확인한후
+      // 10행까지 값이 없을경우 작업을 마감하고 10행 EMPTY값을 제거한다.
+      const columnNames = [];
       let columnCount = 0;
       while (serialNonValueColumnCount < 10) {
-        const colIndex = this.numToAlpha(columnCount);
+        const colIndex = OliveDocumentService.numToAlpha(columnCount);
         const value = sheet[colIndex + '1'] ? sheet[colIndex + '1'].v.toLowerCase().trim() : '';
         columnNames.push(value);
         columnCount++;
         serialNonValueColumnCount = value === '' ? serialNonValueColumnCount + 1 : 0;
       }
       columnNames.splice(columnNames.length - 10, 10);
+      /////////////////////////////////////////////////////////
 
+      // 컬럼이름을 A B C와 같은 알파벳 이름으로 변경
       for (let i = 0; i < columnNames.length; i++) {
-        const colIndex = this.numToAlpha(i);
+        const colIndex = OliveDocumentService.numToAlpha(i);
         sheet[colIndex + '1'] = { t: 's' /* type: string */, v: colIndex /* value */ };
       }
 
@@ -394,6 +399,7 @@ export class OliveDocumentService {
         outThis.onImportTableRendered.next(this.translater.get('common.message.emptyFile'));
         return;
       }
+
 
       // Browser Thread 동적 Table Append Redering이 끝난후 Datatable을 Render해야 한다.
       // create an observer instance

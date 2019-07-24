@@ -10,6 +10,9 @@ import { OliveOrderShipOutPackageListerComponent } from '../order-ship-out-packa
 import { OliveCheckboxSelectorPanelModule } from 'app/core/components/entries/checkbox-selector-panel/checkbox-selector-panel.module';
 import { OlivePendingOrderShipOutListComponent } from '../pending-order-ship-out-list/pending-order-ship-out-list.component';
 import { OlivePendingOrderShipOutPackageListComponent } from '../pending-order-ship-out-package-list/pending-order-ship-out-package-list.component';
+import { OliveProductWeightEditorModule } from 'app/main/productions/products/product/product-weight-editor/product-weight-editor.module';
+import { OliveProductCustomsPriceEditorModule } from 'app/main/productions/products/product/product-customs-price-editor/product-customs-price-editor.module';
+import { OlivePreviewPurchaseOrderComponent } from 'app/main/purchasings/purchases/purchase-order/preview-purchase-order/preview-purchase-order.component';
 
 @NgModule({
   imports: [
@@ -17,19 +20,23 @@ import { OlivePendingOrderShipOutPackageListComponent } from '../pending-order-s
     TranslateModule.forChild(),
 
     OliveSharedModule,
-    OliveCheckboxSelectorPanelModule
+    OliveCheckboxSelectorPanelModule,
+    OliveProductWeightEditorModule,
+    OliveProductCustomsPriceEditorModule
   ],
   declarations: [
     OliveOrderShipOutPackageListerManagerComponent,
     OliveOrderShipOutPackageListerComponent,
     OlivePendingOrderShipOutListComponent,
-    OlivePendingOrderShipOutPackageListComponent
+    OlivePendingOrderShipOutPackageListComponent,
+    OlivePreviewPurchaseOrderComponent
   ],
   providers: [],
   exports: [
   ],
   entryComponents: [
-    OliveOrderShipOutPackageListerManagerComponent
+    OliveOrderShipOutPackageListerManagerComponent,
+    OlivePreviewPurchaseOrderComponent
   ]
 })
 export class OliveOrderShipOutPackageListerModule { }

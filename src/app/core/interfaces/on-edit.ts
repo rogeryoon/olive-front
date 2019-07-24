@@ -22,6 +22,8 @@ export interface OliveOnEdit {
 
     itemDeleted$: any;
 
+    hideDelete?: boolean;
+
     save(): void;
 
     delete(): void;

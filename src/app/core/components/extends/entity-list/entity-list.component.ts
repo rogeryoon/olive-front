@@ -27,6 +27,7 @@ import * as _ from 'lodash';
 import { OliveBaseComponent } from '../../extends/base/base.component';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OliveConstants } from 'app/core/classes/constants';
+import { OliveBackEndErrors } from 'app/core/classes/back-end-errors';
 
 @Component({
   selector: 'olive-entity-list',
@@ -407,7 +408,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
           dialogRef.componentInstance.closeDialog();
         }
         else if (error.error && error.error.errorCode) {
-          if (error.error.errorCode === 'COLUMNS-MATCH-ERROR') {
+          if (error.error.errorCode === OliveBackEndErrors.columnsUnmatchedError) {
             const diffs = error.error.errorMessage.split('/');
             if (diffs.length === 3) {
               errorMessage = String.Format(this.translater.get('common.message.uploadColumnMatchError'), diffs[0], diffs[1], diffs[2]);

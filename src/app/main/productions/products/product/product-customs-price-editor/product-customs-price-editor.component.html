@@ -1,0 +1,20 @@
+﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" autocomplete="off">
+    <div class="mb-12">{{'sales.pendingOrderShipOutList.numberTwoOverridesNumberOne' | translate}}</div>
+    <mat-error *ngIf="hasRequiredAnyError">{{requiredAnyErrorMessage(weightInputUserNames)}}</mat-error>
+    <div class="h3 mb-8">1. {{'common.word.productGroupCustomsPrice' | translate}}</div>
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+        <mat-form-field appearance="outline" flex="100">
+            <mat-label>{{'common.word.customsPrice' | translate}}</mat-label>
+            <input matInput name="productGroupCustomsPrice" formControlName="productGroupCustomsPrice">
+            <mat-error *ngIf="hasEntryError('productGroupCustomsPrice')">{{errorMessage('productGroupCustomsPrice')}}</mat-error>
+        </mat-form-field>
+    </div>
+    <div class="h3 mb-8">2. {{'common.word.productVariantCustomsPrice' | translate}}</div>
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+        <mat-form-field appearance="outline">
+            <mat-label>{{'common.word.customsPrice' | translate}}</mat-label>
+            <input matInput name="productVariantCustomsPrice" formControlName="productVariantCustomsPrice">
+            <mat-error *ngIf="hasEntryError('productVariantCustomsPrice')">{{errorMessage('productVariantCustomsPrice')}}</mat-error>
+        </mat-form-field>
+    </div>
+</form>

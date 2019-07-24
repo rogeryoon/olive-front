@@ -42,10 +42,12 @@ export const locale = {
                 'emptyFile' : '내용이 없는 빈 파일입니다.',
                 'invalidFile' : '업로드 형식에 맞지 않는 파일입니다.',
                 'errorOccured' : '작업도중 오류가 발생하였습니다.',
-                'uploadColumnMatchError' : '엑셀{0}열 이름이 매치하지 않습니다. 입력열[{1}] | 설정열[{2}]',
+                'uploadColumnMatchError' : '엑셀{0}열 이름이 같지 않습니다. 입력열[{1}] | 설정열[{2}]',
                 'uploadDataSignatureUnregisterd' : '등록되지 않은 양식입니다. 관리자에게 문의하십시오.',
                 'areYouSure' : '정말로 요청작업을 진행하겠습니까?',
-                'outOfStock' : '{0}건이 재고부족으로 출고가 되지 않았습니다.'
+                'outOfStock' : '{0}건이 재고부족으로 출고가 되지 않았습니다.',
+                'cancelOrderShipOutInventory': '할당된 출고 재고를 취소',
+                'assignOrderShipOutInventory': '재고를 할당하여 출고가능 처리'
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
@@ -60,7 +62,8 @@ export const locale = {
                 'pattern' : '입력형식 오류입니다.',
                 'number' : '숫자 오류입니다. {0}',
                 'decimal' : '(소숫점 최대{0}자리)',
-                'error' : '오류'
+                'error' : '오류',
+                'requiredAny' : '{0}중 최소 한곳에 입력하십시오.'
             },
             'title' : {
                 'addNewItem' : '{{title}} 등록',
@@ -116,8 +119,9 @@ export const locale = {
                 'finishShipOutPackage' : '출고 완료',
                 'preAssignTrackingNumber' : '송장 선발급',
                 'misc' : '기타',
-                'printPackingList' : '패킹 리스트',
+                'printPackingList' : '팩킹 리스트',
                 'printShippingLable' : '운송장',
+                'printPickingList' : '피킹 리스트',
                 'exportForTrackingNumberUpdate' : '엑셀 (판매 사이트 송장번호)',
                 'exportForLogistic' : '엑셀 (택배사 인계)',
             },
@@ -152,6 +156,7 @@ export const locale = {
                 'min' : '최소',
                 'max' : '최대',
                 'price':  '가격',
+                'standPrice': '구매가',
                 'interfaceName': '인터페이스',
                 'imported': '상품/주문 연결 완료',
                 'orderNumber':  '마켓 주문 #',
@@ -176,7 +181,8 @@ export const locale = {
                 'inventory' : '재고',
                 'weightKiloGram' : '무게(Kg)',
                 'combinedShipping': '합배송',
-                'select' : '선택'
+                'select' : '선택',
+                'customsPrice' : '신고가'
             },
             'word': {
                 'id' : 'ID',
@@ -189,6 +195,8 @@ export const locale = {
                 'date' : '날짜',
                 'quantity' : '수량',
                 'price' : '가격',
+                'standPrice' : '구매가',
+                'productVariantName' : '타입',
                 'remark' : '비고',
                 'freight' : '배송비',
                 'tax' : '세금',
@@ -210,7 +218,7 @@ export const locale = {
                 'weightType' : '단위',
                 'weight' : '무게',
                 'customsItemName' : '세관 신고명',
-                'customsPrice' : '세관 가격',
+                'customsPrice' : '세관 신고 가격',
                 'customsTypeCode' : '통관 타입',
                 'excel': '엑셀',
                 'marketSeller' : '판매자',
@@ -238,6 +246,10 @@ export const locale = {
                 'purchaseReturnOrCancel': '발주 반품/취소',
                 'cancelOrder': '주문 취소',
                 'restoreOrder': '변경 (배송준비)',
+                'productGroupWeight' : '상품 그룹 무게',
+                'productVariantWeight' : '상품 무게',
+                'productGroupCustomsPrice' : '상품 그룹 세관 신고가',
+                'productVariantCustomsPrice' : '상품 세관 신고가'                
             }
         },
         'page': {
@@ -415,7 +427,10 @@ export const locale = {
             'pendingOrderShipOutList' : {
                 'selectDeliveryInfoTitle' : '다중 배달 정보 발견',
                 'selectDeliveryInfoDescription' : '어떤 배달 정보를 사용할것인지 선택하세요',
-                'confirmCombinedShipExists' : '합배송 처리 하지 않은 합배송 대상건이 있습니다. 합배송처리하지 않고 그냥 출고하겠습니까?'
+                'confirmCombinedShipExists' : '합배송 처리 하지 않은 합배송 대상건이 있습니다. 합배송처리하지 않고 출고하겠습니까?',
+                'selectProductForWeightTitle' : '무게 수정 상품 선택',
+                'selectProductForWeightDescription' : '무게 수정을 원하는 상품을 선택하세요',
+                'numberTwoOverridesNumberOne' : '1/2번 모두 입력할 경우 2번 입력을 우선 적용합니다.'
             },
             'marketItemMappingExcelColumnsEditor' : {
                 'notMatchOriginalValue' : '최초 엑셀에 저장되어 있던 (부분) 문자열이 아닙니다'

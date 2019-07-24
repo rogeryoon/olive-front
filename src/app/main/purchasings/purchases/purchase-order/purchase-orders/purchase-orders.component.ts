@@ -401,8 +401,14 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       });
   }
 
+  /**
+   * 발주 인쇄
+   * @param item 
+   * @returns  
+   */
   onPOPrint(item: PurchaseOrder) {
     const printAction = 'print';
+    // 아이템 작성한게 없으면 오류처리
     if (item.purchaseOrderItems.length === 0) {
       const startTabIndex = 1;
       this.alertService.showDialog

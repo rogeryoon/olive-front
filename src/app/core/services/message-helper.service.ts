@@ -7,6 +7,7 @@ import { AlertService, MessageSeverity } from '@quick/services/alert.service';
 
 import { UserMessage } from '../models/user-message';
 import { Utilities } from '@quick/services/utilities';
+import { OliveBackEndErrors } from '../classes/back-end-errors';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +39,7 @@ export class OliveMessageHelperService {
     if (isNewItem) {
       this.alertService.showMessage(
         this.translater.get('common.title.success'),
-        Utilities.TestIsUndefined(itemName) ? 
+        Utilities.TestIsUndefined(itemName) || itemName.length === 0 ? 
           this.translater.get('common.message.newItemCreatedGeneral') :
           String.Format(this.translater.get('common.message.newItemCreated'), itemName), 
         MessageSeverity.success
@@ -47,7 +48,7 @@ export class OliveMessageHelperService {
     else {
       this.alertService.showMessage(
         this.translater.get('common.title.success'),
-        Utilities.TestIsUndefined(itemName) ? 
+        Utilities.TestIsUndefined(itemName) || itemName.length === 0 ? 
           this.translater.get('common.message.updatedGeneral') :
           String.Format(this.translater.get('common.message.updated'), itemName), 
           MessageSeverity.success
@@ -73,7 +74,7 @@ export class OliveMessageHelperService {
     }
     else 
     if (error.error && error.error.errorCode) {
-      const concurrencyError = 'CONCURRENCY_ERROR';
+      const concurrencyError = OliveBackEndErrors.concurrencyError;
       switch (error.error.errorCode) {
         case concurrencyError:
           errorMessage.message = this.translater.get(isDelete ? 'common.entryError.deleteByConcurrency' : 'common.entryError.concurrency');

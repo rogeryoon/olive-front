@@ -30,7 +30,14 @@ export class OliveBaseComponent implements OnInit {
     return OliveUtilities.numberFormat(amount, 0, null);
   }
 
-  numberFormat(amount: number, digits = 0, zero = null) {
+  /**
+   * Number를 형식에 맞게 표시
+   * @param amount 타겟 표시 숫자
+   * @param [digits] 소숫점 자릿수
+   * @param [zero] 0일 경우 숫자대체 문자열
+   * @returns 포맷 반환 문자열
+   */
+  numberFormat(amount: number, digits = 0, zero = null): string {
     return OliveUtilities.numberFormat(amount, digits, zero);
   }
 
@@ -74,6 +81,16 @@ export class OliveBaseComponent implements OnInit {
 
   protected arrayErrorMessage(name: string, index: number): string {
     return this.controlErrorMessage(this.getArrayFormGroup(index).get(name));
+  }
+
+  /**
+   * 입력 컨트롤중 모두 입력이 안되었으면 표시하는 메시지
+   * @param inputNames Input User Names
+   * @returns error message 
+   */
+  protected requiredAnyErrorMessage(inputNames: string[]): string {
+    const inputNamesString = inputNames.join();
+    return String.Format(this.translater.get('common.validate.requiredAny'), inputNamesString);
   }
   
   protected errorMessage(name: string): string {

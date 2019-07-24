@@ -15,4 +15,12 @@ export abstract class OliveDataService {
   abstract updateItem(item: any, id: number): any;
 
   abstract deleteItem(id: number | any): any;
+
+  abstract get(subUrl: string): any;
+
+  abstract post(post: string, data: any): any;
+
+  abstract postString(subUrl: string, data: string): any;
+
+  abstract put(subUrl: string, data: any): any;
 }

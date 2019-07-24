@@ -16,7 +16,7 @@
                         <button [disabled]="!(canCombineShip || canReleaseCombineShip) || isloading" mat-raised-button
                             color="basic" class="right ml-4" (click)="combineShip()">
                             <mat-icon>{{canReleaseCombineShip ? 'link_off' : 'insert_link'}}</mat-icon>
-                            {{(canReleaseCombineShip ? 'common.button.cancelCombineShip' : 'common.button.combineShip') | translate}}
+                            {{(canReleaseCombineShip ? 'common.button.cancelCombineShip' : 'common.button.combineShip') | translate}}{{remarkCombinedOrders}}
                         </button>
                         <button [disabled]="!canListOrders || isloading" mat-raised-button color="warn"
                             class="right ml-4" (click)="buttonListOrders()">
@@ -54,6 +54,7 @@
                         <th>{{'common.tableHeader.consignee' | translate}}</th>
                         <th>{{'common.tableHeader.inventory' | translate}}</th>
                         <th>{{'common.tableHeader.weightKiloGram' | translate}}</th>
+                        <th>{{'common.tableHeader.customsPrice' | translate}}</th>
                         <th>{{'common.tableHeader.combinedShipping' | translate}}</th>
                     </tr>
                 </thead>
@@ -63,14 +64,25 @@
                             <input class="select" name="select" type="checkbox" [(ngModel)]="order.selecteds[index]"
                                 (change)="checkIfAllSelected()" (click)="checkSameCombinedShippingGroup(order)" [attr.disabled]="hasShipOutProblems(order) ? true : null">
                         </td>
-                        <td class="zoom-in" (click)="editOrder(order, $event)">{{order.orderFk.marketSellerFk.code}}</td>
-                        <td class="zoom-in" (click)="editOrder(order, $event)">{{order.deliveryTagFk.consigneeName}}</td>
+
+                        <td class="zoom-in" (click)="editOrder(order)">{{order.orderFk.marketSellerFk.code}}</td>
+
+                        <td class="zoom-in" (click)="editOrder(order)">{{order.deliveryTagFk.consigneeName}}</td>
+
                         <td (click)="switchInventory(order)" 
                             [ngClass]="{'foreground-red': isShortOrderQuantity(order), 'pointer': switchIconVisible(order)}">
-                            {{showInventory(order)}}
-                            <mat-icon *ngIf="switchIconVisible(order)" class="small-icon">{{getInventorySwitchIconName(order)}}</mat-icon>
+                            <span *ngFor="let item of order.orderShipOutDetails" matTooltip="{{item.name}}">{{showItem(item)}}&nbsp;</span>
+                            <mat-icon *ngIf="switchIconVisible(order)" class="small-icon" matTooltip="{{getInventorySwitchTooltip(order)}}">{{getInventorySwitchIconName(order)}}</mat-icon>
                         </td>
-                        <td [ngClass]="{'foreground-red': foundNullWeight(order)}">{{showWeight(order)}}</td>
+
+                        <td class="pointer" (click)="editItemsWeight(order)" [ngClass]="{'foreground-red': foundNullWeight(order)}">
+                            {{showWeight(order)}}
+                        </td>
+
+                        <td class="pointer" (click)="editCustomsPrice(order)" [ngClass]="{'foreground-red': foundNullCustomsPrice(order)}">
+                            {{showCustomsPrice(order)}}
+                        </td>                        
+
                         <td [ngClass]="{'foreground-red': order.dupAddressName}">
                             <mat-icon *ngIf="order.combinedShipAddressName" [ngClass]="{'foreground-blue': order.combinedShipAddressName}">insert_link</mat-icon>
                             {{showCombinedShipping(order)}}
@@ -79,7 +91,7 @@
                 </tbody>
                 <tfoot *ngIf="orders?.length == 0">
                     <tr>
-                        <td [attr.colspan]="6" class="no-data-available">{{'common.message.noRecordsFound' | translate}}</td>
+                        <td [attr.colspan]="7" class="no-data-available">{{'common.message.noRecordsFound' | translate}}</td>
                     </tr>
                 </tfoot>
             </table>

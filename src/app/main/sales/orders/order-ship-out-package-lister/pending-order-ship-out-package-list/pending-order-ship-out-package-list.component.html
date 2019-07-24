@@ -21,6 +21,10 @@
                         </button>
 
                         <mat-menu #misc="matMenu">
+                            <button mat-menu-item (click)="printPickingList()">
+                                <mat-icon>gavel</mat-icon>
+                                {{'common.button.printPickingList' | translate}}
+                            </button>                            
                             <button mat-menu-item (click)="printPackingList()">
                                 <mat-icon>list</mat-icon>
                                 {{'common.button.printPackingList' | translate}}

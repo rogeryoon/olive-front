@@ -4,8 +4,6 @@ import { Subject } from 'rxjs';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { DataTableDirective } from 'angular-datatables';
-
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { OrderShipOutPackage } from 'app/main/sales/models/order-ship-out-package.model';
@@ -59,7 +57,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
 
     this.selectedPackages.forEach(item => {
       item.orderShipOuts.forEach(order => {
-        totalWeight += order.orderShipOutDetails.map(x => x.kiloGramWeight).reduce((a, b) => a + (b || 0), 0);
+        totalWeight += order.orderShipOutDetails.map(x => x.kiloGramWeight * x.quantity).reduce((a, b) => a + (b || 0), 0);
       });
     });
 
@@ -72,7 +70,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
 
     this.warehousePackages.forEach(item => {
       item.orderShipOuts.forEach(order => {
-        totalWeight += order.orderShipOutDetails.map(x => x.kiloGramWeight).reduce((a, b) => a + (b || 0), 0);
+        totalWeight += order.orderShipOutDetails.map(x => x.kiloGramWeight * x.quantity).reduce((a, b) => a + (b || 0), 0);
       });
     });
 
@@ -131,7 +129,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     let weight = 0;
 
     item.orderShipOuts.forEach(order => {
-      weight += order.orderShipOutDetails.map(x => x.kiloGramWeight).reduce((a, b) => a + (b || 0), 0);
+      weight += order.orderShipOutDetails.map(x => x.kiloGramWeight * x.quantity).reduce((a, b) => a + (b || 0), 0);
     });
 
     return OliveUtilities.numberFormat(weight, 2);
@@ -170,29 +168,34 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     this.selectedAll = false;
   }
 
-  // todo
+  // TODO : finshiShipOutPackage
   finshiShipOutPackage() {
     console.log('finshiShipOutPackage');
 
     this.selectedAll = false;
   }
 
-  // todo
+  // TODO : printPickingList
+  printPickingList() {
+    console.log('printPickingList');
+  }
+
+  // TODO : printPackingList
   printPackingList() {
     console.log('printPackingList');
   }
 
-  // todo
+  // TODO : printShippingLable
   printShippingLable() {
     console.log('printShippingLable');
   }
 
-  // todo
+  // TODO : exportForTrackingNumberUpdate
   exportForTrackingNumberUpdate() {
     console.log('exportForTrackingNumberUpdate');
   }
   
-  // todo
+  // TODO : exportForLogistic
   exportForLogistic() {
     console.log('exportForLogistic');
   }  

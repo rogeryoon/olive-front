@@ -88,6 +88,9 @@ export class OliveUtilities {
         });
     }
 
+    /**
+     * 공용으로 사용되는 id, updatedUser, updatedUtc, createdUser, createdUtc를 가져옴
+     */
     public static itemWithIdNAudit(source: any, referItem): any {
         source.id = referItem.id;
         source.updatedUser = referItem.updatedUser;
@@ -175,10 +178,10 @@ export class OliveUtilities {
         return patt.test(input);
     }
 
-    public static minNumber(array: number[]): string {
+    public static minNumber(array: number[], addedNumbers: number[] = []): string {
         let returnValue = '';
 
-        array = array.filter(a => a !== null);
+        array = array.concat(addedNumbers).filter(a => a !== null);
 
         if (array.length > 0) {
             returnValue = Math.min(...array).toString();
@@ -187,10 +190,10 @@ export class OliveUtilities {
         return returnValue;
     }
 
-    public static maxNumber(array: number[]): string {
+    public static maxNumber(array: number[], addedNumbers: number[] = []): string {
         let returnValue = '';
 
-        array = array.filter(a => a !== null);
+        array = array.concat(addedNumbers).filter(a => a !== null);
 
         if (array.length > 0) {
             returnValue = Math.max(...array).toString();
@@ -199,6 +202,13 @@ export class OliveUtilities {
         return returnValue;
     }
 
+   /**
+   * Number를 형식에 맞게 표시
+   * @param amount 타겟 표시 숫자
+   * @param [digits] 소숫점 자릿수
+   * @param [zero] 0일 경우 숫자대체 문자열
+   * @returns 포맷 반환 문자열
+   */    
     public static numberFormat(amount: number, digits = 0, zero = null): string {
         if (zero !== null && amount === 0) {
             return zero;

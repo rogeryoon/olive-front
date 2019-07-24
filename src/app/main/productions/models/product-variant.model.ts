@@ -4,12 +4,15 @@ import { Product } from './product.model';
 export class ProductVariant extends OliveTrackingAttribute {
     id?: number;
     code: string;
+    shortId: number;
     name: string;
     standPrice?: number;
     weight?: number;
     weightTypeCode: string;
     volume?: string;
     lengthTypeCode: string;
+    customsName?: string;
+    customsPrice?: number;
     activated?: boolean;
     memo: string;
 
