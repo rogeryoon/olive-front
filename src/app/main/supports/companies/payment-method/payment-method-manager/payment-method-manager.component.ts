@@ -25,13 +25,13 @@ export class OlivePaymentMethodManagerComponent extends OliveEntityEditComponent
   // private companyFkEditor: OliveCompanyFkEditorComponent;
 
   constructor(
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
     dataService: OlivePaymentMethodService
   ) {
     super(
-      translater, alertService,
+      translator, alertService,
       accountService, messageHelper, 
       snackBar, formBuilder, 
       dataService

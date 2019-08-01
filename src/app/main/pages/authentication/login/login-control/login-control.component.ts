@@ -135,7 +135,7 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
       }
       else {
         this.alertService.showStickyMessage(
-          'Unable to login', 'An error occured, please try again later.\nError: ' +
+          'Unable to login', 'An error occurred, please try again later.\nError: ' +
           error.statusText || error.status, MessageSeverity.error, error
         );
       }

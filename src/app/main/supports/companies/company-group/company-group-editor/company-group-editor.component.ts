@@ -13,9 +13,9 @@ import { CompanyGroup } from '../../../models/company-group.model';
   styleUrls: ['./company-group-editor.component.scss']
 })
 export class OliveCompanyGroupEditorComponent extends OliveEntityFormComponent {
-  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
+  constructor(formBuilder: FormBuilder, translator: FuseTranslationLoaderService) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 

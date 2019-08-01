@@ -47,7 +47,7 @@
                 <thead>
                     <tr>
                         <th>
-                            <input type="checkbox" [disabled]="(orders && !orders.length) || allCheckboxesDisalbed"
+                            <input type="checkbox" [disabled]="(orders && !orders.length) || allCheckboxesDisabled"
                                 [(ngModel)]="selectedAll" (change)="selectAll();" />
                         </th>
                         <th>{{'common.tableHeader.seller' | translate}}</th>
@@ -61,7 +61,7 @@
                 <tbody>
                     <tr *ngFor="let order of orders">
                         <td>
-                            <input class="select" name="select" type="checkbox" [(ngModel)]="order.selecteds[index]"
+                            <input class="select" name="select" type="checkbox" [(ngModel)]="order.choices[index]"
                                 (change)="checkIfAllSelected()" (click)="checkSameCombinedShippingGroup(order)" [attr.disabled]="hasShipOutProblems(order) ? true : null">
                         </td>
 

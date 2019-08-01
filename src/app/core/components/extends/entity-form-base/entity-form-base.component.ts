@@ -27,10 +27,10 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
 
   constructor(
     protected formBuilder: FormBuilder, 
-    translater: FuseTranslationLoaderService
+    translator: FuseTranslationLoaderService
   ) 
   { 
-    super(translater);
+    super(translator);
   }
 
   get isIdVisible(): boolean {
@@ -96,7 +96,7 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
     return OliveUtilities.itemWithIdNAudit(source, this.item);
   }
 
-  // Invalid Cotrol를 찾아 낸다.
+  // Invalid Control를 찾아 낸다.
   // How to find the invalid controls in angular 4 reactive form
   // https://stackoverflow.com/questions/45220073/how-to-find-the-invalid-controls-in-angular-4-reactive-form
   findInvalidControls() {

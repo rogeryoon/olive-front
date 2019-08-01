@@ -2,15 +2,15 @@ import { debounceTime, switchMap, tap, finalize } from 'rxjs/operators';
 
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 
-import { TableDatasource } from 'app/core/classes/table-datasource';
+import { TableDataSource } from 'app/core/classes/table-data-source';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator } from 'app/core/classes/validators';
-import { MarketItemMappingProductVariant } from '../../../models/market-item-mapping-product-variant.model';
 import { OliveProductVariantService } from 'app/main/productions/services/product-variant.service';
 import { IdName } from 'app/core/models/id-name';
 import { OliveUtilities } from 'app/core/classes/utilities';
+import { OrderShipOutDetail } from 'app/main/sales/models/order-ship-out-detail.model';
 
-export class OliveMarketItemMappingProductVariantDatasource extends TableDatasource {
+export class OliveOrderShipOutDetailDataSource extends TableDataSource {
 
     products: IdName[][] = [];
     isLoading = false;
@@ -35,8 +35,8 @@ export class OliveMarketItemMappingProductVariantDatasource extends TableDatasou
 
         const fg = new FormGroup({
             productVariantId36: productVariantId36Control,
-            productName: this.createNewFormContorl(r, 'productName', [Validators.required]),
-            quantity: this.createNewFormContorl(r, 'quantity', [numberValidator(0, true, 1)])
+            productName: this.createNewFormControl(r, 'name', [Validators.required]),
+            quantity: this.createNewFormControl(r, 'quantity', [numberValidator(0, true, 1)])
         });
 
         this.products.push([]);
@@ -59,7 +59,7 @@ export class OliveMarketItemMappingProductVariantDatasource extends TableDatasou
     }
 
     createNewItem(): any {
-        return new MarketItemMappingProductVariant();
+        return new OrderShipOutDetail();
     }
 
     onReInitialize() {

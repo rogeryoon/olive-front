@@ -29,13 +29,13 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
   lookupBranch: OliveLookupHostComponent;
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private companyService: OliveCompanyService,
     private branchService: OliveBranchService,
     private accountService: AccountService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -78,7 +78,7 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
   initializeChildComponent() {
     this.lookupCompany.setting = {
       columnType: 'code',
-      dialogTitle: this.translater.get(NavTranslates.Company.list),
+      dialogTitle: this.translator.get(NavTranslates.Company.list),
       dataService: this.companyService,
       maxSelectItems: 1,
       newComponent: OliveCompanyGroupManagerComponent,
@@ -89,7 +89,7 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
 
     this.lookupBranch.setting = {
       columnType: 'code',
-      dialogTitle: this.translater.get(NavTranslates.Company.branch),
+      dialogTitle: this.translator.get(NavTranslates.Company.branch),
       dataService: this.branchService,
       maxSelectItems: 1,
       newComponent: OliveBranchManagerComponent,

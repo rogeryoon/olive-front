@@ -149,75 +149,8 @@
         padding: 10px;
     }
 
-    #header {
-        height: 80px
-    }
-
-    #header>#reference {
-        float: right;
-        text-align: right
-    }
-
-    #header>#reference h3 {
-        margin: 0;
-        font-size: 150%;
-    }
-
-    #header>#reference h4 {
-        margin: 0;
-        font-size: 100%;
-        font-weight: 600
-    }
-
-    #header>#reference p {
-        margin: 0;
-        margin-top: 2%;
-        font-size: 85%
-    }
-
-    #header>#company {
-        width: 45%;
-        float: left;
-        font-size: 85%
-    }
-
-    #fromto {
-        height: 160px
-    }
-
-    #fromto>#from,
-    #fromto>#to {
-        width: 45%;
-        min-height: 90px;
-        margin-top: 30px;
-        font-size: 85%;
-        padding: 1.5%;
-        line-height: 120%;
-        border: solid grey 1px;
-    }
-
-    #fromto>#from {
-        float: left;
-        width: 45%;
-        background: #efefef;
-        margin-top: 30px;
-        font-size: 85%;
-        padding: 1.5%
-    }
-
-    #from>div,
-    #to>div {
-        padding-bottom: 5px;
-        text-transform: uppercase;
-        font-weight: 400;
-    }
-
-    #fromto>#to {
-        float: right;
-    }
-
     #items {
-        margin-top: 10px
+        margin-top: 15px
     }
 
     #items>p {
@@ -235,12 +168,7 @@
 
     #items>table th {
         font-weight: 400;
-        padding: 1px 4px;
         text-align: center;
-    }
-
-    #items>table td {
-        padding: 1px 4px
     }
 
     #items>table th:nth-child(1),
@@ -248,32 +176,27 @@
         width: 45px
     }
 
-    #items>table th:nth-child(5) {
-        width: 60px
-    }
-
-    #items>table th:nth-child(4),
-    #items>table th:nth-child(6) {
-        width: 70px
-    }
-
-    #items>table tr td:not(:first-child):not(:nth-child(2)) {
-        text-align: right;
-        padding-right: 1%
+    #items>table th:nth-child(4) {
+        width: 100px
     }
 
     #items>table tr:nth-child(even) {
         background-color: #F5F5F5;
     }
 
-    #items>table td:nth-child(1) {
+    #items>table td:nth-child(1),
+    #items>table td:nth-child(3) {
         text-align: center;
     }
 
-    #items>table td:nth-child(2),
-    #items>table td:nth-child(7) {
+    #items>table td:nth-child(3) {
+        font-size: 1em;
+        font-weight: bold;
+    }
+
+    #items>table td:nth-child(2) {
         text-align: justify;
-        font-size: 9px;
+        font-size: 1em;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
@@ -281,10 +204,9 @@
         border-right: solid grey 1px
     }
 
-    #items table tr td {
-        padding-top: 3px;
-        padding-bottom: 3px;
-        height: 10px;
+    #items table tr td,
+    #items table tr th {
+        padding: 6px 4px 6px 4px;
         vertical-align: middle;
     }
 
@@ -294,138 +216,118 @@
 
     #items table tr th {
         border-right: solid grey 1px;
-        padding: 3px
     }
 
     #items table tr:nth-child(2)>td {
         padding-top: 8px
     }
 
-    #summary {
-        height: 170px;
-        margin-top: 30px
+    #top>table {
+        width: 100%;
     }
 
-    #summary #note {
-        float: left
-    }
-
-    #summary #note h4 {
-        font-size: 10px;
-        font-weight: 600;
-        font-style: italic;
-        margin-bottom: 4px
-    }
-
-    #summary #note p {
-        font-size: 10px;
-        font-style: italic
-    }
-
-    #summary #total table {
-        font-size: 85%;
-        width: 260px;
-        float: right;
-        border: solid grey 1px;
-    }
-
-    #summary #total table td {
-        padding: 3px 4px;
+    .title-top {
+        font-size: 24px;
+        text-align: center;
         text-transform: uppercase;
+        width: 30%
     }
 
-    #summary #total table tr td:last-child {
-        text-align: right
+    .title-top p {
+        font-size: 10px;
     }
 
-    #summary #total table tr:first-child,
-    #summary #total table tr:last-child {
-        background: #efefef;
-        font-weight: 600
+    .left-top,
+    .right-top {
+        width: 35%
+    }
+
+    .left-top {
+        text-align: left;
+    }
+
+    .right-top {
+        text-align: right;
+    }
+
+    .left-top span,
+    .right-top span {
+        padding-left: 10px;
+        font-size: 3em;
+        font-weight: bold;
+    }
+
+    .boxes-container {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+
+        -webkit-flex-flow: row wrap;
+        justify-content: flex-start;
+        border-width: 1px;
+        border-color: black;
+    }
+
+    .box-item {
+        padding: 0.20em;
+        width: 4em;
+        height: 1.7em;
+        font-size: 1em;
+        text-align: center;
+        margin: 0.20em;
+        overflow: hidden;
+    }
+
+    #box-list {
+        margin-top: 10px;
+        border: solid grey 1px;
     }
 </style>
 
 <div id="olive-container">
-    <div id="header">
-        <div id="company" [innerHTML]="companyHtml">
-        </div>
-        <div id="reference">
-            <h3><strong>Purchase Order</strong></h3>
-            <h4>PO # : {{this.dateCode(order.date, order.id)}}</h4>
-            <p>Date : {{date(order.date)}}</p>
-        </div>
-    </div>
-
-    <div id="fromto">
-        <div id="from">
-            <div>Supplier</div>
-            <p [innerHTML]="supplierHtml">
-            </p>
-        </div>
-        <div id="to">
-            <div>Ship To</div>
-            <p [innerHTML]="warehouseHtml">
-            </p>
-        </div>
+    <div id="top">
+        <table>
+            <tr>
+                <td class="left-top">Packages<span>{{commaNumber(packages.length)}}</span></td>
+                <td class="title-top">Picking List<p>{{today}}</p>
+                </td>
+                <td class="right-top">Items<span>{{totalItemCount}}</span></td>
+            </tr>
+        </table>
     </div>
 
     <div id="items">
-        <p>{{'purchasing.previewPurchaseOrder.payments' | translate}} : {{paymentSummary}}</p>
         <table id="olive-table">
             <thead>
                 <tr>
                     <th class="print -ex-type-id">ID</th>
                     <th class="print -ex-type-text -ex-width-60">Name</th>
-                    <th class="print -ex-type-number">QTY</th>
-                    <th class="print -ex-type-number">Price</th>
-                    <th class="print -ex-type-number">Discount</th>
-                    <th class="print -ex-type-number">Due</th>
+                    <th class="print -ex-type-number">Quantity</th>
                     <th class="print -ex-type-text">Remark</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of order.purchaseOrderItems" class="print">
-                    <td class="print -ex-type-id">{{id36(item.id)}}</td>
+                <tr *ngFor="let item of pickingItems" class="print">
+                    <td class="print -ex-type-id">{{id36(item.productVariantId)}}</td>
                     <td class="print -ex-type-text">{{item.name}}</td>
                     <td class="print -ex-type-number">{{commaNumber(item.quantity)}}</td>
-                    <td class="print -ex-type-number">{{numberFormat(item.price, digits)}}</td>
-                    <td class="print -ex-type-number">{{numberFormat(item.discount*-1, digits, '0')}}</td>
-                    <td class="print -ex-type-number">{{numberFormat(item.quantity*item.price-item.discount, digits)}}
-                    </td>
-                    <td class="print -ex-type-text">{{item.remarks}}</td>
+                    <td class="print -ex-type-text">&nbsp;</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <div id="summary">
-        <div id="note">
-            <h4>Memo :</h4>
-            <p>{{order.memo}}</p>
-        </div>
-        <div id="total">
-            <table>
-                <tr>
-                    <td>{{'purchasing.previewPurchaseOrder.subTotal' | translate}}</td>
-                    <td>{{numberFormat(subTotal, digits)}}</td>
-                </tr>
-                <tr>
-                    <td>{{'purchasing.previewPurchaseOrder.freight' | translate}}</td>
-                    <td>{{numberFormat(order.freightAmount, digits)}}</td>
-                </tr>
-                <tr>
-                    <td>{{'purchasing.previewPurchaseOrder.addedDiscount' | translate}}</td>
-                    <td>{{numberFormat(order.addedDiscountAmount*-1, digits)}}</td>
-                </tr>
-                <tr>
-                    <td>{{'purchasing.previewPurchaseOrder.tax' | translate}}</td>
-                    <td>{{numberFormat(order.taxAmount, digits)}}</td>
-                </tr>
-                <tr>
-                    <td>{{'purchasing.previewPurchaseOrder.grandTotal' | translate}}</td>
-                    <td>{{numberFormat(grandTotal, digits)}}</td>
-                </tr>
-            </table>
-        </div>
+    <div id="box-list">
+        <ul class="boxes-container">
+            <li class="box-item" *ngFor="let pkg of packages">
+                <div>{{pkg.deliveryTagFk.consigneeName}}</div>
+            </li>
+        </ul>
     </div>
 </div>

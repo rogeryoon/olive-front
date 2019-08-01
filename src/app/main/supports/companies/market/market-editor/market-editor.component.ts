@@ -19,12 +19,12 @@ export class OliveMarketEditorComponent extends OliveEntityFormComponent {
   marketExcelInterfaces: MarketExcelInterface[];
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private cacheService: OliveCacheService, private marketExcelInterfaceService: OliveMarketExcelInterfaceService
   ) 
   {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 

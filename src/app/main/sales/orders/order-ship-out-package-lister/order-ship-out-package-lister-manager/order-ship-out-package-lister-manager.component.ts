@@ -42,7 +42,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   @ViewChildren(OliveOrderShipOutPackageListerComponent) orderPackageListers: QueryList<OliveOrderShipOutPackageListerComponent>;
 
   constructor(
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService,
     snackBar: MatSnackBar, formBuilder: FormBuilder,
     dataService: OliveInWarehouseService, private orderShipOutService: OliveOrderShipOutService,
@@ -50,7 +50,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     private orderShipOutPackageService: OliveOrderShipOutPackageService
   ) {
     super(
-      translater, alertService,
+      translator, alertService,
       accountService, messageHelper,
       snackBar, formBuilder,
       dataService
@@ -89,7 +89,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
           lister.setPendingOrderPackages(this.pendingOrderShipOutPackages, this.parentObject);
         });
       }, error => {
-        this.messageHelper.showLoadFaildSticky(error);
+        this.messageHelper.showLoadFailedSticky(error);
       });
   }
 
@@ -105,7 +105,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
         this.inventories = res.model;
         this.getPendingOrders(refresh);
       }, error => {
-        this.messageHelper.showLoadFaildSticky(error);
+        this.messageHelper.showLoadFailedSticky(error);
       });
   }
 
@@ -118,7 +118,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
 
         // 아이템 Checkbox 선택을 저장하기위한 변수 배열 - 각 창고 Tab 수 만큼 생성
         this.pendingOrderShipOuts.forEach(order => {
-          order.selecteds = new Array(this.warehouses.length).fill(false);
+          order.choices = new Array(this.warehouses.length).fill(false);
         });
 
         this.switchWarehouseSelector();
@@ -126,7 +126,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
           lister.setPendingOrders(this.pendingOrderShipOuts, this.inventories, this.parentObject, refresh);
         });
       }, error => {
-        this.messageHelper.showLoadFaildSticky(error);
+        this.messageHelper.showLoadFailedSticky(error);
       });
   }
 

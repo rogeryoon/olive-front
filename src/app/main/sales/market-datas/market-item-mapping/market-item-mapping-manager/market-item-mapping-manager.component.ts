@@ -27,13 +27,13 @@ export class OliveMarketItemMappingManagerComponent extends OliveEntityEditCompo
   private productVariantsEditor: OliveMarketItemMappingProductVariantsEditorComponent;  
 
   constructor(
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService,  
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
     dataService: OliveMarketItemMappingService
   ) {
     super(
-      translater, alertService,
+      translator, alertService,
       accountService, messageHelper, 
       snackBar, formBuilder,  
       dataService

@@ -8,7 +8,7 @@ import { OliveEntityEndpointService } from 'app/core/services/entity-endpoint.se
 @Injectable({
   providedIn: 'root'
 })
-export class OliveUserConfigService extends OliveEntityService {
+export class OliveCompanyGroupPreferenceService extends OliveEntityService {
 
   constructor
     (
@@ -20,6 +20,6 @@ export class OliveUserConfigService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('userconfigs');
+    this.setApiUrl('CompanyGroupPreferences');
   }
 }

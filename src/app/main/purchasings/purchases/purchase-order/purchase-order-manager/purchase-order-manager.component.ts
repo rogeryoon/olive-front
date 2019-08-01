@@ -31,13 +31,13 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
   purchaseOrderItems: OlivePurchaseOrderItemsEditorComponent;
 
   constructor(
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
     dataService: OlivePurchaseOrderService
   ) {
     super(
-      translater, alertService,
+      translator, alertService,
       accountService, messageHelper, 
       snackBar, formBuilder, 
       dataService

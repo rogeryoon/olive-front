@@ -23,13 +23,13 @@ export class OliveProductWeightEditorComponent extends OliveEntityEditComponent 
   weightTypes: any[] = OliveConstants.weightTypes;
   
   constructor(
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
     dataService: OliveProductService, private cacheService: OliveCacheService
   ) {
     super(
-      translater, alertService,
+      translator, alertService,
       accountService, messageHelper, 
       snackBar, formBuilder, 
       dataService
@@ -63,8 +63,8 @@ export class OliveProductWeightEditorComponent extends OliveEntityEditComponent 
 
   get weightInputUserNames(): string[] {
     return [
-      this.translater.get('common.word.productGroupWeight'), 
-      this.translater.get('common.word.productVariantWeight')
+      this.translator.get('common.word.productGroupWeight'), 
+      this.translator.get('common.word.productVariantWeight')
     ];
   }
 

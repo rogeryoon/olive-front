@@ -39,14 +39,14 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
     dialog: MatDialog, formBuilder: FormBuilder, 
     dialogRef: MatDialogRef<OliveInWarehouseStatusComponent>,     
     @Inject(MAT_DIALOG_DATA) setting: LookupListerSetting,
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     messageHelper: OliveMessageHelperService, deviceService: DeviceDetectorService,
     private oliveInWarehouseService: OliveInWarehouseService
   ) { 
     super(
       dialog, formBuilder,
       dialogRef, setting,
-      translater, alertService,
+      translator, alertService,
       messageHelper, deviceService
     );
   }
@@ -86,19 +86,19 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
     return [
       // 1
       { data: ProductVariantId, orderable: true, 
-          name: this.translater.get('purchasing.inWarehouseStatusHeader.productVariantId')},
+          name: this.translator.get('purchasing.inWarehouseStatusHeader.productVariantId')},
       // 2
       { data: ItemName, orderable: false, 
-          name: this.translater.get('purchasing.inWarehouseStatusHeader.itemName')},
+          name: this.translator.get('purchasing.inWarehouseStatusHeader.itemName')},
       // 3
       { data: Quantity, orderable: true, 
-          name: this.translater.get('purchasing.inWarehouseStatusHeader.quantity')},
+          name: this.translator.get('purchasing.inWarehouseStatusHeader.quantity')},
       // 4
       { data: Balance, orderable: true, 
-          name: this.translater.get('purchasing.inWarehouseStatusHeader.balance')},
+          name: this.translator.get('purchasing.inWarehouseStatusHeader.balance')},
       // 5
       { data: InWarehouseId, orderable: false, 
-          name: this.translater.get('purchasing.inWarehouseStatusHeader.inWarehouseId')},
+          name: this.translator.get('purchasing.inWarehouseStatusHeader.inWarehouseId')},
     ];
   }
 
@@ -118,7 +118,7 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
         },
         error => {
           this.loadingIndicator = false;            
-          this.messageHelper.showLoadFaildSticky(error);
+          this.messageHelper.showLoadFailedSticky(error);
         }
       );
     }
@@ -131,7 +131,7 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
         item: item,
         itemType: InWarehouse,
         managePermission: null,
-        customTitle: `${this.translater.get('navi.inWarehouse.group')} ID : ${this.dateCode(item.createdUtc, item.id)}`,
+        customTitle: `${this.translator.get('navi.inWarehouse.group')} ID : ${this.dateCode(item.createdUtc, item.id)}`,
         readOnly : true
       } as OliveOnEdit
     );

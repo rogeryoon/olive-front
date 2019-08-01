@@ -6,11 +6,10 @@ import { MatSnackBar } from '@angular/material';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { OliveConstants } from 'app/core/classes/constants';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OlivePaymentMethodService } from 'app/main/supports/services/payment-method.service';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { OlivePurchaseOrderPaymentDatasource } from './purchase-order-payment-datasource';
+import { OlivePurchaseOrderPaymentDataSource } from './purchase-order-payment-data-source';
 import { PaymentMethod } from 'app/main/supports/models/payment-method.model';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.model';
@@ -34,7 +33,7 @@ import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.mod
 })
 export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
   displayedColumns = ['paymentMethodId', 'amount', 'remarkId', 'actions'];
-  dataSource: OlivePurchaseOrderPaymentDatasource = new OlivePurchaseOrderPaymentDatasource(this.cacheService);
+  dataSource: OlivePurchaseOrderPaymentDataSource = new OlivePurchaseOrderPaymentDataSource(this.cacheService);
   paymentMethods: PaymentMethod[];
 
   value: any = null;  
@@ -42,12 +41,12 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   @Input() isVoidMode = false;
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private messageHelper: OliveMessageHelperService, private snackBar: MatSnackBar,
     private cacheService: OliveCacheService, private paymentMethodService: OlivePaymentMethodService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -60,7 +59,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
           this.paymentMethods = this.cacheService.set(key, response.model);
         },
           error => {
-            this.messageHelper.showLoadFaildSticky(error);
+            this.messageHelper.showLoadFailedSticky(error);
           });
     }
     else {
@@ -86,7 +85,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
 
   buildForm() {
     this.oFormArray = this.formBuilder.array([]);
-    this.oForm = this.formBuilder.group({ formarray: this.oFormArray });
+    this.oForm = this.formBuilder.group({ formArray: this.oFormArray });
     this.dataSource.formGroup = this.oForm;
   }
 
@@ -114,8 +113,8 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     this.oForm.markAsDirty();
 
     if (!payment) {
-      // Empy행 추가시 전에 선택된 결제수단을 설정해준다
-      this.cacheService.getUserConfig(this.cacheService.keyLastSelectedPaymentMethodId)
+      // Empty행 추가시 전에 선택된 결제수단을 설정해준다
+      this.cacheService.getUserPreference(this.cacheService.keyLastSelectedPaymentMethodId)
       .then((id: number) => {
           if (id) {
             const formGroup = this.oFArray.controls[this.oFArray.controls.length - 1] as FormGroup;
@@ -128,8 +127,8 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   private deleteItem(item: any) {
     if (item.Obj.id || item.Obj.amount || item.Obj.paymentMethodId || item.Obj.remarkId) {
       this.snackBar.open(
-        OliveUtilities.showParamMessage(this.translater.get('common.message.confirmDelete')),
-        this.translater.get('common.button.delete'),
+        OliveUtilities.showParamMessage(this.translator.get('common.message.confirmDelete')),
+        this.translator.get('common.button.delete'),
         { duration: 5000 }
       )
         .onAction().subscribe(() => {
@@ -144,7 +143,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   private deleteUnit(item: any) {
     this.dataSource.deleteItem(item);
     if (this.dataSource.items.length === 0) {
-      const fa = <FormArray>this.oForm.get('formarray');
+      const fa = <FormArray>this.oForm.get('formArray');
       fa.removeAt(0);
     }    
   }
@@ -176,7 +175,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
 
   onSelectionChange(event: any) {
     if (event.value) {
-      this.cacheService.setUserConfig(this.cacheService.keyLastSelectedPaymentMethodId, event.value);
+      this.cacheService.setUserPreference(this.cacheService.keyLastSelectedPaymentMethodId, event.value);
     }
     this._onChange(event.value);
   }

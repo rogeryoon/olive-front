@@ -38,14 +38,14 @@ const Warehouse = 'warehouse';
 })
 export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
   constructor(
-    translater: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
+    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OliveVoidPurchaseOrderService, 
     private cacheService: OliveCacheService
   ) {
       super(
-        translater, deviceService,
+        translator, deviceService,
         alertService, accountService,
         messageHelper, documentService, 
         dialog, dataService
@@ -61,22 +61,22 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
         // 1
         { data: Selected },
         // 2
-        { data: Id, thName: this.translater.get('purchasing.inWarehousesHeader.id'), 
+        { data: Id, thName: this.translator.get('purchasing.inWarehousesHeader.id'), 
           tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: Suppliers, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.suppliers'), 
+        { data: Suppliers, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.suppliers'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 4
-        { data: Items, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.items'), 
+        { data: Items, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.items'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 5
-        { data: Quantity, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.quantity'), 
+        { data: Quantity, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.quantity'), 
           tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 6
-        { data: TotalAmount, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.totalAmount'), 
+        { data: TotalAmount, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.totalAmount'), 
           tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 7
-        { data: Warehouse, orderable: false, thName: this.translater.get('purchasing.inWarehousesHeader.warehouse'), 
+        { data: Warehouse, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.warehouse'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },        
       ],
       editComponent: OliveVoidPurchaseOrderManagerComponent,
@@ -87,10 +87,10 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: VoidPurchaseOrder) {
     if (item) {
-      return `${this.translater.get('common.word.purchaseReturnOrCancel')} ID : ${this.dateCode(item.createdUtc, item.id)}`;
+      return `${this.translator.get('common.word.purchaseReturnOrCancel')} ID : ${this.dateCode(item.createdUtc, item.id)}`;
     }
     else {
-      return this.translater.get(NavTranslates.Purchase.cancelEntry);
+      return this.translator.get(NavTranslates.Purchase.cancelEntry);
     }
   }
 

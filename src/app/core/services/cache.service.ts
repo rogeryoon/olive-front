@@ -15,9 +15,11 @@ import { Currency } from 'app/main/supports/models/currency.model';
 import { OliveDataService } from '../interfaces/data-service';
 import { OliveUtilities } from '../classes/utilities';
 import { UserName } from '../models/user-name';
-import { OliveUserConfigService } from './user-config.service';
-import { UserConfig } from '../models/user-config.model';
+import { OliveUserPreferenceService } from './user-preference.service';
+import { UserPreference } from '../models/user-preference.model';
 import * as _ from 'lodash';
+import { CompanyGroupPreference } from '../models/company-group-preference.model';
+import { OliveCompanyGroupPreferenceService } from './company-group-preference.service';
 
 interface CacheContent {
   expiry: number;
@@ -34,29 +36,38 @@ export class OliveCacheService {
   private companyGroupMutex = new Mutex();
   private chunkItemsMutexes = new Map<string, Mutex>();
   private dataMutexes = new Map<string, Mutex>();
-  private userConfigsMutex = new Mutex();
+  private userPreferencesMutex = new Mutex();
+  private companyGroupPreferencesMutex = new Mutex();
 
   private _companyMaster: CompanyMaster;
   private _currencies: Currency[];
   private _standCurrency: Currency;
 
   static cacheKeys = class {
-    static paymentMethod = 'paymentmethod';
+    static paymentMethod = 'paymentMethod';
     static userName = 'usr';
 
-    static userConfigCacheKey = 'userConfig';
+    static userPreferenceCacheKey = 'userPreference';
 
-    static userConfig = class {
+    static companyGroupPreferenceCacheKey = 'companyGroupPreference';
+
+    static userPreference = class {
       static warehouseCheckboxes = 'warehouseCheckboxes';
       static lookupHost = 'lookupHost-';
       static lastSelectedPaymentMethodId = 'lastSelectedPaymentMethodId';
+    };
+
+    static companyGroupPreference = class {
+      static shippingLabelShippers = 'shippingLabelShippers';
+      static purchaseOrderCompany = 'purchaseOrderCompany';
     };
   };
 
   constructor(
     private companyGroupSettingService: OliveCompanyGroupSettingService, private chunkDataService: OliveChunkDataService,
     private queryParams: OliveQueryParameterService, private messageHelper: OliveMessageHelperService,
-    private authService: AuthService, private userConfigService: OliveUserConfigService
+    private authService: AuthService, private userPreferenceService: OliveUserPreferenceService,
+    private companyGroupPreferenceService: OliveCompanyGroupPreferenceService
   ) {
   }
 
@@ -102,7 +113,7 @@ export class OliveCacheService {
         setting = this.set(key, response.model);
       }
       catch (error) {
-        this.messageHelper.showLoadFaildSticky(error);
+        this.messageHelper.showLoadFailedSticky(error);
       }
     }
     else {
@@ -129,7 +140,7 @@ export class OliveCacheService {
         item = this.set(cacheKey, response.model);
       }
       catch (error) {
-        this.messageHelper.showLoadFaildSticky(error);
+        this.messageHelper.showLoadFailedSticky(error);
       }
     }
     else {
@@ -156,7 +167,7 @@ export class OliveCacheService {
         item = this.set(cacheKey, response.model);
       }
       catch (error) {
-        this.messageHelper.showLoadFaildSticky(error);
+        this.messageHelper.showLoadFailedSticky(error);
       }
     }
     else {
@@ -167,27 +178,33 @@ export class OliveCacheService {
     return item;
   }
 
-  async setUserConfig(dataKey: string, data: any): Promise<void> {
-    let configs: UserConfig[] = [];
+  /**
+   * Sets user preference
+   * @param dataKey 
+   * @param data 
+   * @returns void
+   */
+  async setUserPreference(dataKey: string, data: any): Promise<void> {
+    let preferences: UserPreference[] = [];
 
-    const cacheKey = OliveCacheService.cacheKeys.userConfigCacheKey;
+    const cacheKey = OliveCacheService.cacheKeys.userPreferenceCacheKey;
 
-    const unlock = await this.userConfigsMutex.lock();
-    let config: UserConfig;
+    const unlock = await this.userPreferencesMutex.lock();
+    let preference: UserPreference;
     let saveDb = true;
 
     if (!this.exist(cacheKey)) {
-      config = { dataKey: dataKey, data: JSON.stringify(data) } as UserConfig;
+      preference = { dataKey: dataKey, data: JSON.stringify(data) } as UserPreference;
     }
     else {
-      configs = this.get(cacheKey);
-      config = configs.find(x => x.dataKey === dataKey);
+      preferences = this.get(cacheKey);
+      preference = preferences.find(x => x.dataKey === dataKey);
 
-      if (!config) {
-        config = { dataKey: dataKey, data: JSON.stringify(data) } as UserConfig;
+      if (!preference) {
+        preference = { dataKey: dataKey, data: JSON.stringify(data) } as UserPreference;
       }
-      else if (!_.isEqual(JSON.parse(config.data), data)) {
-        config.data = JSON.stringify(data);
+      else if (!_.isEqual(JSON.parse(preference.data), data)) {
+        preference.data = JSON.stringify(data);
       }
       else {
         saveDb = false;
@@ -196,46 +213,133 @@ export class OliveCacheService {
 
     if (saveDb) {
       try {
-        if (config.id) {
-          await this.userConfigService.updateItem(config, config.id).toPromise();
+        if (preference.id) {
+          await this.userPreferenceService.updateItem(preference, preference.id).toPromise();
         }
         else {
-          const response = await this.userConfigService.newItem(config).toPromise();
-          configs.push(response.model);
+          const response = await this.userPreferenceService.newItem(preference).toPromise();
+          preferences.push(response.model);
         }
       }
       catch (error) {
-        this.messageHelper.showLoadFaildSticky(error);
+        this.messageHelper.showLoadFailedSticky(error);
       }
     }
     unlock();
 
-    this.set(cacheKey, configs, this.ONE_DAY_AGE);
+    this.set(cacheKey, preferences, this.ONE_DAY_AGE);
   }
 
-  async getUserConfig(dataKey: string): Promise<any> {
-    let configs: UserConfig[] = [];
+  /**
+   * Gets user preference : Cache에 없으면 User Preference 한꺼번에 (퍼포먼스 향상) Loading한다. 
+   * @param dataKey 
+   * @returns user preference 
+   */
+  async getUserPreference(dataKey: string): Promise<any> {
+    let preferences: UserPreference[] = [];
 
-    const cacheKey = OliveCacheService.cacheKeys.userConfigCacheKey;
+    const cacheKey = OliveCacheService.cacheKeys.userPreferenceCacheKey;
 
-    const unlock = await this.userConfigsMutex.lock();
+    const unlock = await this.userPreferencesMutex.lock();
     if (!this.exist(cacheKey)) {
       try {
-        const response = await this.userConfigService.getItems(null).toPromise();
-        configs = this.set(cacheKey, response.model, this.ONE_DAY_AGE);
+        const response = await this.userPreferenceService.getItems(null).toPromise();
+        preferences = this.set(cacheKey, response.model, this.ONE_DAY_AGE);
       }
       catch (error) {
-        this.messageHelper.showLoadFaildSticky(error);
+        this.messageHelper.showLoadFailedSticky(error);
       }
     }
     else {
-      configs = this.get(cacheKey);
+      preferences = this.get(cacheKey);
     }
     unlock();
 
-    const config = configs.find(x => x.dataKey === dataKey);
+    const preference = preferences.find(x => x.dataKey === dataKey);
 
-    return config ? JSON.parse(config.data) : null;
+    return preference ? JSON.parse(preference.data) : null;
+  }
+
+  /**
+   * Sets company group preference
+   * @param dataKey 
+   * @param data 
+   * @returns void
+   */
+  async setCompanyGroupPreference(dataKey: string, data: any): Promise<void> {
+    let preferences: CompanyGroupPreference[] = [];
+
+    const cacheKey = OliveCacheService.cacheKeys.companyGroupPreferenceCacheKey + this.queryParams.CompanyGroupId;
+
+    const unlock = await this.companyGroupPreferencesMutex.lock();
+    let preference: CompanyGroupPreference;
+    let saveDb = true;
+
+    if (!this.exist(cacheKey)) {
+      preference = { dataKey: dataKey, data: JSON.stringify(data) } as CompanyGroupPreference;
+    }
+    else {
+      preferences = this.get(cacheKey);
+      preference = preferences.find(x => x.dataKey === dataKey);
+
+      if (!preference) {
+        preference = { dataKey: dataKey, data: JSON.stringify(data) } as CompanyGroupPreference;
+      }
+      else if (!_.isEqual(JSON.parse(preference.data), data)) {
+        preference.data = JSON.stringify(data);
+      }
+      else {
+        saveDb = false;
+      }
+    }
+
+    if (saveDb) {
+      try {
+        if (preference.id) {
+          await this.companyGroupPreferenceService.updateItem(preference, preference.id).toPromise();
+        }
+        else {
+          const response = await this.companyGroupPreferenceService.newItem(preference).toPromise();
+          preferences.push(response.model);
+        }
+      }
+      catch (error) {
+        this.messageHelper.showLoadFailedSticky(error);
+      }
+    }
+    unlock();
+
+    this.set(cacheKey, preferences, this.ONE_DAY_AGE);
+  }
+
+  /**
+   * Gets Company Group Preference : Cache에 없으면 User Preference 한꺼번에 (퍼포먼스 향상) Loading한다. 
+   * @param dataKey 
+   * @returns Company Group Preference
+   */
+  async getCompanyGroupPreference(dataKey: string): Promise<any> {
+    let preferences: CompanyGroupPreference[] = [];
+
+    const cacheKey = OliveCacheService.cacheKeys.companyGroupPreferenceCacheKey + this.queryParams.CompanyGroupId;
+
+    const unlock = await this.companyGroupPreferencesMutex.lock();
+    if (!this.exist(cacheKey)) {
+      try {
+        const response = await this.companyGroupPreferenceService.getItems(null).toPromise();
+        preferences = this.set(cacheKey, response.model, this.ONE_DAY_AGE);
+      }
+      catch (error) {
+        this.messageHelper.showLoadFailedSticky(error);
+      }
+    }
+    else {
+      preferences = this.get(cacheKey);
+    }
+    unlock();
+
+    const preference = preferences.find(x => x.dataKey === dataKey);
+
+    return preference ? JSON.parse(preference.data) : null;
   }
 
   async getChunkItems(key: string): Promise<any> {
@@ -254,7 +358,7 @@ export class OliveCacheService {
         items = this.set(cacheKey, response.model);
       }
       catch (error) {
-        this.messageHelper.showLoadFaildSticky(error);
+        this.messageHelper.showLoadFailedSticky(error);
       }
     }
     else {
@@ -289,7 +393,7 @@ export class OliveCacheService {
         });
       }
       catch (error) {
-        this.messageHelper.showLoadFaildSticky(error);
+        this.messageHelper.showLoadFailedSticky(error);
       }
     }
 
@@ -330,10 +434,15 @@ export class OliveCacheService {
   }
 
   get keyWarehouseCheckboxes(): string {
-    return OliveCacheService.cacheKeys.userConfig.warehouseCheckboxes + this.queryParams.CompanyGroupId;
+    return OliveCacheService.cacheKeys.userPreference.warehouseCheckboxes + this.queryParams.CompanyGroupId;
   }
 
   get keyLastSelectedPaymentMethodId(): string {
-    return OliveCacheService.cacheKeys.userConfig.lastSelectedPaymentMethodId + this.queryParams.CompanyGroupId;
+    return OliveCacheService.cacheKeys.userPreference.lastSelectedPaymentMethodId + this.queryParams.CompanyGroupId;
+  }
+
+  keyShippingLabelShippers(warehouseId: number): string {
+    return OliveCacheService.cacheKeys.companyGroupPreference.shippingLabelShippers + 
+      this.queryParams.CompanyGroupId + '-' + warehouseId;
   }
 }

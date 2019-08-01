@@ -39,7 +39,7 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
   items: any;
 
   loadingIndicator: boolean;
-  searhKeyword = '';
+  searchKeyword = '';
 
   selectedItems: any = [];
 
@@ -62,12 +62,12 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     protected formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<OliveLookupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public setting: LookupListerSetting,
-    translater: FuseTranslationLoaderService,
+    translator: FuseTranslationLoaderService,
     protected alertService: AlertService,
     protected messageHelper: OliveMessageHelperService,
     protected deviceService: DeviceDetectorService
   ) {
-    super(translater);
+    super(translator);
     this.initializeComponent();
   }
 
@@ -119,7 +119,7 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
               this.alertService.stopLoadingMessage();
               this.loadingIndicator = false;
 
-              this.messageHelper.showLoadFaildSticky(error);
+              this.messageHelper.showLoadFailedSticky(error);
             });
       },
       columns: this.tableColumns,

@@ -13,9 +13,9 @@ import { Branch } from '../../../models/branch.model';
 })
 export class OliveBranchEditorComponent extends OliveEntityFormComponent {
 
-  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
+  constructor(formBuilder: FormBuilder, translator: FuseTranslationLoaderService) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 

@@ -12,7 +12,7 @@ import { Permission } from '@quick/models/permission.model';
 import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { PurchaseOrderItem } from '../../../models/purchase-order-item.model';
 import { PaymentMethod } from 'app/main/supports/models/payment-method.model';
-import { OlivePurchaseOrderItemDatasource } from './purchase-order-item-datasource';
+import { OlivePurchaseOrderItemDataSource } from './purchase-order-item-data-source';
 import { NavIcons } from 'app/core/navigations/nav-icons';
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
@@ -50,7 +50,7 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 })
 export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
   displayedColumns = ['productVariantId', 'name', 'quantity', 'price', 'amount', 'discount', 'appliedCost', 'otherCurrencyPrice', 'remark', 'actions'];
-  dataSource: OlivePurchaseOrderItemDatasource = new OlivePurchaseOrderItemDatasource(this.cacheService);
+  dataSource: OlivePurchaseOrderItemDataSource = new OlivePurchaseOrderItemDataSource(this.cacheService);
   paymentMethods: PaymentMethod[];
 
   parentItem: PurchaseOrder;
@@ -61,14 +61,14 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   @Output() paymentAmountChanged = new EventEmitter();
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private snackBar: MatSnackBar, private dialog: MatDialog,
     private messageHelperService: OliveMessageHelperService, private cacheService: OliveCacheService,
     private productVariantService: OliveProductVariantService, private purchaseOrderService: OlivePurchaseOrderService,
 
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -181,7 +181,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   buildForm() {
     this.oFormArray = this.formBuilder.array([]);
     this.oForm = this.formBuilder.group({ 
-      formarray: this.oFormArray,
+      formArray: this.oFormArray,
       addedDiscountAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
       freightAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]],
       taxAmount: ['', [numberValidator(this.standCurrency.decimalPoint, true)]]
@@ -208,8 +208,8 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   private deleteItem(item: any) {
     if (item.Obj.id || item.Obj.name || item.Obj.quantity || item.Obj.price || item.Obj.remark) {
       this.snackBar.open(
-        OliveUtilities.showParamMessage(this.translater.get('common.message.confirmDelete')),
-        this.translater.get('common.button.delete'),
+        OliveUtilities.showParamMessage(this.translator.get('common.message.confirmDelete')),
+        this.translator.get('common.button.delete'),
         { duration: 5000 }
       )
         .onAction().subscribe(() => {
@@ -242,7 +242,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
         data: {
           name: 'ProductVariant',
           columnType: 'id',
-          dialogTitle: this.translater.get(NavTranslates.Product.productVariant),
+          dialogTitle: this.translator.get(NavTranslates.Product.productVariant),
           dataService: this.productVariantService,
           maxSelectItems: 10,
           newComponent: OliveProductVariantManagerComponent,
@@ -257,14 +257,14 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       if (!pvItems || pvItems.length === 0) { return; }
 
       const duplicatedIdStrings: string[] = [];
-      const dupProductVariantIdCheckset = new Set();
+      const dupProductVariantIdCheckSet = new Set();
 
       this.dataSource.items.forEach((dsItem: PurchaseOrderItem) => {
         pvItems
           .filter((pvItem: ProductVariant) => dsItem.productVariantId === pvItem.id)
           .forEach((pvItem: ProductVariant) => {
-            if (!dupProductVariantIdCheckset.has(pvItem.id)) {
-              dupProductVariantIdCheckset.add(pvItem.id);
+            if (!dupProductVariantIdCheckSet.has(pvItem.id)) {
+              dupProductVariantIdCheckSet.add(pvItem.id);
               duplicatedIdStrings.push(
                 `${this.id36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trimRight());
             }
@@ -274,7 +274,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       let needToRender = false;
 
       pvItems
-        .filter((pvItem: ProductVariant) => !dupProductVariantIdCheckset.has(pvItem.id))
+        .filter((pvItem: ProductVariant) => !dupProductVariantIdCheckSet.has(pvItem.id))
         .forEach((pvItem: ProductVariant) => {
           this.dataSource.addNewItem({
             price: pvItem.standPrice,
@@ -306,7 +306,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
         data: {
           name: 'PurchaseOrder',
           columnType: 'custom',
-          dialogTitle: this.translater.get(NavTranslates.Purchase.list),
+          dialogTitle: this.translator.get(NavTranslates.Purchase.list),
           dataService: this.purchaseOrderService,
           maxSelectItems: 10,
           newComponent: OlivePurchaseOrderManagerComponent,
@@ -322,15 +322,15 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       if (!pItems || pItems.length === 0) { return; }
 
       const duplicatedIdStrings: string[] = [];
-      const dupPOItemIdCheckset = new Set();
+      const dupPOItemIdCheckSet = new Set();
 
       this.dataSource.items.forEach((dsItem: PurchaseOrderItem) => {
         pItems.forEach((fItem: PurchaseOrder) => {
           fItem.purchaseOrderItems
             .filter((sItem: PurchaseOrderItem) => dsItem.productVariantId === sItem.productVariantId)
             .forEach((sItem: PurchaseOrderItem) => {
-              if (!dupPOItemIdCheckset.has(sItem.id)) {
-                dupPOItemIdCheckset.add(sItem.productVariantId);
+              if (!dupPOItemIdCheckSet.has(sItem.id)) {
+                dupPOItemIdCheckSet.add(sItem.productVariantId);
                 duplicatedIdStrings.push(`${this.id36(sItem.id)}: ${sItem.name}`);
               }
             });
@@ -342,7 +342,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
       pItems
         .forEach((fItem: PurchaseOrder) => {
           fItem.purchaseOrderItems
-            .filter((sItem: PurchaseOrderItem) => !dupPOItemIdCheckset.has(sItem.productVariantId))
+            .filter((sItem: PurchaseOrderItem) => !dupPOItemIdCheckSet.has(sItem.productVariantId))
             .forEach((sItem: PurchaseOrderItem) => {
               this.dataSource.addNewItem({
                 price: sItem.price,

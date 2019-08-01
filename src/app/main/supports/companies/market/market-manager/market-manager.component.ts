@@ -23,13 +23,13 @@ export class OliveMarketManagerComponent extends OliveEntityEditComponent {
   private marketEditor: OliveMarketEditorComponent;
 
   constructor(
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService,  
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
     dataService: OliveMarketService
   ) {
     super(
-      translater, alertService,
+      translator, alertService,
       accountService, messageHelper, 
       snackBar, formBuilder,  
       dataService

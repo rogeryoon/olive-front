@@ -38,10 +38,10 @@ export class OliveOrderShipOutPackageListerComponent extends OliveEntityFormComp
   private pendingOrderPackageList: OlivePendingOrderShipOutPackageListComponent;  
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 

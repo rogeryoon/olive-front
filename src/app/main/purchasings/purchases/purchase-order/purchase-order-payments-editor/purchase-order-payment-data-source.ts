@@ -1,25 +1,25 @@
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.model';
-import { TableDatasource } from 'app/core/classes/table-datasource';
+import { TableDataSource } from 'app/core/classes/table-data-source';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator } from 'app/core/classes/validators';
-export class OlivePurchaseOrderPaymentDatasource extends TableDatasource {
+export class OlivePurchaseOrderPaymentDataSource extends TableDataSource {
     constructor(cacheService: OliveCacheService) { 
         super(cacheService); 
     }
 
     createRowFormGroup(r: any): FormGroup {
         const f = new FormGroup({
-            paymentMethodId: this.createNewFormContorl(r, 'paymentMethodId', [Validators.required]),
-            amount: this.createNewFormContorl(r, 'amount', [numberValidator(this.standCurrency.decimalPoint, true)]),
-            remarkId: this.createNewFormContorl(r, 'remarkId', [])
+            paymentMethodId: this.createNewFormControl(r, 'paymentMethodId', [Validators.required]),
+            amount: this.createNewFormControl(r, 'amount', [numberValidator(this.standCurrency.decimalPoint, true)]),
+            remarkId: this.createNewFormControl(r, 'remarkId', [])
         });
         return f;
     }
 
-    createNewFormContorl(r: any, propName: string, validators: any[]): FormControl {
-        const m = super.createNewFormContorl(r, propName, validators);
+    createNewFormControl(r: any, propName: string, validators: any[]): FormControl {
+        const m = super.createNewFormControl(r, propName, validators);
         if (r.Obj.paymentMethodId && propName === 'paymentMethodId') { m.setValue(r.Obj.paymentMethodId); }
         return m;
     }

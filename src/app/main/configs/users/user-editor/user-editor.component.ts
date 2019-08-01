@@ -107,11 +107,11 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
   }
 
   constructor(
-    private alertService: AlertService, translater: FuseTranslationLoaderService,
+    private alertService: AlertService, translator: FuseTranslationLoaderService,
     private accountService: AccountService, private formBuilder: FormBuilder,
     private dialog: MatDialog, private companyGroupService: OliveCompanyGroupService
   ) {
-    super(translater);
+    super(translator);
     this.buildForm();
   }
 
@@ -255,7 +255,7 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
   lookUpCompanyGroup() {
     const setting = {
       columnType: 'id',
-      dialogTitle: this.translater.get(NavTranslates.Company.groupList),
+      dialogTitle: this.translator.get(NavTranslates.Company.groupList),
       dataService: this.companyGroupService,
       maxSelectItems: 1,
       itemType: CompanyGroup
@@ -317,7 +317,7 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
   private saveFailed(error: any) {
     this.isSaving = false;
     this.alertService.stopLoadingMessage();
-    this.alertService.showStickyMessage('Save Error', 'One or more errors occured whilst saving your changes:', MessageSeverity.error, error);
+    this.alertService.showStickyMessage('Save Error', 'One or more errors occurred whilst saving your changes:', MessageSeverity.error, error);
     this.alertService.showStickyMessage(error, null, MessageSeverity.error);
   }
 
@@ -364,7 +364,7 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
         error => {
           this.isSaving = false;
           this.alertService.stopLoadingMessage();
-          this.alertService.showStickyMessage('Unblock Error', 'The below errors occured whilst unlocking the user:', MessageSeverity.error, error);
+          this.alertService.showStickyMessage('Unblock Error', 'The below errors occurred whilst unlocking the user:', MessageSeverity.error, error);
           this.alertService.showStickyMessage(error, null, MessageSeverity.error);
         });
   }

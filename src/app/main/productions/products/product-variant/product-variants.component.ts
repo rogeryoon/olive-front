@@ -35,13 +35,13 @@ const CreatedUtc = 'createdUtc';
 })
 export class OliveProductVariantsComponent extends OliveEntityListComponent {
   constructor(
-    translater: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
+    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OliveProductVariantService
   ) {
       super(
-        translater, deviceService,
+        translator, deviceService,
         alertService, accountService,
         messageHelper, documentService, 
         dialog, dataService
@@ -55,12 +55,12 @@ export class OliveProductVariantsComponent extends OliveEntityListComponent {
       managePermission: null,
       columns: [
         { data: Selected },
-        { data: Id, thName: this.translater.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
-        { data: Code, thName: this.translater.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
-        { data: GroupName, thName: this.translater.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
-        { data: Name, thName: this.translater.get('common.tableHeader.type'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
-        { data: StandPrice, thName: this.translater.get('common.tableHeader.standPrice'), tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
-        { data: CreatedUtc, thName: this.translater.get('common.tableHeader.createdUtc'), tdClass: '', thClass: '' }
+        { data: Id, thName: this.translator.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
+        { data: Code, thName: this.translator.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: GroupName, thName: this.translator.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-80' },
+        { data: Name, thName: this.translator.get('common.tableHeader.type'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-30' },
+        { data: StandPrice, thName: this.translator.get('common.tableHeader.standPrice'), tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
+        { data: CreatedUtc, thName: this.translator.get('common.tableHeader.createdUtc'), tdClass: '', thClass: '' }
       ],
       editComponent: OliveProductVariantManagerComponent,
       searchComponent: OliveSearchProductVariantComponent,

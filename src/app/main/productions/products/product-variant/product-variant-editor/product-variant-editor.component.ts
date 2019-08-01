@@ -27,16 +27,16 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
   lookupProduct: OliveLookupHostComponent;
 
   weightTypes: any[] = OliveConstants.weightTypes;
-  lenghtTypes: any[] = OliveConstants.lengthTypes;
+  lengthTypes: any[] = OliveConstants.lengthTypes;
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private accountService: AccountService, private productService: OliveProductService,
     private cacheService: OliveCacheService
   ) 
   {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -118,7 +118,7 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
 
     this.lookupProduct.setting = {
       columnType: 'id',
-      dialogTitle: this.translater.get(NavTranslates.Product.productGroup),
+      dialogTitle: this.translator.get(NavTranslates.Product.productGroup),
       dataService: this.productService,
       maxSelectItems: 1,
       newComponent: OliveProductManagerComponent,

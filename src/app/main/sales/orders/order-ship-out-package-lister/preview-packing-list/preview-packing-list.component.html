@@ -1,0 +1,341 @@
+<style>
+    @import "https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700";
+
+    olivestyle,
+    html,
+    body,
+    div,
+    span,
+    applet,
+    object,
+    iframe,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    blockquote,
+    pre,
+    a,
+    abbr,
+    acronym,
+    address,
+    big,
+    cite,
+    code,
+    del,
+    dfn,
+    em,
+    img,
+    ins,
+    kbd,
+    q,
+    s,
+    samp,
+    small,
+    strike,
+    strong,
+    sub,
+    sup,
+    tt,
+    var,
+    b,
+    u,
+    i,
+    center,
+    dl,
+    dt,
+    dd,
+    ol,
+    ul,
+    li,
+    fieldset,
+    form,
+    label,
+    legend,
+    table,
+    caption,
+    tbody,
+    tfoot,
+    thead,
+    tr,
+    th,
+    td,
+    article,
+    aside,
+    canvas,
+    details,
+    embed,
+    figure,
+    figcaption,
+    footer,
+    header,
+    hgroup,
+    menu,
+    nav,
+    output,
+    ruby,
+    section,
+    total,
+    time,
+    mark,
+    audio,
+    video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline
+    }
+
+    article,
+    aside,
+    details,
+    figcaption,
+    figure,
+    footer,
+    header,
+    hgroup,
+    menu,
+    nav,
+    section {
+        display: block
+    }
+
+    body {
+        line-height: 1
+    }
+
+    ol,
+    ul {
+        list-style: none
+    }
+
+    blockquote,
+    q {
+        quotes: none
+    }
+
+    blockquote:before,
+    blockquote:after,
+    q:before,
+    q:after {
+        content: '';
+        content: none
+    }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0
+    }
+
+    body {
+        height: 840px;
+        width: 592px;
+        margin: auto;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 12px
+    }
+
+    strong {
+        font-weight: 700
+    }
+
+    #olive-container {
+        position: relative;
+        padding: 10px;
+    }
+
+    table tr td,
+    table tr th {
+        vertical-align: middle;
+    }
+
+    #items {
+        margin-top: 15px
+    }
+
+    #items>p {
+        font-weight: 700;
+        text-align: right;
+        margin-bottom: 1%;
+        font-size: 65%
+    }
+
+    #items>table {
+        width: 100%;
+        font-size: 85%;
+        border: solid grey 1px
+    }
+
+    #items>table th {
+        font-weight: 400;
+        text-align: center;
+    }
+
+    #items>table th:nth-child(1),
+    #items>table th:nth-child(3) {
+        width: 45px
+    }
+
+    #items>table th:nth-child(4) {
+        width: 100px
+    }
+
+    #items>table tr:nth-child(even) {
+        background-color: #F5F5F5;
+    }
+
+    #items>table td:nth-child(1),
+    #items>table td:nth-child(3) {
+        text-align: center;
+    }
+
+    #items>table td:nth-child(3) {
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+
+    #items>table td:nth-child(2) {
+        text-align: justify;
+        font-size: 1em;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    #items table td {
+        border-right: solid grey 1px;
+        border-bottom: solid grey 1px
+    }
+
+    #items table tr td,
+    #items table tr th {
+        padding: 6px 4px 6px 4px;
+    }
+
+    #items table tr {
+        border: solid grey 1px
+    }
+
+    #items table tr th {
+        border-right: solid grey 1px;
+    }
+
+    #items table tr:nth-child(2)>td {
+        padding-top: 8px
+    }
+
+    #top>table {
+        width: 100%;
+    }
+
+    .title-top {
+        font-size: 24px;
+        text-align: center;
+        text-transform: uppercase;
+        width: 30%
+    }
+
+    .left-top,
+    .right-top {
+        width: 35%
+    }
+
+    .left-top {
+        text-align: left;
+    }
+
+    .right-top {
+        text-align: right;
+    }
+
+    .left-top span,
+    .right-top span {
+        padding-left: 10px;
+        font-size:4em;
+        font-weight: bold;
+    }
+
+    #lable>table {
+        margin-top: 20px;
+        width: 100%;
+        border: solid grey 1px
+    }
+
+    #lable>table td:nth-child(1) {
+        text-align: center;
+    }
+
+    #lable>table td h1 {
+        font-size: 2em;
+        font-weight: bold;
+    }
+
+    #lable>table td:nth-child(2) {
+        padding-top: 10px;
+        width: 220px;
+        text-align: center;
+    }
+
+    @media print {
+        #page {
+            page-break-after: always;
+        }
+    }
+</style>
+
+<div id="olive-container">
+    <div id="page" *ngFor="let box of packages">
+        <div id="top">
+            <table>
+                <tr>
+                    <td class="left-top">&nbsp;</td>
+                    <td class="title-top">Packing List</td>
+                    <td class="right-top">Items<span>{{boxItemCount(box)}}</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="items">
+            <table id="olive-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Remark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of getItems(box)">
+                        <td>{{id36(item.productVariantId)}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{commaNumber(item.quantity)}}</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="lable">
+            <table>
+                <tr>
+                    <td>
+                        <h1>{{box.deliveryTagFk.consigneeName}}</h1>
+                        <p>{{getAddress(box.deliveryAddressFk)}}</p>
+                    </td>
+                    <td>
+                        <ngx-barcode [bc-element-type]="'svg'" [bc-value]="'X-'+id36(box.id)" [bc-format]="'CODE128'"
+                            [bc-line-color]="'#000000'" [bc-width]="2" [bc-height]="70" [bc-display-value]="true"
+                            [bc-font]="'monospace'" [bc-text-align]="'center'" [bc-text-position]="'bottom'"
+                            [bc-text-margin]="2" [bc-font-size]="20" [bc-background]="'#ffffff'" [bc-margin]="10"
+                            [bc-margin-top]="10" [bc-margin-bottom]="10" [bc-margin-left]="10" [bc-margin-right]="10">
+                        </ngx-barcode>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

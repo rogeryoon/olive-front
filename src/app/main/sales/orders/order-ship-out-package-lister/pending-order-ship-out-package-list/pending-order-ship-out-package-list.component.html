@@ -11,33 +11,33 @@
                             {{'common.button.cancelShipOut' | translate}}{{remarkSelectedPackages}}
                         </button>
                         <button [disabled]="!selectedPackages.length || isloading" mat-raised-button color="basic"
-                            class="ml-4" (click)="finshiShipOutPackage()">
+                            class="ml-4" (click)="finishShipOutPackage()">
                             <mat-icon>local_shipping</mat-icon>
                             {{'common.button.finishShipOutPackage' | translate}}
                         </button>
-                        <button [matMenuTriggerFor]="misc" [disabled]="isloading" mat-raised-button class="right ml-4"
+                        <button [disabled]="!selectedPackages.length || isloading" [matMenuTriggerFor]="misc" [disabled]="isloading" mat-raised-button class="right ml-4"
                             matTooltip="{{'common.button.misc' | translate}}">
                             <mat-icon>dialpad</mat-icon>
                         </button>
 
                         <mat-menu #misc="matMenu">
-                            <button mat-menu-item (click)="printPickingList()">
+                            <button [disabled]="!selectedPackages.length || isloading" mat-menu-item (click)="printPickingList()">
                                 <mat-icon>gavel</mat-icon>
                                 {{'common.button.printPickingList' | translate}}
                             </button>                            
-                            <button mat-menu-item (click)="printPackingList()">
-                                <mat-icon>list</mat-icon>
+                            <button [disabled]="!selectedPackages.length || isloading" mat-menu-item (click)="printPackingList()">
+                                <mat-icon>subject</mat-icon>
                                 {{'common.button.printPackingList' | translate}}
                             </button>
-                            <button mat-menu-item (click)="printShippingLable()">
+                            <button [disabled]="!selectedPackages.length || isloading" mat-menu-item (click)="printShippingLabel()">
                                 <mat-icon>label</mat-icon>
-                                {{'common.button.printShippingLable' | translate}}                                
+                                {{'common.button.printShippingLabel' | translate}}                                
                             </button>
-                            <button mat-menu-item (click)="exportForTrackingNumberUpdate()">
+                            <button [disabled]="!selectedPackages.length || isloading" mat-menu-item (click)="exportForTrackingNumberUpdate()">
                                 <mat-icon>view_list</mat-icon>
                                 {{'common.button.exportForTrackingNumberUpdate' | translate}}                                
                             </button>
-                            <button mat-menu-item (click)="exportForLogistic()">
+                            <button [disabled]="!selectedPackages.length || isloading" mat-menu-item (click)="exportForLogistic()">
                                 <mat-icon>toc</mat-icon>
                                 {{'common.button.exportForLogistic' | translate}}                                
                             </button>

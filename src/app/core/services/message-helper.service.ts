@@ -15,7 +15,7 @@ import { OliveBackEndErrors } from '../classes/back-end-errors';
 export class OliveMessageHelperService {
 
   constructor(
-    private translater: FuseTranslationLoaderService,
+    private translator: FuseTranslationLoaderService,
     private alertService: AlertService
   ) 
   { 
@@ -25,10 +25,10 @@ export class OliveMessageHelperService {
     this.alertService.stopLoadingMessage();
 
     this.alertService.showMessage(
-      this.translater.get('common.title.success'),
+      this.translator.get('common.title.success'),
       Utilities.TestIsUndefined(itemName) ?
-        this.translater.get('common.message.deletedGeneral') :
-        String.Format(this.translater.get('common.message.deleted'), itemName), 
+        this.translator.get('common.message.deletedGeneral') :
+        String.Format(this.translator.get('common.message.deleted'), itemName), 
       MessageSeverity.success
     );
   }
@@ -38,19 +38,19 @@ export class OliveMessageHelperService {
 
     if (isNewItem) {
       this.alertService.showMessage(
-        this.translater.get('common.title.success'),
+        this.translator.get('common.title.success'),
         Utilities.TestIsUndefined(itemName) || itemName.length === 0 ? 
-          this.translater.get('common.message.newItemCreatedGeneral') :
-          String.Format(this.translater.get('common.message.newItemCreated'), itemName), 
+          this.translator.get('common.message.newItemCreatedGeneral') :
+          String.Format(this.translator.get('common.message.newItemCreated'), itemName), 
         MessageSeverity.success
       );
     }
     else {
       this.alertService.showMessage(
-        this.translater.get('common.title.success'),
+        this.translator.get('common.title.success'),
         Utilities.TestIsUndefined(itemName) || itemName.length === 0 ? 
-          this.translater.get('common.message.updatedGeneral') :
-          String.Format(this.translater.get('common.message.updated'), itemName), 
+          this.translator.get('common.message.updatedGeneral') :
+          String.Format(this.translator.get('common.message.updated'), itemName), 
           MessageSeverity.success
       );
     }
@@ -59,8 +59,8 @@ export class OliveMessageHelperService {
   showSavedUploadSuccess() {
     this.alertService.stopLoadingMessage();
 
-    this.alertService.showMessage(this.translater.get('common.title.success'),
-      this.translater.get('common.message.uploadSaved'), MessageSeverity.success);
+    this.alertService.showMessage(this.translator.get('common.title.success'),
+      this.translator.get('common.message.uploadSaved'), MessageSeverity.success);
   }
 
   translateError(error: any, isDelete: boolean = false) {
@@ -68,8 +68,8 @@ export class OliveMessageHelperService {
 
     if (typeof error === 'string' && error.indexOf('session expired') !== -1)
     {
-      errorMessage.title = this.translater.get('common.title.sessionExpired');
-      errorMessage.message = this.translater.get('common.message.sessionExpired');
+      errorMessage.title = this.translator.get('common.title.sessionExpired');
+      errorMessage.message = this.translator.get('common.message.sessionExpired');
       errorMessage.messageSeverity = MessageSeverity.info;
     }
     else 
@@ -77,14 +77,14 @@ export class OliveMessageHelperService {
       const concurrencyError = OliveBackEndErrors.concurrencyError;
       switch (error.error.errorCode) {
         case concurrencyError:
-          errorMessage.message = this.translater.get(isDelete ? 'common.entryError.deleteByConcurrency' : 'common.entryError.concurrency');
+          errorMessage.message = this.translator.get(isDelete ? 'common.entryError.deleteByConcurrency' : 'common.entryError.concurrency');
           errorMessage.messageSeverity = MessageSeverity.error;        
           break;
 
         default:
           if (error.error.errorCode.includes(concurrencyError)) {
             const duplicatedKey = error.error.errorCode.replace(concurrencyError + '-', '');
-            errorMessage.message = String.Format(this.translater.get('common.entryError.concurrencyKeyName'), duplicatedKey);
+            errorMessage.message = String.Format(this.translator.get('common.entryError.concurrencyKeyName'), duplicatedKey);
           }
           errorMessage.messageSeverity = MessageSeverity.error;        
           break;
@@ -94,15 +94,15 @@ export class OliveMessageHelperService {
     return errorMessage;
   }
 
-  showLoadFaildSticky(error: any) {
+  showLoadFailedSticky(error: any) {
     const errorMessage = this.translateError(error);
 
     if (errorMessage.title == null) {
-      errorMessage.title = this.translater.get('common.title.loadError');
+      errorMessage.title = this.translator.get('common.title.loadError');
     }
 
     if (errorMessage.messageSeverity == null) {
-      errorMessage.message = this.translater.get('common.message.errorLoading');
+      errorMessage.message = this.translator.get('common.message.errorLoading');
       errorMessage.messageSeverity = MessageSeverity.error;
     }
 
@@ -120,11 +120,11 @@ export class OliveMessageHelperService {
     const errorMessage = this.translateError(error, isDelete);
 
     if (errorMessage.title == null) {
-      errorMessage.title = this.translater.get(isDelete ? 'common.title.deleteError' : 'common.title.saveError');
+      errorMessage.title = this.translator.get(isDelete ? 'common.title.deleteError' : 'common.title.saveError');
     }    
 
     if (errorMessage.messageSeverity == null) {
-      errorMessage.message = this.translater.get(isDelete ? 'common.message.errorDeleteting' : 'common.message.saveError');
+      errorMessage.message = this.translator.get(isDelete ? 'common.message.errorDeleting' : 'common.message.saveError');
       errorMessage.messageSeverity = MessageSeverity.error;
     }
 
@@ -140,8 +140,8 @@ export class OliveMessageHelperService {
     if (itemStrings.length === 0) { return; }
 
     this.alertService.showMessage(
-      this.translater.get('common.title.duplicated'),
-      String.Format(this.translater.get('common.message.duplicated'), itemStrings.join()),
+      this.translator.get('common.title.duplicated'),
+      String.Format(this.translator.get('common.message.duplicated'), itemStrings.join()),
       MessageSeverity.warn
     );
   }

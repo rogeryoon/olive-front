@@ -23,13 +23,13 @@ export class OliveCompanyEditorComponent extends OliveEntityFormComponent {
   lookupCompanyGroup: OliveLookupHostComponent;
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private accountService: AccountService,
     private companyGroupService: OliveCompanyGroupService
   ) 
   {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -87,7 +87,7 @@ export class OliveCompanyEditorComponent extends OliveEntityFormComponent {
   initializeChildComponent() {
     this.lookupCompanyGroup.setting = {
       columnType: 'id',
-      dialogTitle: this.translater.get(NavTranslates.Company.list),
+      dialogTitle: this.translator.get(NavTranslates.Company.list),
       dataService: this.companyGroupService,
       maxSelectItems: 1,
       newComponent: OliveCompanyGroupManagerComponent,

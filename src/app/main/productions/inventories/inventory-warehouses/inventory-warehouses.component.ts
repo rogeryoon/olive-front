@@ -37,14 +37,14 @@ export class OliveInventoryWarehousesComponent extends OliveEntityListComponent 
   warehouses: Warehouse[] = [];
 
   constructor(
-    translater: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
+    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OliveInventoryService,
     private route: ActivatedRoute
   ) {
     super(
-      translater, deviceService,
+      translator, deviceService,
       alertService, accountService,
       messageHelper, documentService,
       dialog, dataService
@@ -73,13 +73,13 @@ export class OliveInventoryWarehousesComponent extends OliveEntityListComponent 
         // 1
         { data: Selected },
         // 2
-        { data: Id, orderable: true, thName: this.translater.get('common.word.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
+        { data: Id, orderable: true, thName: this.translator.get('common.word.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: ProductName, thName: this.translater.get('common.word.productName'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
+        { data: ProductName, thName: this.translator.get('common.word.productName'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         // 4
-        { data: VariantName, thName: this.translater.get('common.word.productType'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: VariantName, thName: this.translator.get('common.word.productType'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 5
-        { data: TotalQuantity, thName: this.translater.get('common.word.quantity'), tdClass: 'print -ex-type-number', thClass: 'print' }
+        { data: TotalQuantity, thName: this.translator.get('common.word.quantity'), tdClass: 'print -ex-type-number', thClass: 'print' }
     ];
 
     this.warehouses.forEach(warehouse => {
@@ -94,7 +94,7 @@ export class OliveInventoryWarehousesComponent extends OliveEntityListComponent 
       // 1
       { value: '', colSpan: 3 },
       // 2
-      { value: this.translater.get('common.tableHeader.dueAmount'), style: OliveConstants.style.footerCell },
+      { value: this.translator.get('common.tableHeader.dueAmount'), style: OliveConstants.style.footerCell },
       // 3
       { id: TotalQuantity, style: OliveConstants.style.footerCell }
     ];

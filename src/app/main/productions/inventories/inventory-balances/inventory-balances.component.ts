@@ -37,14 +37,14 @@ export class OliveInventoryBalancesComponent extends OliveEntityListComponent {
   warehouseColumns: any[] = [];
 
   constructor(
-    translater: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
+    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OliveInventoryService,
     private cacheService: OliveCacheService
   ) {
     super(
-      translater, deviceService,
+      translator, deviceService,
       alertService, accountService,
       messageHelper, documentService,
       dialog, dataService
@@ -65,26 +65,26 @@ export class OliveInventoryBalancesComponent extends OliveEntityListComponent {
         // 1
         { data: Selected },
         // 2
-        { data: Id, thName: this.translater.get('common.word.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
+        { data: Id, thName: this.translator.get('common.word.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: ProductName, thName: this.translater.get('common.word.productName'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
+        { data: ProductName, thName: this.translator.get('common.word.productName'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         // 4
-        { data: VariantName, thName: this.translater.get('common.word.productType'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: VariantName, thName: this.translator.get('common.word.productType'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 5
-        { data: TotalQuantity, thName: this.translater.get('common.word.quantity'), tdClass: 'print -ex-type-number', thClass: 'print' },
+        { data: TotalQuantity, thName: this.translator.get('common.word.quantity'), tdClass: 'print -ex-type-number', thClass: 'print' },
         // 6
-        { data: InTransitQuantity, thName: this.translater.get('production.inventoryBalances.inTransitQuantity'), tdClass: 'print -ex-type-number', thClass: 'print' },
+        { data: InTransitQuantity, thName: this.translator.get('production.inventoryBalances.inTransitQuantity'), tdClass: 'print -ex-type-number', thClass: 'print' },
         // 7
-        { data: StandPrice, thName: this.translater.get('common.word.price'), tdClass: 'print right -ex-type-number', thClass: 'print' },
+        { data: StandPrice, thName: this.translator.get('common.word.price'), tdClass: 'print right -ex-type-number', thClass: 'print' },
         // 8
-        { data: PriceDue, thName: this.translater.get('common.word.dueAmount'), tdClass: 'print right -ex-type-number', thClass: 'print' }
+        { data: PriceDue, thName: this.translator.get('common.word.dueAmount'), tdClass: 'print right -ex-type-number', thClass: 'print' }
       ],
       itemType: InventoryBalance,
       footerColumns: [
         // 1
         { value: '', colSpan: 3 },
         // 2
-        { value: this.translater.get('common.tableHeader.dueAmount'), style: OliveConstants.style.footerCell },
+        { value: this.translator.get('common.tableHeader.dueAmount'), style: OliveConstants.style.footerCell },
         // 3
         { id: TotalQuantity, style: OliveConstants.style.footerCell },
         // 4

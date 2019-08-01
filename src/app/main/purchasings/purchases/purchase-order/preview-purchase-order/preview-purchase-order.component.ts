@@ -23,11 +23,15 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
   warehouseHtml: string;
 
   constructor(
-    translater: FuseTranslationLoaderService, private cacheService: OliveCacheService,
+    translator: FuseTranslationLoaderService, private cacheService: OliveCacheService,
     private companyService: OliveCompanyService, private documentService: OliveDocumentService,
     private branchService: OliveBranchService
   ) {
-    super(translater);
+    super(translator);
+  }
+
+  set data(value: any) {
+    this.order = value.item;
   }
 
   ngOnInit() {
@@ -67,10 +71,6 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
     }
 
     this.companyHtml += '<p>' + values.join('<br>') + '</p>';
-  }
-
-  set data(value: any) {
-    this.order = value.item;
   }
 
   get subTotal(): number {
@@ -158,13 +158,13 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
     const wfk = this.order.warehouseFk;
     summaries.push(`Warehouse : ${wfk.name} [${wfk.code}]`);
 
-    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.subTotal')} : ${this.numberFormat(this.subTotal, this.digits)}`);
-    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.freight')} : ${this.numberFormat(this.order.freightAmount, this.digits)}`);
-    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.addedDiscount')} : ${this.numberFormat(this.order.addedDiscountAmount * -1, this.digits)}`);
-    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.tax')} : ${this.numberFormat(this.order.taxAmount, this.digits)}`);
-    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.grandTotal')} : ${this.numberFormat(this.grandTotal, this.digits)}`);
+    summaries.push(`${this.translator.get('purchasing.previewPurchaseOrder.subTotal')} : ${this.numberFormat(this.subTotal, this.digits)}`);
+    summaries.push(`${this.translator.get('purchasing.previewPurchaseOrder.freight')} : ${this.numberFormat(this.order.freightAmount, this.digits)}`);
+    summaries.push(`${this.translator.get('purchasing.previewPurchaseOrder.addedDiscount')} : ${this.numberFormat(this.order.addedDiscountAmount * -1, this.digits)}`);
+    summaries.push(`${this.translator.get('purchasing.previewPurchaseOrder.tax')} : ${this.numberFormat(this.order.taxAmount, this.digits)}`);
+    summaries.push(`${this.translator.get('purchasing.previewPurchaseOrder.grandTotal')} : ${this.numberFormat(this.grandTotal, this.digits)}`);
 
-    this.documentService.exportExcel(
+    this.documentService.exportHtmlTableToExcel(
       `PO-${this.id36(this.order.id)}`,
       'olive-table', false,
       summaries

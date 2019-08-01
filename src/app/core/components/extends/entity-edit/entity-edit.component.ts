@@ -51,12 +51,12 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   private inputItem: any = null;
 
   constructor(
-    translater: FuseTranslationLoaderService, protected alertService: AlertService,
+    translator: FuseTranslationLoaderService, protected alertService: AlertService,
     protected accountService: AccountService, protected messageHelper: OliveMessageHelperService,
     protected snackBar: MatSnackBar, protected formBuilder: FormBuilder,
     protected dataService: OliveDataService
   ) {
-    super(translater);
+    super(translator);
     this.initializeComponent();
     this.initializeChildComponent();
   }
@@ -165,14 +165,14 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
         DialogType.confirm,
         () => this.saveData(),
         () => null,
-        this.translater.get('common.button.save'),
-        this.translater.get('common.button.cancel')
+        this.translator.get('common.button.save'),
+        this.translator.get('common.button.cancel')
       );
     }
   }
 
   saveData() {
-    this.alertService.startLoadingMessage(this.translater.get('common.message.savingChanges'));
+    this.alertService.startLoadingMessage(this.translator.get('common.message.savingChanges'));
 
     const editedItem = this.getEditedItem();
 
@@ -217,13 +217,13 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
     const itemToDelete = this.getEditedItem();
 
     this.snackBar.open(
-      OliveUtilities.showParamMessage(this.translater.get('common.message.confirmDelete'), itemToDelete.name),
-      this.translater.get('common.button.delete'),
+      OliveUtilities.showParamMessage(this.translator.get('common.message.confirmDelete'), itemToDelete.name),
+      this.translator.get('common.button.delete'),
       { duration: 5000 }
     )
       .onAction().subscribe(() => {
         this.isDeleting = true;
-        this.alertService.startLoadingMessage(this.translater.get('common.message.deleting'));
+        this.alertService.startLoadingMessage(this.translator.get('common.message.deleting'));
 
         this.dataService.deleteItem(itemToDelete)
           .subscribe(results => {

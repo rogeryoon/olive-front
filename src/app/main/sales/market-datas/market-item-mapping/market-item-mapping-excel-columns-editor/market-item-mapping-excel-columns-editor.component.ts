@@ -1,15 +1,12 @@
 import { Component, forwardRef } from '@angular/core';
-import { FormBuilder, FormArray, FormControl, ValidationErrors, 
+import { FormBuilder, FormControl, ValidationErrors, 
   NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { OlivePaymentMethodService } from 'app/main/supports/services/payment-method.service';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { OliveMarketItemMappingExcelColumnDatasource } from './market-item-mapping-excel-column.datasource';
+import { OliveMarketItemMappingExcelColumnDataSource } from './market-item-mapping-excel-column-data-source';
 import { MarketItemMappingExcelColumn } from '../../../models/market-item-mapping-excel-column.model';
 
 @Component({
@@ -31,16 +28,16 @@ import { MarketItemMappingExcelColumn } from '../../../models/market-item-mappin
 })
 export class OliveMarketItemMappingExcelColumnsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
   displayedColumns = ['name', 'matchValue', 'matchSearch', 'actions'];
-  dataSource: OliveMarketItemMappingExcelColumnDatasource = new OliveMarketItemMappingExcelColumnDatasource(this.cacheService);
+  dataSource: OliveMarketItemMappingExcelColumnDataSource = new OliveMarketItemMappingExcelColumnDataSource(this.cacheService);
 
   value: any = null;  
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private cacheService: OliveCacheService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -53,7 +50,7 @@ export class OliveMarketItemMappingExcelColumnsEditorComponent extends OliveEnti
 
   buildForm() {
     this.oFormArray = this.formBuilder.array([]);
-    this.oForm = this.formBuilder.group({ formarray: this.oFormArray });
+    this.oForm = this.formBuilder.group({ formArray: this.oFormArray });
     this.dataSource.formGroup = this.oForm;
   }
 

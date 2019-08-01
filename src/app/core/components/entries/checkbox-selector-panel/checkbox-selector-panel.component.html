@@ -16,7 +16,7 @@
                 {{'common.title.selectDeselectAll'|translate}}
             </label>
 
-            <label formArrayName="formarray" *ngFor="let item of oFArray.controls; let i = index">
+            <label formArrayName="formArray" *ngFor="let item of oFArray.controls; let i = index">
                 <input type="checkbox" class="margin" [formControlName]="i"
                     [attr.disabled]="loadingIndicator ? true : null">{{items[i].name}}
             </label>

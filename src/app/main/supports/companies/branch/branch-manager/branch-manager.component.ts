@@ -26,13 +26,13 @@ export class OliveBranchManagerComponent extends OliveEntityEditComponent {
   private addressEditorComponent: OliveAddressEditorComponent;
 
   constructor(
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
     dataService: OliveBranchService
   ) {
     super(
-      translater, alertService,
+      translator, alertService,
       accountService, messageHelper, 
       snackBar, formBuilder, 
       dataService

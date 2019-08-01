@@ -23,7 +23,7 @@ export class OliveMarketExcelImportDialogComponent extends OliveImportFileDialog
   sellers: MarketSeller[];
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService, 
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService, 
     documentService: OliveDocumentService, alertService: AlertService, 
     dialogRef: MatDialogRef<OliveImportFileDialogComponent>, 
     @Inject(MAT_DIALOG_DATA) data: {importType: string},
@@ -31,7 +31,7 @@ export class OliveMarketExcelImportDialogComponent extends OliveImportFileDialog
     private messageHelper: OliveMessageHelperService,
   ) { 
     super(
-      formBuilder, translater, 
+      formBuilder, translator, 
       documentService, alertService, 
       dialogRef, data
     );
@@ -67,7 +67,7 @@ export class OliveMarketExcelImportDialogComponent extends OliveImportFileDialog
           this.sellers = res.model;
         },
           error => {
-            this.messageHelper.showLoadFaildSticky(error);
+            this.messageHelper.showLoadFailedSticky(error);
           });
     }
     else {

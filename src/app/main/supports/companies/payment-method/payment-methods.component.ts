@@ -37,13 +37,13 @@ const CreatedUtc = 'createdUtc';
 })
 export class OlivePaymentMethodsComponent extends OliveEntityListComponent {
   constructor(
-    translater: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
+    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OlivePaymentMethodService
   ) {
       super(
-        translater, deviceService,
+        translator, deviceService,
         alertService, accountService,
         messageHelper, documentService, 
         dialog, dataService

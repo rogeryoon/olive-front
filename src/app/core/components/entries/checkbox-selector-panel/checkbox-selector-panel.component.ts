@@ -38,18 +38,18 @@ export class OliveCheckboxSelectorPanelComponent extends OliveEntityFormComponen
   visible = true;
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private cacheService: OliveCacheService
     
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      formarray: this.buildFormArray(),
+      formArray: this.buildFormArray(),
       selectAll: new FormControl(false)
     });
   }
@@ -66,7 +66,7 @@ export class OliveCheckboxSelectorPanelComponent extends OliveEntityFormComponen
 
     this.subscribeChanges();
 
-    this.cacheService.getUserConfig(this.cacheKey)
+    this.cacheService.getUserPreference(this.cacheKey)
       .then((ids: number[]) => {
         if (ids) {
           ids.forEach((id: number) => {
@@ -107,13 +107,13 @@ export class OliveCheckboxSelectorPanelComponent extends OliveEntityFormComponen
     this.loadingIndicator = true;
 
     // Filter out the selected ids
-    this.selectedIds = this.oForm.value.formarray
+    this.selectedIds = this.oForm.value.formArray
       .map((checked, index) => checked ? this.items[index].id : null)
       .filter(value => value !== null);
 
-    this.cacheService.setUserConfig(this.cacheKey, this.selectedIds);
+    this.cacheService.setUserPreference(this.cacheKey, this.selectedIds);
 
-    const selectedItems = this.oForm.value.formarray
+    const selectedItems = this.oForm.value.formArray
     .map((checked, index) => checked ? this.items[index] : null)
     .filter(value => value !== null);
 

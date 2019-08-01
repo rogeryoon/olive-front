@@ -23,11 +23,11 @@ import { InWarehouse } from '../../../models/in-warehouse.model';
 export class OliveInWarehouseEditorPageComponent extends OliveEditPageComponent {
   constructor(
     private route: ActivatedRoute, componentFactoryResolver: ComponentFactoryResolver,
-    translater: FuseTranslationLoaderService, accountService: AccountService,
+    translator: FuseTranslationLoaderService, accountService: AccountService,
     alertService: AlertService, router: Router
   ) {
     super(
-      componentFactoryResolver, translater,
+      componentFactoryResolver, translator,
       accountService, alertService, router
     );
   }

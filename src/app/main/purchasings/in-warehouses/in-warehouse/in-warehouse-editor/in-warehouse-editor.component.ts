@@ -27,11 +27,11 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
   @Output() warehouseChanged = new EventEmitter();
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private warehouseService: OliveWarehouseService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -74,7 +74,7 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
     this.lookupWarehouse.setting = {
       name: 'Warehouse',
       columnType: 'code',
-      dialogTitle: this.translater.get(NavTranslates.Company.warehouse),
+      dialogTitle: this.translator.get(NavTranslates.Company.warehouse),
       dataService: this.warehouseService,
       maxSelectItems: 1,
       newComponent: OliveWarehouseManagerComponent,

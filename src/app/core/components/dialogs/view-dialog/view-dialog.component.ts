@@ -22,12 +22,12 @@ export class OliveViewDialogComponent extends OliveBaseComponent implements OnIn
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
-    translater: FuseTranslationLoaderService,
+    translator: FuseTranslationLoaderService,
     public dialogRef: MatDialogRef<OliveViewDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public setting: OliveDialogSetting,
     private accountService: AccountService
   ) {
-    super(translater);
+    super(translator);
   }
 
   ngOnInit() {

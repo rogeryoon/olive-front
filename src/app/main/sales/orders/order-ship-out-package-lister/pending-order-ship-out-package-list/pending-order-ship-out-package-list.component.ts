@@ -11,12 +11,13 @@ import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveOrderShipOutPackageService } from 'app/main/sales/services/order-ship-out-package.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveOnShare } from 'app/core/interfaces/on-share';
-
-class OrderQuantity {
-  productVariantId: number;
-  expectedQuantity: number;
-  allocatedQuantity: number;
-} 
+import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
+import { OlivePreviewPickingListComponent } from '../preview-picking-list/preview-picking-list.component';
+import { MatDialog } from '@angular/material';
+import { OlivePreviewDialogComponent } from 'app/core/components/dialogs/preview-dialog/preview-dialog.component';
+import { AlertService, DialogType } from '@quick/services/alert.service';
+import { OlivePreviewPackingListComponent } from '../preview-packing-list/preview-packing-list.component';
+import { OliveShipperExcelService } from 'app/main/sales/services/shipper-excel.service';
 
 @Component({
   selector: 'olive-pending-order-ship-out-package-list',
@@ -43,11 +44,13 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   @Output() reload = new EventEmitter<any>();
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
-    private messageHelper: OliveMessageHelperService, private orderShipOutPackageService: OliveOrderShipOutPackageService
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
+    private messageHelper: OliveMessageHelperService, private orderShipOutPackageService: OliveOrderShipOutPackageService,
+    private dialog: MatDialog, private alertService: AlertService,
+    private shipperExcelService: OliveShipperExcelService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -168,26 +171,85 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     this.selectedAll = false;
   }
 
-  // TODO : finshiShipOutPackage
-  finshiShipOutPackage() {
-    console.log('finshiShipOutPackage');
+  /**
+   * 출고 완료 처리 - 최종 확인한 후 백앤드로 전송
+   */
+  finishShipOutPackage() {
+    this.setIsLoading(true);
+    const packageIds: number[] = [];
+    this.selectedPackages.forEach(item => {
+      packageIds.push(item.id);
+    });
 
-    this.selectedAll = false;
+    this.alertService.showDialog(
+      this.translator.get('common.title.finalConfirm'),
+      this.translator.get('sales.pendingOrderShipOutPackageList.finalFinishConfirmMessage'),
+      DialogType.confirm,
+      () => {
+        this.orderShipOutPackageService.finishPackages(packageIds).subscribe(
+          response => {
+            this.setIsLoading(false);
+            this.onPackagesCanceled(response);
+          },
+          error => {
+            this.setIsLoading(false);
+            this.messageHelper.showStickySaveFailed(error, false);
+          }
+        );
+    
+        this.selectedAll = false;
+      },
+      () => null,
+      this.translator.get('common.button.yes'),
+      this.translator.get('common.button.no')
+    );
   }
 
-  // TODO : printPickingList
+  /**
+   * 픽킹 리스트 인쇄
+   */
   printPickingList() {
-    console.log('printPickingList');
+    const dialogSetting = new OliveDialogSetting(
+      OlivePreviewPickingListComponent, 
+      {
+        item: this.selectedPackages,
+        hideExcelButton: true
+      }
+    );
+
+    this.dialog.open(
+      OlivePreviewDialogComponent,
+      {
+        disableClose: false,
+        panelClass: 'mat-dialog-md',
+        data: dialogSetting
+      });
   }
 
-  // TODO : printPackingList
+   /**
+   * 팩킹 리스트 인쇄
+   */
   printPackingList() {
-    console.log('printPackingList');
+    const dialogSetting = new OliveDialogSetting(
+      OlivePreviewPackingListComponent, 
+      {
+        item: this.selectedPackages,
+        hideExcelButton: true
+      }
+    );
+    
+    this.dialog.open(
+      OlivePreviewDialogComponent,
+      {
+        disableClose: false,
+        panelClass: 'mat-dialog-md',
+        data: dialogSetting
+      });
   }
 
-  // TODO : printShippingLable
-  printShippingLable() {
-    console.log('printShippingLable');
+  // TODO : printShippingLabel
+  printShippingLabel() {
+    console.log('printShippingLabel');
   }
 
   // TODO : exportForTrackingNumberUpdate
@@ -197,7 +259,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   
   // TODO : exportForLogistic
   exportForLogistic() {
-    console.log('exportForLogistic');
+    this.shipperExcelService.saveForGps(this.selectedPackages);
   }  
 
   initializeChildComponent() {

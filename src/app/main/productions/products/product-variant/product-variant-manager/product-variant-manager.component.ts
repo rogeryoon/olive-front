@@ -22,13 +22,13 @@ export class OliveProductVariantManagerComponent extends OliveEntityEditComponen
   private productVariantEditor: OliveProductVariantEditorComponent;
 
   constructor(
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
     dataService: OliveProductVariantService
   ) {
     super(
-      translater, alertService,
+      translator, alertService,
       accountService, messageHelper, 
       snackBar, formBuilder, 
       dataService

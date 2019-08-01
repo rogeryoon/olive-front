@@ -1,5 +1,5 @@
 <form [formGroup]="oForm" (keydown.enter)="false">
-  <mat-table [dataSource]="dataSource" formArrayName="formarray">
+  <mat-table [dataSource]="dataSource" formArrayName="formArray">
     <mat-header-row *matHeaderRowDef="displayedColumns">
     </mat-header-row>
 
@@ -51,7 +51,7 @@
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('quantity',i)">
         <mat-form-field fxFlex='95%'>
           <input name="inputQuantity{{row.ObjId}}" class="right olive-error" matInput formControlName="quantity"
-            (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" (input)="updateBalace(i)">
+            (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" (input)="updateBalance(i)">
           <mat-error *ngIf="hasArrayEntryError('quantity',i)">{{'common.validate.error' | translate}}</mat-error>
         </mat-form-field>
       </mat-cell>

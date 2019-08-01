@@ -49,11 +49,11 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   loadingIndicator: boolean;
   selectedAll: any;
   savedFilterValue = '';
-  searhKeyword = '';
+  searchKeyword = '';
 
   _setting: ListerSetting;
 
-  constructor(translater: FuseTranslationLoaderService,
+  constructor(translator: FuseTranslationLoaderService,
     protected deviceService: DeviceDetectorService,
     protected alertService: AlertService,
     protected accountService: AccountService,
@@ -61,7 +61,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
     protected documentService: OliveDocumentService,
     protected dialog: MatDialog,
     protected dataService: OliveDataService) {
-    super(translater);
+    super(translator);
   }
 
   get title() {
@@ -94,7 +94,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   }
 
   listTitle() {
-    return this.translater.get(this.setting.translateTitleId);
+    return this.translator.get(this.setting.translateTitleId);
   }
 
   contextButtonVisible(name: string): boolean {
@@ -196,7 +196,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
-        this.messageHelper.showLoadFaildSticky(error);
+        this.messageHelper.showLoadFailedSticky(error);
       });
   }
 
@@ -226,7 +226,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       // Destroy the table first
       dtInstance.clear().destroy();
-      // Call the dtTrigger to rerender again
+      // Call the dtTrigger to reRender again
       this.dtTrigger.next();
     });
   }
@@ -280,7 +280,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
           },
           error => {
             this.loadingIndicator = false;
-            this.messageHelper.showLoadFaildSticky(error);
+            this.messageHelper.showLoadFailedSticky(error);
           }
         );
       }
@@ -334,7 +334,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
         data: dialog
       });
 
-    this.searhKeyword = '';
+    this.searchKeyword = '';
     this.savedFilterValue = '';
 
     dialogRef.afterClosed().subscribe(searches => {
@@ -356,7 +356,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   }
 
   onExcel() {
-    this.documentService.exportExcel(this.title, this.setting.dataTableId);
+    this.documentService.exportHtmlTableToExcel(this.title, this.setting.dataTableId);
   }
 
   onPrint() {
@@ -394,12 +394,12 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
 
         this.alertService.showDialog
           (
-            this.translater.get('common.title.success'),
-            this.translater.get('common.message.uploadSaved'),
+            this.translator.get('common.title.success'),
+            this.translator.get('common.message.uploadSaved'),
             DialogType.alert,
             () => this.onUploaded(response.model),
             null,
-            this.translater.get('common.button.refresh')
+            this.translator.get('common.button.refresh')
           );
       },
       error => {
@@ -411,14 +411,14 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
           if (error.error.errorCode === OliveBackEndErrors.columnsUnmatchedError) {
             const diffs = error.error.errorMessage.split('/');
             if (diffs.length === 3) {
-              errorMessage = String.Format(this.translater.get('common.message.uploadColumnMatchError'), diffs[0], diffs[1], diffs[2]);
+              errorMessage = String.Format(this.translator.get('common.message.uploadColumnMatchError'), diffs[0], diffs[1], diffs[2]);
             }
             else {
-              errorMessage = this.translater.get('common.message.errorOccured');
+              errorMessage = this.translator.get('common.message.errorOccurred');
             }
           }
           else {
-            errorMessage = this.translater.get('common.message.uploadDataSignatureUnregisterd');
+            errorMessage = this.translator.get('common.message.uploadDataSignatureUnregistered');
           }
         }
         else {

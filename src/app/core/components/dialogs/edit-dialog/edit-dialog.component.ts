@@ -41,17 +41,17 @@ export class OliveEditDialogComponent extends OliveBaseComponent implements OnIn
   }
 
   get title(): any {
-    return { title : this.setting.data.translateTitleId ? this.translater.get(this.setting.data.translateTitleId) : '' } ;
+    return { title : this.setting.data.translateTitleId ? this.translator.get(this.setting.data.translateTitleId) : '' } ;
   }
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
-    translater: FuseTranslationLoaderService,
+    translator: FuseTranslationLoaderService,
     public dialogRef: MatDialogRef<OliveEditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public setting: OliveDialogSetting,
     private accountService: AccountService
   ) {
-    super(translater);
+    super(translator);
   }
 
   ngOnInit() {

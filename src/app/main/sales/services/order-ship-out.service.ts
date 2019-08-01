@@ -20,7 +20,7 @@ export class OliveOrderShipOutService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('ordershipouts');
+    this.setApiUrl('orderShipOuts');
   }
 
   cancelOrder(id: number) {

@@ -54,7 +54,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
     this.lookupName = new FormControl(null, Validators.required);
 
     // Cache Value Loading
-    this.cacheService.getUserConfig(this.companyGroupIdCacheKey)
+    this.cacheService.getUserPreference(this.companyGroupIdCacheKey)
       .then(obj => {
         if (obj) {
           this.lookupName.setValue(obj.name);
@@ -71,7 +71,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
 
   get companyGroupIdCacheKey(): string {
     if (!this.cacheKey) { return null; }
-    return OliveCacheService.cacheKeys.userConfig.lookupHost + this.cacheKey + this.queryParams.CompanyGroupId;
+    return OliveCacheService.cacheKeys.userPreference.lookupHost + this.cacheKey + this.queryParams.CompanyGroupId;
   }
 
   lookUp() {
@@ -92,7 +92,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
         this._onChange(item);
         this.selected.emit(item);
         if (this.companyGroupIdCacheKey) {
-          this.cacheService.setUserConfig(this.companyGroupIdCacheKey, item);
+          this.cacheService.setUserPreference(this.companyGroupIdCacheKey, item);
         }
       }
     });

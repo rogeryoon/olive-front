@@ -16,9 +16,9 @@ export class OliveCompanyGroupSettingEditorComponent extends OliveEntityFormComp
 
   weightTypes: any[] = OliveConstants.weightTypes;
 
-  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
+  constructor(formBuilder: FormBuilder, translator: FuseTranslationLoaderService) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -45,7 +45,7 @@ export class OliveCompanyGroupSettingEditorComponent extends OliveEntityFormComp
   resetForm() {
     this.oForm.reset({
       purchasingEnabled: this.item.purchasingEnabled || false,
-      thirdpPartyEnabled: this.item.thirdPartyEnabled || false,
+      thirdPartyEnabled: this.item.thirdPartyEnabled || false,
       shippingAgentEnabled: this.item.shippingAgentEnabled || false,
       productWeightType: this.item.productWeightTypeCode || ''
     });

@@ -26,13 +26,13 @@ export class OliveCompanyGroupManagerComponent extends OliveEntityEditComponent 
   private companyGroupSettingEditor: OliveCompanyGroupSettingEditorComponent;
 
   constructor(
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
     dataService: OliveCompanyGroupService
   ) {
     super(
-      translater, alertService,
+      translator, alertService,
       accountService, messageHelper, 
       snackBar, formBuilder, 
       dataService

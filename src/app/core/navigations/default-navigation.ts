@@ -2,7 +2,6 @@ import { FuseNavigation } from '@fuse/types';
 
 import { NavIcons } from './nav-icons';
 import { NavTranslates } from './nav-translates';
-import { Permission } from '@quick/models/permission.model';
 
 export const defaultNavigation: FuseNavigation[] = [
     {
@@ -379,7 +378,7 @@ export const defaultNavigation: FuseNavigation[] = [
     //             title: '판매 출고',
     //             type: 'item',
     //             icon: 'local_shipping',
-    //             url: '/sales/shipout',
+    //             url: '/sales/shipOut',
     //             badge: {
     //                 title: '186',
     //                 bg: '#F44336',

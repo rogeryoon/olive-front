@@ -39,14 +39,14 @@ export class OliveMarketItemMappingsComponent extends OliveEntityListComponent {
   sub: any;
 
   constructor(
-    translater: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
+    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OliveMarketItemMappingService,
     private route: ActivatedRoute, private router: Router
   ) {
       super(
-        translater, deviceService,
+        translator, deviceService,
         alertService, accountService,
         messageHelper, documentService, 
         dialog, dataService
@@ -76,15 +76,15 @@ export class OliveMarketItemMappingsComponent extends OliveEntityListComponent {
         // 1
         { data: Selected },
         // 2
-        { data: Id, thName: this.translater.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
+        { data: Id, thName: this.translator.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: InterfaceName, orderable: false, thName: this.translater.get('common.tableHeader.interfaceName'),  
+        { data: InterfaceName, orderable: false, thName: this.translator.get('common.tableHeader.interfaceName'),  
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 4
-        { data: ExcelColumns, orderable: false, thName: this.translater.get('common.tableHeader.marketProduct'),  
+        { data: ExcelColumns, orderable: false, thName: this.translator.get('common.tableHeader.marketProduct'),  
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         // 5
-        { data: Products, orderable: false, thName: this.translater.get('common.tableHeader.linkedProducts'),  
+        { data: Products, orderable: false, thName: this.translator.get('common.tableHeader.linkedProducts'),  
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
       ],
       editComponent: OliveMarketItemMappingManagerComponent,
@@ -135,16 +135,16 @@ export class OliveMarketItemMappingsComponent extends OliveEntityListComponent {
     if (item) {
       const title = item.excelColumns.map(x => x.matchValue).join(' ').trim();
 
-      let shorttenTitle = title.substr(0, maxLength);
+      let shortenTitle = title.substr(0, maxLength);
 
       if (title.length > maxLength) {
-        shorttenTitle += '...';
+        shortenTitle += '...';
       }
 
-      return shorttenTitle;
+      return shortenTitle;
     }
     else {
-      return this.translater.get(NavTranslates.Sales.matchItems);
+      return this.translator.get(NavTranslates.Sales.matchItems);
     }
   }
 
@@ -152,8 +152,8 @@ export class OliveMarketItemMappingsComponent extends OliveEntityListComponent {
     if (this.isExcelMasterIdPage && this.recordsTotal === 0) {
       this.alertService.showDialog
       (
-        this.translater.get('sales.marketItemMappings.linkProductMenuJobDoneTitle'),
-        this.translater.get('sales.marketItemMappings.linkProductMenuJobDoneDescription'),
+        this.translator.get('sales.marketItemMappings.linkProductMenuJobDoneTitle'),
+        this.translator.get('sales.marketItemMappings.linkProductMenuJobDoneDescription'),
         DialogType.alert,
         () => this.router.navigateByUrl(`/data/market/orders/${this.id36(this.excelId)}?name=${encodeURI(this.interfaceName)}`)
       ); 

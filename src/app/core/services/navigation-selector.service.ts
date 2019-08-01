@@ -5,7 +5,7 @@ import { FuseNavigation } from '@fuse/types';
 
 import { AuthService } from '@quick/services/auth.service';
 
-import { defaultNavigation } from '../navigations/defaut-navigation';
+import { defaultNavigation } from '../navigations/default-navigation';
 import { reserveNavigation } from '../navigations/reserve-navigation';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
@@ -19,7 +19,7 @@ export class OliveNavigationSelectorService implements OnInit, OnDestroy {
     protected isAuthenticNavigation?: boolean;
     protected navigationMap: { [name: string]: FuseNavigation[]; } = {};
 
-    constructor(private authService: AuthService, private translater: FuseTranslationLoaderService) {
+    constructor(private authService: AuthService, private translator: FuseTranslationLoaderService) {
         this.navigationMap['default'] = defaultNavigation;
         this.navigationMap['reserve'] = reserveNavigation;
     }
@@ -68,9 +68,9 @@ export class OliveNavigationSelectorService implements OnInit, OnDestroy {
             // Deep Copy
             returnNavi = jQuery.extend(true, {}, navi);
             // if (returnNavi.translate) {
-            //     const returnValue = this.translater.get(returnNavi.translate);
+            //     const returnValue = this.translator.get(returnNavi.translate);
             //     if (returnNavi.translate !== returnValue) {
-            //         returnNavi.title = this.translater.get(returnNavi.translate);
+            //         returnNavi.title = this.translator.get(returnNavi.translate);
             //     }
             // }
 
@@ -107,7 +107,7 @@ export class OliveNavigationSelectorService implements OnInit, OnDestroy {
                     }
                 }
             }
-        } // Group 정책먼저 적용 후 Master를 적용해야 문제가 없음 (Detail -> Globla : 자세한것 부터)
+        } // Group 정책먼저 적용 후 Master를 적용해야 문제가 없음 (Detail -> Global : 자세한것 부터)
         else if (navi.groupEnables) {
             for (let i = 0; i < navi.groupEnables.length; i++) {
                 const groupPropertyName = navi.groupEnables[i];

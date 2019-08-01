@@ -5,7 +5,7 @@
   <button mat-raised-button (click)="print()" color="primary">
     <mat-icon>print</mat-icon> {{'common.button.print' | translate}}  
   </button>
-  <button mat-raised-button (click)="excel()" color="accent">
+  <button *ngIf="!dialog.data.hideExcelButton" mat-raised-button (click)="excel()" color="accent">
     <mat-icon>cancel_presentation</mat-icon> Excel
   </button>  
   <button mat-raised-button (click)="cancel()">

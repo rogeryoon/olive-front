@@ -38,7 +38,7 @@ export class OliveDropDownListComponent implements ControlValueAccessor, OnInit,
 
   constructor(
     private _renderer: Renderer2,
-    private translater: FuseTranslationLoaderService
+    private translator: FuseTranslationLoaderService
   ) 
   {
   }

@@ -50,10 +50,6 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
   parentObject: OliveOnShare;
 
-  // 실제 표시되는 상품 (상호교차 참조)
-  actualUsedForDisplayItemsByProductVariantId = new Map<number, number>();
-  actualUsedForDisplayItemsByIndexId = new Map<number, number>();
-
   // 상품별 부족 수량 정리
   shortInventories = new Map<number, number>();
   inventories = new Map<number, number>();
@@ -73,14 +69,14 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   @Output() reload = new EventEmitter<any>();
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private dialog: MatDialog, private alertService: AlertService,
     private orderShipOutPackageService: OliveOrderShipOutPackageService, 
     private messageHelper: OliveMessageHelperService,
     private productService: OliveProductService, private cacheService: OliveCacheService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -110,7 +106,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       .every(x => x.dupAddressName === firstOrder.dupAddressName && x.combinedShipAddressName != null);
   }
 
-  get allCheckboxesDisalbed(): boolean {
+  get allCheckboxesDisabled(): boolean {
     let allDisabled = true;
     for (let index = 0; index < this.orders.length; index++) {
       const order = this.orders[index];
@@ -129,11 +125,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   }
 
   get selectedOrders(): OrderShipOut[] {
-    return this.orders.filter(x => x.selecteds[this.index]);
+    return this.orders.filter(x => x.choices[this.index]);
   }
 
   get canListOrders(): boolean {
-    return !this.isNull(this.orders.find(x => x.selecteds[this.index]));
+    return !this.isNull(this.orders.find(x => x.choices[this.index]));
   }
 
   get remarkCombinedOrders(): string {
@@ -178,21 +174,21 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
   selectAll() {
     this.orders.forEach(order => {
-      order.selecteds[this.index] = this.selectedAll && !this.isShortOrderQuantity(order);
+      order.choices[this.index] = this.selectedAll && !this.isShortOrderQuantity(order);
     });
   }
 
   checkIfAllSelected() {
-    this.selectedAll = this.orders.every(x => x.selecteds[this.index]);
+    this.selectedAll = this.orders.every(x => x.choices[this.index]);
   }
 
   // 묶음배송 체크 자동선택
   checkSameCombinedShippingGroup(order: OrderShipOut) {
-    if (!order.selecteds[this.index] && order.dupAddressName) {
+    if (!order.choices[this.index] && order.dupAddressName) {
       this.orders.forEach(item => {
-        if (!item.selecteds[this.index]
+        if (!item.choices[this.index]
           && order.dupAddressName === item.dupAddressName && !this.hasShipOutProblems(item)) {
-          item.selecteds[this.index] = true;
+          item.choices[this.index] = true;
         }
       });
     }
@@ -246,13 +242,6 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
           this.shortInventories.set(item.productVariantId, shortQuantity);
 
           shortage = true;
-        }
-
-        // 상품표시를 위한 정리
-        if (!this.actualUsedForDisplayItemsByProductVariantId.has(item.productVariantId)) {
-          const productIdex = this.actualUsedForDisplayItemsByProductVariantId.keys.length + 1;
-          this.actualUsedForDisplayItemsByProductVariantId.set(item.productVariantId, productIdex);
-          this.actualUsedForDisplayItemsByIndexId.set(productIdex, item.productVariantId);
         }
       }
 
@@ -332,8 +321,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
           disableClose: false,
           panelClass: 'mat-dialog-md',
           data: {
-            title: this.translater.get('sales.pendingOrderShipOutList.selectProductForWeightTitle'),
-            description: this.translater.get('sales.pendingOrderShipOutList.selectProductForWeightDescription'),
+            title: this.translator.get('sales.pendingOrderShipOutList.selectProductForWeightTitle'),
+            description: this.translator.get('sales.pendingOrderShipOutList.selectProductForWeightDescription'),
             items: params
           } as OliveSelectOneSetting
         });
@@ -358,7 +347,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     // 백앤드에서 상품무게 받음
     this.productService.get(`weight/${editItem.productVariantId}/`).subscribe(
       response => this.updateProductWeight(order, response.model),
-      error => this.messageHelper.showLoadFaildSticky(error)
+      error => this.messageHelper.showLoadFailedSticky(error)
     );    
   }
 
@@ -415,7 +404,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     // 백앤드에서 상품무게 받음
     this.productService.get(`customsPrice/${editItem.productVariantId}/`).subscribe(
       response => this.updateCustomsPrice(order, response.model),
-      error => this.messageHelper.showLoadFaildSticky(error)
+      error => this.messageHelper.showLoadFailedSticky(error)
     );
   }
 
@@ -425,7 +414,6 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @param price ProductCustomsPrice
    */
   private updateCustomsPrice(order: OrderShipOut, price: ProductCustomsPrice) {
-    console.log('updateCustomsPrice');
     // 세관신고 상품가격 수정창 오픈
     const setting = new OliveDialogSetting(
       OliveProductCustomsPriceEditorComponent,
@@ -488,7 +476,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         order.combinedShipAddressName = null;
         order.combinedShipDeliveryInfoSelected = false;
       });
-      this.uncheckSelectedOrders();
+      this.unCheckSelectedOrders();
       return;
     }
 
@@ -514,8 +502,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
           disableClose: false,
           panelClass: 'mat-dialog-md',
           data: {
-            title: this.translater.get('sales.pendingOrderShipOutList.selectDeliveryInfoTitle'),
-            description: this.translater.get('sales.pendingOrderShipOutList.selectDeliveryInfoDescription'),
+            title: this.translator.get('sales.pendingOrderShipOutList.selectDeliveryInfoTitle'),
+            description: this.translator.get('sales.pendingOrderShipOutList.selectDeliveryInfoDescription'),
             items: items
           } as OliveSelectOneSetting
         });
@@ -539,12 +527,12 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       }
     });
 
-    this.uncheckSelectedOrders();
+    this.unCheckSelectedOrders();
   }
 
-  private uncheckSelectedOrders() {
+  private unCheckSelectedOrders() {
     this.selectedOrders.forEach(order => {
-      order.selecteds[this.index] = false;
+      order.choices[this.index] = false;
     });
   }
 
@@ -572,7 +560,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         const backup = _.cloneDeep(this.saveOrder);
         Object.assign(this.saveOrder, item);
 
-        this.saveOrder.selecteds = _.cloneDeep(backup.selecteds);
+        this.saveOrder.choices = _.cloneDeep(backup.choices);
         this.saveOrder.dupAddressName = backup.dupAddressName;
         this.saveOrder.combinedShipAddressName = backup.combinedShipAddressName;
         this.saveOrder.combinedShipDeliveryInfoSelected = backup.combinedShipDeliveryInfoSelected;
@@ -593,19 +581,19 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       return;
     }
 
-    const orderQuanties = this.ordersQuantities.get(order.id);
+    const orderQuantities = this.ordersQuantities.get(order.id);
     // 정상 할당된 상품은 인벤토리로 반환하고 선택되었으면 선택도 언체크
     if (!this.isShortOrderQuantity(order)) {
       for (const item of order.orderShipOutDetails) {
         this.inventories.set(item.productVariantId, this.inventories.get(item.productVariantId) + item.quantity);
-        orderQuanties.find(x => x.productVariantId === item.productVariantId).quantity = 0;
+        orderQuantities.find(x => x.productVariantId === item.productVariantId).quantity = 0;
       }
-      order.selecteds[this.index] = false;
+      order.choices[this.index] = false;
     }
     else { // 부족상품을 반환된 인벤토리로 
       for (const item of order.orderShipOutDetails) {
         this.inventories.set(item.productVariantId, this.inventories.get(item.productVariantId) - item.quantity);
-        orderQuanties.find(x => x.productVariantId === item.productVariantId).quantity = item.quantity;
+        orderQuantities.find(x => x.productVariantId === item.productVariantId).quantity = item.quantity;
       }
     }
   }
@@ -617,13 +605,13 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   getInventorySwitchTooltip(order: OrderShipOut): string {
     // 정상 할당된 상품
     if (!this.isShortOrderQuantity(order)) {
-      return this.translater.get('common.message.cancelOrderShipOutInventory');
+      return this.translator.get('common.message.cancelOrderShipOutInventory');
     }
 
     // 부족한 상품은 정상 할당에서 제거된 인벤토리 수량이 있는지 체크 후
     // 재고가 있으면 추가할수 있는 메시지 표시
     if (this.hasAllItemsQuantity(order)) {
-      return this.translater.get('common.message.assignOrderShipOutInventory');
+      return this.translator.get('common.message.assignOrderShipOutInventory');
     }
 
     return '';
@@ -675,20 +663,20 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     const uncombinedOrderExists = Array.from(uncombinedOrderChecker.values()).some(x => x > 1);
 
-    let confirmMessage = this.translater.get('common.message.areYouSure');
+    let confirmMessage = this.translator.get('common.message.areYouSure');
     // 합배송처리 안하고 그냥 출고하는 거라면 컨펌 받는다.
     if (uncombinedOrderExists) {
-      confirmMessage = this.translater.get('sales.pendingOrderShipOutList.confirmCombinedShipExists');
+      confirmMessage = this.translator.get('sales.pendingOrderShipOutList.confirmCombinedShipExists');
     }
 
     this.alertService.showDialog(
-      this.translater.get('common.title.yesOrNo'),
+      this.translator.get('common.title.yesOrNo'),
       confirmMessage,
       DialogType.confirm,
       () => this.listOrders(),
       () => null,
-      this.translater.get('common.button.yes'),
-      this.translater.get('common.button.no')
+      this.translator.get('common.button.yes'),
+      this.translator.get('common.button.no')
     );
   }
 
@@ -732,18 +720,18 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     if (shortInventoryOrderIds && shortInventoryOrderIds.length > 0) {
       this.alertService.showDialog
         (
-          this.translater.get('common.title.errorConfirm'),
-          String.Format(this.translater.get('common.message.outOfStock'), shortInventoryOrderIds.length),
+          this.translator.get('common.title.errorConfirm'),
+          String.Format(this.translator.get('common.message.outOfStock'), shortInventoryOrderIds.length),
           DialogType.alert,
           () => this.reload.emit(),
           null,
-          this.translater.get('common.button.refresh')
+          this.translator.get('common.button.refresh')
         );
     }
     else { // 재고가 저장된것 빼고 삭제한다.
       for (let i = this.orders.length - 1; i >= 0; i--) {
         const orderId = this.orders[i].id;
-        if (this.orders[i].selecteds[this.index] && (!shortInventoryOrderIds || shortInventoryOrderIds.every(x => x !== orderId))) {
+        if (this.orders[i].choices[this.index] && (!shortInventoryOrderIds || shortInventoryOrderIds.every(x => x !== orderId))) {
           this.ordersQuantities.delete(orderId);
           this.orders.splice(i, 1);
         }

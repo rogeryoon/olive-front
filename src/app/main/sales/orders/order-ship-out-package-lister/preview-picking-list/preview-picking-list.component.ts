@@ -5,169 +5,104 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { OliveOnPreview } from 'app/core/interfaces/on-preview';
 import { OliveBaseComponent } from 'app/core/components/extends/base/base.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { OliveCompanyService } from 'app/main/supports/services/company.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { Branch } from 'app/main/supports/models/branch.model';
-import { OliveBranchService } from 'app/main/supports/services/branch.service';
-import { PurchaseOrder } from 'app/main/purchasings/models/purchase-order.model';
+import { OrderShipOutPackage } from 'app/main/sales/models/order-ship-out-package.model';
+import { OliveUtilities } from 'app/core/classes/utilities';
+
+class PickingItem {
+  productVariantId: number;
+  productGroupId: number;
+  name: string;
+  quantity: number;
+}
 
 @Component({
   selector: 'olive-preview-picking-list',
   templateUrl: './preview-picking-list.component.html',
   styleUrls: ['./preview-picking-list.component.scss']
 })
-export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent implements OliveOnPreview, OnInit {
-  order: PurchaseOrder;
-  digits: number;
-  companyHtml: string;
-  warehouseHtml: string;
+export class OlivePreviewPickingListComponent extends OliveBaseComponent implements OliveOnPreview, OnInit {
+  packages: OrderShipOutPackage[];
+  pickingItems: PickingItem[] = [];
 
   constructor(
-    translater: FuseTranslationLoaderService, private cacheService: OliveCacheService,
-    private companyService: OliveCompanyService, private documentService: OliveDocumentService,
-    private branchService: OliveBranchService
+    translator: FuseTranslationLoaderService, private cacheService: OliveCacheService,
+    private documentService: OliveDocumentService,
   ) {
-    super(translater);
+    super(translator);
+  }
+
+  set data(value: any) {
+    this.packages = value.item;
   }
 
   ngOnInit() {
     super.ngOnInit();
-    this.standCurrency = this.cacheService.standCurrency;
-    this.digits = this.standCurrency.decimalPoint;
 
-    this.loadCompany();
-  }
+    this.buildData();
 
-  loadCompany() {
-    this.cacheService.getItem(this.companyService, 'company', this.order.warehouseFk.companyId)
-    .then(item => {
-      this.renderCompanyHtml(item);  
-    });  
+    // Font Size 자동 동적 조정
+    $(document).ready(function () {
+      const boxListId = '.box-item div';
+      $(boxListId).css('font-size', '1em');
 
-    this.cacheService.getItems(this.branchService, 'branches')
-    .then(items => {
-      const branch = items.find(b => b.id === this.order.warehouseFk.companyMasterBranchId);
-      if (branch) {
-        this.renderWarehouseHtml(branch);  
+      while ($(boxListId).height() > $('.box-item').height()) {
+        $(boxListId).css('font-size', (parseInt($(boxListId).css('font-size'), 10) - 1) + 'px');
       }
-    });  
-  }
-
-  renderCompanyHtml(company: any) {
-    const values = [];
-
-    this.companyHtml = `<strong>${company.name}</strong><br>`;
-
-    if (company.addressFk) {
-      values.push(this.address(company.addressFk));
-    }
-
-    if (company.phoneNumber) {
-      values.push(company.phoneNumber);
-    }
-
-    this.companyHtml += '<p>' + values.join('<br>') + '</p>';
-  }
-
-  set data(value: any) {
-    this.order = value.item;
-  }
-
-  get subTotal(): number {
-    if (!this.order) { return 0; }
-
-    let value = 0;
-    this.order.purchaseOrderItems.forEach(item => {
-      value += item.quantity * item.price - item.discount;
     });
-
-    return value;
   }
 
-  get grandTotal(): number {
-    return this.subTotal + this.order.freightAmount -
-      this.order.addedDiscountAmount + this.order.taxAmount;
-  }
+  /**
+   * Table Html Body에 표시할수 있도록 상품별로 수량을 합산 정리
+   */
+  buildData() {
+    const pickingProductsMap = new Map<number, PickingItem>();
 
-  get paymentSummary(): string {
-    const values = [];
+    // 제품별 합산
+    for (const pkg of this.packages) {
+      for (const order of pkg.orderShipOuts) {
+        for (const item of order.orderShipOutDetails) {
+          if (!pickingProductsMap.has(item.productVariantId)) {
+            pickingProductsMap.set(
+              item.productVariantId,
+              {
+                productVariantId: item.productVariantId,
+                productGroupId: item.productId,
+                name: item.name,
+                quantity: 0
+              } as PickingItem);
+          }
 
-    this.order.purchaseOrderPayments.forEach(payment => {
-      values.push(`${payment.code}: ${this.numberFormat(payment.amount, this.digits)}`);
-    });
-
-    return values.join(' / ');
-  }
-
-  get supplierHtml(): string {
-    const values = [];
-
-    const fk = this.order.supplierFk;
-
-    values.push(`<strong>${fk.name} [${fk.code}]</strong>`);
-
-    if (fk.address) {
-      values.push(fk.address);
-    }
-
-    if (fk.phoneNumber) {
-      values.push(fk.phoneNumber);
-    }
-
-    return values.join('<br>');
-  }
-
-  renderWarehouseHtml(branch: Branch) {
-    const values = [];
-
-    const fk = this.order.warehouseFk;
-
-    values.push(`<strong>${fk.name} [${fk.code}]</strong>`);
-
-    if (fk.companyMasterBranchId) {
-      // const branch = this.cacheService.branches.find(b => b.id === fk.companyMasterBranchId);
-
-      if (branch.addressFk) {
-        values.push(this.address(branch.addressFk));
-      }
-
-      if (branch.phoneNumber) {
-        values.push(branch.phoneNumber);
+          const pickingItem = pickingProductsMap.get(item.productVariantId);
+          pickingItem.quantity += item.quantity;
+          pickingProductsMap.set(item.productVariantId, pickingItem);
+        }
       }
     }
 
-    this.warehouseHtml = values.join('<br>');
+    // 딕셔너리 구조를 배열로 전환
+    for (const productVariantId of Array.from(pickingProductsMap.keys())) {
+      this.pickingItems.push(pickingProductsMap.get(productVariantId));
+    }
+
+    // 배열을 상품 그룹 ID로 정열
+    this.pickingItems.sort((a, b) => a.productGroupId < b.productGroupId ? -1 : a.productGroupId > b.productGroupId ? 1 : 0);
+  }
+
+  get totalItemCount(): string {
+    return this.commaNumber(this.pickingItems.map(x => x.quantity).reduce((a, b) => a + (b || 0), 0));
+  }
+
+  get today(): string {
+    return OliveUtilities.isoDateString(new Date(), true);
   }
 
   onPrint() {
     this.documentService.printPage(
-      `Purchase Order ${this.dateCode(this.order.date, this.order.id)}`, 
+      `Picking List ${OliveUtilities.isoDateString(new Date(), true)}`,
       'olivestyle', 'olive-container'
     );
   }
 
-  onExcel() {
-    const summaries = [];
-
-    summaries.push(`PO # : ${this.dateCode(this.order.date, this.order.id)}`);
-    summaries.push(`Date : ${this.date(this.order.date)}`);
-
-    const vfk = this.order.supplierFk;
-    summaries.push(`Supplier : ${vfk.name} [${vfk.code}]`);
-
-    const wfk = this.order.warehouseFk;
-    summaries.push(`Warehouse : ${wfk.name} [${wfk.code}]`);
-
-    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.subTotal')} : ${this.numberFormat(this.subTotal, this.digits)}`);
-    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.freight')} : ${this.numberFormat(this.order.freightAmount, this.digits)}`);
-    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.addedDiscount')} : ${this.numberFormat(this.order.addedDiscountAmount * -1, this.digits)}`);
-    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.tax')} : ${this.numberFormat(this.order.taxAmount, this.digits)}`);
-    summaries.push(`${this.translater.get('purchasing.previewPurchaseOrder.grandTotal')} : ${this.numberFormat(this.grandTotal, this.digits)}`);
-
-    this.documentService.exportExcel(
-      `PO-${this.id36(this.order.id)}`,
-      'olive-table', false,
-      summaries
-    );
-  }
+  onExcel() { }
 }

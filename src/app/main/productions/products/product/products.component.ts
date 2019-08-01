@@ -37,13 +37,13 @@ const CreatedUtc = 'createdUtc';
 })
 export class OliveProductsComponent extends OliveEntityListComponent {
   constructor(
-    translater: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
+    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OliveProductService
   ) {
     super(
-      translater, deviceService,
+      translator, deviceService,
       alertService, accountService,
       messageHelper, documentService,
       dialog, dataService
@@ -59,19 +59,19 @@ export class OliveProductsComponent extends OliveEntityListComponent {
         // 1
         { data: Selected },
         // 2
-        { data: Id, thName: this.translater.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
+        { data: Id, thName: this.translator.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: Name, thName: this.translater.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
+        { data: Name, thName: this.translator.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         // 4
-        { data: MinPrice, orderable: false, thName: this.translater.get('common.tableHeader.min'), tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
+        { data: MinPrice, orderable: false, thName: this.translator.get('common.tableHeader.min'), tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 5
-        { data: MaxPrice, orderable: false, thName: this.translater.get('common.tableHeader.max'), tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
+        { data: MaxPrice, orderable: false, thName: this.translator.get('common.tableHeader.max'), tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 6
-        { data: VariantCount, thName: this.translater.get('common.tableHeader.type'), tdClass: '', thClass: '' },
+        { data: VariantCount, thName: this.translator.get('common.tableHeader.type'), tdClass: '', thClass: '' },
         // 7
-        { data: Activated, thName: this.translater.get('common.tableHeader.activated'), tdClass: '', thClass: '' },
+        { data: Activated, thName: this.translator.get('common.tableHeader.activated'), tdClass: '', thClass: '' },
         // 8
-        { data: CreatedUtc, thName: this.translater.get('common.tableHeader.createdUtc'), tdClass: '', thClass: '' }
+        { data: CreatedUtc, thName: this.translator.get('common.tableHeader.createdUtc'), tdClass: '', thClass: '' }
       ],
       editComponent: OliveProductManagerComponent,
       searchComponent: OliveSearchProductComponent,

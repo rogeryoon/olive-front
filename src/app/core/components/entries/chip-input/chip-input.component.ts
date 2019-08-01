@@ -39,7 +39,7 @@ export class OliveChipInputComponent extends OliveBaseComponent implements OnIni
 
   @Input() id: string;
   @Input() placeholder = '';
-  @Input() datakey: string;
+  @Input() dataKey: string;
   @Input() readonly: boolean;
   @Input() maxNameLength?: number;
   @Input() showId: boolean;
@@ -48,11 +48,11 @@ export class OliveChipInputComponent extends OliveBaseComponent implements OnIni
   companyGroup: string;
 
   constructor(
-    translater: FuseTranslationLoaderService, private cacheService: OliveCacheService,
+    translator: FuseTranslationLoaderService, private cacheService: OliveCacheService,
     private _renderer: Renderer2
   ) 
   {
-    super(translater);
+    super(translator);
   }
 
   ngOnInit() {
@@ -87,9 +87,9 @@ export class OliveChipInputComponent extends OliveBaseComponent implements OnIni
   }
 
   private setCacheValues() {
-    if (!this.datakey) { return; }
+    if (!this.dataKey) { return; }
 
-    this.cacheService.getChunkItems(this.datakey)
+    this.cacheService.getChunkItems(this.dataKey)
       .then(items => {
         setTimeout(() => {
           this.initChipHelper(items);  

@@ -1,12 +1,12 @@
 import { FormGroup } from '@angular/forms';
 
-import { TableDatasource } from 'app/core/classes/table-datasource';
+import { TableDataSource } from 'app/core/classes/table-data-source';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator } from 'app/core/classes/validators';
 import { Currency } from 'app/main/supports/models/currency.model';
 import { InWarehouseItem } from '../../../models/in-warehouse-item.model';
 
-export class OliveInWarehouseItemDatasource extends TableDatasource {
+export class OliveInWarehouseItemDataSource extends TableDataSource {
 
     poCurrency: Currency = null;
 
@@ -18,8 +18,8 @@ export class OliveInWarehouseItemDatasource extends TableDatasource {
 
     createRowFormGroup(r: any): FormGroup {
         const f = new FormGroup({
-            quantity: this.createNewFormContorl(r, 'quantity', [numberValidator(0, true, 1)]),
-            remark: this.createNewFormContorl(r, 'remark', [])
+            quantity: this.createNewFormControl(r, 'quantity', [numberValidator(0, true, 1)]),
+            remark: this.createNewFormControl(r, 'remark', [])
         });
         return f;
     }

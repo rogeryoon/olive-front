@@ -35,15 +35,15 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
   @Output() warehouseChanged = new EventEmitter();
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private warehouseService: OliveWarehouseService, private purchaseOrderService: OlivePurchaseOrderService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
-  get warehousId() {
+  get warehouseId() {
     return this.getControl('purchaseOrderFk').value.warehouseId;
   }
 
@@ -53,7 +53,7 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
     return this.itemWithIdNAudit({
       inWarehouseFk: {
         memo : formModel.memo,
-        warehouseId : this.warehousId
+        warehouseId : this.warehouseId
       },
       purchaseOrderFk: this.item.purchaseOrderFk,
       returnTrackings: this.item.returnTrackings
@@ -96,7 +96,7 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
     this.lookupWarehouse.setting = {
       name: 'Warehouse',
       columnType: 'code',
-      dialogTitle: this.translater.get(NavTranslates.Company.warehouse),
+      dialogTitle: this.translator.get(NavTranslates.Company.warehouse),
       dataService: this.warehouseService,
       maxSelectItems: 1,
       newComponent: OliveWarehouseManagerComponent,
@@ -111,7 +111,7 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
       managerComponent: OlivePurchaseOrderManagerComponent,
       managePermission: null,
       translateTitleId: NavTranslates.Purchase.entry,
-      customTitleTemplate: this.translater.get('navi.purchase.group') + ' ID : {0}',
+      customTitleTemplate: this.translator.get('navi.purchase.group') + ' ID : {0}',
       customTitleCallback: this.customTitle,
       customNameCallback: this.customName,
       readonly: true

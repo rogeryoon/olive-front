@@ -7,6 +7,7 @@ import * as FileSaver from 'file-saver';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { AlertService } from '@quick/services/alert.service';
+import { ExcelColumn } from '../models/excel-column';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class OliveDocumentService {
   onImportTableRendered: Subject<any> = new Subject;
 
   constructor(
-    private translater: FuseTranslationLoaderService,
+    private translator: FuseTranslationLoaderService,
     private alertService: AlertService
   ) {
   }
@@ -66,8 +67,8 @@ export class OliveDocumentService {
 
     if (!selectedCheckboxExists) {
       this.alertService.showMessageBox(
-        this.translater.get('common.title.notSelected'),
-        this.translater.get('common.message.selectItem')
+        this.translator.get('common.title.notSelected'),
+        this.translator.get('common.message.selectItem')
       );
       return true;
     }
@@ -75,96 +76,103 @@ export class OliveDocumentService {
     return false;
   }
 
-  exportExcel(fileName: string, tableId: string, selectable = true, summaries: string[] = []): void {
-    if (selectable && this.noItemSelected) { return; }
-
+  exportExcel(fileName: string, columns: ExcelColumn[], rows: any[]) {
     const workbook = new Excel.Workbook();
 
     const worksheet = workbook.addWorksheet(fileName);
 
-    const table = $(`#${tableId}`);
-
-    let rowIndex = this.setExcelSummaries(worksheet, summaries);
-
-    rowIndex = this.setExcelColsHeader(table, worksheet, rowIndex);
-
-    this.setExcelTbodyTable(table, worksheet, selectable, rowIndex);
-
-    workbook.xlsx.writeBuffer().then(function (data): void {
-      const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      FileSaver.saveAs(blob, `${fileName}.xlsx`);
-    });
-  }
-
-  private setExcelSummaries(worksheet: any, summaries: string[]) {
     let rowIndex = 0;
-    summaries.forEach(summary => {
-      rowIndex++;
-      worksheet.mergeCells(`A${rowIndex}:B${rowIndex}`);
-      worksheet.getCell(`A${rowIndex}`).value = summary;
-    });
-    return rowIndex;
+
+    rowIndex = this.setExcelColumnsHeader(columns, worksheet, rowIndex);
+
+    this.setExcelBody(worksheet, rowIndex, columns, rows);
+
+    this.saveExcelWorkbook(fileName, workbook);
   }
 
-  private setExcelColsHeader(table: any, worksheet: any, rowIndex: number) {
-    if (rowIndex === 0) {
-      worksheet.views = [
-        { state: 'frozen', xSplit: 0, ySplit: 1 }
-      ];
-    }
+  private setExcelBody(worksheet: any, rowIndex: number, columns: ExcelColumn[], rows: any[]) {
 
-    const columns = [];
+    for (const row of rows) {
+      rowIndex++;
+
+      const newRow = worksheet.getRow(rowIndex);
+      newRow.font = { name: 'Calibri', family: 4, size: 10 };
+      newRow.height = 25;
+
+      let colIndex = 0;
+      for (const column of columns) {
+        colIndex++;
+
+        const columnValue = row[column.propertyName];
+
+        if (!columnValue) { continue; }
+
+        if (column.type === 'number') {
+          let amount = parseFloat(columnValue.replace(/,/g, ''));
+          if (isNaN(amount)) { amount = 0.0; }
+          newRow.getCell(colIndex).value = amount;
+        }
+        else {
+          newRow.getCell(colIndex).value = columnValue.toString();
+        }
+
+        newRow.eachCell(function (cell) {
+          cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
+        });
+      }
+    }
+  }
+
+  private setExcelColumnsHeader(columns: ExcelColumn[], worksheet: any, rowIndex: number): number {
+    this.setExcelHeaderSticky(worksheet, rowIndex);
+
+    const columnDefinitions = [];
     const columnTitles = [];
     let excelColumnCharIndex = '@';
 
-    table.children('thead').find('th').each(function (): void {
-      if (this.classList.contains('print')) {
-        excelColumnCharIndex = String.fromCharCode(excelColumnCharIndex.charCodeAt(0) + 1);
+    for (const header of columns) {
+      excelColumnCharIndex = String.fromCharCode(excelColumnCharIndex.charCodeAt(0) + 1);
+      columnTitles.push(header.headerTitle);
 
-        const columnTitle = this.textContent.trim();
-        columnTitles.push(columnTitle);
+      let colWidth = 10;
+      let style;
 
-        let colWidth = 10;
-        let style;
-        for (let i = 0, l = this.classList.length; i < l; ++i) {
-          if (/-ex-type-.*/.test(this.classList[i])) {
-            const columnType = this.classList[i].replace('-ex-type-', '');
-
-            if (columnType === 'id') {
-              colWidth = 10;
-              style = { alignment: { vertical: 'middle', horizontal: 'center' } };
-            }
-            else if (columnType === 'number') {
-              colWidth = 10;
-              style = { alignment: { vertical: 'middle', horizontal: 'right' } };
-            }
-            else if (columnType === 'text') {
-              style = { alignment: { vertical: 'middle', horizontal: 'left', indent: 1, wrapText: true } };
-            }
-            else {
-              style = { alignment: { vertical: 'middle', horizontal: 'center' } };
-            }
-          }
-          else
-            if (/-ex-width-.*/.test(this.classList[i])) {
-              colWidth = Number(this.classList[i].replace('-ex-width-', ''));
-            }
-        }
-
-        const columnDefinition = { key: columnTitle, width: colWidth };
-
-        if (style) {
-          columnDefinition['style'] = style;
-        }
-
-        columns.push(columnDefinition);
+      if (header.type === 'id') {
+        style = { alignment: { vertical: 'middle', horizontal: 'center' } };
       }
-    });
+      else if (header.type === 'number') {
+        style = { alignment: { vertical: 'middle', horizontal: 'right' } };
+      }
+      else if (header.type === 'text') {
+        style = { alignment: { vertical: 'middle', horizontal: 'left', indent: 1, wrapText: true } };
+        colWidth = 20;
+      }
+      else {
+        style = { alignment: { vertical: 'middle', horizontal: 'center' } };
+        colWidth = 20;
+      }
 
+      if (header.width) {
+        colWidth = header.width;
+      }
+
+      const columnDefinition = { key: header.headerTitle, width: colWidth };
+
+      if (style) {
+        columnDefinition['style'] = style;
+      }
+
+      columnDefinitions.push(columnDefinition);
+    }
+
+    return this.buildHeaderRow(rowIndex, worksheet, excelColumnCharIndex, columnDefinitions, columnTitles);
+  }
+
+  private buildHeaderRow(rowIndex: number, worksheet: any, excelColumnCharIndex: string, columnDefinitions: any[], columnTitles: any[]): number {
     if (rowIndex === 0) {
       worksheet.autoFilter = `A1${excelColumnCharIndex}1`;
     }
-    worksheet.columns = columns;
+    worksheet.columns = columnDefinitions;
 
     rowIndex++;
 
@@ -179,6 +187,81 @@ export class OliveDocumentService {
     });
 
     return rowIndex;
+  }
+
+  private saveExcelWorkbook(fileName: string, workbook: Excel.Workbook) {
+    workbook.xlsx.writeBuffer().then(function (data): void {
+      const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      FileSaver.saveAs(blob, `${fileName}.xlsx`);
+    });
+  }
+
+  private setExcelHeaderSticky(worksheet: any, rowIndex: number) {
+    if (rowIndex === 0) {
+      worksheet.views = [
+        { state: 'frozen', xSplit: 0, ySplit: 1 }
+      ];
+    }
+  }
+
+  exportHtmlTableToExcel(fileName: string, tableId: string, selectable = true, summaries: string[] = []): void {
+    if (selectable && this.noItemSelected) { return; }
+
+    const workbook = new Excel.Workbook();
+
+    const worksheet = workbook.addWorksheet(fileName);
+
+    const table = $(`#${tableId}`);
+
+    let rowIndex = this.setExcelSummaries(worksheet, summaries);
+
+    rowIndex = this.setExcelColumnsHeaderForHtmlTable(table, worksheet, rowIndex);
+
+    this.setExcelTbodyTable(table, worksheet, selectable, rowIndex);
+
+    this.saveExcelWorkbook(fileName, workbook);
+  }
+
+  private setExcelSummaries(worksheet: any, summaries: string[]): number {
+    let rowIndex = 0;
+    summaries.forEach(summary => {
+      rowIndex++;
+      worksheet.mergeCells(`A${rowIndex}:B${rowIndex}`);
+      worksheet.getCell(`A${rowIndex}`).value = summary;
+    });
+    return rowIndex;
+  }
+
+  private setExcelColumnsHeaderForHtmlTable(table: any, worksheet: any, rowIndex: number) {
+    this.setExcelHeaderSticky(worksheet, rowIndex);
+
+    const headerColumns: ExcelColumn[] = [];
+
+    table.children('thead').find('th').each(function (): void {
+      if (this.classList.contains('print')) {
+
+        const headerColumn = { headerTitle: this.textContent.trim() } as ExcelColumn;
+
+        for (let i = 0, l = this.classList.length; i < l; ++i) {
+          if (/-ex-type-.*/.test(this.classList[i])) {
+            const columnType = this.classList[i].replace('-ex-type-', '');
+
+            if (columnType) {
+              headerColumn.type = columnType;
+            }
+          }
+
+          if (/-ex-width-.*/.test(this.classList[i])) {
+            headerColumn.width = Number(this.classList[i].replace('-ex-width-', ''));
+            console.log(headerColumn.width);
+          }
+        }
+
+        headerColumns.push(headerColumn);
+      }
+    });
+
+    return this.setExcelColumnsHeader(headerColumns, worksheet, rowIndex);
   }
 
   private setExcelTbodyTable(table: any, worksheet: any, selectable: boolean, rowIndex: number) {
@@ -236,46 +319,52 @@ export class OliveDocumentService {
     });
   }
 
+  /**
+   * Prints page
+   * @param documentTitle 
+   * @param styleId
+   * @param bodyId 
+   */
   printPage(documentTitle: string, styleId: string, bodyId: string) {
-    const pwin = window.open('');
+    const printerWindow = window.open('');
 
-    pwin.document.write(`<html><head><title>${documentTitle}</title>`);
+    printerWindow.document.write(`<html><head><title>${documentTitle}</title>`);
     for (let i = $('style').length - 1; i >= 0; i--) {
       if ($('style')[i].outerHTML.indexOf(styleId) !== -1) {
-        pwin.document.write($('style')[i].outerHTML);
+        printerWindow.document.write($('style')[i].outerHTML);
         break;
       }
     }
-    pwin.document.write('</head><body>');
-    pwin.document.write($(`#${bodyId}`).html());
-    pwin.document.write('</body></html>');
+    printerWindow.document.write('</head><body>');
+    printerWindow.document.write($(`#${bodyId}`).html());
+    printerWindow.document.write('</body></html>');
 
-    pwin.print();
-    pwin.close();
+    printerWindow.print();
+    printerWindow.close();
   }
 
   printTable(documentTitle: string, tableId: string): void {
     if (this.noItemSelected) { return; }
 
-    const pwin = window.open('');
+    const printerWindow = window.open('');
 
-    pwin.document.write(`<html><head><title>${documentTitle}</title>`);
-    pwin.document.write(this.stylesheet);
-    pwin.document.write('</head><body>');
-    pwin.document.write('<table>');
+    printerWindow.document.write(`<html><head><title>${documentTitle}</title>`);
+    printerWindow.document.write(this.stylesheet);
+    printerWindow.document.write('</head><body>');
+    printerWindow.document.write('<table>');
 
-    pwin.document.write('<thead><tr>');
+    printerWindow.document.write('<thead><tr>');
 
     const table = $(`#${tableId}`);
 
     table.children('thead').find('th').each(function (): void {
       if (this.classList.contains('print')) {
-        pwin.document.write(`<th>${this.textContent}</th>`);
+        printerWindow.document.write(`<th>${this.textContent}</th>`);
       }
     });
-    pwin.document.write('</tr></thead>');
+    printerWindow.document.write('</tr></thead>');
 
-    pwin.document.write('<tbody>');
+    printerWindow.document.write('<tbody>');
 
     table.children('tbody').find('tr').each(function (): void {
       const $this = $(this);
@@ -289,7 +378,7 @@ export class OliveDocumentService {
           checkBoxes[0].classList.contains('select') &&
           (<HTMLInputElement>checkBoxes[0]).checked
         ) {
-          pwin.document.write('<tr>');
+          printerWindow.document.write('<tr>');
 
           $this.children('td').each(function (): void {
             if (this.classList.contains('print')) {
@@ -301,30 +390,30 @@ export class OliveDocumentService {
                 style = ' class="right"';
               }
 
-              pwin.document.write(`<td${style}>${this.textContent}</td>`);
+              printerWindow.document.write(`<td${style}>${this.textContent}</td>`);
             }
           });
 
-          pwin.document.write('</tr>');
+          printerWindow.document.write('</tr>');
         }
       }
     });
 
-    pwin.document.write('</tbody>');
-    pwin.document.write('</table>');
-    pwin.document.write('</body></html>');
+    printerWindow.document.write('</tbody>');
+    printerWindow.document.write('</table>');
+    printerWindow.document.write('</body></html>');
 
-    pwin.print();
-    pwin.close();
+    printerWindow.print();
+    printerWindow.close();
   }
 
   public static numToAlpha(num: number): string {
     let alpha = '';
-  
+
     for (; num >= 0; num = parseInt((num / 26).toString(), 10) - 1) {
       alpha = String.fromCharCode(num % 26 + 0x41) + alpha;
     }
-  
+
     return alpha;
   }
 
@@ -334,10 +423,10 @@ export class OliveDocumentService {
     $(tableIdExp).empty();
 
     const files = event.target.files;
-    const outThis = this;    
+    const outThis = this;
 
     if (!files || files.length === 0) {
-      outThis.onImportTableRendered.next(this.translater.get('common.message.invalidSelectedFiles'));
+      outThis.onImportTableRendered.next(this.translator.get('common.message.invalidSelectedFiles'));
       return;
     }
 
@@ -347,8 +436,8 @@ export class OliveDocumentService {
 
     // Checks whether the browser supports HTML5
     if (typeof (FileReader) === 'undefined') {
-      outThis.onImportTableRendered.next(this.translater.get('common.message.notSupportHtml5'));
-      return;      
+      outThis.onImportTableRendered.next(this.translator.get('common.message.notSupportHtml5'));
+      return;
     }
 
     let excelJson;
@@ -396,12 +485,12 @@ export class OliveDocumentService {
       const target = document.querySelector(tableIdExp);
 
       if (columnNames.length === 0) {
-        outThis.onImportTableRendered.next(this.translater.get('common.message.emptyFile'));
+        outThis.onImportTableRendered.next(this.translator.get('common.message.emptyFile'));
         return;
       }
 
 
-      // Browser Thread 동적 Table Append Redering이 끝난후 Datatable을 Render해야 한다.
+      // Browser Thread 동적 Table Append ReRendering이 끝난후 Datatable을 Render해야 한다.
       // create an observer instance
       const observer = new MutationObserver(function (mutations): void {
         $(tableIdExp).DataTable().destroy();
@@ -410,7 +499,7 @@ export class OliveDocumentService {
 
         observer.disconnect();
 
-        outThis.onImportTableRendered.next({excelJson : excelJson, columnNames: columnNames});
+        outThis.onImportTableRendered.next({ excelJson: excelJson, columnNames: columnNames });
       });
 
       // configuration of the observer:
@@ -434,13 +523,13 @@ export class OliveDocumentService {
     reader.readAsArrayBuffer(excelFile);
   }
 
-  private bindTable(jsondata, tableid): void {
-    const columns = this.bindTableHeader(jsondata, tableid);
+  private bindTable(jsonData, tableId): void {
+    const columns = this.bindTableHeader(jsonData, tableId);
     const tbody$ = $('<tbody/>');
-    for (let i = 0; i < jsondata.length; i++) {
+    for (let i = 0; i < jsonData.length; i++) {
       const row$ = $('<tr/>');
       for (let colIndex = 0; colIndex < columns.length; colIndex++) {
-        let cellValue = jsondata[i][columns[colIndex]];
+        let cellValue = jsonData[i][columns[colIndex]];
         if (cellValue === null) {
           cellValue = '';
         }
@@ -448,14 +537,14 @@ export class OliveDocumentService {
       }
       tbody$.append(row$);
     }
-    $(tableid).append(tbody$);
+    $(tableId).append(tbody$);
   }
 
-  private bindTableHeader(jsondata, tableid): any {
+  private bindTableHeader(jsonData, tableId): any {
     const columnSet = [];
     const headerTr$ = $('<tr/>');
-    for (let i = 0; i < jsondata.length; i++) {
-      const rowHash = jsondata[i];
+    for (let i = 0; i < jsonData.length; i++) {
+      const rowHash = jsonData[i];
       for (const key in rowHash) {
         if (rowHash.hasOwnProperty(key)) {
           if ($.inArray(key, columnSet) === -1) {
@@ -466,7 +555,7 @@ export class OliveDocumentService {
       }
     }
     const headerThead$ = $('<thead/>').append(headerTr$);
-    $(tableid).append(headerThead$);
+    $(tableId).append(headerThead$);
     return columnSet;
   }
 }

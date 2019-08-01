@@ -118,13 +118,13 @@ export class OliveRoleEditorComponent implements OnChanges {
       .subscribe(user => { },
         error => {
           this.alertService.resetStickyMessage();
-          this.alertService.showStickyMessage('Refresh failed', 'An error occured whilst refreshing logged in user information from the server', MessageSeverity.error, error);
+          this.alertService.showStickyMessage('Refresh failed', 'An error occurred whilst refreshing logged in user information from the server', MessageSeverity.error, error);
         });
   }
 
   private saveFailedHelper(error: any) {
     this.alertService.stopLoadingMessage();
-    this.alertService.showStickyMessage('Save Error', 'The below errors occured whilst saving your changes:', MessageSeverity.error, error);
+    this.alertService.showStickyMessage('Save Error', 'The below errors occurred whilst saving your changes:', MessageSeverity.error, error);
     this.alertService.showStickyMessage(error, null, MessageSeverity.error);
   }
 
@@ -165,11 +165,11 @@ export class OliveRoleEditorComponent implements OnChanges {
       description: this.role.description || ''
     });
 
-    const selectePermissions = this.role.permissions
+    const selectedPermissions = this.role.permissions
       ? this.allPermissions.filter(x => this.role.permissions.find(y => y.value === x.value))
       : [];
 
-    this.selectedPermissions = new SelectionModel<Permission>(true, selectePermissions);
+    this.selectedPermissions = new SelectionModel<Permission>(true, selectedPermissions);
   }
 
   get canManageRoles() {

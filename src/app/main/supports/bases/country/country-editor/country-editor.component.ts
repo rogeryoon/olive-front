@@ -13,9 +13,9 @@ import { Country } from '../../../models/country.model';
 })
 export class OliveCountryEditorComponent extends OliveEntityFormComponent {
 
-  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
+  constructor(formBuilder: FormBuilder, translator: FuseTranslationLoaderService) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 

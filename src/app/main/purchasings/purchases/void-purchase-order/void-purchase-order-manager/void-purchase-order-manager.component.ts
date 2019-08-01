@@ -36,20 +36,20 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
   purchaseOrderPaymentsEditor: OlivePurchaseOrderPaymentsEditorComponent;
   
   constructor(
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
     dataService: OliveVoidPurchaseOrderService
   ) {
     super(
-      translater, alertService,
+      translator, alertService,
       accountService, messageHelper, 
       snackBar, formBuilder, 
       dataService
     );
 
-    this.saveConfirmTitle = translater.get('purchasing.voidPurchaseOrderManager.saveConfirmTitle');
-    this.saveConfirmMessage = translater.get('purchasing.voidPurchaseOrderManager.saveConfirmMessage');
+    this.saveConfirmTitle = translator.get('purchasing.voidPurchaseOrderManager.saveConfirmTitle');
+    this.saveConfirmMessage = translator.get('purchasing.voidPurchaseOrderManager.saveConfirmMessage');
   }
 
   registerSubControl() {
@@ -154,20 +154,20 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
   calculateByPaymentMethod(order: PurchaseOrder): PurchaseOrderPayment[] {
     const payments = _.cloneDeep(order.purchaseOrderPayments);
 
-    const balanceByPamentMethod = new Map<number, number>();
+    const balanceByPaymentMethod = new Map<number, number>();
     const keysForUniqueOrPlusValueCheck = new Set();
 
     payments.forEach(payment => {
-      if (!balanceByPamentMethod.has(payment.paymentMethodId)) {
-        balanceByPamentMethod.set(payment.paymentMethodId, payment.amount);
+      if (!balanceByPaymentMethod.has(payment.paymentMethodId)) {
+        balanceByPaymentMethod.set(payment.paymentMethodId, payment.amount);
       }
       else {
-        balanceByPamentMethod.set(payment.paymentMethodId, balanceByPamentMethod.get(payment.paymentMethodId) + payment.amount);
+        balanceByPaymentMethod.set(payment.paymentMethodId, balanceByPaymentMethod.get(payment.paymentMethodId) + payment.amount);
       }
     });
 
     payments.forEach(payment => {
-      if (balanceByPamentMethod.get(payment.paymentMethodId) <= 0) {
+      if (balanceByPaymentMethod.get(payment.paymentMethodId) <= 0) {
         keysForUniqueOrPlusValueCheck.add(payment.paymentMethodId);
       }
     });
@@ -177,7 +177,7 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     payments.forEach(payment => {
       if (!keysForUniqueOrPlusValueCheck.has(payment.paymentMethodId)) {
         payment.id = null;
-        payment.amount = balanceByPamentMethod.get(payment.paymentMethodId);
+        payment.amount = balanceByPaymentMethod.get(payment.paymentMethodId);
         payment.remarkId = null;
         finalPayments.push(payment);
         keysForUniqueOrPlusValueCheck.add(payment.paymentMethodId);

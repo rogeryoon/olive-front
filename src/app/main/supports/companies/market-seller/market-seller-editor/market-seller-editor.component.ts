@@ -22,11 +22,11 @@ export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
   lookupMarket: OliveLookupHostComponent;
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private marketService: OliveMarketService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -73,7 +73,7 @@ export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
   initializeChildComponent() {
     this.lookupMarket.setting = {
       columnType: 'id',
-      dialogTitle: this.translater.get(NavTranslates.Company.market),
+      dialogTitle: this.translator.get(NavTranslates.Company.market),
       dataService: this.marketService,
       maxSelectItems: 1,
       newComponent: OliveMarketManagerComponent,

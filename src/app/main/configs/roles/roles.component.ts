@@ -30,7 +30,7 @@ export class OliveRolesComponent implements OnInit, AfterViewInit {
   loadingIndicator: boolean;
 
   constructor(
-    private translater: FuseTranslationLoaderService,
+    private translator: FuseTranslationLoaderService,
     private alertService: AlertService,
     private accountService: AccountService,
     private snackBar: MatSnackBar,
@@ -126,7 +126,7 @@ export class OliveRolesComponent implements OnInit, AfterViewInit {
               this.alertService.stopLoadingMessage();
               this.loadingIndicator = false;
 
-              this.alertService.showStickyMessage('Delete Error', `An error occured whilst deleting the role.\r\nError: "${Utilities.getHttpResponseMessage(error)}"`,
+              this.alertService.showStickyMessage('Delete Error', `An error occurred whilst deleting the role.\r\nError: "${Utilities.getHttpResponseMessage(error)}"`,
                 MessageSeverity.error, error);
             });
       });

@@ -21,13 +21,13 @@ export class OliveMarketExcelRowManagerComponent extends OliveEntityEditComponen
   rows: any[] = [];
 
   constructor(
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService,  
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
     dataService: OliveMarketExcelRowService
   ) {
     super(
-      translater, alertService,
+      translator, alertService,
       accountService, messageHelper, 
       snackBar, formBuilder,  
       dataService

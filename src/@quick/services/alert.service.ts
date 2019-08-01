@@ -15,7 +15,7 @@ export class AlertService {
     private _isLoading = false;
     private loadingMessageId: any;
 
-    constructor(private translater: FuseTranslationLoaderService) { }
+    constructor(private translator: FuseTranslationLoaderService) { }
 
     showMessageBox(title: string, message: string) {
         this.showDialog(title, message, DialogType.alert, () => null);
@@ -124,7 +124,7 @@ export class AlertService {
 
     showValidationError() {
         this.resetStickyMessage();
-        this.showStickyMessage(this.translater.get('common.title.validationError'), this.translater.get('common.message.validationError'), MessageSeverity.error);
+        this.showStickyMessage(this.translator.get('common.title.validationError'), this.translator.get('common.message.validationError'), MessageSeverity.error);
     }
 
     private showMessageHelper(summary: string, detail: string, severity: MessageSeverity, isSticky: boolean) {

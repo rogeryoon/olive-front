@@ -1,6 +1,7 @@
 ﻿import { NgModule } from '@angular/core';
 
 import { TranslateModule } from '@ngx-translate/core';
+import { NgxBarcodeModule } from 'ngx-barcode';
 
 import { FuseSharedModule } from '@fuse/shared.module';
 
@@ -12,12 +13,14 @@ import { OlivePendingOrderShipOutListComponent } from '../pending-order-ship-out
 import { OlivePendingOrderShipOutPackageListComponent } from '../pending-order-ship-out-package-list/pending-order-ship-out-package-list.component';
 import { OliveProductWeightEditorModule } from 'app/main/productions/products/product/product-weight-editor/product-weight-editor.module';
 import { OliveProductCustomsPriceEditorModule } from 'app/main/productions/products/product/product-customs-price-editor/product-customs-price-editor.module';
-import { OlivePreviewPurchaseOrderComponent } from 'app/main/purchasings/purchases/purchase-order/preview-purchase-order/preview-purchase-order.component';
+import { OlivePreviewPickingListComponent } from '../preview-picking-list/preview-picking-list.component';
+import { OlivePreviewPackingListComponent } from '../preview-packing-list/preview-packing-list.component';
 
 @NgModule({
   imports: [
     FuseSharedModule,
     TranslateModule.forChild(),
+    NgxBarcodeModule,
 
     OliveSharedModule,
     OliveCheckboxSelectorPanelModule,
@@ -29,14 +32,16 @@ import { OlivePreviewPurchaseOrderComponent } from 'app/main/purchasings/purchas
     OliveOrderShipOutPackageListerComponent,
     OlivePendingOrderShipOutListComponent,
     OlivePendingOrderShipOutPackageListComponent,
-    OlivePreviewPurchaseOrderComponent
+    OlivePreviewPickingListComponent,
+    OlivePreviewPackingListComponent
   ],
   providers: [],
   exports: [
   ],
   entryComponents: [
     OliveOrderShipOutPackageListerManagerComponent,
-    OlivePreviewPurchaseOrderComponent
+    OlivePreviewPickingListComponent,
+    OlivePreviewPackingListComponent
   ]
 })
 export class OliveOrderShipOutPackageListerModule { }

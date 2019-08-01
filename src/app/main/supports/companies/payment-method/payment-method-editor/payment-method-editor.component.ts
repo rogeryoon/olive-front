@@ -13,9 +13,9 @@ import { PaymentMethod } from '../../../models/payment-method.model';
 })
 export class OlivePaymentMethodEditorComponent extends OliveEntityFormComponent {
 
-  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
+  constructor(formBuilder: FormBuilder, translator: FuseTranslationLoaderService) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 

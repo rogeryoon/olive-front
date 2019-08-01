@@ -50,14 +50,14 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
   excelRowsStatus: MarketExcelRowsStatus;
 
   constructor(
-    translater: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
+    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OliveMarketExcelRowService,
     private route: ActivatedRoute, private router: Router
   ) {
     super(
-      translater, deviceService,
+      translator, deviceService,
       alertService, accountService,
       messageHelper, documentService,
       dialog, dataService
@@ -88,37 +88,37 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
         { data: Selected },
         // 2
         {
-          data: Id, thName: this.translater.get('common.tableHeader.id'),
+          data: Id, thName: this.translator.get('common.tableHeader.id'),
           tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id'
         },
         // 3
         {
-          data: OrderNumber, orderable: false, thName: this.translater.get('common.tableHeader.orderNumber'),
+          data: OrderNumber, orderable: false, thName: this.translator.get('common.tableHeader.orderNumber'),
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text'
         },
         // 4
         {
-          data: Consignee, orderable: false, thName: this.translater.get('common.tableHeader.consignee'),
+          data: Consignee, orderable: false, thName: this.translator.get('common.tableHeader.consignee'),
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text'
         },
         // 5
         {
-          data: ProductName, orderable: false, thName: this.translater.get('common.tableHeader.itemsName'),
+          data: ProductName, orderable: false, thName: this.translator.get('common.tableHeader.itemsName'),
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text'
         },
         // 6
         {
-          data: Quantity, orderable: false, thName: this.translater.get('common.tableHeader.quantity'),
+          data: Quantity, orderable: false, thName: this.translator.get('common.tableHeader.quantity'),
           tdClass: 'print left -ex-type-number', thClass: 'print -ex-type-number'
         },
         // 7
         {
-          data: MarketItemMappingId, orderable: false, thName: this.translater.get('common.tableHeader.productMatched'),
+          data: MarketItemMappingId, orderable: false, thName: this.translator.get('common.tableHeader.productMatched'),
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text'
         },
         // 8
         {
-          data: OrderId, orderable: false, thName: this.translater.get('common.tableHeader.orderTransferred'),
+          data: OrderId, orderable: false, thName: this.translator.get('common.tableHeader.orderTransferred'),
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text'
         },
       ],
@@ -132,7 +132,7 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
       //   {
       //     id: 'linkProduct',
       //     iconName: NavIcons.Sales.matchItems,
-      //     titleId: 'sales.maketExcelRows.linkProductMenu'
+      //     titleId: 'sales.marketExcelRows.linkProductMenu'
       //   }
       // ]
     };
@@ -152,7 +152,7 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
         if (this.excelRowsStatus.unmappedProducts > 0) {
           this.setting.customContextMenus = [{
             iconName: NavIcons.Sales.matchItems,
-            titleId: 'sales.maketExcelRows.linkProductMenu'
+            titleId: 'sales.marketExcelRows.linkProductMenu'
           }];
 
           const dialogRef = this.dialog.open(
@@ -161,7 +161,7 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
               disableClose: false,
               panelClass: 'mat-dialog-md',
               data: { 
-                title: this.translater.get('sales.maketExcelRows.unmappedProductsTitle'),
+                title: this.translator.get('sales.marketExcelRows.unmappedProductsTitle'),
                 count: this.excelRowsStatus.unmappedProducts
               } as OliveTaskCountSetting
             });
@@ -173,7 +173,7 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
         else if (this.excelRowsStatus.transferableOrders > 0) {
           this.setting.customContextMenus = [{
             iconName: NavIcons.Sales.orderList,
-            titleId: 'sales.maketExcelRows.transferOrders'
+            titleId: 'sales.marketExcelRows.transferOrders'
           }];
 
           const dialogRef = this.dialog.open(
@@ -182,7 +182,7 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
               disableClose: false,
               panelClass: 'mat-dialog-md',
               data: { 
-                title: this.translater.get('sales.maketExcelRows.transferableOrdersTitle'),
+                title: this.translator.get('sales.marketExcelRows.transferableOrdersTitle'),
                 count: this.excelRowsStatus.transferableOrders,
                 buttonColor: 'primary'
               } as OliveTaskCountSetting
@@ -190,26 +190,26 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
       
           dialogRef.componentInstance.onTask.subscribe(data => {
             this.alertService.showDialog(
-              this.translater.get('common.title.finalConfirm'),
-              this.translater.get('sales.maketExcelRows.finalTransferOrdersConfirmMessage'),
+              this.translator.get('common.title.finalConfirm'),
+              this.translator.get('sales.marketExcelRows.finalTransferOrdersConfirmMessage'),
               DialogType.confirm,
               () => this.transferOrders(),
               () => null,
-              this.translater.get('common.button.yes'),
-              this.translater.get('common.button.no')
+              this.translator.get('common.button.yes'),
+              this.translator.get('common.button.no')
             );
-          });          
+          });
         }
       },
       error => {
         this.loadingIndicator = false;
-        this.messageHelper.showLoadFaildSticky(error);
+        this.messageHelper.showLoadFailedSticky(error);
       }
     );    
   }
 
   listTitle() {
-    return `${this.translater.get('common.word.excel')}-${this.interfaceName}`;
+    return `${this.translator.get('common.word.excel')}-${this.interfaceName}`;
   }
 
   getEditorCustomTitle(item: MarketExcelRow) {
@@ -306,15 +306,15 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
 
         this.alertService.showDialog
         (
-          this.translater.get('common.title.success'),
-          String.Format(this.translater.get('sales.maketExcelRows.transferOrdersSuccessMessage'), transferredOrderCount),
+          this.translator.get('common.title.success'),
+          String.Format(this.translator.get('sales.marketExcelRows.transferOrdersSuccessMessage'), transferredOrderCount),
           DialogType.alert,
           () => this.router.navigateByUrl('/orders/list')
         );          
       },
       error => {
         this.loadingIndicator = false;
-        this.messageHelper.showLoadFaildSticky(error);
+        this.messageHelper.showLoadFailedSticky(error);
       }
     );    
   }

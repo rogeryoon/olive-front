@@ -38,12 +38,12 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   standCurrencyCode: string;
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private supplierService: OliveSupplierService, private warehouseService: OliveWarehouseService,
     private cacheService: OliveCacheService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -123,7 +123,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     this.lookupSupplier.setting = {
       name: 'Supplier',
       columnType: 'code',
-      dialogTitle: this.translater.get(NavTranslates.Company.supplier),
+      dialogTitle: this.translator.get(NavTranslates.Company.supplier),
       dataService: this.supplierService,
       maxSelectItems: 1,
       newComponent: OliveSupplierManagerComponent,
@@ -135,7 +135,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     this.lookupWarehouse.setting = {
       name: 'Warehouse',
       columnType: 'code',
-      dialogTitle: this.translater.get(NavTranslates.Company.warehouse),
+      dialogTitle: this.translator.get(NavTranslates.Company.warehouse),
       dataService: this.warehouseService,
       maxSelectItems: 1,
       newComponent: OliveWarehouseManagerComponent,

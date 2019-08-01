@@ -1,12 +1,12 @@
 import { FormGroup, Validators } from '@angular/forms';
 
-import { TableDatasource } from 'app/core/classes/table-datasource';
+import { TableDataSource } from 'app/core/classes/table-data-source';
 import { PurchaseOrderItem } from '../../../models/purchase-order-item.model';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator } from 'app/core/classes/validators';
 import { Currency } from 'app/main/supports/models/currency.model';
 
-export class OlivePurchaseOrderItemDatasource extends TableDatasource {
+export class OlivePurchaseOrderItemDataSource extends TableDataSource {
 
     poCurrency: Currency = null;
     exchangeRate = 0;
@@ -27,14 +27,14 @@ export class OlivePurchaseOrderItemDatasource extends TableDatasource {
 
     createRowFormGroup(r: any): FormGroup {
         const f = new FormGroup({
-            name: this.createNewFormContorl(r, 'name', [Validators.required]),
-            quantity: this.createNewFormContorl(r, 'quantity', [numberValidator(0, true, 1)]),
-            price: this.createNewFormContorl(r, 'price', [numberValidator(this.standCurrency.decimalPoint, true)]),
-            discount: this.createNewFormContorl(r, 'discount', [numberValidator(this.standCurrency.decimalPoint, true)]),
-            appliedCost: this.createNewFormContorl(r, 'appliedCost', [numberValidator(this.standCurrency.decimalPoint, true)]),
-            otherCurrencyPrice: this.createNewFormContorl(r, 'otherCurrencyPrice', 
+            name: this.createNewFormControl(r, 'name', [Validators.required]),
+            quantity: this.createNewFormControl(r, 'quantity', [numberValidator(0, true, 1)]),
+            price: this.createNewFormControl(r, 'price', [numberValidator(this.standCurrency.decimalPoint, true)]),
+            discount: this.createNewFormControl(r, 'discount', [numberValidator(this.standCurrency.decimalPoint, true)]),
+            appliedCost: this.createNewFormControl(r, 'appliedCost', [numberValidator(this.standCurrency.decimalPoint, true)]),
+            otherCurrencyPrice: this.createNewFormControl(r, 'otherCurrencyPrice', 
                 [numberValidator(this.appliedCurrency.decimalPoint, this.otherCurrencyPriceRequired)]),
-            remark: this.createNewFormContorl(r, 'remark', [])
+            remark: this.createNewFormControl(r, 'remark', [])
         });
         return f;
     }

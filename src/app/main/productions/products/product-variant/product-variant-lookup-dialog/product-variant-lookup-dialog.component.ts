@@ -30,7 +30,7 @@ export class OliveProductVariantLookupDialogComponent extends OliveLookupDialogC
     formBuilder: FormBuilder,
     dialogRef: MatDialogRef<OliveProductVariantLookupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) setting: LookupListerSetting,
-    translater: FuseTranslationLoaderService,
+    translator: FuseTranslationLoaderService,
     alertService: AlertService,
     messageHelper: OliveMessageHelperService,
     deviceService: DeviceDetectorService
@@ -38,7 +38,7 @@ export class OliveProductVariantLookupDialogComponent extends OliveLookupDialogC
     super(
       dialog, formBuilder,
       dialogRef, setting,
-      translater, alertService,
+      translator, alertService,
       messageHelper, deviceService
     );
   }

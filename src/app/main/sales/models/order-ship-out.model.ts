@@ -20,5 +20,5 @@ export class OrderShipOut extends OliveTrackingAttribute {
     combinedShipAddressName?: string;
     combinedShipDeliveryInfoSelected?: boolean;
 
-    selecteds?: boolean[];
+    choices?: boolean[];
 }

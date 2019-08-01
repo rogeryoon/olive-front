@@ -35,13 +35,13 @@ const CreatedUtc = 'createdUtc';
 })
 export class OliveMarketsComponent extends OliveEntityListComponent {
   constructor(
-    translater: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
+    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OliveMarketService
   ) {
       super(
-        translater, deviceService,
+        translator, deviceService,
         alertService, accountService,
         messageHelper, documentService, 
         dialog, dataService
@@ -55,15 +55,15 @@ export class OliveMarketsComponent extends OliveEntityListComponent {
       managePermission: null,
       columns: [
         { data: Selected },
-        { data: Code, thName: this.translater.get('common.tableHeader.code'), 
+        { data: Code, thName: this.translator.get('common.tableHeader.code'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
-        { data: Name, thName: this.translater.get('common.tableHeader.name'), 
+        { data: Name, thName: this.translator.get('common.tableHeader.name'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
-        { data: WebSite, thName: this.translater.get('common.tableHeader.webSite'), 
+        { data: WebSite, thName: this.translator.get('common.tableHeader.webSite'), 
           tdClass: 'print left -ex-type-text link', thClass: 'print -ex-type-text' }, 
-        { data: Activated, thName: this.translater.get('common.tableHeader.activated'), 
+        { data: Activated, thName: this.translator.get('common.tableHeader.activated'), 
           tdClass: '', thClass: '' },
-        { data: CreatedUtc, thName: this.translater.get('common.tableHeader.createdUtc'), 
+        { data: CreatedUtc, thName: this.translator.get('common.tableHeader.createdUtc'), 
           tdClass: '', thClass: '' }
       ],
       editComponent: OliveMarketManagerComponent,

@@ -22,13 +22,13 @@ export class OliveProductCustomsPriceEditorComponent extends OliveEntityEditComp
   weightTypes: any[] = OliveConstants.weightTypes;
   
   constructor(
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
     dataService: OliveProductService
   ) {
     super(
-      translater, alertService,
+      translator, alertService,
       accountService, messageHelper, 
       snackBar, formBuilder, 
       dataService
@@ -58,8 +58,8 @@ export class OliveProductCustomsPriceEditorComponent extends OliveEntityEditComp
 
   get weightInputUserNames(): string[] {
     return [
-      this.translater.get('common.word.productGroupCustomsPrice'), 
-      this.translater.get('common.word.productVariantCustomsPrice')
+      this.translator.get('common.word.productGroupCustomsPrice'), 
+      this.translator.get('common.word.productVariantCustomsPrice')
     ];
   }
 

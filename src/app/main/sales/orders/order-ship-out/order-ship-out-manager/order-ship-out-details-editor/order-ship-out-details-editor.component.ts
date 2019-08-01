@@ -19,7 +19,7 @@ import { ProductVariant } from 'app/main/productions/models/product-variant.mode
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { IdName } from 'app/core/models/id-name';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { OliveOrderShipOutDetailDatasource } from './order-ship-out-detail.datasource';
+import { OliveOrderShipOutDetailDataSource } from './order-ship-out-detail-data-source';
 import { OrderShipOutDetail } from 'app/main/sales/models/order-ship-out-detail.model';
 
 @Component({
@@ -42,18 +42,18 @@ import { OrderShipOutDetail } from 'app/main/sales/models/order-ship-out-detail.
 export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
   displayedColumns = ['productVariantId36', 'productName', 'quantity', 'actions'];
   dataSource: 
-  OliveOrderShipOutDetailDatasource = new OliveOrderShipOutDetailDatasource(this.cacheService, this.productVariantService);
+  OliveOrderShipOutDetailDataSource = new OliveOrderShipOutDetailDataSource(this.cacheService, this.productVariantService);
 
   value: any = null;
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private alertService: AlertService, private snackBar: MatSnackBar,
     private cacheService: OliveCacheService, private dialog: MatDialog,
     private productVariantService: OliveProductVariantService, private messageHelperService: OliveMessageHelperService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -74,7 +74,7 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
 
   buildForm() {
     this.oFormArray = this.formBuilder.array([]);
-    this.oForm = this.formBuilder.group({ formarray: this.oFormArray });
+    this.oForm = this.formBuilder.group({ formArray: this.oFormArray });
     this.dataSource.formGroup = this.oForm;
   }
 
@@ -119,8 +119,8 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
   protected hasOtherError(): boolean {
     if (this.noItemSelectedError) {
       this.alertService.showMessageBox(
-        this.translater.get('common.title.errorConfirm'),
-        this.translater.get('common.message.noItemCreated')
+        this.translator.get('common.title.errorConfirm'),
+        this.translator.get('common.message.noItemCreated')
       );
 
       return true;
@@ -140,7 +140,7 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
         data: {
           name: 'ProductVariant',
           columnType: 'id',
-          dialogTitle: this.translater.get(NavTranslates.Product.productVariant),
+          dialogTitle: this.translator.get(NavTranslates.Product.productVariant),
           dataService: this.productVariantService,
           maxSelectItems: 10,
           newComponent: OliveProductVariantManagerComponent,
@@ -155,14 +155,14 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
         if (!pvItems || pvItems.length === 0) { return; }
   
         const duplicatedIdStrings: string[] = [];
-        const dupProductVariantIdCheckset = new Set();
+        const dupProductVariantIdCheckSet = new Set();
   
         this.dataSource.items.forEach((dsItem: OrderShipOutDetail) => {
           pvItems
             .filter((pvItem: ProductVariant) => dsItem.productVariantId === pvItem.id)
             .forEach((pvItem: ProductVariant) => {
-              if (!dupProductVariantIdCheckset.has(pvItem.id)) {
-                dupProductVariantIdCheckset.add(pvItem.id);
+              if (!dupProductVariantIdCheckSet.has(pvItem.id)) {
+                dupProductVariantIdCheckSet.add(pvItem.id);
                 duplicatedIdStrings.push(
                   `${this.id36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trimRight());
               }
@@ -172,7 +172,7 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
         let needToRender = false;
   
         pvItems
-          .filter((pvItem: ProductVariant) => !dupProductVariantIdCheckset.has(pvItem.id))
+          .filter((pvItem: ProductVariant) => !dupProductVariantIdCheckSet.has(pvItem.id))
           .forEach((pvItem: ProductVariant) => {
             this.dataSource.addNewItem({
               quantity: 1,
@@ -217,8 +217,8 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
   private deleteItem(item: any) {
     if (item.Obj.productVariantId36) {
       this.snackBar.open(
-        OliveUtilities.showParamMessage(this.translater.get('common.message.confirmDelete')),
-        this.translater.get('common.button.delete'),
+        OliveUtilities.showParamMessage(this.translator.get('common.message.confirmDelete')),
+        this.translator.get('common.button.delete'),
         { duration: 5000 }
       )
         .onAction().subscribe(() => {
@@ -233,7 +233,7 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
   private deleteUnit(item: any) {
     this.dataSource.deleteItem(item);
     if (this.dataSource.items.length === 0) {
-      const fa = <FormArray>this.oForm.get('formarray');
+      const fa = <FormArray>this.oForm.get('formArray');
       fa.removeAt(0);
     }    
   }

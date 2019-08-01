@@ -38,13 +38,13 @@ const CreatedUtc = 'createdUtc';
 })
 export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
   constructor(
-    translater: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
+    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OliveOrderShipOutService
   ) {
     super(
-      translater, deviceService,
+      translator, deviceService,
       alertService, accountService,
       messageHelper, documentService,
       dialog, dataService
@@ -60,24 +60,24 @@ export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
         // 1
         { data: Selected },
         // 2
-        { data: Id, thName: this.translater.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
+        { data: Id, thName: this.translator.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: SellerCode, orderable: false, thName: this.translater.get('common.tableHeader.seller'), 
+        { data: SellerCode, orderable: false, thName: this.translator.get('common.tableHeader.seller'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 4        
-        { data: OrdererName, orderable: false, thName: this.translater.get('common.tableHeader.orderer'), 
+        { data: OrdererName, orderable: false, thName: this.translator.get('common.tableHeader.orderer'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 5
-        { data: ProductName, orderable: false, thName: this.translater.get('common.tableHeader.itemsName'), 
+        { data: ProductName, orderable: false, thName: this.translator.get('common.tableHeader.itemsName'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 6
-        { data: Quantity, orderable: false, thName: this.translater.get('common.tableHeader.quantity'), 
+        { data: Quantity, orderable: false, thName: this.translator.get('common.tableHeader.quantity'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 7
-        { data: Status, orderable: false, thName: this.translater.get('common.tableHeader.status'), 
+        { data: Status, orderable: false, thName: this.translator.get('common.tableHeader.status'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 8
-        { data: CreatedUtc, orderable: false, thName: this.translater.get('common.tableHeader.createdUtc'), 
+        { data: CreatedUtc, orderable: false, thName: this.translator.get('common.tableHeader.createdUtc'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' }
       ],
       editComponent: OliveOrderShipOutManagerComponent,
@@ -155,7 +155,7 @@ export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
       return `${item.orderFk.marketSellerFk.code} - ${item.orderFk.marketOrdererName} (${this.getOrderCount(item)})`;
     }
     else {
-      return this.translater.get(NavTranslates.Sales.orderList);
+      return this.translator.get(NavTranslates.Sales.orderList);
     }
   }
 

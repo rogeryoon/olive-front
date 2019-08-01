@@ -47,7 +47,7 @@ export class OliveReferHostComponent implements ControlValueAccessor, OnInit, Va
 
   constructor(
     private dialog: MatDialog, private _renderer: Renderer2, 
-    private translater: FuseTranslationLoaderService, private messageHelper: OliveMessageHelperService
+    private translator: FuseTranslationLoaderService, private messageHelper: OliveMessageHelperService
   ) 
   {
   }
@@ -81,7 +81,7 @@ export class OliveReferHostComponent implements ControlValueAccessor, OnInit, Va
         },
         error => {
           this.loadingIndicator = false;            
-          this.messageHelper.showLoadFaildSticky(error);
+          this.messageHelper.showLoadFailedSticky(error);
         }
       );
     }

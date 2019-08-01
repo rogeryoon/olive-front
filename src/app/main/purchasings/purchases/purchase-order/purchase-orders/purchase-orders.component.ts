@@ -52,7 +52,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
   purchaseService: OlivePurchaseOrderService;
 
   constructor(
-    translater: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
+    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OlivePurchaseOrderService,
@@ -60,7 +60,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     private inWarehouseItemService: OliveInWarehouseItemService
   ) {
     super(
-      translater, deviceService,
+      translator, deviceService,
       alertService, accountService,
       messageHelper, documentService,
       dialog, dataService
@@ -78,31 +78,31 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         // 1
         { data: Selected },
         // 2ㄴ
-        { data: Id, thName: this.translater.get('common.tableHeader.id'), 
+        { data: Id, thName: this.translator.get('common.tableHeader.id'), 
           tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: SupplierName, orderable: false, thName: this.translater.get('common.tableHeader.supplier'), 
+        { data: SupplierName, orderable: false, thName: this.translator.get('common.tableHeader.supplier'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 4
-        { data: ItemsName, orderable: false, thName: this.translater.get('common.tableHeader.itemsName'), 
+        { data: ItemsName, orderable: false, thName: this.translator.get('common.tableHeader.itemsName'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 5
-        { data: Warehouse, orderable: false, thName: this.translater.get('common.tableHeader.warehouse'), 
+        { data: Warehouse, orderable: false, thName: this.translator.get('common.tableHeader.warehouse'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },        
         // 6
-        { data: TotalAmount, thName: this.translater.get('purchasing.purchaseOrdersHeader.totalAmount'), 
+        { data: TotalAmount, thName: this.translator.get('purchasing.purchaseOrdersHeader.totalAmount'), 
           tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
         // 7
-        { data: PaymentsName, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.paymentsName'), 
+        { data: PaymentsName, orderable: false, thName: this.translator.get('purchasing.purchaseOrdersHeader.paymentsName'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 8
-        { data: InWarehouseStatusLink, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.inWarehouseStatusLink'), 
+        { data: InWarehouseStatusLink, orderable: false, thName: this.translator.get('purchasing.purchaseOrdersHeader.inWarehouseStatusLink'), 
           tdClass: 'left -ex-type-text', thClass: '-ex-type-text' },
         // 9
-        { data: FinishLink, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.finishLink'), 
+        { data: FinishLink, orderable: false, thName: this.translator.get('purchasing.purchaseOrdersHeader.finishLink'), 
           tdClass: 'left -ex-type-text foreground-blue', thClass: '-ex-type-text' },
         // 10
-        { data: PrintLink, orderable: false, thName: this.translater.get('purchasing.purchaseOrdersHeader.printLink'), 
+        { data: PrintLink, orderable: false, thName: this.translator.get('purchasing.purchaseOrdersHeader.printLink'), 
           tdClass: 'left -ex-type-text foreground-blue', thClass: '-ex-type-text' }
       ],
       editComponent: OlivePurchaseOrderManagerComponent,
@@ -113,10 +113,10 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: PurchaseOrder): string {
     if (item) {
-      return `${this.translater.get('navi.purchase.group')} ID : ${this.dateCode(item.date, item.id)}`;
+      return `${this.translator.get('navi.purchase.group')} ID : ${this.dateCode(item.date, item.id)}`;
     }
     else {
-      return this.translater.get(NavTranslates.Purchase.entry);
+      return this.translator.get(NavTranslates.Purchase.entry);
     }
   }
 
@@ -224,11 +224,11 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       case InWarehouseStatusLink:
         if (item.purchaseOrderItems.length) {
           retValue = item.inWarehouseCompletedDate ?
-          this.translater.get('common.status.inWarehouseComplete') :
-          this.translater.get('common.status.inWarehousePending');
+          this.translator.get('common.status.inWarehouseComplete') :
+          this.translator.get('common.status.inWarehousePending');
         }
         else {
-          retValue = this.translater.get('common.status.inItemEntry');
+          retValue = this.translator.get('common.status.inItemEntry');
         }
         break;
 
@@ -303,14 +303,14 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         let message = '';
 
         if (transactionType === 'close') {
-          message = this.translater.get('purchasing.purchaseOrders.closed');
+          message = this.translator.get('purchasing.purchaseOrders.closed');
         }
         else if (transactionType === 'open') {
-          message = this.translater.get('purchasing.purchaseOrders.opened');
+          message = this.translator.get('purchasing.purchaseOrders.opened');
         }
 
         this.alertService.showMessage(
-          this.translater.get('common.title.success'), 
+          this.translator.get('common.title.success'), 
           message, 
           MessageSeverity.success
         );
@@ -342,33 +342,33 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     }
     else { // 종결 요청 Validation
       if (item.purchaseOrderItems.length === 0) { // No Item?
-        errorDialogTitle = this.translater.get('common.title.errorConfirm');
-        errorDialogMessage = this.translater.get('purchasing.purchaseOrders.noItem');
+        errorDialogTitle = this.translator.get('common.title.errorConfirm');
+        errorDialogMessage = this.translator.get('purchasing.purchaseOrders.noItem');
         startTabIndex = 1;
       }
       else if (item.purchaseOrderPayments.length === 0) { // No Payment?
-        errorDialogTitle = this.translater.get('common.title.errorConfirm');
-        errorDialogMessage = this.translater.get('purchasing.purchaseOrders.noPayment');
+        errorDialogTitle = this.translator.get('common.title.errorConfirm');
+        errorDialogMessage = this.translator.get('purchasing.purchaseOrders.noPayment');
         startTabIndex = 2;
       }
       else if (item.inWarehouseCompletedDate) { // 입고완료
         transactionType = 'close';
       }
       else { // 입고중
-        errorDialogTitle = this.translater.get('common.title.errorConfirm');
-        errorDialogMessage = this.translater.get('purchasing.purchaseOrders.pendingInWarehouse');
+        errorDialogTitle = this.translator.get('common.title.errorConfirm');
+        errorDialogMessage = this.translator.get('purchasing.purchaseOrders.pendingInWarehouse');
       }
     }
 
     if (transactionType) { // 저장 확인
       this.alertService.showDialog(
-        this.translater.get('common.title.yesOrNo'),
-        transactionType === 'open' ? this.translater.get('purchasing.purchaseOrders.confirmOpen') : this.translater.get('purchasing.purchaseOrders.confirmClose'),
+        this.translator.get('common.title.yesOrNo'),
+        transactionType === 'open' ? this.translator.get('purchasing.purchaseOrders.confirmOpen') : this.translator.get('purchasing.purchaseOrders.confirmClose'),
         DialogType.confirm,
         () => this.patchPurchaseOrder(item, transactionType),
         () => null,
-        this.translater.get('common.button.save'),
-        this.translater.get('common.button.cancel')
+        this.translator.get('common.button.save'),
+        this.translator.get('common.button.cancel')
       );
     }
     else {
@@ -393,7 +393,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
           columnType: 'custom',
           disableSearchInput: true,
           customClick: true,
-          dialogTitle: this.translater.get(NavTranslates.InWarehouse.status),
+          dialogTitle: this.translator.get(NavTranslates.InWarehouse.status),
           itemType: InWarehouseItem,
           dataService: this.inWarehouseItemService,
           extraSearches: [{ name: 'status', value: item.id }] as NameValue[]
@@ -413,8 +413,8 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       const startTabIndex = 1;
       this.alertService.showDialog
       (
-        this.translater.get('common.title.errorConfirm'),
-        this.translater.get('purchasing.purchaseOrders.noItemToPrint'),
+        this.translator.get('common.title.errorConfirm'),
+        this.translator.get('purchasing.purchaseOrders.noItemToPrint'),
         DialogType.alert,
         () => this.editItem(item, new Event('custom'), startTabIndex)
       );

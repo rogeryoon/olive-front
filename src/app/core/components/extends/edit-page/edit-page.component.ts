@@ -42,11 +42,11 @@ export class OliveEditPageComponent extends OliveBaseComponent implements OnInit
   createdComponent: OliveOnEdit;
 
   constructor(
-    private componentFactoryResolver: ComponentFactoryResolver, translater: FuseTranslationLoaderService,
+    private componentFactoryResolver: ComponentFactoryResolver, translator: FuseTranslationLoaderService,
     private accountService: AccountService, private alertService: AlertService,
     private router: Router
   ) {
-    super(translater);
+    super(translator);
   }
 
   ngOnInit() {
@@ -65,8 +65,8 @@ export class OliveEditPageComponent extends OliveBaseComponent implements OnInit
 
   showEditCompleted() {
     this.alertService.showDialog(
-      this.translater.get('common.title.success'),
-      this.translater.get('common.message.requestFinished'),
+      this.translator.get('common.title.success'),
+      this.translator.get('common.message.requestFinished'),
       DialogType.alert,
       () => this.router.navigate([this.setting.itemListPath])
     );
@@ -88,7 +88,7 @@ export class OliveEditPageComponent extends OliveBaseComponent implements OnInit
   }
 
   get title(): any {
-    return { title: this.translater.get(this.setting.translateTitleId) };
+    return { title: this.translator.get(this.setting.translateTitleId) };
   }
 
   get pageIcon() {

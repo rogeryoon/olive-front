@@ -22,9 +22,9 @@ export class OliveProductClassEditorComponent extends OliveEntityFormComponent {
   @ViewChild('tags') 
   tags: OliveChipInputComponent;
 
-  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
+  constructor(formBuilder: FormBuilder, translator: FuseTranslationLoaderService) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 

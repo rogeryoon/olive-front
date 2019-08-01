@@ -40,7 +40,7 @@ export class OliveInventoryBalanceSaveComponent implements AfterViewInit, OnDest
 
   inventoryTableId = 'inventories-table';
   constructor(
-    private translater: FuseTranslationLoaderService,
+    private translator: FuseTranslationLoaderService,
     private deviceService: DeviceDetectorService,
     private alertService: AlertService,
     private accountService: AccountService,
@@ -99,7 +99,7 @@ export class OliveInventoryBalanceSaveComponent implements AfterViewInit, OnDest
               this.alertService.stopLoadingMessage();
               this.loadingIndicator = false;
 
-              this.messageHelper.showLoadFaildSticky(error);
+              this.messageHelper.showLoadFailedSticky(error);
             });
       },
       columns: [
@@ -132,11 +132,11 @@ export class OliveInventoryBalanceSaveComponent implements AfterViewInit, OnDest
     this.dtTrigger.unsubscribe();
   }
 
-  rerender(): void {
+  reRender(): void {
     this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
       // Destroy the table first
       dtInstance.destroy();
-      // Call the dtTrigger to rerender again
+      // Call the dtTrigger to reRender again
       this.dtTrigger.next();
     });
   }
@@ -173,10 +173,10 @@ export class OliveInventoryBalanceSaveComponent implements AfterViewInit, OnDest
   }
 
   onExcel() {
-    this.documentService.exportExcel(this.translater.get('navi.product.inventoriesBalance'), this.inventoryTableId);
+    this.documentService.exportHtmlTableToExcel(this.translator.get('navi.product.inventoriesBalance'), this.inventoryTableId);
   }
 
   onPrint() {
-    this.documentService.printTable(this.translater.get('navi.product.inventoriesBalance'), this.inventoryTableId);
+    this.documentService.printTable(this.translator.get('navi.product.inventoriesBalance'), this.inventoryTableId);
   }
 }

@@ -16,10 +16,10 @@ import { DeliveryTag } from 'app/core/models/delivery-tag.model';
 export class OliveDeliveryTagEditorComponent extends OliveEntityFormComponent {
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 

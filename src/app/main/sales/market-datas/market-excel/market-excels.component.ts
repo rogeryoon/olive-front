@@ -35,14 +35,14 @@ const CreatedUtc = 'createdUtc';
 })
 export class OliveMarketExcelsComponent extends OliveEntityListComponent {
   constructor(
-    translater: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
+    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OliveMarketExcelService,
     private router: Router
   ) {
       super(
-        translater, deviceService,
+        translator, deviceService,
         alertService, accountService,
         messageHelper, documentService, 
         dialog, dataService
@@ -56,10 +56,10 @@ export class OliveMarketExcelsComponent extends OliveEntityListComponent {
       managePermission: null,
       columns: [
         { data: Selected },
-        { data: Id, thName: this.translater.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
-        { data: InterfaceName, thName: this.translater.get('common.tableHeader.interfaceName'),  tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
-        { data: TransferredUtc, thName: this.translater.get('common.tableHeader.imported'), tdClass: '', thClass: '' },
-        { data: CreatedUtc, thName: this.translater.get('common.tableHeader.createdUtc'), tdClass: '', thClass: '' }
+        { data: Id, thName: this.translator.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
+        { data: InterfaceName, thName: this.translator.get('common.tableHeader.interfaceName'),  tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
+        { data: TransferredUtc, thName: this.translator.get('common.tableHeader.imported'), tdClass: '', thClass: '' },
+        { data: CreatedUtc, thName: this.translator.get('common.tableHeader.createdUtc'), tdClass: '', thClass: '' }
       ],
       itemType: MarketExcel,
       disabledContextMenus: [ OliveConstants.contextMenu.newItem, OliveConstants.contextMenu.excel, OliveConstants.contextMenu.print ],

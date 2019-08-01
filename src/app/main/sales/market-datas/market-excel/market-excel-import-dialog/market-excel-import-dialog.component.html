@@ -14,10 +14,10 @@
 
         <div *ngIf="!uploadData && sellerSelected" fxLayout="column" fxLayout.lt-sm="column" fxLayoutGap="1em" class="mt-8 mb-8">
             {{translate('common.message.clickFileButton')}}
-            <button mat-raised-button (click)="excelfile.click()" [disabled]="showLoadingBar" color="primary" class="w-300 mt-4">
-                <mat-icon>ballot</mat-icon> {{translate('common.button.exelFile')}}
+            <button mat-raised-button (click)="excelFile.click()" [disabled]="showLoadingBar" color="primary" class="w-300 mt-4">
+                <mat-icon>ballot</mat-icon> {{translate('common.button.excelFile')}}
             </button>
-            <input #excelfile type="file" id="excelfile" (change)="onUpload($event)" style="display:none;" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+            <input #excelFile type="file" id="excelFile" (change)="onUpload($event)" style="display:none;" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
         </div>
 
         <div fxLayout="column" fxLayout.lt-sm="column" fxLayoutGap="1em" class="mt-8 mb-8">

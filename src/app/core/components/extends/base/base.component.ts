@@ -20,7 +20,7 @@ export class OliveBaseComponent implements OnInit {
   oFormArray: FormArray;
   isNewItem = false;
 
-  constructor(protected translater: FuseTranslationLoaderService) { }
+  constructor(protected translator: FuseTranslationLoaderService) { }
 
   ngOnInit() {
   }
@@ -76,7 +76,7 @@ export class OliveBaseComponent implements OnInit {
   }
 
   get oFArray(): FormArray {
-    return <FormArray>this.getControl('formarray');
+    return <FormArray>this.getControl('formArray');
   }
 
   protected arrayErrorMessage(name: string, index: number): string {
@@ -90,7 +90,7 @@ export class OliveBaseComponent implements OnInit {
    */
   protected requiredAnyErrorMessage(inputNames: string[]): string {
     const inputNamesString = inputNames.join();
-    return String.Format(this.translater.get('common.validate.requiredAny'), inputNamesString);
+    return String.Format(this.translator.get('common.validate.requiredAny'), inputNamesString);
   }
   
   protected errorMessage(name: string): string {
@@ -105,25 +105,25 @@ export class OliveBaseComponent implements OnInit {
     }
 
     if (control.errors.hasOwnProperty('required')) {
-      message = this.translater.get('common.validate.required');
+      message = this.translator.get('common.validate.required');
     }
     else
     if (control.errors.hasOwnProperty('pattern')) {
-      message = this.translater.get('common.validate.pattern');
+      message = this.translator.get('common.validate.pattern');
     }    
     else
     if (control.errors.hasOwnProperty('number')) {
       let decimal = '';
-      decimal = String.Format(this.translater.get('common.validate.decimal'), control.errors.number);
-      message = String.Format(this.translater.get('common.validate.number'), decimal);
+      decimal = String.Format(this.translator.get('common.validate.decimal'), control.errors.number);
+      message = String.Format(this.translator.get('common.validate.number'), decimal);
     }
     else
     if (control.errors.hasOwnProperty('min')) {
-      message = String.Format(this.translater.get('common.validate.minNumber'), control.errors.min);
+      message = String.Format(this.translator.get('common.validate.minNumber'), control.errors.min);
     }
     else
     if (control.errors.hasOwnProperty('max') ) {
-      message = String.Format(this.translater.get('common.validate.maxNumber'), control.errors.max);
+      message = String.Format(this.translator.get('common.validate.maxNumber'), control.errors.max);
     }
 
     return message;

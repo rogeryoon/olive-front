@@ -17,14 +17,14 @@ import { OliveUtilities } from 'app/core/classes/utilities';
 })
 export class OliveProductEditorComponent extends OliveEntityFormComponent {
   weightTypes: any[] = OliveConstants.weightTypes;
-  lenghtTypes: any[] = OliveConstants.lengthTypes;
+  lengthTypes: any[] = OliveConstants.lengthTypes;
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private cacheService: OliveCacheService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 

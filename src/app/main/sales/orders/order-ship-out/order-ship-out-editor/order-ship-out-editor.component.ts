@@ -18,11 +18,11 @@ export class OliveOrderShipOutEditorComponent extends OliveEntityFormComponent {
   readOnly = true;
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private cacheService: OliveCacheService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -89,19 +89,19 @@ export class OliveOrderShipOutEditorComponent extends OliveEntityFormComponent {
     let status1;
 
     if (item.canceledDate) {
-      status1 = this.translater.get('common.status.canceled');
+      status1 = this.translator.get('common.status.canceled');
     }
     else if (item.shipOutDate) {
-      status1 = this.translater.get('common.status.shipped');
+      status1 = this.translator.get('common.status.shipped');
     }
     else {
-      status1 = this.translater.get('common.status.pending');
+      status1 = this.translator.get('common.status.pending');
     }
 
     let status2 = null;
 
     if (item.orderFk.itemsChanged) {
-      status2 = this.translater.get('common.status.itemChanged');
+      status2 = this.translator.get('common.status.itemChanged');
     }
 
     return status2 ? `${status1} - [${status2}]` : status1;

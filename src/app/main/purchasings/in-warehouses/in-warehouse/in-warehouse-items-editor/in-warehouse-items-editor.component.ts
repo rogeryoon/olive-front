@@ -2,8 +2,7 @@ import { Component, forwardRef, Output, EventEmitter, Input } from '@angular/cor
 import {
   FormBuilder, FormControl, ValidationErrors,
   NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor,
-  Validator, FormGroup
-} from '@angular/forms';
+  Validator } from '@angular/forms';
 import { MatSnackBar, MatDialog } from '@angular/material';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -11,7 +10,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { Permission } from '@quick/models/permission.model';
 import { AlertService } from '@quick/services/alert.service';
 
-import { OliveInWarehouseItemDatasource } from './in-warehouse-item-datasource';
+import { OliveInWarehouseItemDataSource } from './in-warehouse-item-data-source';
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
@@ -46,7 +45,7 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 })
 export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
   displayedColumns = ['productVariantId', 'name', 'balance', 'price', 'quantityDue', 'quantity', 'remark', 'actions'];
-  dataSource: OliveInWarehouseItemDatasource = new OliveInWarehouseItemDatasource(this.cacheService);
+  dataSource: OliveInWarehouseItemDataSource = new OliveInWarehouseItemDataSource(this.cacheService);
 
   warehouse: Warehouse;
   value: InWarehouseItem[] = null;
@@ -57,13 +56,13 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   @Output() inWarehouseItemAdded = new EventEmitter();
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private purchaseOrderService: OlivePurchaseOrderService, private snackBar: MatSnackBar,
     private dialog: MatDialog, private alertService: AlertService,
     private cacheService: OliveCacheService, private messageHelperService: OliveMessageHelperService,
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -82,7 +81,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   buildForm() {
     this.oFormArray = this.formBuilder.array([]);
     this.oForm = this.formBuilder.group({
-      formarray: this.oFormArray
+      formArray: this.oFormArray
     });
     this.dataSource.formGroup = this.oForm;
   }
@@ -130,8 +129,8 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   private deleteItem(item: any) {
     if (item.Obj.id || item.Obj.name || item.Obj.quantity || item.Obj.price || item.Obj.remark) {
       this.snackBar.open(
-        OliveUtilities.showParamMessage(this.translater.get('common.message.confirmDelete')),
-        this.translater.get('common.button.delete'),
+        OliveUtilities.showParamMessage(this.translator.get('common.message.confirmDelete')),
+        this.translator.get('common.button.delete'),
         { duration: 5000 }
       )
         .onAction().subscribe(() => {
@@ -201,7 +200,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
         data: {
           name: 'PurchaseOrder',
           columnType: 'custom',
-          dialogTitle: this.translater.get(NavTranslates.Purchase.list),
+          dialogTitle: this.translator.get(NavTranslates.Purchase.list),
           dataService: this.purchaseOrderService,
           maxSelectItems: 10,
           itemType: PurchaseOrder,
@@ -221,7 +220,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
       if (!pItems || pItems.length === 0) { return; }
 
       const duplicatedIdStrings: string[] = [];
-      const dupPOItemIdCheckset = new Set();
+      const dupPOItemIdCheckSet = new Set();
       let onePurchaseOrderId = 0;
 
       // 발주서 하나만 선택가능, 이후 추가 버튼을 눌러도 다른 발주서를 로딩 못하게 막음 (VoidMode)
@@ -238,8 +237,8 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
                 (this.isVoidMode && onePurchaseOrderId !== 0 && onePurchaseOrderId !== pItem.id)
               )
               .forEach((sItem: PurchaseOrderItem) => {
-                if (!dupPOItemIdCheckset.has(sItem.id)) {
-                  dupPOItemIdCheckset.add(sItem.id);
+                if (!dupPOItemIdCheckSet.has(sItem.id)) {
+                  dupPOItemIdCheckSet.add(sItem.id);
                   duplicatedIdStrings.push(
                     `${this.id36(sItem.id)}: ${sItem.name}`.trimRight());
                 }
@@ -259,7 +258,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
                 ( !this.isVoidMode && sItem.balance > 0 ) ||
                 ( this.isVoidMode && sItem.quantity - sItem.balance + sItem.cancelQuantity > 0)
               ) && 
-              !dupPOItemIdCheckset.has(sItem.id)
+              !dupPOItemIdCheckSet.has(sItem.id)
             )
             .forEach((sItem: PurchaseOrderItem) => {
               let quantity = 0;
@@ -302,7 +301,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     });
   }
 
-  updateBalace(index: number) {
+  updateBalance(index: number) {
     const quantityValue = this.getArrayFormGroup(index).get('quantity').value;
 
     if (OliveUtilities.isNumberPattern(quantityValue)) {
@@ -322,8 +321,8 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   protected hasOtherError(): boolean {
     if (this.noItemSelectedError) {
       this.alertService.showMessageBox(
-        this.translater.get('common.title.errorConfirm'),
-        this.translater.get('common.message.noItemCreated')
+        this.translator.get('common.title.errorConfirm'),
+        this.translator.get('common.message.noItemCreated')
       );
 
       return true;
@@ -331,8 +330,8 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
     if (this.balanceIsMinusError) {
       this.alertService.showMessageBox(
-        this.translater.get('common.title.errorConfirm'),
-        this.translater.get('common.message.balanceIsMinus')
+        this.translator.get('common.title.errorConfirm'),
+        this.translator.get('common.message.balanceIsMinus')
       );
 
       return true;

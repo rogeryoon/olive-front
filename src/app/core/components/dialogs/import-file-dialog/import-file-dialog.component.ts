@@ -23,13 +23,13 @@ export class OliveImportFileDialogComponent extends OliveEntityFormComponent imp
   columnNames = [];
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService, 
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService, 
     protected documentService: OliveDocumentService, protected alertService: AlertService, 
     protected dialogRef: MatDialogRef<OliveImportFileDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {importType: string}
   ) 
   {
-    super(formBuilder, translater);
+    super(formBuilder, translator);
   }
 
   ngOnInit() {
@@ -37,7 +37,7 @@ export class OliveImportFileDialogComponent extends OliveEntityFormComponent imp
   }
 
   translate(key: string) {
-    return this.translater.get(key);
+    return this.translator.get(key);
   }
 
   // Problem : Javascript가 Single Thread라서 mat-progress-bar가 움직이지 않음
@@ -50,7 +50,7 @@ export class OliveImportFileDialogComponent extends OliveEntityFormComponent imp
 
       if (typeof data === 'string') {
         this.alertService.showMessageBox(
-          this.translater.get('common.title.errorOccurred'),
+          this.translator.get('common.title.errorOccurred'),
           data
         );
       }
@@ -78,7 +78,7 @@ export class OliveImportFileDialogComponent extends OliveEntityFormComponent imp
   showError(message: string) {
     this.alertService.showDialog
     (
-      this.translater.get('common.title.saveError'),
+      this.translator.get('common.title.saveError'),
       message,
       DialogType.alert,
       () => this.cancel()

@@ -36,13 +36,13 @@ export class OliveOrderShipOutManagerComponent extends OliveEntityEditComponent 
   private orderShipOutDetailsEditor: OliveOrderShipOutDetailsEditorComponent;
 
   constructor(
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService,
     snackBar: MatSnackBar, formBuilder: FormBuilder,
     dataService: OliveOrderShipOutService
   ) {
     super(
-      translater, alertService,
+      translator, alertService,
       accountService, messageHelper,
       snackBar, formBuilder,
       dataService
@@ -91,8 +91,8 @@ export class OliveOrderShipOutManagerComponent extends OliveEntityEditComponent 
     const dataService = this.dataService as OliveOrderShipOutService;
 
     this.alertService.showDialog(
-      this.translater.get('common.title.yesOrNo'),
-      this.translater.get('common.message.areYouSure'),
+      this.translator.get('common.title.yesOrNo'),
+      this.translator.get('common.message.areYouSure'),
       DialogType.confirm,
       () =>
         buttonId === OliveConstants.customButton.cancelOrder ?
@@ -105,8 +105,8 @@ export class OliveOrderShipOutManagerComponent extends OliveEntityEditComponent 
             error => this.onSaveFail(error)
           ),
       () => null,
-      this.translater.get('common.button.yes'),
-      this.translater.get('common.button.no')
+      this.translator.get('common.button.yes'),
+      this.translator.get('common.button.no')
     );
   }
 

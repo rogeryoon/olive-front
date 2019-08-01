@@ -14,9 +14,9 @@ import { Supplier } from '../../../models/supplier.model';
 })
 export class OliveSupplierEditorComponent extends OliveEntityFormComponent {
 
-  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
+  constructor(formBuilder: FormBuilder, translator: FuseTranslationLoaderService) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 

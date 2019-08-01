@@ -68,7 +68,7 @@
         <mat-form-field appearance="outline">
             <mat-label>{{'common.word.lengthType' | translate}}</mat-label>
             <mat-select #lengthTypeCode name="lengthTypeCode" formControlName="lengthTypeCode" required>
-                <mat-option *ngFor="let unit of lenghtTypes" [value]="unit.code">{{unit.name}} ({{unit.symbol}})
+                <mat-option *ngFor="let unit of lengthTypes" [value]="unit.code">{{unit.name}} ({{unit.symbol}})
                 </mat-option>
             </mat-select>
             <mat-error *ngIf="hasEntryError('lengthTypeCode')">{{errorMessage('lengthTypeCode')}}</mat-error>

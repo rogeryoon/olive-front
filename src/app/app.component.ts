@@ -264,7 +264,7 @@ export class AppComponent implements OnInit, OnDestroy
 
     showLoginDialog(): void {
         const title = this._fuseTranslationLoaderService.get('common.title.sessionExpired');
-        this.alertService.showStickyMessage(title, this._fuseTranslationLoaderService.get('common.message.relogin'), MessageSeverity.info);
+        this.alertService.showStickyMessage(title, this._fuseTranslationLoaderService.get('common.message.reLogin'), MessageSeverity.info);
 
         const dialogRef = this.dialog.open(OliveLoginDialogComponent);
 

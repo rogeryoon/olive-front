@@ -21,17 +21,17 @@ export const locale = {
                 'deletedGeneral' : '데이터가 삭제되었습니다.', // 'The item was deleted successfully'
                 'updated' : '"{0}"(이)가 저장되었습니다.', // '"{0}" was saved successfully'
                 'updatedGeneral' : '데이터가 저장되었습니다.', // 'The item was saved successfully'
-                'saveError' : 'The below errors occured whilst saving your changes:',
+                'saveError' : 'The below errors occurred whilst saving your changes:',
                 'selectItem' : '원하는 항목을 체크 선택해주세요.',
                 'notSupportHtml5' : 'Sorry! Your browser does not support HTML5.',
                 'invalidSelectedFiles' : '선택한 파일이 없습니다.',
                 'clickFileButton' : '파일열기 버튼을 눌러 업로드 파일을 선택해 주십시오.',
                 'confirmDelete' : '정말 삭제하겠습니까{0}?',
-                'errorDeleteting' : 'The below errors occured whilst sdeleting the item:',
+                'errorDeleting' : 'The below errors occurred while deleting the item:',
                 'deleting' : 'Deleting...',
                 'errorLoading' : 'Unable to retrieve data from the server.\r\n Please contact your system administrator',
                 'sessionExpired' : 'The session expired. please login to continue.',
-                'relogin' : 'Your Session has expired. Please log in again',
+                'reLogin' : 'Your Session has expired. Please log in again',
                 'renewSession' : 'Your Session has expired. Please log in again to renew your session',
                 'duplicated' : '아래건(들)이 이미 존재하여 추가되지 않았습니다.\r\n{0}',
                 'requestFinished': '요청한 작업을 완료하였습니다.',
@@ -41,9 +41,9 @@ export const locale = {
                 'chooseOption' : '선택', // 'Choose an option',
                 'emptyFile' : '내용이 없는 빈 파일입니다.',
                 'invalidFile' : '업로드 형식에 맞지 않는 파일입니다.',
-                'errorOccured' : '작업도중 오류가 발생하였습니다.',
+                'errorOccurred' : '작업도중 오류가 발생하였습니다.',
                 'uploadColumnMatchError' : '엑셀{0}열 이름이 같지 않습니다. 입력열[{1}] | 설정열[{2}]',
-                'uploadDataSignatureUnregisterd' : '등록되지 않은 양식입니다. 관리자에게 문의하십시오.',
+                'uploadDataSignatureUnregistered' : '등록되지 않은 양식입니다. 관리자에게 문의하십시오.',
                 'areYouSure' : '정말로 요청작업을 진행하겠습니까?',
                 'outOfStock' : '{0}건이 재고부족으로 출고가 되지 않았습니다.',
                 'cancelOrderShipOutInventory': '할당된 출고 재고를 취소',
@@ -83,7 +83,7 @@ export const locale = {
                 'duplicated' : '중복 오류 알림',
                 'deleteConfirm' : '삭제 알림',
                 'yesOrNo': '확인',
-                'creater' : '등록',
+                'creator' : '등록',
                 'lastUpdater' : '최종수정',
                 'validationError' : '입력 오류',
                 'finalConfirm' : '최종확인',
@@ -98,7 +98,7 @@ export const locale = {
                 'delete' : '삭제',
                 'cancel' : '취소',
                 'close' : '닫기',
-                'exelFile' : '파일 열기..',
+                'excelFile' : '파일 열기..',
                 'refresh' : '새로고침',
                 'confirmDelete' : '삭제알림',
                 'select' : '선택',
@@ -120,7 +120,7 @@ export const locale = {
                 'preAssignTrackingNumber' : '송장 선발급',
                 'misc' : '기타',
                 'printPackingList' : '팩킹 리스트',
-                'printShippingLable' : '운송장',
+                'printShippingLabel' : '운송장',
                 'printPickingList' : '피킹 리스트',
                 'exportForTrackingNumberUpdate' : '엑셀 (판매 사이트 송장번호)',
                 'exportForLogistic' : '엑셀 (택배사 인계)',
@@ -288,7 +288,7 @@ export const locale = {
                 'product' : '상품',
                 'products' : '상품 목록',
                 
-                'invetoryGroup' : '재고 목록',
+                'inventoryGroup' : '재고 목록',
                 'inventoriesBalance' : '재고 조회',
                 'inventoriesWarehouse' : '창고별 재고',
                 'inventoriesHistory' : '품목별 재고기록'
@@ -432,10 +432,13 @@ export const locale = {
                 'selectProductForWeightDescription' : '무게 수정을 원하는 상품을 선택하세요',
                 'numberTwoOverridesNumberOne' : '1/2번 모두 입력할 경우 2번 입력을 우선 적용합니다.'
             },
+            'pendingOrderShipOutPackageList' : {
+                'finalFinishConfirmMessage' : '출고 마감처리 합니다. 확실합니까?',
+            },
             'marketItemMappingExcelColumnsEditor' : {
                 'notMatchOriginalValue' : '최초 엑셀에 저장되어 있던 (부분) 문자열이 아닙니다'
             },
-            'maketExcelRows' : {
+            'marketExcelRows' : {
                 'unmappedProductsTitle' : '연결대상 상품수',
                 'linkProductMenu' : '상품 연결',
                 'transferableOrdersTitle' : '주문 전환 대상',

@@ -12,8 +12,8 @@ export class OliveEntityFormComponent extends OliveEntityFormBaseComponent {
   @ViewChild(OliveEntityDateComponent)
   private dateComponent: OliveEntityDateComponent;
 
-  constructor(formBuilder: FormBuilder, translater: FuseTranslationLoaderService) {
-    super(formBuilder, translater);
+  constructor(formBuilder: FormBuilder, translator: FuseTranslationLoaderService) {
+    super(formBuilder, translator);
   }
 
   get hasError() {

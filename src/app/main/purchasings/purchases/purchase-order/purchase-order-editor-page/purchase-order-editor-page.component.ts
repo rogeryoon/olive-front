@@ -23,11 +23,11 @@ import { AlertService } from '@quick/services/alert.service';
 export class OlivePurchaseOrderEditorPageComponent extends OliveEditPageComponent {
   constructor(
     private route: ActivatedRoute, componentFactoryResolver: ComponentFactoryResolver,
-    translater: FuseTranslationLoaderService, accountService: AccountService,
+    translator: FuseTranslationLoaderService, accountService: AccountService,
     alertService: AlertService, router: Router
   ) {
     super(
-      componentFactoryResolver, translater,
+      componentFactoryResolver, translator,
       accountService, alertService, router
     );
   }

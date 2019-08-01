@@ -24,13 +24,13 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
   countries: Country[];
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private cacheService: OliveCacheService,
     private messageHelper: OliveMessageHelperService,
     private countryService: OliveCountryService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -84,7 +84,7 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
           this.countries = res.model;
         },
           error => {
-            this.messageHelper.showLoadFaildSticky(error);
+            this.messageHelper.showLoadFailedSticky(error);
           });
     }
     else {

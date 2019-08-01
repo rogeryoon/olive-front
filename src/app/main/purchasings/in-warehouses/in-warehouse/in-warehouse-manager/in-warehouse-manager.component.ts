@@ -27,20 +27,20 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
   private inWarehouseItemsEditor: OliveInWarehouseItemsEditorComponent;
 
   constructor(
-    translater: FuseTranslationLoaderService, alertService: AlertService,
+    translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
     dataService: OliveInWarehouseService
   ) {
     super(
-      translater, alertService,
+      translator, alertService,
       accountService, messageHelper, 
       snackBar, formBuilder, 
       dataService
     );
 
-    this.saveConfirmTitle = translater.get('purchasing.inWarehouseManager.saveConfirmTitle');
-    this.saveConfirmMessage = translater.get('purchasing.inWarehouseManager.saveConfirmMessage');
+    this.saveConfirmTitle = translator.get('purchasing.inWarehouseManager.saveConfirmTitle');
+    this.saveConfirmMessage = translator.get('purchasing.inWarehouseManager.saveConfirmMessage');
   }
 
   registerSubControl() {

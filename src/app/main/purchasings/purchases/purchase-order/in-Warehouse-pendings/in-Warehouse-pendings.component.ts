@@ -31,14 +31,14 @@ export class OliveInWarehousePendingComponent extends OliveEntityListComponent {
   purchaseService: OlivePurchaseOrderService;
 
   constructor(
-    translater: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
+    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
     alertService: AlertService, accountService: AccountService,
     messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
     dialog: MatDialog, dataService: OlivePurchaseOrderService, 
     private cacheService: OliveCacheService
   ) {
     super(
-      translater, deviceService,
+      translator, deviceService,
       alertService, accountService,
       messageHelper, documentService,
       dialog, dataService
@@ -85,10 +85,10 @@ export class OliveInWarehousePendingComponent extends OliveEntityListComponent {
 
           purchaseOrder.tagCode = 'D';
 
-          const purchseOrderItem = model[i].purchaseOrderItems.find(p => !p.tagProcessed && p.balance > 0);
-          purchseOrderItem.tagProcessed = true;
+          const purchaseOrderItem = model[i].purchaseOrderItems.find(p => !p.tagProcessed && p.balance > 0);
+          purchaseOrderItem.tagProcessed = true;
           
-          purchaseOrder.tagPurchaseOrderItem = jQuery.extend(true, {}, purchseOrderItem);
+          purchaseOrder.tagPurchaseOrderItem = jQuery.extend(true, {}, purchaseOrderItem);
 
           model.splice(i + 1, 0, purchaseOrder);
         }
@@ -105,10 +105,10 @@ export class OliveInWarehousePendingComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: PurchaseOrder) {
     if (item) {
-      return `${this.translater.get('navi.purchase.group')} ID : ${this.dateCode(item.date, item.id)}`;
+      return `${this.translator.get('navi.purchase.group')} ID : ${this.dateCode(item.date, item.id)}`;
     }
     else {
-      return this.translater.get(NavTranslates.Purchase.entry);
+      return this.translator.get(NavTranslates.Purchase.entry);
     }
   }
 

@@ -27,7 +27,7 @@ export class NavTranslates {
         static productGroup = 'navi.product.productGroup';
         static productVariant = 'navi.product.productVariant';
 
-        static inventoryGroup = 'navi.product.invetoryGroup';
+        static inventoryGroup = 'navi.product.inventoryGroup';
         static inventoriesBalance = 'navi.product.inventoriesBalance';
         static inventoriesWarehouse = 'navi.product.inventoriesWarehouse';
         static inventoriesHistory = 'navi.product.inventoriesHistory';

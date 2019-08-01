@@ -7,7 +7,7 @@ import { Currency } from 'app/main/supports/models/currency.model';
 import { OliveCacheService } from '../services/cache.service';
 import { OliveUtilities } from './utilities';
 
-export class DatasourceObject {
+export class DataSourceObject {
     public readonly ObjId: number;
     public Obj: any;
     constructor(m: any) {
@@ -16,10 +16,10 @@ export class DatasourceObject {
     }
 }
 
-export class TableDatasource extends DataSource<any> {
-    private _objectStore: DatasourceObject[] = [];
-    private _saveObjectStore: DatasourceObject[] = [];
-    private _ObjectsSubject$ = new BehaviorSubject<DatasourceObject[]>([]);
+export class TableDataSource extends DataSource<any> {
+    private _objectStore: DataSourceObject[] = [];
+    private _saveObjectStore: DataSourceObject[] = [];
+    private _ObjectsSubject$ = new BehaviorSubject<DataSourceObject[]>([]);
     public formGroup: FormGroup;
     protected standCurrency: Currency;
     protected currencies: Currency[];
@@ -34,10 +34,10 @@ export class TableDatasource extends DataSource<any> {
         this.standCurrency = this.cacheService.standCurrency;
     }
 
-    connect(): Observable<DatasourceObject[]> {
+    connect(): Observable<DataSourceObject[]> {
         return this._ObjectsSubject$.asObservable().pipe(
             tap(res => {
-                const fa = <FormArray>this.formGroup.get('formarray');
+                const fa = <FormArray>this.formGroup.get('formArray');
                 fa.controls.splice(0);
                 res.forEach(r => {
                     fa.push(this.createRowFormGroup(r));
@@ -60,7 +60,7 @@ export class TableDatasource extends DataSource<any> {
 
     loadItems(items: any[]) {
         this._objectStore = []; // clear current stored data
-        items.forEach(m => this._objectStore.push(new DatasourceObject(m)));
+        items.forEach(m => this._objectStore.push(new DataSourceObject(m)));
         this.renderItems(false);
     }
 
@@ -86,15 +86,15 @@ export class TableDatasource extends DataSource<any> {
         this.onReInitialize();
     }
 
-    public addNewItem(m: any): DatasourceObject {
+    public addNewItem(m: any): DataSourceObject {
         if (!m) { m = this.createNewItem(); }
-        const o = new DatasourceObject(m);
+        const o = new DataSourceObject(m);
         this._objectStore.push(o);
 
         return o;
     }
 
-    public deleteItem(res: DatasourceObject) {
+    public deleteItem(res: DataSourceObject) {
         if (!res || !res.Obj) { return; }
 
         const d = res.ObjId;
@@ -113,7 +113,7 @@ export class TableDatasource extends DataSource<any> {
         this.renderItems();
     }
 
-    createNewFormContorl(r: any, propName: string, validators: any[] = null, disabled = false): FormControl {
+    createNewFormControl(r: any, propName: string, validators: any[] = null, disabled = false): FormControl {
         const stringValue = OliveUtilities.testIsUndefined(r.Obj[propName]) ? '' : r.Obj[propName].toString();
 
         let value: any;
@@ -141,7 +141,7 @@ export class TableDatasource extends DataSource<any> {
         return formControl;
     }
 
-    createRowFormGroup(r: DatasourceObject): FormGroup { return null; }
+    createRowFormGroup(r: DataSourceObject): FormGroup { return null; }
     createNewItem(): any { return null; }
     onReInitialize() { }
 }

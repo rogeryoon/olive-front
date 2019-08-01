@@ -21,11 +21,11 @@ export class OliveCarrierEditorComponent extends OliveEntityFormComponent {
   lookupStandCarrier: OliveLookupHostComponent;
 
   constructor(
-    formBuilder: FormBuilder, translater: FuseTranslationLoaderService,
+    formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private standCarrierService: OliveStandCarrierService
   ) {
     super(
-      formBuilder, translater
+      formBuilder, translator
     );
   }
 
@@ -71,7 +71,7 @@ export class OliveCarrierEditorComponent extends OliveEntityFormComponent {
   initializeChildComponent() {
     this.lookupStandCarrier.setting = {
       columnType: 'code',
-      dialogTitle: this.translater.get(NavTranslates.Basic.standCarrier),
+      dialogTitle: this.translator.get(NavTranslates.Basic.standCarrier),
       dataService: this.standCarrierService,
       maxSelectItems: 1,
       itemType: StandCarrier,
