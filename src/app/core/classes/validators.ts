@@ -49,6 +49,26 @@ export function volumeValidator(): ValidatorFn {
     };
 }
 
+/**
+ * Required validator For Whitespace Input
+ */
+export function requiredValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+        let stringValue = '';
+
+        if (control.value) {
+            stringValue = String(control.value);
+            stringValue = stringValue.replace(/\s/g, '');
+        }
+
+        if (stringValue.length === 0) {
+            return { required: true };
+        }
+
+        return null;
+    };
+}
+
 export function subsetValidator(originalValue: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
         const originalTrimValue = originalValue.trim();

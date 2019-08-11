@@ -18,4 +18,17 @@
             text-align: left;
         }
     }
+
+    .olive-datatable tr {
+        cursor: auto ;
+    }
+
+    .olive-datatable td.pointer,
+    .olive-datatable span.pointer {
+        cursor: pointer ;
+    }
+    
+    .olive-datatable td.zoom-in {
+        cursor: zoom-in ;
+    }    
 }

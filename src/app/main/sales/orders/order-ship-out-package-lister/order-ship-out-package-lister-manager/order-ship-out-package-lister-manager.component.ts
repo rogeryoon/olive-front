@@ -79,14 +79,14 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     this.getPendingOrderPackages();
   }
 
-  private getPendingOrderPackages() {
+  private getPendingOrderPackages(refresh: boolean = false) {
     const searchOption = OliveUtilities.searchOption([{ name: 'listing', value: true } as NameValue], 'id', 'desc');
 
     this.orderShipOutPackageService.getItems(searchOption)
       .subscribe(res => {
         this.pendingOrderShipOutPackages = res.model;
         this.orderPackageListers.forEach((lister) => {
-          lister.setPendingOrderPackages(this.pendingOrderShipOutPackages, this.parentObject);
+          lister.setPendingOrderPackages(this.pendingOrderShipOutPackages, this.parentObject, refresh);
         });
       }, error => {
         this.messageHelper.showLoadFailedSticky(error);
@@ -141,7 +141,11 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     this.getInventories(true);
   }
 
+  /**
+   * 페이지 Refresh 처리 - Refresh인수를 True로 설정할것
+   */
   onReload() {
-    console.log('Manager Parent Reload');
+    this.getInventories(true);
+    this.getPendingOrderPackages(true);
   }
 }

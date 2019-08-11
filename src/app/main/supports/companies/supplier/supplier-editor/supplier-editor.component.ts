@@ -1,11 +1,12 @@
 ﻿import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { Supplier } from '../../../models/supplier.model';
+import { requiredValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-supplier-editor',
@@ -37,8 +38,8 @@ export class OliveSupplierEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      code: ['', Validators.required],
-      name: ['', Validators.required],
+      code: ['', requiredValidator()],
+      name: ['', requiredValidator()],
       phoneNumber: '',
       email: '',
       webSite: '',

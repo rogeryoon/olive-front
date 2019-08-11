@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
 
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';

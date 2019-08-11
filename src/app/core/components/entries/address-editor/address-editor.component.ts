@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
@@ -12,6 +12,7 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { NameValue } from 'app/core/models/name-value';
+import { requiredValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-address-editor',
@@ -49,12 +50,12 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      address1: ['', Validators.required],
+      address1: ['', requiredValidator()],
       address2: '',
       city: '',
       stateProvince: '',
-      postalCode: ['', Validators.required],
-      country: ['', Validators.required]
+      postalCode: ['', requiredValidator()],
+      country: ['', requiredValidator()]
     });
   }
 

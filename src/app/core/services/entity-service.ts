@@ -24,7 +24,7 @@ export class OliveEntityService implements OliveDataService {
         return this.endpoint.getItemEndpoint<any>(id, this.endpointUrl, errorCount);
     }
 
-    getItems(dataTablesParameters: any) {
+    getItems(dataTablesParameters: any = null) {
         const errorCount = {unAuth: 0};
         return this.endpoint.getItemsEndpoint<any>(dataTablesParameters, this.endpointUrl, errorCount);
     }

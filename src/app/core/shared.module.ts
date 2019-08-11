@@ -32,6 +32,7 @@ import { OliveFloatheadDirective } from './directives/floathead.directive';
 import { OliveTaskCountDialogComponent } from './components/dialogs/task-count-dialog/task-count-dialog.component';
 import { OliveDeliveryTagEditorComponent } from './components/entries/delivery-tag/delivery-tag-editor.component';
 import { OliveSelectOneDialogComponent } from './components/dialogs/select-one-dialog/select-one-dialog.component';
+import { OliveCompanyContactEditorComponent } from './components/entries/company-contact-editor/company-contact-editor.component';
 
 @NgModule({
   imports: [
@@ -76,6 +77,7 @@ import { OliveSelectOneDialogComponent } from './components/dialogs/select-one-d
     OliveDeliveryTagEditorComponent,
     OliveEditPageComponent,
     OliveTabLabelComponent,
+    OliveCompanyContactEditorComponent,
 
     OlivePlaceHolderDirective,
     OliveFloatheadDirective
@@ -106,6 +108,7 @@ import { OliveSelectOneDialogComponent } from './components/dialogs/select-one-d
     OliveDeliveryTagEditorComponent,
     OliveEditPageComponent,
     OliveTabLabelComponent,
+    OliveCompanyContactEditorComponent,
 
     OlivePlaceHolderDirective,
     OliveFloatheadDirective
@@ -120,7 +123,8 @@ import { OliveSelectOneDialogComponent } from './components/dialogs/select-one-d
     OlivePreviewDialogComponent,
     OliveViewDialogComponent,
     OliveTaskCountDialogComponent,
-    OliveSelectOneDialogComponent
+    OliveSelectOneDialogComponent,
+    OliveCompanyContactEditorComponent
   ]
 })
 export class OliveSharedModule { }

@@ -91,7 +91,8 @@ export const locale = {
                 'selectDeselectAll': '모두 선택/해제', // Select/Deselect All
                 'select': '선택',
                 'pendingShipOut' : '대기',
-                'shipOut' : '출고'
+                'shipOut' : '출고',
+                'shippingLabelShippersEntry' : '발송회사 입력'
             },
             'button': {
                 'save' : '저장',
@@ -246,10 +247,19 @@ export const locale = {
                 'purchaseReturnOrCancel': '발주 반품/취소',
                 'cancelOrder': '주문 취소',
                 'restoreOrder': '변경 (배송준비)',
+
                 'productGroupWeight' : '상품 그룹 무게',
                 'productVariantWeight' : '상품 무게',
-                'productGroupCustomsPrice' : '상품 그룹 세관 신고가',
-                'productVariantCustomsPrice' : '상품 세관 신고가'                
+                'productOverrideWeight' : '예외적용 무게',
+
+                'productGroupCustomsPrice' : '상품 그룹 신고가',
+                'productVariantCustomsPrice' : '상품 신고가',
+                'productOverrideCustomsPrice': '예외적용 신고가',
+
+                'nickName': '별명',
+                'companyName': '회사명',
+                'default': '기본',
+                'productCustomsPrice': '세관 신고 가격'
             }
         },
         'page': {
@@ -428,12 +438,16 @@ export const locale = {
                 'selectDeliveryInfoTitle' : '다중 배달 정보 발견',
                 'selectDeliveryInfoDescription' : '어떤 배달 정보를 사용할것인지 선택하세요',
                 'confirmCombinedShipExists' : '합배송 처리 하지 않은 합배송 대상건이 있습니다. 합배송처리하지 않고 출고하겠습니까?',
-                'selectProductForWeightTitle' : '무게 수정 상품 선택',
-                'selectProductForWeightDescription' : '무게 수정을 원하는 상품을 선택하세요',
-                'numberTwoOverridesNumberOne' : '1/2번 모두 입력할 경우 2번 입력을 우선 적용합니다.'
+                'selectProductTitle' : '상품 선택',
+                'selectProductDescription' : '원하는 상품을 선택하세요',
+                'priorityOrders' : '입력 값 우선 순위',
+                'orderShipOutDataNotExistsErrorMessage' : '출고 요청중에 유효하지 않은 주문건(다른 사용자가 이미 출고/취소)이 존재합니다. 확인을 클릭하면 출고작업을 초기화합니다.'
             },
             'pendingOrderShipOutPackageList' : {
                 'finalFinishConfirmMessage' : '출고 마감처리 합니다. 확실합니까?',
+                'clickAddButtonForOneItem' : '선택건만 수정하려면 추가를 클릭하세요.',
+                'clickAddButtonForItems' : '다른 선택또는 해당건만 수정하려면 추가를 클릭하세요.',
+                'warningForUpdateAll' : '아래 내용을 수정/저장할 경우 연결된 모든 출고건들이 모두 업데이트됩니다.',
             },
             'marketItemMappingExcelColumnsEditor' : {
                 'notMatchOriginalValue' : '최초 엑셀에 저장되어 있던 (부분) 문자열이 아닙니다'

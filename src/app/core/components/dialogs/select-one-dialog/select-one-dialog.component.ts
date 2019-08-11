@@ -36,6 +36,12 @@ export class OliveSelectOneDialogComponent implements OnInit {
   ngOnInit() {
   }
 
+  onChange(event: any) {
+    if (this.setting.oneClick) {
+      this.dialogRef.close(event.value.id);
+    }
+  }
+
   select(): void {
     if (!this.selectedItem) { return; }
     this.dialogRef.close(this.selectedItem.id);

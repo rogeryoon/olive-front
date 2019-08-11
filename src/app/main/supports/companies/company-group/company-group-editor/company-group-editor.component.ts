@@ -1,11 +1,12 @@
 ﻿import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { CompanyGroup } from '../../../models/company-group.model';
+import { requiredValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-company-group-editor',
@@ -30,7 +31,7 @@ export class OliveCompanyGroupEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', requiredValidator()],
       memo: '',
       activated: false
     });

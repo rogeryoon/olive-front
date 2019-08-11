@@ -187,9 +187,9 @@ export class OliveUtilities {
             decimalPattern = `(\\.\\d{1,${maxDigits}})?`;
         }
 
-        const patt = new RegExp(`^\\s*\\d*${decimalPattern}\\s*$`);
+        const pattern = new RegExp(`^\\s*\\d*${decimalPattern}\\s*$`);
 
-        return patt.test(input);
+        return pattern.test(input);
     }
 
     public static minNumber(array: number[], addedNumbers: number[] = []): string {
@@ -216,13 +216,13 @@ export class OliveUtilities {
         return returnValue;
     }
 
-   /**
-   * Number를 형식에 맞게 표시
-   * @param amount 타겟 표시 숫자
-   * @param [digits] 소숫점 자릿수
-   * @param [zero] 0일 경우 숫자대체 문자열
-   * @returns 포맷 반환 문자열
-   */    
+    /**
+    * Number를 형식에 맞게 표시
+    * @param amount 타겟 표시 숫자
+    * @param [digits] 소숫점 자릿수
+    * @param [zero] 0일 경우 숫자대체 문자열
+    * @returns 포맷 반환 문자열
+    */
     public static numberFormat(amount: number, digits = 0, zero = null): string {
         if (zero !== null && amount === 0) {
             return zero;

@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 import { AlertService } from '@quick/services/alert.service';
@@ -12,6 +12,7 @@ import { OliveMarketSellerService } from 'app/main/supports/services/market-sell
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { NameValue } from 'app/core/models/name-value';
+import { requiredValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-market-excel-import-dialog',
@@ -47,7 +48,7 @@ export class OliveMarketExcelImportDialogComponent extends OliveImportFileDialog
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      seller: ['', Validators.required]
+      seller: ['', requiredValidator()]
     });
   }
 

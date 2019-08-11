@@ -1,5 +1,5 @@
 import { Component, forwardRef, ViewChild, ElementRef, Renderer2, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor, Validators, FormControl, Validator, ValidationErrors, NG_VALIDATORS } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl, Validator, ValidationErrors, NG_VALIDATORS } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';

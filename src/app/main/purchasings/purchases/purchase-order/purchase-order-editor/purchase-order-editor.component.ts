@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
@@ -17,7 +17,7 @@ import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/warehouse/warehouse-manager/warehouse-manager.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { numberValidator } from 'app/core/classes/validators';
+import { numberValidator, requiredValidator } from 'app/core/classes/validators';
 import { OliveUtilities } from 'app/core/classes/utilities';
 
 @Component({
@@ -82,7 +82,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   buildForm() {
     this.oForm = this.formBuilder.group({
       supplierOrderId: '',
-      poDate: ['', Validators.required],
+      poDate: ['', requiredValidator()],
       memo: '',
       currencyExchangeRate: ['', [numberValidator(2, false)]],
       supplierFk: null,

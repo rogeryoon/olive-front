@@ -73,7 +73,7 @@ export class OliveProductVariantsComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = this.id36(item.id);
+        retValue = OliveDocumentService.numToAlpha(item.shortId - 1);
         break;
       case Code:
         retValue = item.code;

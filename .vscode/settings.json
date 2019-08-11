@@ -1,16 +1,34 @@
 {
     "cSpell.words": [
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
         "Angular's",
         "Mutex",
         "Mutexes",
+        "YYMMDD",
+        "angularclass",
         "argb",
+        "barcode",
+        "classlist",
+        "codelyzer",
         "collapsable",
+        "compat",
+        "devkit",
+        "devtools",
         "dialpad",
+        "dragula",
         "exceljs",
+        "floathead",
+        "floatthead",
         "fromto",
         "groupadmin",
+        "jasminewd",
+        "ngrx",
         "officedocument",
         "openxmlformats",
-        "spreadsheetml"
+        "prismjs",
+        "scrollbar",
+        "spreadsheetml",
+        "swimlane",
+        "tslib"
     ]
 }

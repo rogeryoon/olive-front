@@ -2,13 +2,16 @@
 import { OrderShipOutPackage } from '../models/order-ship-out-package.model';
 import { ExcelColumn } from 'app/core/models/excel-column';
 import { ExcelRowExportGps } from '../models/excel-row-export-gps.model';
+import { OliveUtilities } from 'app/core/classes/utilities';
+import { OliveConstants } from 'app/core/classes/constants';
+import { CompanyContact } from 'app/core/models/company-contact.model';
 
 class ShipItem {
   productVariantId: number;
   name: string;
   customsPrice: number;
   quantity: number;
-  weight: number;  
+  kiloGramWeight: number;  
   volume: string;
   hsCode: string;
 }
@@ -26,9 +29,22 @@ export class OliveShipperExcelService {
   }
 
   /**
+   * Calculates items weight
+   * @param items ShipItem[]
+   * @returns weight number
+   */
+  private calculateItemsWeight(items: ShipItem[]): string {
+    const totalKiloWeight = items.map(x => x.kiloGramWeight * x.quantity).reduce((a, b) => a + (b || 0), 0);
+
+    const poundWeight = totalKiloWeight * OliveConstants.unitConversionRate.kiloToPound;
+
+    return OliveUtilities.numberFormat(poundWeight, 2);
+  }
+
+  /**
    * Builds ship items : 합배송의 경우 아이템이 중복될수 있으므로 아이템 별로 재정리한다.
-   * @param packages 
-   * @returns ship items 
+   * @param packages OrderShipOutPackage[]
+   * @returns void
    */
   private buildShipItems(packages: OrderShipOutPackage[]): Map<number, ShipItem[]> {
     const packageItems = new Map<number, ShipItem[]>();
@@ -61,11 +77,14 @@ export class OliveShipperExcelService {
     return packageItems;
   }
 
-  saveForGps(packages: OrderShipOutPackage[]) {
+  saveForGps(packages: OrderShipOutPackage[], senders: Map<number, CompanyContact>) {
     this.buildGpsHeader();    
-    this.buildGpsBody(packages, this.buildShipItems(packages));
+    this.buildGpsBody(packages, this.buildShipItems(packages), senders);
   }
 
+  /**
+   * Builds GPS header
+   */
   private buildGpsHeader() {
     const columns: ExcelColumn[] = [];
     // A
@@ -128,18 +147,50 @@ export class OliveShipperExcelService {
     }
   }
 
-  private buildGpsBody(packages: OrderShipOutPackage[], items: Map<number, ShipItem[]>): ExcelRowExportGps[] {
+  private buildGpsBody(packages: OrderShipOutPackage[], shipItems: Map<number, ShipItem[]>, senders: Map<number, CompanyContact>): ExcelRowExportGps[] {
     const rows: ExcelRowExportGps[] = [];
 
     for (const box of packages) {
       const row = new ExcelRowExportGps();
+      const items = shipItems.get(box.id);
 
+      row.serialNumber = box.trackingNumber;
+
+      const sender = senders.get(box.id);
+
+      row.shipperName = sender.companyName;
+      row.shipperPhone = sender.phone;
+      row.shipperAddress = (sender.address1 + ' ' + sender.address2).trim();
+
+      // 고정변수
       row.boxCount = '1';
+      // 중량단위(1:Kg, 2:Lbs)
       row.weightTypeID = '2';
-      row.weight = this.calculateItemsWeight(items.get(box.id));
+      // 일반신청(0:목록,1:일반)
+      row.priceTypeID = '1';
+      // 전자상거래(1:전자상거래 구매대행, 2:일반, 3:전자상거래 개인직접수입형)
+      row.consigneeCustomTypeID = '3';
+      // 받는이 구분(1:개인,2:사업자)
+      row.consigneeTypeID = '1';
+
+      row.consigneeName = box.deliveryTagFk.consigneeName;
+      row.consigneePhone = box.deliveryTagFk.consigneePhoneNumber2;
+      row.consigneeCell = box.deliveryTagFk.consigneeCellPhoneNumber;
+
+      row.consigneePostalCode = box.deliveryAddressFk.postalCode;
+      row.consigneeAddress1 = (box.deliveryAddressFk.stateProvince + ' ' + box.deliveryAddressFk.city + ' ' + box.deliveryAddressFk.address1).trim();
+      row.consigneeAddress2 = box.deliveryAddressFk.address1;
+
+      row.customSID = box.deliveryTagFk.customsId;
+      row.consigneeMemo = box.deliveryTagFk.deliveryMemo;
+      
+      row.orderID = 'X-' + OliveUtilities.make36Id(box.id);
+
+      row.weight = this.calculateItemsWeight(items);
+      this.calculateGpsVolumeWeight(items, row);
       
       let seqNo = 0;
-      for (const item of items.get(box.id)) {
+      for (const item of items) {
         seqNo++;
 
         let newRow = row;
@@ -159,7 +210,42 @@ export class OliveShipperExcelService {
     return rows;
   }
 
-  private calculateItemsWeight(items: ShipItem[]): string {
-    return '';
+  /**
+   * GPS 엑셀 부피 열 설정 :
+   * 단품인 경우 볼륨을 계산하고 단품이 아니거나 
+   * 단품이더라도 볼륨이 없을 경우 기본 볼륨 2 X 2 X 2로 설정
+   * @param items ShipItem[]
+   * @param row ExcelRowExportGps
+   * @returns void
+   */
+  private calculateGpsVolumeWeight(items: ShipItem[], row: ExcelRowExportGps): void {
+    let defaultVolume = true;
+
+    if (items.length === 1 && items[0].volume) {
+      const volumes = items[0].volume.split(' ');
+
+      if (volumes.length === 3) {
+        let volume1 = +volumes[0];
+        const volume2 = +volumes[1];
+        const volume3 = +volumes[2];
+
+        volume1 = volume1 * items[0].quantity;
+
+        if (volume1 > 0 && volume2 > 0 && volume3 > 0) {
+          defaultVolume = false;          
+          row.volume1 = volume1.toString();
+          row.volume2 = volume2.toString();
+          row.volume3 = volume3.toString();
+        }
+      }
+    }
+
+    if (defaultVolume) {
+      row.volume1 = '2';
+      row.volume2 = '2';
+      row.volume3 = '2';
+    }
+
+    return null;
   }
 }

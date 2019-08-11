@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
@@ -15,6 +15,7 @@ import { OliveBranchManagerComponent } from '../../branch/branch-manager/branch-
 import { Branch } from '../../../models/branch.model';
 import { OliveBranchService } from '../../../services/branch.service';
 import { AccountService } from '@quick/services/account.service';
+import { requiredValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-warehouse-editor',
@@ -53,8 +54,8 @@ export class OliveWarehouseEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      code: ['', Validators.required],
-      name: ['', Validators.required],
+      code: ['', requiredValidator()],
+      name: ['', requiredValidator()],
       companyFk: null,
       companyMasterBranchFk: null,
       activated: false

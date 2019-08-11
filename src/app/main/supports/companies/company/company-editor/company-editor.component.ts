@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 import { AccountService } from '@quick/services/account.service';
 import { Permission } from '@quick/models/permission.model';
@@ -12,6 +12,7 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveCompanyGroupService } from '../../../services/company-group.service';
 import { CompanyGroup } from '../../../models/company-group.model';
 import { OliveCompanyGroupManagerComponent } from '../../company-group/company-group-manager/company-group-manager.component';
+import { requiredValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-company-editor',
@@ -52,8 +53,8 @@ export class OliveCompanyEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      code: ['', Validators.required],
-      name: ['', Validators.required],
+      code: ['', requiredValidator()],
+      name: ['', requiredValidator()],
       phoneNumber: '',
       memo: '',
       activated: false,

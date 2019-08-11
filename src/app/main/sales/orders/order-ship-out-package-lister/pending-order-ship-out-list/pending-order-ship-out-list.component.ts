@@ -30,6 +30,10 @@ import { ProductWeight } from 'app/main/productions/models/product-weight.model'
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { ProductCustomsPrice } from 'app/main/productions/models/product-customs-price.model';
 import { OliveProductCustomsPriceEditorComponent } from 'app/main/productions/products/product/product-customs-price-editor/product-customs-price-editor.component';
+import { OliveBackEndErrors } from 'app/core/classes/back-end-errors';
+import { OrderShipOutDetailExtra } from 'app/main/sales/models/order-ship-out-detail-extra.model';
+import { OliveOrderShipOutService } from 'app/main/sales/services/order-ship-out.service';
+import { OliveConstants } from 'app/core/classes/constants';
 
 class AllocatedQuantity {
   productVariantId: number;
@@ -57,9 +61,12 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   orders: OrderShipOut[] = [];
   // 오더에 매칭한 기대수량과 실제 할당 수량을 저장
   ordersQuantities = new Map<number, AllocatedQuantity[]>();
-  
+
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
+
+  productCustomsPriceSelectedTrigger: Subject<any> = new Subject();
+  productCustomsWeightSelectedTrigger: Subject<any> = new Subject();
 
   selectedAll: any;
 
@@ -71,8 +78,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private dialog: MatDialog, private alertService: AlertService,
-    private orderShipOutPackageService: OliveOrderShipOutPackageService, 
-    private messageHelper: OliveMessageHelperService,
+    private orderShipOutPackageService: OliveOrderShipOutPackageService,
+    private messageHelper: OliveMessageHelperService, private orderShipOutService: OliveOrderShipOutService,
     private productService: OliveProductService, private cacheService: OliveCacheService
   ) {
     super(
@@ -138,7 +145,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     let totalAmount = 0;
 
     this.selectedOrders.forEach(order => {
-      totalAmount += order.orderShipOutDetails.map(x => x.customsPrice * x.quantity).reduce((a, b) => a + (b || 0), 0);
+      totalAmount += this.getOrderShipOutCustomsPriceDue(order);
     });
 
     return ` (${this.cacheService.showMoney(totalAmount)})`;
@@ -149,7 +156,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     let totalWeight = 0;
 
     this.selectedOrders.forEach(order => {
-      totalWeight += order.orderShipOutDetails.map(x => x.kiloGramWeight * x.quantity).reduce((a, b) => a + (b || 0), 0);
+      totalWeight += this.getOrderShipOutWeightDue(order);
     });
 
     return listableCount === 0 ? '' : ` (${this.commaNumber(listableCount)}/${this.commaNumber(totalWeight)}Kg)`;
@@ -160,7 +167,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     let totalWeight = 0;
 
     this.orders.forEach(order => {
-      totalWeight += order.orderShipOutDetails.map(x => x.kiloGramWeight * x.quantity).reduce((a, b) => a + (b || 0), 0);
+      totalWeight += this.getOrderShipOutWeightDue(order);
 
       if (!nullWeightExists) {
         nullWeightExists = this.foundNullWeight(order);
@@ -170,6 +177,49 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     const totalRows = this.orders.length;
 
     return totalRows === 0 ? '' : ` (${this.commaNumber(totalRows)}/${this.commaNumber(totalWeight)}Kg${nullWeightExists ? '-?' : ''})`;
+  }
+
+  /**
+   * 주문 아이템 세관신고 합을 구한다.
+   * @param order OrderShipOut
+   * @returns 합산값
+   */  
+  getOrderShipOutCustomsPriceDue(order: OrderShipOut) {
+    return order.orderShipOutDetails
+      .map(x => (x.extra && x.extra.customsPrice || x.customsPrice) * x.quantity)
+      .reduce((a, b) => a + (b || 0), 0);
+  }
+
+  /**
+   * 주문 아이템 무게 합을 구한다.
+   * @param order OrderShipOut
+   * @returns 합산값
+   */
+  getOrderShipOutWeightDue(order: OrderShipOut) {
+    return order.orderShipOutDetails
+      .map(x => (this.getOverrideKiloWeight(x) || x.kiloGramWeight) * x.quantity)
+      .reduce((a, b) => a + (b || 0), 0);
+  }
+
+  /**
+   * 파운드로 입력된 무게는 킬로그램으로 변환
+   * @param item OrderShipOutDetail
+   * @returns 킬로 무게
+   */
+  getOverrideKiloWeight(item: OrderShipOutDetail): number {
+    let kiloWeight: number;
+
+    if (item.extra == null || !item.extra.customsWeight) {
+      return null;
+    }
+
+    kiloWeight = item.extra.customsWeight;
+
+    if (item.extra.customsWeightTypeCode === OliveConstants.weightTypeCode.Pound) {
+      kiloWeight = kiloWeight * OliveConstants.unitConversionRate.poundToKilo;
+    }
+
+    return +this.numberFormat(kiloWeight, 2);
   }
 
   selectAll() {
@@ -204,8 +254,28 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     this.allocateOrderInventories();
 
     if (!refresh) {
-      this.dtTrigger.next();
+      this.initialize();
     }
+  }
+
+  initialize() {
+    this.dtTrigger.next();
+
+    this.productCustomsPriceSelectedTrigger.subscribe(param => {
+      // 백앤드에서 상품가격 받음
+      this.productService.get(`customsPrice/${param.editItem.productVariantId}/`).subscribe(
+        response => this.updateCustomsPrice(param.order, param.editItem, response.model),
+        error => this.messageHelper.showLoadFailedSticky(error)
+      );
+    });
+
+    this.productCustomsWeightSelectedTrigger.subscribe(param => {
+      // 백앤드에서 상품무게 받음
+      this.productService.get(`weight/${param.editItem.productVariantId}/`).subscribe(
+        response => this.updateProductWeight(param.order, param.editItem, response.model),
+        error => this.messageHelper.showLoadFailedSticky(error)
+      );
+    });
   }
 
   private allocateOrderInventories() {
@@ -278,20 +348,25 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     return this.getActualQuantity(order) - this.getOrderQuantity(order) !== 0;
   }
 
+  /**
+   * 널이 있는 무게가 있는지 조사
+   * @param order 
+   * @returns true if null weight 
+   */
   foundNullWeight(order: OrderShipOut): boolean {
-    return !this.isNull(order.orderShipOutDetails.find(x => x.kiloGramWeight == null));
+    return !this.isNull(order.orderShipOutDetails.find(x => x.kiloGramWeight == null && (x.extra == null ||  x.extra.customsWeight == null)));
   }
 
   showWeight(order: OrderShipOut): string {
-    const weight = order.orderShipOutDetails.map(x => x.kiloGramWeight * x.quantity).reduce((a, b) => a + (b || 0), 0);
+    const weightDue = this.getOrderShipOutWeightDue(order);
 
-    const foundNullWeight = this.foundNullWeight(order);
+    const foundNull = this.foundNullWeight(order);
 
-    if (weight === 0) {
+    if (weightDue === 0) {
       return '?';
     }
 
-    return this.numberFormat(weight, 2) + (foundNullWeight ? ' ?' : '');
+    return this.numberFormat(weightDue, 2) + (foundNull ? ' ?' : '');
   }
 
   showCombinedShipping(order: OrderShipOut): string {
@@ -301,18 +376,37 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   /**
    * 편집 상품 가져오기
    * @param order OrderShipOut
-   * @returns OrderShipOutDetail 
    */
-  getEditItem(order: OrderShipOut): OrderShipOutDetail {
+  getEditItem(order: OrderShipOut, subject: any): void {
     let editItem = order.orderShipOutDetails[0];
     // 아이템이 2개이상일 경우 선택
     if (order.orderShipOutDetails.length > 1) {
       const params: IdName[] = [];
 
-      // 선택창에 보낼 데이터 만들기
+      // 라디오 선택창에 보낼 데이터 만들기
+      let remark = '';
       for (const it of order.orderShipOutDetails) {
-        const weightString = it.kiloGramWeight ? this.numberFormat(it.kiloGramWeight, 2) : '?';
-        params.push({id: it.productVariantId, name: `[${weightString}Kg]-${it.name}`});  
+        const itemId = OliveDocumentService.numToAlpha(it.productVariantShortId - 1);
+        if (subject === this.productCustomsWeightSelectedTrigger) {
+          remark = it.kiloGramWeight ? this.numberFormat(it.kiloGramWeight, 2) : '?';
+          if (it.extra && it.extra.customsWeight) {
+            let weight = it.extra.customsWeight;
+            if (it.extra.customsWeightTypeCode === OliveConstants.weightTypeCode.Pound) {
+              weight = weight * OliveConstants.unitConversionRate.poundToKilo;
+            }
+
+            remark = this.numberFormat(weight, 2);
+          }
+          remark += 'Kg';
+        }
+        else if (subject === this.productCustomsPriceSelectedTrigger) {
+          remark = it.customsPrice ? this.cacheService.showMoney(it.customsPrice, true) : '?';
+          if (it.extra && it.extra.customsPrice) {
+            remark = this.cacheService.showMoney(it.extra.customsPrice, true);
+          }
+        }
+
+        params.push({ id: it.productVariantId, name: `${itemId}. [${remark}]-${it.name}` });
       }
 
       const dialogRef = this.dialog.open(
@@ -321,20 +415,23 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
           disableClose: false,
           panelClass: 'mat-dialog-md',
           data: {
-            title: this.translator.get('sales.pendingOrderShipOutList.selectProductForWeightTitle'),
-            description: this.translator.get('sales.pendingOrderShipOutList.selectProductForWeightDescription'),
-            items: params
+            title: this.translator.get('sales.pendingOrderShipOutList.selectProductTitle'),
+            description: this.translator.get('sales.pendingOrderShipOutList.selectProductDescription'),
+            items: params,
+            oneClick: true
           } as OliveSelectOneSetting
         });
 
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
           editItem = order.orderShipOutDetails.find(x => x.productVariantId === result);
+          subject.next({ order: order, editItem: editItem });
         }
       });
     }
-
-    return editItem;
+    else {
+      subject.next({ order: order, editItem: editItem });
+    }
   }
 
   /**
@@ -342,35 +439,34 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @param order OrderShipOut
    */
   editItemsWeight(order: OrderShipOut) {
-    const editItem = this.getEditItem(order);
-
-    // 백앤드에서 상품무게 받음
-    this.productService.get(`weight/${editItem.productVariantId}/`).subscribe(
-      response => this.updateProductWeight(order, response.model),
-      error => this.messageHelper.showLoadFailedSticky(error)
-    );    
+    this.getEditItem(order, this.productCustomsWeightSelectedTrigger);
   }
 
   /**
    * Updates product weight
    * @param order OrderShipOut
+   * @param editItem OrderShipOutDetail
    * @param weight ProductWeight
    */
-  private updateProductWeight(order: OrderShipOut, weight: ProductWeight) {
+  private updateProductWeight(order: OrderShipOut, editItem: OrderShipOutDetail, weight: ProductWeight) {
+    const savedCustomsWeight = editItem.kiloGramWeight;
+    const savedOverrideWeight = editItem.extra && editItem.extra.customsWeight || null;
+    const savedOverrideWeightTypeCode = editItem.extra && editItem.extra.customsWeightTypeCode || null;
+
     // 상품 무게 수정창 오픈
+    const itemId = OliveDocumentService.numToAlpha(editItem.productVariantShortId - 1);
     const setting = new OliveDialogSetting(
       OliveProductWeightEditorComponent,
       {
-        item: {
-          productVariantId: weight.productVariantId,
-          productGroupWeight: weight.productGroupWeight, 
-          productGroupWeightTypeCode: weight.productGroupWeightTypeCode,
-          productVariantWeight: weight.productVariantWeight,
-          productVariantWeightTypeCode: weight.productVariantWeightTypeCode
-        } as ProductWeight,
+        item: weight,
         itemType: OrderShipOut,
-        customTitle: `${order.orderFk.marketSellerFk.code} - ${order.orderFk.marketOrdererName} (${this.getOrderCount(order)})`,
-        hideDelete: true
+        customTitle: `${itemId}. ${order.orderFk.marketSellerFk.code} - ${order.orderFk.marketOrdererName} (${this.getOrderCount(order)})`,
+        hideDelete: true,
+        extraParameter: { 
+          productName: editItem.name, 
+          overrideWeight: editItem.extra && editItem.extra.customsWeight || null,
+          overrideWeightTypeCode: editItem.extra && editItem.extra.customsWeightTypeCode || null,
+        }
       } as OliveOnEdit
     );
 
@@ -383,11 +479,32 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       });
 
     // 무게 업데이트
-    dialogRef.afterClosed().subscribe(kilo => {
-      if (kilo) {
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // 예외 적용 무게를 저장해야 한다면
+        if (result.overrideCustomsWeight !== savedOverrideWeight || result.overrideWeightTypeCode !== savedOverrideWeightTypeCode) {
+          if (!editItem.extra) {
+            editItem.extra = new OrderShipOutDetailExtra();
+          }
+
+          editItem.extra.customsWeight = result.overrideCustomsWeight;
+          // Weight이 Null이면 무게 타입 콤보도 Null처리한다. (값이 없는 무게 단위는 의미가 없다.)
+          editItem.extra.customsWeightTypeCode = result.overrideCustomsWeight ? result.overrideWeightTypeCode : null;
+
+          this.saveShipOutExtra(editItem);
+        }
+
+        let update = true;
         for (const od of this.orders) {
           for (const it of od.orderShipOutDetails.filter(x => x.productVariantId === weight.productVariantId)) {
-            it.kiloGramWeight = kilo;
+            if (savedCustomsWeight === result.customsWeight) {
+              update = false;
+              break;
+            }
+            it.kiloGramWeight = result.customsWeight;
+          }
+          if (!update) {
+            break;
           }
         }
       }
@@ -399,13 +516,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @param order OrderShipOut
    */
   editCustomsPrice(order: OrderShipOut) {
-    const editItem = this.getEditItem(order);
-
-    // 백앤드에서 상품무게 받음
-    this.productService.get(`customsPrice/${editItem.productVariantId}/`).subscribe(
-      response => this.updateCustomsPrice(order, response.model),
-      error => this.messageHelper.showLoadFailedSticky(error)
-    );
+    this.getEditItem(order, this.productCustomsPriceSelectedTrigger);
   }
 
   /**
@@ -413,19 +524,21 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @param order OrderShipOut
    * @param price ProductCustomsPrice
    */
-  private updateCustomsPrice(order: OrderShipOut, price: ProductCustomsPrice) {
+  private updateCustomsPrice(order: OrderShipOut, editItem: OrderShipOutDetail, price: ProductCustomsPrice) {
+    const savedCustomsPrice = editItem.customsPrice;
+    const savedOverridePrice = editItem.extra && editItem.extra.customsPrice || null;
+
     // 세관신고 상품가격 수정창 오픈
+    const itemId = OliveDocumentService.numToAlpha(editItem.productVariantShortId - 1);
     const setting = new OliveDialogSetting(
       OliveProductCustomsPriceEditorComponent,
       {
-        item: {
-          productVariantId: price.productVariantId,
-          productGroupCustomsPrice: price.productGroupCustomsPrice, 
-          productVariantCustomsPrice: price.productVariantCustomsPrice
-        } as ProductCustomsPrice,
+        item: price,
         itemType: OrderShipOut,
-        customTitle: `${order.orderFk.marketSellerFk.code} - ${order.orderFk.marketOrdererName} (${this.getOrderCount(order)})`,
-        hideDelete: true
+        customTitle: `${itemId}. [${this.translator.get('common.word.productCustomsPrice')}] ${order.orderFk.marketSellerFk.code} - 
+        ${order.orderFk.marketOrdererName} (${this.getOrderCount(order)})`,
+        hideDelete: true,
+        extraParameter: { productName: editItem.name, overrideCustomsPrice: editItem.extra && editItem.extra.customsPrice || null }
       } as OliveOnEdit
     );
 
@@ -438,33 +551,74 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       });
 
     // 가격 업데이트
-    dialogRef.afterClosed().subscribe(customsPrice => {
-      if (customsPrice) {
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // 예외 적용 가격을 저장해야 한다면
+        if (result.overrideCustomsPrice !== savedOverridePrice) {
+          if (!editItem.extra) {
+            editItem.extra = new OrderShipOutDetailExtra();
+          }
+
+          editItem.extra.customsPrice = result.overrideCustomsPrice;
+
+          this.saveShipOutExtra(editItem);
+        }
+
+        let update = true;
         for (const od of this.orders) {
           for (const it of od.orderShipOutDetails.filter(x => x.productVariantId === price.productVariantId)) {
-            it.customsPrice = customsPrice;
+            if (savedCustomsPrice === result.customsPrice) {
+              update = false;
+              break;
+            }
+            it.customsPrice = result.customsPrice;
+          }
+          if (!update) {
+            break;
           }
         }
       }
     });
   }
 
+  /**
+   * 예외 적용 가격, 이름, 중량등의 통관시 사용 부가정보를 백앤드에 저장
+   * @param editItem OrderShipOutDetail
+   */
+  saveShipOutExtra(editItem: OrderShipOutDetail) {
+    this.orderShipOutService.put(`extra/${editItem.id}/`, editItem.extra).subscribe(
+      response => {
+        editItem = response.model as OrderShipOutDetail;
+      },
+      error => this.messageHelper.showStickySaveFailed(error, false)
+    );
+  }
+
   showCustomsPrice(order: OrderShipOut): string {
-    const price = order.orderShipOutDetails.map(x => x.customsPrice * x.quantity).reduce((a, b) => a + (b || 0), 0);
+    const priceDue = this.getOrderShipOutCustomsPriceDue(order);
 
-    const foundNullCustomsPrice = this.foundNullCustomsPrice(order);
+    const foundNull = this.foundNullCustomsPrice(order);
 
-    if (price === 0) {
+    if (priceDue === 0) {
       return '?';
     }
 
-    return this.cacheService.showMoney(price) + (foundNullCustomsPrice ? ' ?' : '');
+    return this.cacheService.showMoney(priceDue) + (foundNull ? ' ?' : '');
   }
 
+  /**
+   * 널이 있는 가격이 있는지 조사
+   * @param order 
+   * @returns true if null price 
+   */   
   foundNullCustomsPrice(order: OrderShipOut): boolean {
-    return !this.isNull(order.orderShipOutDetails.find(x => x.customsPrice == null));
+    return !this.isNull(order.orderShipOutDetails.find(x => x.customsPrice == null && (x.extra == null || x.extra.customsPrice == null)));
   }
 
+  /**
+   * 합배송 처리
+   * @returns  
+   */
   combineShip() {
     const canCombineShip = this.canCombineShip;
     if (!(canCombineShip || this.canReleaseCombineShip)) { return; }
@@ -504,7 +658,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
           data: {
             title: this.translator.get('sales.pendingOrderShipOutList.selectDeliveryInfoTitle'),
             description: this.translator.get('sales.pendingOrderShipOutList.selectDeliveryInfoDescription'),
-            items: items
+            items: items,
+            oneClick: true
           } as OliveSelectOneSetting
         });
 
@@ -701,9 +856,30 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       },
       error => {
         this.setIsLoading(false);
-        this.messageHelper.showStickySaveFailed(error, false);
+        this.alertService.stopLoadingMessage();
+
+        // 다른 User가 이미 출고를 했거나 주문취소를 했을 경우 출고 대상 데이터가 없다.
+        // 이경우 Refresh를 해서 모든 작업을 초기화 해야 한다.
+        if (error.error && error.error.errorCode === OliveBackEndErrors.DataNotExistsError) {
+          this.showRefreshDialog(this.translator.get('sales.pendingOrderShipOutList.orderShipOutDataNotExistsErrorMessage'));
+        }
+        else {
+          this.messageHelper.showStickySaveFailed(error, false);
+        }
       }
     );
+  }
+
+  private showRefreshDialog(message: string) {
+    this.alertService.showDialog
+      (
+        this.translator.get('common.title.errorConfirm'),
+        message,
+        DialogType.alert,
+        () => this.reload.emit(),
+        null,
+        this.translator.get('common.button.refresh')
+      );
   }
 
   private onShipOutFinished(response: any) {
@@ -718,15 +894,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     // 패키지/재고전환 누락건이 있을 경우 사용자에게 알린 후 Reload한다.
     if (shortInventoryOrderIds && shortInventoryOrderIds.length > 0) {
-      this.alertService.showDialog
-        (
-          this.translator.get('common.title.errorConfirm'),
-          String.Format(this.translator.get('common.message.outOfStock'), shortInventoryOrderIds.length),
-          DialogType.alert,
-          () => this.reload.emit(),
-          null,
-          this.translator.get('common.button.refresh')
-        );
+      this.showRefreshDialog(String.Format(this.translator.get('common.message.outOfStock'), shortInventoryOrderIds.length));
     }
     else { // 재고가 저장된것 빼고 삭제한다.
       for (let i = this.orders.length - 1; i >= 0; i--) {
@@ -765,6 +933,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
   cleanUpChildComponent() {
     this.dtTrigger.unsubscribe();
+    this.productCustomsPriceSelectedTrigger.unsubscribe();
+    this.productCustomsWeightSelectedTrigger.unsubscribe();
   }
 }
-

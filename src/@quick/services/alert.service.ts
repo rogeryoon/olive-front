@@ -224,6 +224,9 @@ export class AlertMessage {
     constructor(public severity: MessageSeverity, public summary: string, public detail: string) { }
 }
 
+/**
+ * 메시지 종류 (성공/경고/에러 등)
+ */
 export enum MessageSeverity {
     default,
     info,

@@ -1,0 +1,41 @@
+﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" autocomplete="off">
+    <div class="mb-12" *ngIf="!isNewItem && contacts && contacts.length > 0">
+        {{(contacts && contacts.length == 1 ? 'sales.pendingOrderShipOutPackageList.clickAddButtonForOneItem' : 'sales.pendingOrderShipOutPackageList.clickAddButtonForItems') | translate}}
+        <button mat-stroked-button color="primary" (click)="addContact()"><mat-icon>add</mat-icon>{{'common.button.add' | translate}}</button> 
+    </div>
+    <div class="mb-12" fxLayout="column" *ngIf="contacts && contacts.length > 1">
+        <mat-radio-group formControlName="options" class="contact-radio-group">
+            <mat-radio-button class="example-radio-button" *ngFor="let contact of contacts" [value]="contact.id" (change)="contactChange($event)">
+                {{contact.companyName}} <span class="foreground-orange" (click)="deleteContact(contact)"><mat-icon style="vertical-align:middle;">delete_outline</mat-icon></span>
+            </mat-radio-button>
+        </mat-radio-group>
+    </div>
+    <div class="mb-8"><small>{{'sales.pendingOrderShipOutPackageList.warningForUpdateAll' | translate}}</small></div>
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <mat-form-field appearance="outline" class="w-50-p">
+            <mat-label>{{'common.word.companyName' | translate}}</mat-label>
+            <input matInput name="companyName" formControlName="companyName" required>
+            <mat-error *ngIf="hasEntryError('companyName')">{{errorMessage('companyName')}}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-50-p pl-8">
+            <mat-label>{{'common.word.phoneNumber' | translate}}</mat-label>
+            <input matInput name="phone" formControlName="phone" required>
+            <mat-error *ngIf="hasEntryError('phone')">{{errorMessage('phone')}}</mat-error>
+        </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+        <mat-form-field appearance="outline" class="w-100-p">
+            <mat-label>{{'common.word.address1' | translate}}</mat-label>
+            <input matInput name="address1" formControlName="address1" required>
+            <mat-error *ngIf="hasEntryError('address1')">{{errorMessage('address1')}}</mat-error>
+        </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+        <mat-form-field appearance="outline" class="w-70-p">
+            <mat-label>{{'common.word.address2' | translate}}</mat-label>
+            <input matInput name="address2" formControlName="address2">
+        </mat-form-field>
+        <mat-checkbox formControlName="default" class="w-30-p pl-12" (change)="checkDefault($event)">{{'common.word.default' | translate}}
+        </mat-checkbox>
+    </div>
+</form>

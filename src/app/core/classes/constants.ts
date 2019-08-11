@@ -4,6 +4,11 @@ export class OliveConstants {
         { code: 'K', name: 'Kilogram', symbol: 'Kg' }
     ];
 
+    static weightTypeCode = class {
+        static Pound = 'L';
+        static Kilogram = 'K';
+    };
+
     static lengthTypes = [
         { code: 'I', name: 'Inch', symbol: 'In' },        
         { code: 'C', name: 'Centimeter', symbol: 'Cm' }
@@ -25,7 +30,7 @@ export class OliveConstants {
 
     static foregroundColor = class {
         static blue = 'foreground-blue';
-        static orange = 'foreground-orange';
+        static orange = 'K';
         static red = 'foreground-red';
     };
 

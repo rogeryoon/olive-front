@@ -4,4 +4,5 @@ export interface OliveSelectOneSetting {
     title?: string;
     description?: string;
     items: IdName[];
+    oneClick?: boolean;
 }

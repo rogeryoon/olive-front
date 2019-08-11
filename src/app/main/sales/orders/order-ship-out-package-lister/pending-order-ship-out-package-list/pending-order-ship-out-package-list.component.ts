@@ -1,6 +1,8 @@
-﻿import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+﻿import { Component, Input, Output, EventEmitter, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Subject } from 'rxjs';
+
+import * as _ from 'lodash';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
@@ -18,13 +20,23 @@ import { OlivePreviewDialogComponent } from 'app/core/components/dialogs/preview
 import { AlertService, DialogType } from '@quick/services/alert.service';
 import { OlivePreviewPackingListComponent } from '../preview-packing-list/preview-packing-list.component';
 import { OliveShipperExcelService } from 'app/main/sales/services/shipper-excel.service';
+import { CompanyContact } from 'app/core/models/company-contact.model';
+import { OliveCacheService } from 'app/core/services/cache.service';
+import { OliveCompanyContactEditorComponent } from 'app/core/components/entries/company-contact-editor/company-contact-editor.component';
+import { OliveOnEdit } from 'app/core/interfaces/on-edit';
+import { OliveEditDialogComponent } from 'app/core/components/dialogs/edit-dialog/edit-dialog.component';
+import { MarketSeller } from 'app/main/supports/models/market-seller.model';
+import { OliveDocumentService } from 'app/core/services/document.service';
+import { OrderShipOutDetail } from 'app/main/sales/models/order-ship-out-detail.model';
+import { OliveOrderShipOutService } from 'app/main/sales/services/order-ship-out.service';
+import { OrderShipOutPackageExtra } from 'app/main/sales/models/order-ship-out-package-extra.model';
 
 @Component({
   selector: 'olive-pending-order-ship-out-package-list',
   templateUrl: './pending-order-ship-out-package-list.component.html',
   styleUrls: ['./pending-order-ship-out-package-list.component.scss']
 })
-export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFormComponent {
+export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFormComponent implements AfterContentChecked {
   @Input()
   warehouse: Warehouse;
 
@@ -34,6 +46,11 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   parentObject: OliveOnShare;
 
   packages: OrderShipOutPackage[] = [];
+
+  packagesContact = new Map<number, CompanyContact>();
+  companyContacts: CompanyContact[] = [];
+  marketSellerContacts = new Map<number, CompanyContact[]>();
+  marketSellers = new Map<number, MarketSeller>();
 
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
@@ -47,11 +64,19 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private messageHelper: OliveMessageHelperService, private orderShipOutPackageService: OliveOrderShipOutPackageService,
     private dialog: MatDialog, private alertService: AlertService,
-    private shipperExcelService: OliveShipperExcelService
+    private shipperExcelService: OliveShipperExcelService, private cacheService: OliveCacheService,
+    private cdRef: ChangeDetectorRef
   ) {
     super(
       formBuilder, translator
     );
+  }
+
+  /**
+   * showSenderCompany Tooltip Expression Check Error때문에 Change Detection 적용
+   */
+  ngAfterContentChecked() {
+    this.cdRef.detectChanges();
   }
 
   get remarkSelectedPackages(): string {
@@ -98,12 +123,40 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     this.selectedAll = this.packages.every(x => x.selected);
   }
 
-  startTable(packages: OrderShipOutPackage[], parentObject: any) {
+  startTable(packages: OrderShipOutPackage[], parentObject: any, refresh: boolean) {
     this.parentObject = parentObject;
 
     this.packages = packages;
 
-    this.dtTrigger.next();
+    if (!refresh) {
+      this.dtTrigger.next();
+    }
+  }
+
+  getMarketSellerContacts() {
+    // Cache에서 가져올것이 무엇인지 marketSellerFk.id별로 정리한다.
+    for (const box of this.warehousePackages) {
+      for (const order of box.orderShipOuts) {
+        const key = order.orderFk.marketSellerFk.id;
+        if (!this.marketSellerContacts.has(key)) {
+          this.marketSellerContacts.set(key, null);
+          this.marketSellers.set(key, order.orderFk.marketSellerFk);
+        }
+      }
+    }
+
+    for (const marketSellerId of Array.from(this.marketSellerContacts.keys())) {
+      // 컨텍 데이터가 없는 경우만 Cache에서 가져온다.
+      if (!this.marketSellerContacts.get(marketSellerId)) {
+        this.cacheService.getCompanyGroupPreference(this.cacheService.keyShippingLabelShippers(this.warehouse.id, marketSellerId))
+          .then((contacts: CompanyContact[]) => {
+            if (contacts) {
+              this.marketSellerContacts.set(marketSellerId, contacts);
+              this.companyContacts = this.companyContacts.concat(contacts);
+            }
+          });
+      }
+    }
   }
 
   get warehousePackages() {
@@ -116,6 +169,53 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
 
   showSeller(item: OrderShipOutPackage): string {
     return item.orderShipOuts[0].orderFk.marketSellerFk.code;
+  }
+
+  showSenderCharacters(box: OrderShipOutPackage): string {
+    const markerSellerId = box.orderShipOuts[0].orderFk.marketSellerFk.id;
+    const contacts = this.marketSellerContacts.get(markerSellerId);
+
+    let foundIndex = -1;
+    if (contacts) {
+      // 이미 지정된 컨텍이 없으면 
+      if (!this.packagesContact.has(box.id)) {
+        // 예외 컨텍이 지정되어 있으면 예외 컨텍 먼저 지정
+        if (box.extra && box.extra.companyContactId) {
+          const found = this.companyContacts.find(x => x.marketSellerId === markerSellerId && x.id === box.extra.companyContactId);
+          if (found) {
+            this.packagesContact.set(box.id, found);
+          }
+        }
+
+        // 모두 해당 되지 않으면, 기본지정을 찾아 지정/저장한다.
+        if (!this.packagesContact.has(box.id)) {
+          const found = this.companyContacts.find(x => x.marketSellerId === markerSellerId && x.default);
+          if (found) {
+            this.packagesContact.set(box.id, found);
+          }
+        }
+      }
+
+      foundIndex = this.companyContacts.findIndex(x => x.id === this.packagesContact.get(box.id).id);
+    }
+
+    if (foundIndex === -1) {
+      return '?';
+    }
+
+    return OliveDocumentService.numToAlpha(foundIndex);
+  }
+
+  showSenderCompany(box: OrderShipOutPackage): string {
+    let companyName = '';
+    const markerSellerId = box.orderShipOuts[0].orderFk.marketSellerFk.id;
+    const contact = this.packagesContact.get(markerSellerId);
+
+    if (contact) {
+      companyName = contact.companyName;
+    }
+
+    return companyName;
   }
 
   showQuantity(item: OrderShipOutPackage): string {
@@ -159,7 +259,10 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     );
   }
 
-  // 캔슬된 패키지를 삭제하고 Reload한다.
+  /**
+   * 캔슬된 패키지를 삭제하고 Reload한다.
+   * @param response 
+   */
   private onPackagesCanceled(response: any) {
     for (let i = this.packages.length - 1; i >= 0; i--) {
       if (this.packages[i].warehouseId === this.warehouse.id && this.packages[i].selected) {
@@ -169,6 +272,19 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     this.packagesCanceled.emit();
 
     this.selectedAll = false;
+  }
+
+  /**
+  * 패키지에 관한 부
+  * @param box OrderShipOutPackage
+  */
+  private saveShipOutExtra(box: OrderShipOutPackage) {
+    this.orderShipOutPackageService.put(`extra/${box.id}/`, box.extra).subscribe(
+      response => {
+        box = response.model as OrderShipOutPackage;
+      },
+      error => this.messageHelper.showStickySaveFailed(error, false)
+    );
   }
 
   /**
@@ -196,7 +312,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
             this.messageHelper.showStickySaveFailed(error, false);
           }
         );
-    
+
         this.selectedAll = false;
       },
       () => null,
@@ -210,7 +326,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
    */
   printPickingList() {
     const dialogSetting = new OliveDialogSetting(
-      OlivePreviewPickingListComponent, 
+      OlivePreviewPickingListComponent,
       {
         item: this.selectedPackages,
         hideExcelButton: true
@@ -226,18 +342,18 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
       });
   }
 
-   /**
-   * 팩킹 리스트 인쇄
-   */
+  /**
+  * 팩킹 리스트 인쇄
+  */
   printPackingList() {
     const dialogSetting = new OliveDialogSetting(
-      OlivePreviewPackingListComponent, 
+      OlivePreviewPackingListComponent,
       {
         item: this.selectedPackages,
         hideExcelButton: true
       }
     );
-    
+
     this.dialog.open(
       OlivePreviewDialogComponent,
       {
@@ -256,11 +372,163 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   exportForTrackingNumberUpdate() {
     console.log('exportForTrackingNumberUpdate');
   }
-  
+
   // TODO : exportForLogistic
   exportForLogistic() {
-    this.shipperExcelService.saveForGps(this.selectedPackages);
-  }  
+    // 마켓셀러에 저장된 컨텍이 없을 경우 없는 컨텍만큼 연속으로 팝업을 띠워서 입력을 받는다.
+    for (const marketSellerId of Array.from(this.marketSellerContacts.keys())) {
+      if (!this.marketSellerContacts.get(marketSellerId)) {
+        this.openMarketSellerContactEditor(marketSellerId);
+      }
+    }
+
+    // this.shipperExcelService.saveForGps(this.warehousePackages, null);
+  }
+
+  editCompanyContact(box: OrderShipOutPackage) {
+    const contact = this.packagesContact.get(box.id);
+
+    if (contact) {
+      this.openMarketSellerContactEditor(contact.marketSellerId, contact, box);
+    }
+    else {
+      const markerSellerId = box.orderShipOuts[0].orderFk.marketSellerFk.id;
+      this.openMarketSellerContactEditor(markerSellerId, null, box);
+    }
+  }
+
+  private openMarketSellerContactEditor(marketSellerId: number, contact: CompanyContact = null, box: OrderShipOutPackage = null) {
+    const marketSeller = this.marketSellers.get(marketSellerId);
+    const savedCompanyContactId = (box && box.extra && box.extra.companyContactId) ? box.extra.companyContactId : null;
+
+    const deepCopiedContacts = _.cloneDeep(this.marketSellerContacts.get(marketSellerId));
+
+    let deepCopiedContact = null;
+    if (deepCopiedContacts) {
+      deepCopiedContact = deepCopiedContacts.find(x => x.id === contact.id);
+    }
+
+    // 회사 컨텍정보 수정창 오픈
+    const setting = new OliveDialogSetting(
+      OliveCompanyContactEditorComponent,
+      {
+        item: deepCopiedContact,
+        itemType: CompanyContact,
+        customTitle: `${this.translator.get('common.title.shippingLabelShippersEntry')} - ${marketSeller.code}`,
+        hideDelete: true,
+        extraParameter: {
+          marketSellerId: marketSeller.id,
+          warehouseId: this.warehouse.id,
+          contacts: deepCopiedContacts
+        }
+      } as OliveOnEdit
+    );
+
+    const dialogRef = this.dialog.open(
+      OliveEditDialogComponent,
+      {
+        disableClose: true,
+        panelClass: 'mat-dialog-md',
+        data: setting
+      });
+
+    // Contact 업데이트
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        const selectedId = result.selectedId as number;
+        const savedContacts = result.contacts as CompanyContact[];
+
+        const currentContacts = this.marketSellerContacts.get(marketSellerId);
+
+        const arrangedContacts = this.updateCurrentContacts(currentContacts, savedContacts);
+
+        if (arrangedContacts) {
+          // 캐쉬 저장
+          this.cacheService.setCompanyGroupPreference(
+            this.cacheService.keyShippingLabelShippers(this.warehouse.id, marketSellerId),
+            arrangedContacts
+          );
+
+          // 박스를 선택한 경우 업데이트가 필요하다면
+          if (box && savedCompanyContactId !== selectedId) {
+            this.packagesContact.set(box.id, arrangedContacts.find(x => x.id === selectedId));
+
+            if (!box.extra) {
+              box.extra = new OrderShipOutPackageExtra();
+            }
+
+            box.extra.companyContactId = selectedId;
+
+            this.saveShipOutExtra(box);
+          }
+        }
+      }
+    });
+  }
+
+  /**
+   * 기존 저장된 컨텍들이 있을 경우 편집창에서 저장된 컨텍들과 비교대조 업데이트
+   * @param currentContacts CompanyContact[]
+   * @param savedContacts CompanyContact[]
+   * @returns current contacts 
+   */
+  private updateCurrentContacts(currentContacts: CompanyContact[], savedContacts: CompanyContact[]): CompanyContact[] {
+    if (currentContacts) {
+      //#region 삭제
+
+      // 기존 컨텍에 저장 컨텍이 없으면 삭제
+      const deleteContacts: CompanyContact[] = [];
+      for (const ct of currentContacts) {
+        if (!savedContacts.find(x => x.id === ct.id)) {
+          deleteContacts.push(ct);
+        }
+      }
+
+      // 패키지 맵에서 찾아서 삭제
+      for (const boxId of Array.from(this.packagesContact.keys())) {
+        const packageContact = this.packagesContact.get(boxId);
+        for (const delContact of deleteContacts) {
+          if (packageContact && packageContact.id === delContact.id) {
+            this.packagesContact.delete(boxId);
+          }
+        }
+      }
+
+      // 컨텍 배열 / 마켓셀러 맵에서 찾아서 삭제
+      for (const delContact of deleteContacts) {
+        let index = this.companyContacts.findIndex(x => x.id === delContact.id);
+        this.companyContacts.splice(index, 1);
+        index = currentContacts.findIndex(x => x.id === delContact.id);
+        currentContacts.splice(index, 1);
+      }
+      //#endregion 삭제
+
+      // 기존 컨텍과 매치되는 컨텍이 있으면 업데이트
+      for (const ct of currentContacts) {
+        const matchedContact = savedContacts.find(x => x.id === ct.id);
+        if (matchedContact) {
+          Object.assign(ct, matchedContact);
+        }
+      }
+
+      // 저장컨텍에 기존컨텍 매치가 안되면 삽입
+      for (const ct of savedContacts) {
+        const found = currentContacts.find(x => x.id === ct.id);
+        if (!found) {
+          currentContacts.push(ct);
+          this.companyContacts.push(ct);
+        }
+      }
+
+      return currentContacts;
+    }
+    else {
+      this.marketSellerContacts.set(savedContacts[0].marketSellerId, savedContacts);
+      this.companyContacts = this.companyContacts.concat(savedContacts);
+
+      return savedContacts;
+    }
+  }
 
   initializeChildComponent() {
     this.dtOptions = {

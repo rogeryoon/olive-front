@@ -55,15 +55,21 @@ export class OliveOrderShipOutPackageListerComponent extends OliveEntityFormComp
     this.pendingOrderList.startTable(pendingOrders, inventories, parentObject, refresh);
   }
 
-  setPendingOrderPackages(pendingOrderPackages: OrderShipOutPackage[], parentObject: OliveOnShare) {
+  setPendingOrderPackages(pendingOrderPackages: OrderShipOutPackage[], parentObject: OliveOnShare, refresh: boolean) {
     this.pendingOrderPackages = pendingOrderPackages;
-    this.pendingOrderPackageList.startTable(this.pendingOrderPackages, parentObject);
+    this.pendingOrderPackageList.startTable(this.pendingOrderPackages, parentObject, refresh);
+    this.pendingOrderPackageList.getMarketSellerContacts();
   }
 
+  /**
+   * 출고완료 처리 후 출고 맨 상단에 해당 패키지들을 차례대로 밀어 올린다.
+   * @param pendingOrderPackages 패키지
+   */
   onShipOutFinished(pendingOrderPackages: OrderShipOutPackage[]) {
     for (let i = pendingOrderPackages.length - 1; i >= 0; i--) {
       this.pendingOrderPackages.unshift(pendingOrderPackages[i]);
     }
+    this.pendingOrderPackageList.getMarketSellerContacts();
   }
 
   onShipOutPackageCanceled() {

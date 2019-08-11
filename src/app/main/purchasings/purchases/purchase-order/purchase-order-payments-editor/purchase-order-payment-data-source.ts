@@ -1,9 +1,9 @@
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 
 import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.model';
 import { TableDataSource } from 'app/core/classes/table-data-source';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { numberValidator } from 'app/core/classes/validators';
+import { numberValidator, requiredValidator } from 'app/core/classes/validators';
 export class OlivePurchaseOrderPaymentDataSource extends TableDataSource {
     constructor(cacheService: OliveCacheService) { 
         super(cacheService); 
@@ -11,7 +11,7 @@ export class OlivePurchaseOrderPaymentDataSource extends TableDataSource {
 
     createRowFormGroup(r: any): FormGroup {
         const f = new FormGroup({
-            paymentMethodId: this.createNewFormControl(r, 'paymentMethodId', [Validators.required]),
+            paymentMethodId: this.createNewFormControl(r, 'paymentMethodId', [requiredValidator()]),
             amount: this.createNewFormControl(r, 'amount', [numberValidator(this.standCurrency.decimalPoint, true)]),
             remarkId: this.createNewFormControl(r, 'remarkId', [])
         });

@@ -114,10 +114,12 @@ export class OliveMessageHelperService {
     );
   }
 
-  showStickySaveFailed(error: any, isDelete: boolean) {
+  showStickySaveFailed(error: any, isDelete: boolean, errorMessage: UserMessage = null) {
     this.alertService.stopLoadingMessage();
 
-    const errorMessage = this.translateError(error, isDelete);
+    if (!errorMessage) {
+      errorMessage = this.translateError(error, isDelete);
+    }
 
     if (errorMessage.title == null) {
       errorMessage.title = this.translator.get(isDelete ? 'common.title.deleteError' : 'common.title.saveError');

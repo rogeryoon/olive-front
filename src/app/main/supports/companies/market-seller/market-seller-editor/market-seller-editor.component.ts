@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
@@ -11,6 +11,7 @@ import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-hos
 import { OliveMarketService } from '../../../services/market.service';
 import { OliveMarketManagerComponent } from '../../market/market-manager/market-manager.component';
 import { Market } from '../../../models/market.model';
+import { requiredValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-market-seller-editor',
@@ -48,8 +49,8 @@ export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      code: ['', Validators.required],
-      name: ['', Validators.required],
+      code: ['', requiredValidator()],
+      name: ['', requiredValidator()],
       memo: '',
       activated: false,
       marketFk: null

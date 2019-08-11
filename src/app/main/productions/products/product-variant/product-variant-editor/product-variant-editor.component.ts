@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { AccountService } from '@quick/services/account.service';
@@ -14,7 +14,7 @@ import { OliveProductService } from '../../../services/product.service';
 import { OliveProductManagerComponent } from '../../product/product-manager/product-manager.component';
 import { Product } from '../../../models/product.model';
 import { Permission } from '@quick/models/permission.model';
-import { numberValidator, volumeValidator } from 'app/core/classes/validators';
+import { numberValidator, volumeValidator, requiredValidator } from 'app/core/classes/validators';
 import { OliveUtilities } from 'app/core/classes/utilities';
 
 @Component({
@@ -67,10 +67,10 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
       memo: '',      
       standPrice: ['', [numberValidator(this.standCurrency.decimalPoint, false)]],
       weight: ['', [numberValidator(2, false)]],
-      weightTypeCode: ['', Validators.required],
+      weightTypeCode: ['', requiredValidator()],
       volume: ['', [volumeValidator()]],
       volumeWeight: '',
-      lengthTypeCode: ['', Validators.required],
+      lengthTypeCode: ['', requiredValidator()],
       customsName: '',
       customsPrice: ['', [numberValidator(this.standCurrency.decimalPoint, false)]],    
       productFk: null

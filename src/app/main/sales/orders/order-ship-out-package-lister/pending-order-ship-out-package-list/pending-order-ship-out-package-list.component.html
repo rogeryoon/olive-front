@@ -76,7 +76,7 @@
                                 (change)="checkIfAllSelected();" [attr.disabled]="false ? true : null">
                         </td>
                         <td>{{warehousePackages.length-i}}</td>
-                        <td>{{showSeller(package)}}</td>
+                        <td class="pointer" (click)="editCompanyContact(package)">{{showSeller(package)}}-<span class="font-weight-900" matTooltip="{{showSenderCompany(package)}}">{{showSenderCharacters(package)}}</span></td>
                         <td>{{package.deliveryTagFk.consigneeName}}</td>
                         <td>{{showQuantity(package)}}</td>
                         <td>{{showWeight(package)}}</td>

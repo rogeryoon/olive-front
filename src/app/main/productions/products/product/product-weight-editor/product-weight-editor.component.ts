@@ -1,9 +1,9 @@
 ﻿import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { numberValidator, volumeValidator, requiredAnyValidator } from 'app/core/classes/validators';
+import { numberValidator, requiredAnyValidator, requiredValidator } from 'app/core/classes/validators';
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
@@ -21,49 +21,53 @@ import { ProductWeight } from 'app/main/productions/models/product-weight.model'
 })
 export class OliveProductWeightEditorComponent extends OliveEntityEditComponent {
   weightTypes: any[] = OliveConstants.weightTypes;
-  
+
   constructor(
     translator: FuseTranslationLoaderService, alertService: AlertService,
-    accountService: AccountService, messageHelper: OliveMessageHelperService, 
-    snackBar: MatSnackBar, formBuilder: FormBuilder, 
+    accountService: AccountService, messageHelper: OliveMessageHelperService,
+    snackBar: MatSnackBar, formBuilder: FormBuilder,
     dataService: OliveProductService, private cacheService: OliveCacheService
   ) {
     super(
       translator, alertService,
-      accountService, messageHelper, 
-      snackBar, formBuilder, 
+      accountService, messageHelper,
+      snackBar, formBuilder,
       dataService
     );
   }
 
-  getEditedItem(): any {
+  getEditedItem(): ProductWeight {
     const formModel = this.oForm.value;
 
-    return this.itemWithIdNAudit({
+    return {
       productVariantId: this.item.productVariantId,
       productGroupWeight: formModel.productGroupWeight,
       productGroupWeightTypeCode: formModel.productGroupWeightTypeCode,
       productVariantWeight: formModel.productVariantWeight,
       productVariantWeightTypeCode: formModel.productVariantWeightTypeCode,
-    } as ProductWeight);
+      productOverrideWeight: formModel.productOverrideWeight,
+      productOverrideWeightTypeCode: formModel.productOverrideWeightTypeCode,
+    };
   }
 
   buildForm() {
     this.oForm = this.formBuilder.group({
       productGroupWeight: ['', [numberValidator(2, false)]],
-      productGroupWeightTypeCode: ['', Validators.required],
+      productGroupWeightTypeCode: ['', requiredValidator()],
       productVariantWeight: ['', [numberValidator(2, false)]],
-      productVariantWeightTypeCode: ['', Validators.required]      
-    }, { validators: [requiredAnyValidator(['productGroupWeight', 'productVariantWeight'])] } );
+      productVariantWeightTypeCode: ['', requiredValidator()],
+      productOverrideWeight: ['', [numberValidator(2, false)]],
+      productOverrideWeightTypeCode: ['', requiredValidator()]
+    }, { validators: [requiredAnyValidator(['productGroupWeight', 'productVariantWeight'])] });
   }
 
   get hasRequiredAnyError() {
     return this.oForm.errors && this.oForm.errors['requiredAny'];
   }
 
-  get weightInputUserNames(): string[] {
+  get inputRequiredNames(): string[] {
     return [
-      this.translator.get('common.word.productGroupWeight'), 
+      this.translator.get('common.word.productGroupWeight'),
       this.translator.get('common.word.productVariantWeight')
     ];
   }
@@ -73,24 +77,53 @@ export class OliveProductWeightEditorComponent extends OliveEntityEditComponent 
       productGroupWeight: this.item.productGroupWeight || '',
       productGroupWeightTypeCode: this.item.productGroupWeightTypeCode || '',
       productVariantWeight: this.item.productVariantWeight || '',
-      productVariantWeightTypeCode: this.item.productVariantWeightTypeCode || '',       
+      productVariantWeightTypeCode: this.item.productVariantWeightTypeCode || '',
+      productOverrideWeight: this.extraParameter && this.extraParameter.overrideWeight || '',
+      productOverrideWeightTypeCode: this.extraParameter && this.extraParameter.overrideWeightTypeCode || '',
     });
 
-    if (!this.item.productGroupWeightTypeCode || !this.item.productVariantWeightTypeCode) {
-      this.cacheService.GetCompanyGroupSetting()
-        .then(setting => {
+    this.cacheService.GetCompanyGroupSetting()
+      .then(setting => {
+        if (!this.item.productGroupWeightTypeCode) {
           this.oForm.patchValue({
-            productGroupWeightTypeCode: setting.productWeightTypeCode,
+            productGroupWeightTypeCode: setting.productWeightTypeCode
+          });
+        }
+
+        if (!this.item.productVariantWeightTypeCode) {
+          this.oForm.patchValue({
             productVariantWeightTypeCode: setting.productWeightTypeCode
           });
-        });  
-    }
+        }
+
+        if (!this.extraParameter || !this.extraParameter.overrideWeightTypeCode) {
+          this.oForm.patchValue({
+            productOverrideWeightTypeCode: setting.productWeightTypeCode
+          });
+        }
+      });
+  }
+
+  get productName() {
+    return this.extraParameter.productName;
   }
 
   sendToEndPoint(item: any) {
+    this.isSaving = false;
+
     this.dataService.post('weight/', item).subscribe(
       response => this.onSaveSuccess(response.model),
       error => this.onSaveFail(error)
     );
+  }
+
+  notifyItemSaved(kiloWeight: number) {
+    const formModel = this.oForm.value;
+
+    this.onItemSaved.next({
+      customsWeight: kiloWeight, 
+      overrideCustomsWeight : formModel.productOverrideWeight,
+      overrideWeightTypeCode : formModel.productOverrideWeightTypeCode,
+    });
   }
 }

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 import { fuseAnimations } from '@fuse/animations';
+import { requiredValidator } from 'app/core/classes/validators';
 
 @Component({
     selector     : 'forgot-password',
@@ -55,7 +56,7 @@ export class ForgotPasswordComponent implements OnInit
     ngOnInit(): void
     {
         this.forgotPasswordForm = this._formBuilder.group({
-            email: ['', [Validators.required, Validators.email]]
+            email: ['', [requiredValidator(), Validators.email]]
         });
     }
 }

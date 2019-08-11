@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
@@ -10,6 +10,7 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveStandCarrierService } from '../../../services/stand-carrier.service';
 import { StandCarrier } from '../../../models/stand-carrier.model';
 import { NameValue } from 'app/core/models/name-value';
+import { requiredValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-carrier-editor',
@@ -44,8 +45,8 @@ export class OliveCarrierEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      code: ['', Validators.required],
-      name: ['', Validators.required],
+      code: ['', requiredValidator()],
+      name: ['', requiredValidator()],
       webSite: '',
       memo: '',
       activated: false,

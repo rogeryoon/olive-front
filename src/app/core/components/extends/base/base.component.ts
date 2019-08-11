@@ -26,6 +26,12 @@ export class OliveBaseComponent implements OnInit {
   }
 
   //#region Utilities
+
+  /**
+   * 123,345 같은 콤마형식 숫자로 변환
+   * @param amount 
+   * @returns  
+   */
   commaNumber(amount: number) {
     return OliveUtilities.numberFormat(amount, 0, null);
   }

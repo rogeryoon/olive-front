@@ -241,6 +241,10 @@ export class Utilities {
         }
     }
 
+    /**
+     * Create Unique id (1000000~9000000)
+     * @returns string
+     */
     public static uniqueId() {
         return this.randomNumber(1000000, 9000000).toString();
     }

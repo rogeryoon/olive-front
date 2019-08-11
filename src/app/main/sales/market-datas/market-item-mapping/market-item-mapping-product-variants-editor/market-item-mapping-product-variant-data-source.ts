@@ -1,10 +1,10 @@
 import { debounceTime, switchMap, tap, finalize } from 'rxjs/operators';
 
-import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 
 import { TableDataSource } from 'app/core/classes/table-data-source';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { numberValidator } from 'app/core/classes/validators';
+import { numberValidator, requiredValidator } from 'app/core/classes/validators';
 import { MarketItemMappingProductVariant } from '../../../models/market-item-mapping-product-variant.model';
 import { OliveProductVariantService } from 'app/main/productions/services/product-variant.service';
 import { IdName } from 'app/core/models/id-name';
@@ -23,7 +23,7 @@ export class OliveMarketItemMappingProductVariantDataSource extends TableDataSou
 
     createRowFormGroup(r: any): FormGroup {
         r.Obj.productVariantId36 = OliveUtilities.convertToBase36(r.Obj.productVariantId);
-        const productVariantId36Control = new FormControl(r.Obj.productVariantId36, [Validators.required]);
+        const productVariantId36Control = new FormControl(r.Obj.productVariantId36, [requiredValidator()]);
         productVariantId36Control.valueChanges.subscribe(val => { 
             if (val) {
                 r.Obj.productVariantId = OliveUtilities.convertBase36ToNumber(val);
@@ -35,7 +35,7 @@ export class OliveMarketItemMappingProductVariantDataSource extends TableDataSou
 
         const fg = new FormGroup({
             productVariantId36: productVariantId36Control,
-            productName: this.createNewFormControl(r, 'productName', [Validators.required]),
+            productName: this.createNewFormControl(r, 'productName', [requiredValidator()]),
             quantity: this.createNewFormControl(r, 'quantity', [numberValidator(0, true, 1)])
         });
 

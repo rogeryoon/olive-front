@@ -1,10 +1,11 @@
 ﻿import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { Country } from '../../../models/country.model';
+import { requiredValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-country-editor',
@@ -30,8 +31,8 @@ export class OliveCountryEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      code: ['', Validators.required],
-      name: ['', Validators.required]
+      code: ['', requiredValidator()],
+      name: ['', requiredValidator()]
     });
 }
 

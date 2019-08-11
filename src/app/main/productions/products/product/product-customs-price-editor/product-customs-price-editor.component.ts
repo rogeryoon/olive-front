@@ -10,7 +10,6 @@ import { AccountService } from '@quick/services/account.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { MatSnackBar } from '@angular/material';
 import { OliveProductService } from 'app/main/productions/services/product.service';
-import { OliveConstants } from 'app/core/classes/constants';
 import { ProductCustomsPrice } from 'app/main/productions/models/product-customs-price.model';
 
 @Component({
@@ -19,8 +18,6 @@ import { ProductCustomsPrice } from 'app/main/productions/models/product-customs
   styleUrls: ['./product-customs-price-editor.component.scss']
 })
 export class OliveProductCustomsPriceEditorComponent extends OliveEntityEditComponent {
-  weightTypes: any[] = OliveConstants.weightTypes;
-  
   constructor(
     translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
@@ -35,20 +32,22 @@ export class OliveProductCustomsPriceEditorComponent extends OliveEntityEditComp
     );
   }
 
-  getEditedItem(): any {
+  getEditedItem(): ProductCustomsPrice {
     const formModel = this.oForm.value;
 
-    return this.itemWithIdNAudit({
+    return {
       productVariantId: this.item.productVariantId,
       productGroupCustomsPrice: formModel.productGroupCustomsPrice,
       productVariantCustomsPrice: formModel.productVariantCustomsPrice,
-    } as ProductCustomsPrice);
+      productOverrideCustomsPrice: formModel.productOverrideCustomsPrice
+    };
   }
 
   buildForm() {
     this.oForm = this.formBuilder.group({
       productGroupCustomsPrice: ['', [numberValidator(2, false)]],
       productVariantCustomsPrice: ['', [numberValidator(2, false)]],
+      productOverrideCustomsPrice: ['', [numberValidator(2, false)]],
     }, { validators: [requiredAnyValidator(['productGroupCustomsPrice', 'productVariantCustomsPrice'])] } );
   }
 
@@ -56,7 +55,7 @@ export class OliveProductCustomsPriceEditorComponent extends OliveEntityEditComp
     return this.oForm.errors && this.oForm.errors['requiredAny'];
   }
 
-  get weightInputUserNames(): string[] {
+  get inputRequiredNames(): string[] {
     return [
       this.translator.get('common.word.productGroupCustomsPrice'), 
       this.translator.get('common.word.productVariantCustomsPrice')
@@ -67,13 +66,29 @@ export class OliveProductCustomsPriceEditorComponent extends OliveEntityEditComp
     this.oForm.reset({
       productGroupCustomsPrice: this.item.productGroupCustomsPrice || '',
       productVariantCustomsPrice: this.item.productVariantCustomsPrice || '',
+      productOverrideCustomsPrice: this.extraParameter && this.extraParameter.overrideCustomsPrice || ''
     });
   }
 
+  get productName() {
+    return this.extraParameter.productName;
+  }
+
   sendToEndPoint(item: any) {
+    this.isSaving = false;
+
     this.dataService.post('customsPrice/', item).subscribe(
       response => this.onSaveSuccess(response.model),
       error => this.onSaveFail(error)
     );
+  }
+
+  notifyItemSaved(customsPrice: number) {
+    const formModel = this.oForm.value;
+
+    this.onItemSaved.next({
+      customsPrice: customsPrice, 
+      overrideCustomsPrice : formModel.productOverrideCustomsPrice
+    });
   }
 }

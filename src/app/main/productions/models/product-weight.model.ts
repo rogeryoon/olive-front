@@ -1,7 +1,10 @@
 ﻿export class ProductWeight {
     productVariantId?: number;
-    productGroupWeight: number;
-    productGroupWeightTypeCode: string;
+    productGroupWeight?: number;
+    productGroupWeightTypeCode?: string;
     productVariantWeight?: number;
-    productVariantWeightTypeCode: string;
+    productVariantWeightTypeCode?: string;
+
+    productOverrideWeight?: number;
+    productOverrideWeightTypeCode?: string;
 }

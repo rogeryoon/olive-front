@@ -1,11 +1,12 @@
 import { Component, forwardRef, ViewChild, ElementRef, Renderer2, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor, Validators, FormControl, Validator, ValidationErrors, NG_VALIDATORS } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl, Validator, ValidationErrors, NG_VALIDATORS } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 
 import { OliveLookupDialogComponent } from '../../dialogs/lookup-dialog/lookup-dialog.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
+import { requiredValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-lookup-host',
@@ -51,7 +52,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
   }
 
   ngOnInit(): void {
-    this.lookupName = new FormControl(null, Validators.required);
+    this.lookupName = new FormControl(null, requiredValidator());
 
     // Cache Value Loading
     this.cacheService.getUserPreference(this.companyGroupIdCacheKey)

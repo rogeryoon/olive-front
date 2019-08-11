@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { FuseConfigService } from '@fuse/services/config.service';
 
@@ -7,6 +7,7 @@ import { AlertService, MessageSeverity } from '@quick/services/alert.service';
 import { AuthService } from '@quick/services/auth.service';
 import { Utilities } from '@quick/services/utilities';
 import { UserLogin } from '@quick/models/user-login.model';
+import { requiredValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-login-control',
@@ -71,8 +72,8 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
 
   buildForm() {
     this.loginForm = this.formBuilder.group({
-      userName: ['groupadmin', Validators.required],
-      password: ['tempP@ss123', Validators.required],
+      userName: ['groupadmin', requiredValidator()],
+      password: ['tempP@ss123', requiredValidator()],
       rememberMe: [this.authService.rememberMe]
     });
   }

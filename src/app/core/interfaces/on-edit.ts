@@ -41,4 +41,6 @@ export interface OliveOnEdit {
     customButtonVisible(buttonId: string): boolean;
 
     customButtonEnable(buttonId: string): boolean;
+
+    extraParameter?: any;
 }

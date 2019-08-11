@@ -1,9 +1,10 @@
 import { Component, forwardRef, ViewChild, ElementRef, Renderer2, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor, Validators, FormControl, Validator, ValidationErrors, NG_VALIDATORS } from '@angular/forms';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl, Validator, ValidationErrors, NG_VALIDATORS } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { DropDownSetting } from 'app/core/interfaces/lister-setting';
+import { requiredValidator } from 'app/core/classes/validators';
 
 
 @Component({
@@ -44,7 +45,7 @@ export class OliveDropDownListComponent implements ControlValueAccessor, OnInit,
   }
 
   ngOnInit(): void {
-    this.dropDown = new FormControl(null, this.setting.required ? Validators.required : null);
+    this.dropDown = new FormControl(null, this.setting.required ? requiredValidator() : null);
   }
 
   get setting(): DropDownSetting {

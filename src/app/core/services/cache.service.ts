@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 
 import Mutex from 'await-mutex';
 
+import * as _ from 'lodash';
+
 import { AuthService } from '@quick/services/auth.service';
 
 import { CompanyGroupSetting } from 'app/core/models/company-group-setting.model';
@@ -17,9 +19,10 @@ import { OliveUtilities } from '../classes/utilities';
 import { UserName } from '../models/user-name';
 import { OliveUserPreferenceService } from './user-preference.service';
 import { UserPreference } from '../models/user-preference.model';
-import * as _ from 'lodash';
 import { CompanyGroupPreference } from '../models/company-group-preference.model';
 import { OliveCompanyGroupPreferenceService } from './company-group-preference.service';
+import { OliveConfig } from '../models/olive-config.model';
+import { OliveConfigService } from './olive-config.service';
 
 interface CacheContent {
   expiry: number;
@@ -38,6 +41,7 @@ export class OliveCacheService {
   private dataMutexes = new Map<string, Mutex>();
   private userPreferencesMutex = new Mutex();
   private companyGroupPreferencesMutex = new Mutex();
+  private oliveConfigsMutex = new Mutex();
 
   private _companyMaster: CompanyMaster;
   private _currencies: Currency[];
@@ -48,18 +52,22 @@ export class OliveCacheService {
     static userName = 'usr';
 
     static userPreferenceCacheKey = 'userPreference';
-
-    static companyGroupPreferenceCacheKey = 'companyGroupPreference';
-
     static userPreference = class {
       static warehouseCheckboxes = 'warehouseCheckboxes';
       static lookupHost = 'lookupHost-';
       static lastSelectedPaymentMethodId = 'lastSelectedPaymentMethodId';
     };
 
+    static companyGroupPreferenceCacheKey = 'companyGroupPreference';
     static companyGroupPreference = class {
       static shippingLabelShippers = 'shippingLabelShippers';
       static purchaseOrderCompany = 'purchaseOrderCompany';
+    };
+
+    static oliveConfigCacheKey = 'oliveConfig';
+    static oliveConfig = class {
+      static customsTypeCodes = 'CustomsRule-TypeCodes';
+      static customsRuleKR = 'CustomsRule-KR';
     };
   };
 
@@ -67,7 +75,8 @@ export class OliveCacheService {
     private companyGroupSettingService: OliveCompanyGroupSettingService, private chunkDataService: OliveChunkDataService,
     private queryParams: OliveQueryParameterService, private messageHelper: OliveMessageHelperService,
     private authService: AuthService, private userPreferenceService: OliveUserPreferenceService,
-    private companyGroupPreferenceService: OliveCompanyGroupPreferenceService
+    private companyGroupPreferenceService: OliveCompanyGroupPreferenceService,
+    private oliveConfigService: OliveConfigService
   ) {
   }
 
@@ -193,15 +202,17 @@ export class OliveCacheService {
     let preference: UserPreference;
     let saveDb = true;
 
+    const newPreference = { dataKey: dataKey, data: JSON.stringify(data) } as UserPreference;
+
     if (!this.exist(cacheKey)) {
-      preference = { dataKey: dataKey, data: JSON.stringify(data) } as UserPreference;
+      preference = newPreference;
     }
     else {
       preferences = this.get(cacheKey);
       preference = preferences.find(x => x.dataKey === dataKey);
 
       if (!preference) {
-        preference = { dataKey: dataKey, data: JSON.stringify(data) } as UserPreference;
+        preference = newPreference;
       }
       else if (!_.isEqual(JSON.parse(preference.data), data)) {
         preference.data = JSON.stringify(data);
@@ -243,7 +254,7 @@ export class OliveCacheService {
     const unlock = await this.userPreferencesMutex.lock();
     if (!this.exist(cacheKey)) {
       try {
-        const response = await this.userPreferenceService.getItems(null).toPromise();
+        const response = await this.userPreferenceService.getItems().toPromise();
         preferences = this.set(cacheKey, response.model, this.ONE_DAY_AGE);
       }
       catch (error) {
@@ -275,15 +286,17 @@ export class OliveCacheService {
     let preference: CompanyGroupPreference;
     let saveDb = true;
 
+    const newPreference = { dataKey: dataKey, data: JSON.stringify(data), companyGroupId: this.queryParams.CompanyGroupId } as CompanyGroupPreference;
+
     if (!this.exist(cacheKey)) {
-      preference = { dataKey: dataKey, data: JSON.stringify(data) } as CompanyGroupPreference;
+      preference = newPreference;
     }
     else {
       preferences = this.get(cacheKey);
       preference = preferences.find(x => x.dataKey === dataKey);
 
       if (!preference) {
-        preference = { dataKey: dataKey, data: JSON.stringify(data) } as CompanyGroupPreference;
+        preference = newPreference;
       }
       else if (!_.isEqual(JSON.parse(preference.data), data)) {
         preference.data = JSON.stringify(data);
@@ -325,7 +338,7 @@ export class OliveCacheService {
     const unlock = await this.companyGroupPreferencesMutex.lock();
     if (!this.exist(cacheKey)) {
       try {
-        const response = await this.companyGroupPreferenceService.getItems(null).toPromise();
+        const response = await this.companyGroupPreferenceService.getItems().toPromise();
         preferences = this.set(cacheKey, response.model, this.ONE_DAY_AGE);
       }
       catch (error) {
@@ -340,6 +353,91 @@ export class OliveCacheService {
     const preference = preferences.find(x => x.dataKey === dataKey);
 
     return preference ? JSON.parse(preference.data) : null;
+  }
+
+  /**
+   * Sets olive config
+   * @param code 
+   * @param name 
+   * @param data 
+   * @returns void
+   */
+  async setOliveConfig(code: string, name: string, data: any): Promise<void> {
+    let configs: OliveConfig[] = [];
+
+    const cacheKey = OliveCacheService.cacheKeys.oliveConfigCacheKey;
+
+    const unlock = await this.oliveConfigsMutex.lock();
+    let config: OliveConfig;
+    let saveDb = true;
+
+    const newConfig = { code: code, name: name, data: JSON.stringify(data) } as OliveConfig;
+
+    if (!this.exist(cacheKey)) {
+      config = newConfig;
+    }
+    else {
+      configs = this.get(cacheKey);
+      config = configs.find(x => x.code === code);
+
+      if (!config) {
+        config = newConfig;
+      }
+      else if (!_.isEqual(JSON.parse(config.data), data)) {
+        config.data = JSON.stringify(data);
+      }
+      else {
+        saveDb = false;
+      }
+    }
+
+    if (saveDb) {
+      try {
+        if (config.id) {
+          await this.oliveConfigService.updateItem(config, config.id).toPromise();
+        }
+        else {
+          const response = await this.oliveConfigService.newItem(config).toPromise();
+          configs.push(response.model);
+        }
+      }
+      catch (error) {
+        this.messageHelper.showLoadFailedSticky(error);
+      }
+    }
+    unlock();
+
+    this.set(cacheKey, configs, this.ONE_DAY_AGE);
+  }
+
+  /**
+   * Gets Olive Config : Cache에 없으면 Olive Config를 한꺼번에 (퍼포먼스 향상) Loading한다. 
+   * @param code 
+   * @returns user preference 
+   */
+  async getOliveConfig(code: string): Promise<any> {
+    let configs: OliveConfig[] = [];
+
+    const cacheKey = OliveCacheService.cacheKeys.oliveConfigCacheKey;
+
+    const unlock = await this.oliveConfigsMutex.lock();
+    if (!this.exist(cacheKey)) {
+      try {
+        const response = await this.oliveConfigService.getItems().toPromise();
+        configs = this.set(cacheKey, response.model, this.ONE_DAY_AGE);
+      }
+      catch (error) {
+        this.messageHelper.showLoadFailedSticky(error);
+      }
+    }
+    else {
+      configs = this.get(cacheKey);
+    }
+    unlock();
+
+    const config = configs.find(x => x.code === code);
+
+    return config ? JSON.parse(config.data) : null;
   }
 
   async getChunkItems(key: string): Promise<any> {
@@ -429,8 +527,9 @@ export class OliveCacheService {
     return this._standCurrency;
   }
 
-  showMoney(amount: number): string {
-    return OliveUtilities.numberFormat(amount, this.standCurrency.decimalPoint);
+  showMoney(amount: number, showSymbol = false): string {
+    const amountString = OliveUtilities.numberFormat(amount, this.standCurrency.decimalPoint);
+    return showSymbol ? `${this.standCurrency.symbol} ${amountString}` : amountString;
   }
 
   get keyWarehouseCheckboxes(): string {
@@ -441,8 +540,7 @@ export class OliveCacheService {
     return OliveCacheService.cacheKeys.userPreference.lastSelectedPaymentMethodId + this.queryParams.CompanyGroupId;
   }
 
-  keyShippingLabelShippers(warehouseId: number): string {
-    return OliveCacheService.cacheKeys.companyGroupPreference.shippingLabelShippers + 
-      this.queryParams.CompanyGroupId + '-' + warehouseId;
+  keyShippingLabelShippers(warehouseId: number, marketSellerId: number): string {
+    return OliveCacheService.cacheKeys.companyGroupPreference.shippingLabelShippers + '-' + warehouseId + '-' + marketSellerId;
   }
 }

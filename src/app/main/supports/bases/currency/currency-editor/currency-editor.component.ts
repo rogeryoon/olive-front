@@ -1,10 +1,10 @@
 ﻿import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { Currency } from '../../../models/currency.model';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-import { numberValidator } from 'app/core/classes/validators';
+import { numberValidator, requiredValidator } from 'app/core/classes/validators';
 
 @Component({
   selector: 'olive-currency-editor',
@@ -33,9 +33,9 @@ export class OliveCurrencyEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      code: ['', Validators.required],
-      name: ['', Validators.required],
-      symbol: ['', Validators.required],
+      code: ['', requiredValidator()],
+      name: ['', requiredValidator()],
+      symbol: ['', requiredValidator()],
       decimalPoint: ['', [numberValidator(0, true, 0)]],
       activated: false
     });

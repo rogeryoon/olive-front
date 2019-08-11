@@ -323,7 +323,8 @@
         </table>
     </div>
 
-    <div id="box-list">
+    <!-- User들이 원하지 않아서 패키지 리스트는 필요할때까지 삭제한다. -->
+    <div id="box-list" *ngIf="false">
         <ul class="boxes-container">
             <li class="box-item" *ngFor="let pkg of packages">
                 <div>{{pkg.deliveryTagFk.consigneeName}}</div>

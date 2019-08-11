@@ -1,6 +1,6 @@
 import { Component, forwardRef } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, ValidationErrors, 
-  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, FormGroup } from '@angular/forms';
+  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator } from '@angular/forms';
 import { MatSnackBar, MatDialog } from '@angular/material';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';

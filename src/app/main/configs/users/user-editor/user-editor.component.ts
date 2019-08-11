@@ -1,5 +1,5 @@
-import { Component, OnDestroy, ViewChild, Input, Output, OnChanges, EventEmitter, ElementRef, AfterViewInit } from '@angular/core';
-import { NgForm, FormBuilder, FormGroup, Validators, AbstractControl, FormControl } from '@angular/forms';
+import { Component, OnDestroy, ViewChild, Input, OnChanges } from '@angular/core';
+import { NgForm, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
@@ -21,6 +21,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { OliveBaseComponent } from 'app/core/components/extends/base/base.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { CompanyGroup } from 'app/main/supports/models/company-group.model';
+import { requiredValidator } from 'app/core/classes/validators';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -146,13 +147,13 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
   private buildForm() {
     this.userProfileForm = this.formBuilder.group({
       jobTitle: '',
-      userName: ['', Validators.required],
-      companyGroupName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      userName: ['', requiredValidator()],
+      companyGroupName: ['', requiredValidator()],
+      email: ['', [requiredValidator(), Validators.email]],
       password: this.formBuilder.group({
-        currentPassword: ['', Validators.required],
-        newPassword: ['', [Validators.required, Validators.pattern(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}/)]],
-        confirmPassword: ['', [Validators.required, EqualValidator('newPassword')]],
+        currentPassword: ['', requiredValidator()],
+        newPassword: ['', [requiredValidator(), Validators.pattern(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}/)]],
+        confirmPassword: ['', [requiredValidator(), EqualValidator('newPassword')]],
       }),
       roles: '',
       fullName: '',
@@ -339,12 +340,12 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
   }
 
   private addCurrentPasswordValidators() {
-    this.currentPassword.setValidators(Validators.required);
+    this.currentPassword.setValidators(requiredValidator());
   }
 
   private addNewPasswordValidators() {
-    this.newPassword.setValidators([Validators.required, Validators.pattern(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}/)]);
-    this.confirmPassword.setValidators([Validators.required, EqualValidator('newPassword')]);
+    this.newPassword.setValidators([requiredValidator(), Validators.pattern(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}/)]);
+    this.confirmPassword.setValidators([requiredValidator(), EqualValidator('newPassword')]);
   }
 
   private unlockUser() {

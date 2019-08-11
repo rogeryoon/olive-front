@@ -1,12 +1,12 @@
-﻿import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+﻿import { Component  } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { Product } from '../../../models/product.model';
 import { OliveConstants } from 'app/core/classes/constants';
-import { numberValidator, volumeValidator } from 'app/core/classes/validators';
+import { numberValidator, volumeValidator, requiredValidator } from 'app/core/classes/validators';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 
@@ -51,7 +51,7 @@ export class OliveProductEditorComponent extends OliveEntityFormComponent {
   buildForm() {
     this.oForm = this.formBuilder.group({
       code: '',
-      name: ['', Validators.required],
+      name: ['', requiredValidator()],
       activated: false,
       customsName: '',
       customsPrice: ['', [numberValidator(this.standCurrency.decimalPoint, false)]],
@@ -60,10 +60,10 @@ export class OliveProductEditorComponent extends OliveEntityFormComponent {
       memo: '',
       standPrice: ['', [numberValidator(this.standCurrency.decimalPoint, false)]],
       weight: ['', [numberValidator(2, false)]],
-      weightTypeCode: ['', Validators.required],
+      weightTypeCode: ['', requiredValidator()],
       volume: ['', [volumeValidator()]],
       volumeWeight: '',
-      lengthTypeCode: ['', Validators.required]
+      lengthTypeCode: ['', requiredValidator()]
     });
   }
 

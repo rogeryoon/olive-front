@@ -1,20 +1,30 @@
-﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" autocomplete="off">
-    <div class="mb-12">{{'sales.pendingOrderShipOutList.numberTwoOverridesNumberOne' | translate}}</div>
-    <mat-error *ngIf="hasRequiredAnyError">{{requiredAnyErrorMessage(weightInputUserNames)}}</mat-error>
-    <div class="h3 mb-8">1. {{'common.word.productGroupCustomsPrice' | translate}}</div>
-    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
-        <mat-form-field appearance="outline" flex="100">
-            <mat-label>{{'common.word.customsPrice' | translate}}</mat-label>
+﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxFlex="1 0 auto" autocomplete="off">
+    <div class="mb-12">{{productName}}</div>
+
+    <div class="mb-12">
+        {{'sales.pendingOrderShipOutList.priorityOrders' | translate}} :
+        3. {{'common.word.productOverrideCustomsPrice' | translate}} >
+        2. {{'common.word.productVariantCustomsPrice' | translate}} >
+        1. {{'common.word.productGroupCustomsPrice' | translate}}
+    </div>
+
+    <mat-error *ngIf="hasRequiredAnyError">{{requiredAnyErrorMessage(inputRequiredNames)}}</mat-error>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <mat-form-field appearance="outline">
+            <mat-label>1. {{'common.word.productGroupCustomsPrice' | translate}}</mat-label>
             <input matInput name="productGroupCustomsPrice" formControlName="productGroupCustomsPrice">
             <mat-error *ngIf="hasEntryError('productGroupCustomsPrice')">{{errorMessage('productGroupCustomsPrice')}}</mat-error>
         </mat-form-field>
-    </div>
-    <div class="h3 mb-8">2. {{'common.word.productVariantCustomsPrice' | translate}}</div>
-    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
         <mat-form-field appearance="outline">
-            <mat-label>{{'common.word.customsPrice' | translate}}</mat-label>
+            <mat-label>2. {{'common.word.productVariantCustomsPrice' | translate}}</mat-label>
             <input matInput name="productVariantCustomsPrice" formControlName="productVariantCustomsPrice">
             <mat-error *ngIf="hasEntryError('productVariantCustomsPrice')">{{errorMessage('productVariantCustomsPrice')}}</mat-error>
         </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>3. {{'common.word.productOverrideCustomsPrice' | translate}}</mat-label>
+            <input matInput name="productOverrideCustomsPrice" formControlName="productOverrideCustomsPrice">
+            <mat-error *ngIf="hasEntryError('productOverrideCustomsPrice')">{{errorMessage('productOverrideCustomsPrice')}}</mat-error>
+        </mat-form-field>                
     </div>
 </form>

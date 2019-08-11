@@ -27,9 +27,9 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   @ViewChild(OliveEntityDateComponent)
   private dateComponent: OliveEntityDateComponent;
 
-  private onItemSaved = new Subject<any>();
-  private onItemDeleted = new Subject<any>();
-  private onCustomButtonActionEnded = new Subject<any>();
+  protected onItemSaved = new Subject<any>();
+  protected onItemDeleted = new Subject<any>();
+  protected onCustomButtonActionEnded = new Subject<any>();
   subControls: any = [];
 
   item: any = null;
@@ -46,6 +46,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   itemSaved$ = this.onItemSaved.asObservable();
   itemDeleted$ = this.onItemDeleted.asObservable();
   customButtonActionEnded$ = this.onCustomButtonActionEnded.asObservable();
+  extraParameter: any = null;
 
   @Input()
   private inputItem: any = null;
@@ -70,6 +71,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   resetForm() { }
   registerSubControl() { }
   onAfterViewInit() { }
+  isCustomValidationOk(): boolean { return true; }
 
   ngOnInit() {
     this.buildForm();
@@ -145,13 +147,33 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
     });
   }
 
+  /**
+   * Marks all controls in a form group as touched
+   * @param formGroup - The form group to touch
+   */
+  private markFormGroupTouched(formGroup: FormGroup) {
+    (<any>Object).values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+
+      if (control.controls) {
+        this.markFormGroupTouched(control);
+      }
+    });
+  }
+
   public save() {
     if (this.form && !this.form.submitted) {
       this.form.onSubmit(null);
       return;
     }
 
+    this.markFormGroupTouched(this.oForm);
+
     if (!this.oForm.valid || !this.isSubFormsValid) {
+      return;
+    }
+
+    if (!this.isCustomValidationOk()) {
       return;
     }
 
@@ -172,8 +194,6 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   }
 
   saveData() {
-    this.alertService.startLoadingMessage(this.translator.get('common.message.savingChanges'));
-
     const editedItem = this.getEditedItem();
 
     this.isSaving = true;
@@ -181,7 +201,13 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
     this.sendToEndPoint(editedItem);
   }
 
+  /**
+   * Sends to end point service
+   * @param item : 엔티티
+   */
   sendToEndPoint(item: any) {
+    this.alertService.startLoadingMessage(this.translator.get('common.message.savingChanges'));
+
     if (this.isNewItem) {
       this.dataService.newItem(item).subscribe(
         response => this.onSaveSuccess(response.model),
@@ -197,20 +223,23 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   }
 
   onSaveSuccess(data: any) {
-    const result = data;
-
     this.messageHelper.showSavedSuccess(
       this.isNewItem,
-      result.name
+      data.name
     );
 
-    this.onItemSaved.next(result);
+    this.notifyItemSaved(data);
+    
     this.isSaving = false;
   }
 
   onSaveFail(error: any) {
     this.messageHelper.showStickySaveFailed(error, false);
     this.isSaving = false;
+  }
+
+  notifyItemSaved(data) {
+    this.onItemSaved.next(data);
   }
 
   public delete() {
