@@ -15,7 +15,6 @@ import { OliveChunkDataService } from './chunk-data.service';
 import { CompanyMaster } from '../models/company-master.model';
 import { Currency } from 'app/main/supports/models/currency.model';
 import { OliveDataService } from '../interfaces/data-service';
-import { OliveUtilities } from '../classes/utilities';
 import { UserName } from '../models/user-name';
 import { OliveUserPreferenceService } from './user-preference.service';
 import { UserPreference } from '../models/user-preference.model';
@@ -23,6 +22,7 @@ import { CompanyGroupPreference } from '../models/company-group-preference.model
 import { OliveCompanyGroupPreferenceService } from './company-group-preference.service';
 import { OliveConfig } from '../models/olive-config.model';
 import { OliveConfigService } from './olive-config.service';
+import { numberFormat } from '../utils/helpers';
 
 interface CacheContent {
   expiry: number;
@@ -528,7 +528,7 @@ export class OliveCacheService {
   }
 
   showMoney(amount: number, showSymbol = false): string {
-    const amountString = OliveUtilities.numberFormat(amount, this.standCurrency.decimalPoint);
+    const amountString = numberFormat(amount, this.standCurrency.decimalPoint);
     return showSymbol ? `${this.standCurrency.symbol} ${amountString}` : amountString;
   }
 

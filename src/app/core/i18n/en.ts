@@ -441,13 +441,17 @@ export const locale = {
                 'selectProductTitle' : '상품 선택',
                 'selectProductDescription' : '원하는 상품을 선택하세요',
                 'priorityOrders' : '입력 값 우선 순위',
-                'orderShipOutDataNotExistsErrorMessage' : '출고 요청중에 유효하지 않은 주문건(다른 사용자가 이미 출고/취소)이 존재합니다. 확인을 클릭하면 출고작업을 초기화합니다.'
+                'orderShipOutDataNotExistsErrorMessage' : '출고 요청중에 유효하지 않은 주문건(다른 사용자가 이미 출고/취소)이 존재합니다. 확인을 클릭하면 출고작업을 초기화합니다.',
+                'confirmNeedHsCodeEntry': '출고하려면 상품 {0}가지 HS CODE를 입력해야 합니다. 입력하겠습니까?',
+                'productHsCodeEditorTitle': 'HS 코드 입력'
             },
             'pendingOrderShipOutPackageList' : {
                 'finalFinishConfirmMessage' : '출고 마감처리 합니다. 확실합니까?',
                 'clickAddButtonForOneItem' : '선택건만 수정하려면 추가를 클릭하세요.',
                 'clickAddButtonForItems' : '다른 선택또는 해당건만 수정하려면 추가를 클릭하세요.',
                 'warningForUpdateAll' : '아래 내용을 수정/저장할 경우 연결된 모든 출고건들이 모두 업데이트됩니다.',
+                'confirmCanNotProcessDueToNoCompanyContact': '해당 작업을 진행하려면 {0} 발송회사정보를 입력해야 합니다. 입력하겠습니까?',
+                'shipperExcelFileName': '택배'
             },
             'marketItemMappingExcelColumnsEditor' : {
                 'notMatchOriginalValue' : '최초 엑셀에 저장되어 있던 (부분) 문자열이 아닙니다'

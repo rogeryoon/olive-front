@@ -13,12 +13,12 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchProductComponent } from './search-product/search-product.component';
 import { OliveProductService } from '../../services/product.service';
 import { Product } from '../../models/product.model';
 import { OliveProductManagerComponent } from './product-manager/product-manager.component';
+import { minNumber, maxNumber, checkIcon } from 'app/core/utils/helpers';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -91,10 +91,10 @@ export class OliveProductsComponent extends OliveEntityListComponent {
         retValue = item.name;
         break;
       case MinPrice:
-        retValue = item.variants ? OliveUtilities.minNumber(item.variants.map(x => x.standPrice), [item.standPrice]) : '';
+        retValue = item.variants ? minNumber(item.variants.filter(f => f.standPrice).map(x => x.standPrice), item.standPrice ? [item.standPrice] : []) : '';
         break;
       case MaxPrice:
-        retValue = item.variants ? OliveUtilities.maxNumber(item.variants.map(x => x.standPrice), [item.standPrice]) : '';
+        retValue = item.variants ? maxNumber(item.variants.filter(f => f.standPrice).map(x => x.standPrice), item.standPrice ? [item.standPrice] : []) : '';
         break;
       case VariantCount:
         retValue = item.variants ? item.variants.length.toString() : '';
@@ -125,7 +125,7 @@ export class OliveProductsComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Activated:
-        retValue = OliveUtilities.iconName(item.activated);
+        retValue = checkIcon(item.activated);
         break;
     }
 

@@ -14,12 +14,12 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchBranchComponent } from './search-branch/search-branch.component';
 import { OliveBranchService } from '../../services/branch.service';
 import { Branch } from '../../models/branch.model';
 import { OliveBranchManagerComponent } from './branch-manager/branch-manager.component';
+import { checkIcon } from 'app/core/utils/helpers';
 
 const Selected  = 'selected';
 const Id = 'id';
@@ -132,13 +132,13 @@ export class OliveBranchesComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Outsourcing:
-        retValue = OliveUtilities.iconName(item.outsourcing);
+        retValue = checkIcon(item.outsourcing);
         break;
       case Private:
-        retValue = OliveUtilities.iconName(item.private);
+        retValue = checkIcon(item.private);
         break;
       case Activated:
-        retValue = OliveUtilities.iconName(item.activated);
+        retValue = checkIcon(item.activated);
         break;
     }
 

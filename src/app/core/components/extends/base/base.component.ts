@@ -7,6 +7,7 @@ import { OliveUtilities } from 'app/core/classes/utilities';
 import { Address } from 'app/core/models/address.model';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
+import { numberFormat } from 'app/core/utils/helpers';
 
 @Component({
   selector: 'olive-base',
@@ -33,7 +34,7 @@ export class OliveBaseComponent implements OnInit {
    * @returns  
    */
   commaNumber(amount: number) {
-    return OliveUtilities.numberFormat(amount, 0, null);
+    return numberFormat(amount, 0, null);
   }
 
   /**
@@ -44,7 +45,7 @@ export class OliveBaseComponent implements OnInit {
    * @returns 포맷 반환 문자열
    */
   numberFormat(amount: number, digits = 0, zero = null): string {
-    return OliveUtilities.numberFormat(amount, digits, zero);
+    return numberFormat(amount, digits, zero);
   }
 
   isNull(input: any): boolean {

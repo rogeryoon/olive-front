@@ -76,10 +76,10 @@ export class OliveDocumentService {
     return false;
   }
 
-  exportExcel(fileName: string, columns: ExcelColumn[], rows: any[]) {
+  exportExcel(fileName: string, columns: ExcelColumn[], rows: any[], sheetName: string = null) {
     const workbook = new Excel.Workbook();
 
-    const worksheet = workbook.addWorksheet(fileName);
+    const worksheet = workbook.addWorksheet(sheetName ? sheetName : fileName);
 
     let rowIndex = 0;
 
@@ -105,15 +105,18 @@ export class OliveDocumentService {
 
         const columnValue = row[column.propertyName];
 
-        if (!columnValue) { continue; }
-
-        if (column.type === 'number') {
-          let amount = parseFloat(columnValue.replace(/,/g, ''));
-          if (isNaN(amount)) { amount = 0.0; }
-          newRow.getCell(colIndex).value = amount;
+        if (columnValue) { 
+          if (column.type === 'number') {
+            let amount = parseFloat(columnValue.replace(/,/g, ''));
+            if (isNaN(amount)) { amount = 0.0; }
+            newRow.getCell(colIndex).value = amount;
+          }
+          else {
+            newRow.getCell(colIndex).value = columnValue.toString();
+          }
         }
         else {
-          newRow.getCell(colIndex).value = columnValue.toString();
+          newRow.getCell(colIndex).value = '';
         }
 
         newRow.eachCell(function (cell) {

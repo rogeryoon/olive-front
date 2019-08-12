@@ -19,6 +19,7 @@ import { OliveSearchMarketComponent } from './search-market/search-market.compon
 import { OliveMarketService } from '../../services/market.service';
 import { Market } from '../../models/market.model';
 import { OliveMarketManagerComponent } from './market-manager/market-manager.component';
+import { checkIcon } from 'app/core/utils/helpers';
 
 const Selected  = 'selected';
 const Code = 'code';
@@ -111,7 +112,7 @@ export class OliveMarketsComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Activated:
-        retValue = OliveUtilities.iconName(item.activated);
+        retValue = checkIcon(item.activated);
         break;
     }
 

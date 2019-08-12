@@ -27,6 +27,7 @@ import { OliveTaskCountDialogComponent } from 'app/core/components/dialogs/task-
 import { OliveTaskCountSetting } from 'app/core/interfaces/dialog-setting/task-count-setting';
 import { MarketExcelRowsStatus } from '../../models/market-excel-rows-status.model';
 import { MarketExcel } from '../../models/market-excel.model';
+import { checkIcon } from 'app/core/utils/helpers';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -274,10 +275,10 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case MarketItemMappingId:
-        retValue = OliveUtilities.iconName(!this.isNull(item.marketItemMappingId));
+        retValue = checkIcon(!this.isNull(item.marketItemMappingId));
         break;
       case OrderId:
-        retValue = OliveUtilities.iconName(!this.isNull(item.orderId));
+        retValue = checkIcon(!this.isNull(item.orderId));
         break;
     }
 

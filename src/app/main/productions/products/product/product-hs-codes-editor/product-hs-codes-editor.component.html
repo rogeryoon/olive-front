@@ -1,0 +1,30 @@
+<form [formGroup]="oForm" (keydown.enter)="false">
+    <mat-table [dataSource]="dataSource" formArrayName="formArray">
+        <mat-header-row *matHeaderRowDef="displayedColumns">
+        </mat-header-row>
+
+        <mat-row *matRowDef="let row; columns: displayedColumns; let i=index" #cdkrow
+            [ngClass]="{'highlightrow': (currentRow) && row.ObjId == currentRow.ObjId}" (click)="currentRow=row;">
+        </mat-row>
+
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.id' | translate}}</mat-header-cell>
+            <mat-cell *matCellDef="let row" class="center">{{id36(row.Obj.id)}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef>{{'common.word.name' | translate}}</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{id36(row.Obj.name)}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="hsCode">
+            <mat-header-cell *matHeaderCellDef>{{'common.word.hsCode' | translate}}</mat-header-cell>
+            <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
+                <mat-form-field fxFlex='95%'>
+                    <input matInput name="inputHsCode{{row.ObjId}}" formControlName="hsCode" class="small-font olive-error" autocomplete="off">
+                    <mat-error *ngIf="hasArrayEntryError('hsCode',i)">{{arrayErrorMessage('hsCode',i)}}</mat-error>
+                </mat-form-field>
+            </mat-cell>
+        </ng-container>
+    </mat-table>
+</form>

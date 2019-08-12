@@ -18,8 +18,8 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveMarketExcelService } from '../../services/market-excel.service';
 import { MarketExcel } from '../../models/market-excel.model';
 import { OliveConstants } from 'app/core/classes/constants';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveMarketExcelImportDialogComponent } from './market-excel-import-dialog/market-excel-import-dialog.component';
+import { checkIcon } from 'app/core/utils/helpers';
 
 const Selected  = 'selected';
 const Id = 'id';
@@ -104,7 +104,7 @@ export class OliveMarketExcelsComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case TransferredUtc:
-        retValue = OliveUtilities.iconName(item.transferredUtc);
+        retValue = checkIcon(item.transferredUtc);
         break;
     }
 

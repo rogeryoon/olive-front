@@ -1,6 +1,7 @@
 ﻿import { Component, Input, Output, EventEmitter, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { String } from 'typescript-string-operations';
 
 import * as _ from 'lodash';
 
@@ -9,7 +10,6 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { OrderShipOutPackage } from 'app/main/sales/models/order-ship-out-package.model';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveOrderShipOutPackageService } from 'app/main/sales/services/order-ship-out-package.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveOnShare } from 'app/core/interfaces/on-share';
@@ -27,9 +27,10 @@ import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OliveEditDialogComponent } from 'app/core/components/dialogs/edit-dialog/edit-dialog.component';
 import { MarketSeller } from 'app/main/supports/models/market-seller.model';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { OrderShipOutDetail } from 'app/main/sales/models/order-ship-out-detail.model';
-import { OliveOrderShipOutService } from 'app/main/sales/services/order-ship-out.service';
 import { OrderShipOutPackageExtra } from 'app/main/sales/models/order-ship-out-package-extra.model';
+import { OrderShipOut } from 'app/main/sales/models/order-ship-out.model';
+import { OlivePendingOrderShipOutListComponent } from '../pending-order-ship-out-list/pending-order-ship-out-list.component';
+import { numberFormat } from 'app/core/utils/helpers';
 
 @Component({
   selector: 'olive-pending-order-ship-out-package-list',
@@ -83,9 +84,9 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     const totalPackageCount = this.selectedPackages.length;
     let totalWeight = 0;
 
-    this.selectedPackages.forEach(item => {
-      item.orderShipOuts.forEach(order => {
-        totalWeight += order.orderShipOutDetails.map(x => x.kiloGramWeight * x.quantity).reduce((a, b) => a + (b || 0), 0);
+    this.selectedPackages.forEach(box => {
+      box.orderShipOuts.forEach(order => {
+        totalWeight += this.getOrderShipOutWeightDue(order);
       });
     });
 
@@ -98,11 +99,20 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
 
     this.warehousePackages.forEach(item => {
       item.orderShipOuts.forEach(order => {
-        totalWeight += order.orderShipOutDetails.map(x => x.kiloGramWeight * x.quantity).reduce((a, b) => a + (b || 0), 0);
+        totalWeight += this.getOrderShipOutWeightDue(order);
       });
     });
 
     return totalPackageCount === 0 ? '' : ` (${this.commaNumber(totalPackageCount)}/${this.commaNumber(totalWeight)}Kg)`;
+  }
+
+  /**
+   * 주문 아이템 무게 합을 구한다.
+   * @param order OrderShipOut
+   * @returns 합산값
+   */  
+  getOrderShipOutWeightDue(order: OrderShipOut): number {
+    return OlivePendingOrderShipOutListComponent.getOrderShipOutKiloWeightDue(order);
   }
 
   get isloading(): boolean {
@@ -167,8 +177,8 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     return this.warehousePackages.filter(x => x.selected);
   }
 
-  showSeller(item: OrderShipOutPackage): string {
-    return item.orderShipOuts[0].orderFk.marketSellerFk.code;
+  showSeller(box: OrderShipOutPackage): string {
+    return box.orderShipOuts[0].orderFk.marketSellerFk.code;
   }
 
   showSenderCharacters(box: OrderShipOutPackage): string {
@@ -218,24 +228,24 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     return companyName;
   }
 
-  showQuantity(item: OrderShipOutPackage): string {
+  showQuantity(box: OrderShipOutPackage): string {
     let quantity = 0;
 
-    item.orderShipOuts.forEach(order => {
+    box.orderShipOuts.forEach(order => {
       quantity += order.orderShipOutDetails.map(x => x.quantity).reduce((a, b) => a + (b || 0), 0);
     });
 
     return this.commaNumber(quantity);
   }
 
-  showWeight(item: OrderShipOutPackage): string {
+  showWeight(box: OrderShipOutPackage): string {
     let weight = 0;
 
-    item.orderShipOuts.forEach(order => {
-      weight += order.orderShipOutDetails.map(x => x.kiloGramWeight * x.quantity).reduce((a, b) => a + (b || 0), 0);
+    box.orderShipOuts.forEach(order => {
+      weight += this.getOrderShipOutWeightDue(order);
     });
 
-    return OliveUtilities.numberFormat(weight, 2);
+    return numberFormat(weight, 2);
   }
 
   cancelShipOutPackages() {
@@ -373,16 +383,33 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     console.log('exportForTrackingNumberUpdate');
   }
 
+  // 마켓셀러에 저장된 컨텍이 없을 경우 없는 컨텍만큼 연속으로 팝업을 띠워서 입력을 받는다.
   // TODO : exportForLogistic
   exportForLogistic() {
-    // 마켓셀러에 저장된 컨텍이 없을 경우 없는 컨텍만큼 연속으로 팝업을 띠워서 입력을 받는다.
     for (const marketSellerId of Array.from(this.marketSellerContacts.keys())) {
+      const seller = this.marketSellers.get(marketSellerId);
       if (!this.marketSellerContacts.get(marketSellerId)) {
-        this.openMarketSellerContactEditor(marketSellerId);
+        const message = String.Format(
+          this.translator.get(
+            'sales.pendingOrderShipOutPackageList.confirmCanNotProcessDueToNoCompanyContact'
+            ), 
+            `${seller.name} [${seller.code}]`
+        );
+                
+        this.alertService.showDialog(
+          this.translator.get('common.title.confirm'),
+          message,
+          DialogType.confirm,
+          () => this.openMarketSellerContactEditor(marketSellerId),
+          () => null,
+          this.translator.get('common.button.yes'),
+          this.translator.get('common.button.no')
+        );
+        return;
       }
     }
 
-    // this.shipperExcelService.saveForGps(this.warehousePackages, null);
+    this.shipperExcelService.saveForGps(this.warehousePackages, this.packagesContact);
   }
 
   editCompanyContact(box: OrderShipOutPackage) {

@@ -3,10 +3,8 @@ import { Subject } from 'rxjs/Subject';
 
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
-import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-
 import { OliveTaskCountSetting } from 'app/core/interfaces/dialog-setting/task-count-setting';
-import { OliveUtilities } from 'app/core/classes/utilities';
+import { numberFormat } from 'app/core/utils/helpers';
 
 @Component({
   selector: 'olive-task-count-dialog',
@@ -31,7 +29,7 @@ export class OliveTaskCountDialogComponent implements OnInit {
   }
 
   get taskCount() {
-    return OliveUtilities.numberFormat(this.setting.count, 0);
+    return numberFormat(this.setting.count, 0);
   }
 
   get buttonColor() {

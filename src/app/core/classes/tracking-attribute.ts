@@ -1,7 +1,7 @@
 export class OliveTrackingAttribute {
-    updatedUser: string;
+    updatedUser?: string;
     updatedUtc?: any;
-    createdUser: string;
+    createdUser?: string;
     createdUtc?: any;
     
     selected?: boolean;

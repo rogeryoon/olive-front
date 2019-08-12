@@ -19,6 +19,7 @@ import { OliveSearchSupplierComponent } from './search-supplier/search-supplier.
 import { OliveSupplierService } from '../../services/supplier.service';
 import { Supplier } from '../../models/supplier.model';
 import { OliveSupplierManagerComponent } from './supplier-manager/supplier-manager.component';
+import { checkIcon } from 'app/core/utils/helpers';
 
 const Selected = 'selected';
 const Code = 'code';
@@ -106,7 +107,7 @@ export class OliveSuppliersComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Activated:
-        retValue = OliveUtilities.iconName(item.activated);
+        retValue = checkIcon(item.activated);
         break;
     }
 

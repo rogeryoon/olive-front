@@ -1,0 +1,19 @@
+:host {
+    .mat-column-id {
+        flex: 0 1 120px;
+        justify-content: center;
+    }
+
+    .mat-column-hsCode {
+        flex: 0 1 120px;
+    }
+
+    .mat-table {
+        min-width: 1000px;
+        max-width: 1200px;
+    }
+
+    .highlightrow {
+        background: cornsilk;
+    }
+}

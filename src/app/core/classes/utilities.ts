@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 
 import { String } from 'typescript-string-operations';
@@ -10,53 +9,9 @@ import { NameValue } from '../models/name-value';
 import { OliveConstants } from './constants';
 import { Address } from '../models/address.model';
 import { UserName } from '../models/user-name';
+import { numberFormat } from '../utils/helpers';
 
 export class OliveUtilities {
-    public static isNullOrWhitespace(input): boolean {
-        if (typeof input === 'undefined' || input == null) { return true; }
-        return input.replace(/\s/g, '').length < 1;
-    }
-
-    public static filterNotNullNameValues(array: NameValue[]): NameValue[] {
-        array.forEach(e => {
-            if (e.value instanceof Date) {
-                e.value = this.isoDateString(e.value);
-            }
-        });
-
-        return array.filter(e => !this.isNullOrWhitespace(e.value));
-    }
-
-    /**
-     * Date을 표준 포맷 (예:2013-02-13 13:15:15) 문자열로 변환
-     * @param date 
-     * @param [showTime] 시간 표시/비표시
-     * @returns date string 
-     */
-    public static isoDateString(date: any, showTime: boolean = false): string {
-        if (date instanceof Date) {
-            let month = '' + (date.getMonth() + 1);
-            let day = '' + date.getDate();
-            const year = date.getFullYear();
-
-            if (month.length < 2) { month = '0' + month; }
-            if (day.length < 2) { day = '0' + day; }
-
-            let hour = '' + (date.getHours());
-            let minute = '' + (date.getMinutes());
-            let second = '' + (date.getSeconds());
-
-            if (hour.length < 2) { hour = '0' + hour; }
-            if (minute.length < 2) { minute = '0' + minute; }
-            if (second.length < 2) { second = '0' + second; }
-
-            return [year, month, day].join('-') + (showTime ? ' ' + [hour, minute, second].join(':') : '');
-        }
-        else {
-            return null;
-        }
-    }
-
     public static splitStickyWords(input, separator): string {
         const words: string[] = [];
         const exp = /[A-Z][a-z]+/g;
@@ -114,10 +69,6 @@ export class OliveUtilities {
         return source;
     }
 
-    public static iconName(condition: boolean): string {
-        return condition ? OliveConstants.iconStatus.checked : OliveConstants.iconStatus.unchecked;
-    }
-
     public static webSiteHostName(url: string): string {
         url = this.webSiteUrl(url);
 
@@ -154,6 +105,11 @@ export class OliveUtilities {
         return /^https?:\/\/[^ "]+$/i.test(url);
     }
 
+    /**
+     * Make 36 Type Radom ID;
+     * @param length 
+     * @returns id 
+     */
     public static make36Id(length: number): string {
         let text = '';
         const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -170,6 +126,11 @@ export class OliveUtilities {
         return new RegExp('^[A-Za-z0-9]{1,6}$').test(id);
     }
 
+    /**
+     * Converts to base36 ID
+     * @param input 
+     * @returns base36 ID string
+     */
     public static convertToBase36(input: number): string {
         if (this.testIsUndefined(input)) { return ''; }
         return input.toString(36).toUpperCase();
@@ -190,44 +151,6 @@ export class OliveUtilities {
         const pattern = new RegExp(`^\\s*\\d*${decimalPattern}\\s*$`);
 
         return pattern.test(input);
-    }
-
-    public static minNumber(array: number[], addedNumbers: number[] = []): string {
-        let returnValue = '';
-
-        array = array.concat(addedNumbers).filter(a => a !== null);
-
-        if (array.length > 0) {
-            returnValue = Math.min(...array).toString();
-        }
-
-        return returnValue;
-    }
-
-    public static maxNumber(array: number[], addedNumbers: number[] = []): string {
-        let returnValue = '';
-
-        array = array.concat(addedNumbers).filter(a => a !== null);
-
-        if (array.length > 0) {
-            returnValue = Math.max(...array).toString();
-        }
-
-        return returnValue;
-    }
-
-    /**
-    * Number를 형식에 맞게 표시
-    * @param amount 타겟 표시 숫자
-    * @param [digits] 소숫점 자릿수
-    * @param [zero] 0일 경우 숫자대체 문자열
-    * @returns 포맷 반환 문자열
-    */
-    public static numberFormat(amount: number, digits = 0, zero = null): string {
-        if (zero !== null && amount === 0) {
-            return zero;
-        }
-        return new DecimalPipe('en-us').transform(amount, `1.${digits}-${digits}`);
     }
 
     public static addSpanAddedCount(count: number) {
@@ -364,7 +287,7 @@ export class OliveUtilities {
             if (volumeValue != null) {
                 const symbol = OliveConstants.weightTypes.find(e => e.code === weightTypeCode).symbol;
 
-                const volumeWeight = this.numberFormat(this.volumeWeight(volumeValue, lengthTypeCode, weightTypeCode), 2);
+                const volumeWeight = numberFormat(this.volumeWeight(volumeValue, lengthTypeCode, weightTypeCode), 2);
 
                 return `${volumeWeight} ${symbol}`;
             }
@@ -408,6 +331,13 @@ export class OliveUtilities {
         }
 
         return value;
+    }
+
+    public static camelize(str) {
+        return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+          if (+match === 0) { return ''; } // or if (/\s+/.test(match)) for white spaces
+          return index === 0 ? match.toLowerCase() : match.toUpperCase();
+        });
     }
 }
 

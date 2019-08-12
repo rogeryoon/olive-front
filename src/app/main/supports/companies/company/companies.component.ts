@@ -14,12 +14,12 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchCompanyComponent } from './search-company/search-company.component';
 import { OliveCompanyService } from '../../services/company.service';
 import { Company } from '../../models/company.model';
 import { OliveCompanyManagerComponent } from './company-manager/company-manager.component';
+import { checkIcon } from 'app/core/utils/helpers';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -121,7 +121,7 @@ export class OliveCompaniesComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Activated:
-        retValue = OliveUtilities.iconName(item.activated);
+        retValue = checkIcon(item.activated);
         break;
     }
 

@@ -7,19 +7,18 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
-import { Permission } from '@quick/models/permission.model';
 
 import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchCurrencyComponent } from './search-currency/search-currency.component';
 import { OliveCurrencyService } from '../../services/currency.service';
 import { Currency } from '../../models/currency.model';
 import { OliveCurrencyManagerComponent } from './currency-manager/currency-manager.component';
+import { checkIcon } from 'app/core/utils/helpers';
 
 const Selected  = 'selected';
 const Id = 'id';
@@ -123,7 +122,7 @@ export class OliveCurrenciesComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Activated:
-        retValue = OliveUtilities.iconName(item.activated);
+        retValue = checkIcon(item.activated);
         break;
     }
 

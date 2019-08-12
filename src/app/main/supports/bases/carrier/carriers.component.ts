@@ -19,6 +19,7 @@ import { OliveCarrierService } from '../../services/carrier.service';
 import { Carrier } from '../../models/carrier.model';
 import { OliveCarrierManagerComponent } from './carrier-manager/carrier-manager.component';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
+import { checkIcon } from 'app/core/utils/helpers';
 
 const Selected  = 'selected';
 const Code = 'code';
@@ -117,7 +118,7 @@ export class OliveCarriersComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Activated:
-        retValue = OliveUtilities.iconName(item.activated);
+        retValue = checkIcon(item.activated);
         break;
     }
 

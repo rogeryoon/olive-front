@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { OliveOnSearch } from 'app/core/interfaces/on-search';
-import { OliveUtilities } from 'app/core/classes/utilities';
+import { filterNotNullNameValues } from 'app/core/utils/helpers';
 
 @Component({
   selector: 'olive-search-warehouse',
@@ -25,7 +25,7 @@ export class OliveSearchWarehouseComponent implements OnInit, OliveOnSearch {
 
     const formModel = this.searchForm.value;
 
-    return OliveUtilities.filterNotNullNameValues(
+    return filterNotNullNameValues(
       [
         { name: 'id', value: formModel.id },
         { name: 'name', value: formModel.name },

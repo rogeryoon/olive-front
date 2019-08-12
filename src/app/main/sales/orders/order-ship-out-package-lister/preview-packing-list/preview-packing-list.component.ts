@@ -7,8 +7,8 @@ import { OliveBaseComponent } from 'app/core/components/extends/base/base.compon
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
 import { OrderShipOutPackage } from 'app/main/sales/models/order-ship-out-package.model';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { Address } from 'app/core/models/address.model';
+import { isoDateString } from 'app/core/utils/helpers';
 
 class PackingItem {
   productVariantId: number;
@@ -73,7 +73,7 @@ export class OlivePreviewPackingListComponent extends OliveBaseComponent impleme
 
   onPrint() {
     this.documentService.printPage(
-      `Packing List ${OliveUtilities.isoDateString(new Date(), true)}`,
+      `Packing List ${isoDateString(new Date(), true)}`,
       'olivestyle', 'olive-container'
     );
   }

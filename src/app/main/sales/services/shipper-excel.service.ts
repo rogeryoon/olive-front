@@ -5,6 +5,11 @@ import { ExcelRowExportGps } from '../models/excel-row-export-gps.model';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveConstants } from 'app/core/classes/constants';
 import { CompanyContact } from 'app/core/models/company-contact.model';
+import { OliveDocumentService } from 'app/core/services/document.service';
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
+import { Address } from 'app/core/models/address.model';
+import { applyPrecision, isoDateString, numberFormat } from 'app/core/utils/helpers';
+import { OlivePendingOrderShipOutListComponent } from '../orders/order-ship-out-package-lister/pending-order-ship-out-list/pending-order-ship-out-list.component';
 
 class ShipItem {
   productVariantId: number;
@@ -23,7 +28,7 @@ export class OliveShipperExcelService {
 
   constructor
   (
-
+    private documentService: OliveDocumentService, private translator: FuseTranslationLoaderService
   ) 
   {
   }
@@ -33,12 +38,12 @@ export class OliveShipperExcelService {
    * @param items ShipItem[]
    * @returns weight number
    */
-  private calculateItemsWeight(items: ShipItem[]): string {
+  private getTotalPoundWeight(items: ShipItem[]): string {
     const totalKiloWeight = items.map(x => x.kiloGramWeight * x.quantity).reduce((a, b) => a + (b || 0), 0);
 
     const poundWeight = totalKiloWeight * OliveConstants.unitConversionRate.kiloToPound;
 
-    return OliveUtilities.numberFormat(poundWeight, 2);
+    return numberFormat(poundWeight, 2);
   }
 
   /**
@@ -55,7 +60,16 @@ export class OliveShipperExcelService {
       for (const order of box.orderShipOuts) {
         for (const item of order.orderShipOutDetails) {
           const foundItem = items.find(x => x.productVariantId === item.productVariantId);
+          const customsPrice = (item.extra && item.extra.customsPrice || item.customsPrice);
+          const customsWeight = OlivePendingOrderShipOutListComponent.getItemKiloWeight(item);
           if (foundItem) {
+            // 평균값 작성
+            const totalAmount = (foundItem.customsPrice * foundItem.quantity) + (customsPrice * item.quantity);
+            foundItem.customsPrice = applyPrecision(totalAmount / (foundItem.quantity + item.quantity), 2);
+
+            const totalWeight = (foundItem.kiloGramWeight * foundItem.quantity) + (customsWeight * item.quantity);
+            foundItem.kiloGramWeight = applyPrecision(totalWeight / (foundItem.quantity + item.quantity), 2);
+
             foundItem.quantity += item.quantity;
           }
           else {
@@ -63,7 +77,8 @@ export class OliveShipperExcelService {
               productVariantId: item.productVariantId,
               name: item.name,
               quantity: item.quantity,
-              customsPrice: item.customsPrice,
+              customsPrice: customsPrice,
+              kiloGramWeight:  customsWeight,
               volume: item.volume,
               hsCode: item.hsCode
             } as ShipItem);
@@ -77,15 +92,23 @@ export class OliveShipperExcelService {
     return packageItems;
   }
 
+  /**
+   * GPS 택배 엑셀 파일 만들기
+   * @param packages 
+   * @param senders 
+   */
   saveForGps(packages: OrderShipOutPackage[], senders: Map<number, CompanyContact>) {
-    this.buildGpsHeader();    
-    this.buildGpsBody(packages, this.buildShipItems(packages), senders);
+    const columns = this.buildGpsHeader();    
+    const rows = this.buildGpsBody(packages, this.buildShipItems(packages), senders);
+    let fileName = this.translator.get('sales.pendingOrderShipOutPackageList.shipperExcelFileName');
+    fileName = fileName + '-' + isoDateString(new Date(Date.now()), false);
+    this.documentService.exportExcel(fileName, columns, rows);
   }
 
   /**
    * Builds GPS header
    */
-  private buildGpsHeader() {
+  private buildGpsHeader(): ExcelColumn[] {
     const columns: ExcelColumn[] = [];
     // A
     columns.push({ headerTitle: 'SerialNumber', type: 'text' } as ExcelColumn);
@@ -143,10 +166,19 @@ export class OliveShipperExcelService {
     columns.push({ headerTitle: 'HSCode', type: 'text' } as ExcelColumn);
 
     for (const column of columns) {
-      column.propertyName = column.headerTitle;
+      column.propertyName = OliveUtilities.camelize(column.headerTitle);
     }
+
+    return columns;
   }
 
+  /**
+   * Builds GPS body
+   * @param packages 
+   * @param shipItems 
+   * @param senders 
+   * @returns GPS body Rows
+   */
   private buildGpsBody(packages: OrderShipOutPackage[], shipItems: Map<number, ShipItem[]>, senders: Map<number, CompanyContact>): ExcelRowExportGps[] {
     const rows: ExcelRowExportGps[] = [];
 
@@ -178,15 +210,19 @@ export class OliveShipperExcelService {
       row.consigneeCell = box.deliveryTagFk.consigneeCellPhoneNumber;
 
       row.consigneePostalCode = box.deliveryAddressFk.postalCode;
-      row.consigneeAddress1 = (box.deliveryAddressFk.stateProvince + ' ' + box.deliveryAddressFk.city + ' ' + box.deliveryAddressFk.address1).trim();
-      row.consigneeAddress2 = box.deliveryAddressFk.address1;
+      row.consigneeAddress1 = Address.joinedAddressNoCountry({
+        stateProvince: box.deliveryAddressFk.stateProvince,
+        city: box.deliveryAddressFk.city,
+        address1: box.deliveryAddressFk.address1
+      });
+      row.consigneeAddress2 = box.deliveryAddressFk.address2;
 
       row.customSID = box.deliveryTagFk.customsId;
       row.consigneeMemo = box.deliveryTagFk.deliveryMemo;
       
-      row.orderID = 'X-' + OliveUtilities.make36Id(box.id);
+      row.orderID = 'X-' + OliveUtilities.convertToBase36(box.id);
 
-      row.weight = this.calculateItemsWeight(items);
+      row.weight = this.getTotalPoundWeight(items);
       this.calculateGpsVolumeWeight(items, row);
       
       let seqNo = 0;

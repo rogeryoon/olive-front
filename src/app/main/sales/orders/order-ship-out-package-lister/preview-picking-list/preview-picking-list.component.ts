@@ -7,7 +7,7 @@ import { OliveBaseComponent } from 'app/core/components/extends/base/base.compon
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
 import { OrderShipOutPackage } from 'app/main/sales/models/order-ship-out-package.model';
-import { OliveUtilities } from 'app/core/classes/utilities';
+import { isoDateString } from 'app/core/utils/helpers';
 
 class PickingItem {
   productVariantId: number;
@@ -94,12 +94,12 @@ export class OlivePreviewPickingListComponent extends OliveBaseComponent impleme
   }
 
   get today(): string {
-    return OliveUtilities.isoDateString(new Date(), true);
+    return isoDateString(new Date(), true);
   }
 
   onPrint() {
     this.documentService.printPage(
-      `Picking List ${OliveUtilities.isoDateString(new Date(), true)}`,
+      `Picking List ${isoDateString(new Date(), true)}`,
       'olivestyle', 'olive-container'
     );
   }
