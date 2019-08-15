@@ -19,6 +19,6 @@ export class OliveCompanyGroupSettingService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('companygroupsettings');
+    this.setApiUrl('companyGroupSettings');
   }
 }

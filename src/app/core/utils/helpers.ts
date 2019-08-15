@@ -10,7 +10,7 @@ export function isFunction(value: any) {
     return typeof value === 'function';
 }
 
-export function isNumber(value: any) {
+export function isNumberType(value: any) {
     return typeof value === 'number';
 }
 
@@ -27,7 +27,7 @@ export function isObject(value: any) {
 }
 
 export function isNumberFinite(value: any) {
-    return isNumber(value) && isFinite(value);
+    return isNumberType(value) && isFinite(value);
 }
 
 export function applyPrecision(num: number, precision: number) {
@@ -169,3 +169,41 @@ export function maxNumber(array: number[], addedNumbers: number[] = []): string 
 export function checkIcon(condition: boolean): string {
     return condition ? OliveConstants.iconStatus.checked : OliveConstants.iconStatus.unchecked;
 }
+
+/**
+ * 입력 문자열이 필요 소숫점 자릿수를 가지고 있는지 확인
+ * @param input 문자열
+ * @param maxPrecision 최대 소숫점 자릿수
+ * @returns true if number 
+ */
+export function isNumber(input: string, maxPrecision: number): boolean {
+    let decimalPattern = '';
+
+    if (maxPrecision > 0) {
+        decimalPattern = `(\\.\\d{1,${maxPrecision}})?`;
+    }
+
+    const pattern = new RegExp(`^\\s*\\d*${decimalPattern}\\s*$`);
+
+    return pattern.test(input);
+}
+
+
+/**
+ * Determines whether money pattern is
+ * @param input 
+ * @returns  
+ */
+export function isMoneyPattern(input: string) {
+    return /^\s*\d*(\.\d{1,2})?\s*$/.test(input);
+}
+
+/**
+ * Determines whether number pattern is
+ * @param input 
+ * @returns  
+ */
+export function isNumberPattern(input: string) {
+    return /^\s*\d*\s*$/.test(input);
+}
+

@@ -20,6 +20,6 @@ export class OliveMarketExcelService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('marketexcels');
+    this.setApiUrl('marketExcels');
   }
 }

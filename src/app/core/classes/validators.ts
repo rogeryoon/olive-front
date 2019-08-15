@@ -1,6 +1,15 @@
 import { AbstractControl, ValidatorFn } from '@angular/forms';
-import { OliveUtilities } from './utilities';
+import { isNumber } from '../utils/helpers';
+import { volume } from '../utils/shipping-helpers';
 
+/**
+ * 다목적 숫자 입력 검사
+ * @param maxDigits 최대 숫자
+ * @param [required] 
+ * @param [min] 
+ * @param [max] 
+ * @returns validator 
+ */
 export function numberValidator(maxDigits: number, required: boolean = true, min: number = 0, max: number = 2147483647): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
         let stringValue = '';
@@ -27,7 +36,7 @@ export function numberValidator(maxDigits: number, required: boolean = true, min
                 return { max: max };
             }
 
-            if (!OliveUtilities.isNumber(stringValue, maxDigits)) {
+            if (!isNumber(stringValue, maxDigits)) {
                 return { number: maxDigits };
             }
         }
@@ -36,10 +45,14 @@ export function numberValidator(maxDigits: number, required: boolean = true, min
     };
 }
 
+/**
+ * 부피 입력 검사
+ * @returns validator 
+ */
 export function volumeValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
         if (control.value) {
-            if (OliveUtilities.volume(control.value) != null) {
+            if (volume(control.value) != null) {
                 return null;
             }
 
@@ -69,6 +82,11 @@ export function requiredValidator(): ValidatorFn {
     };
 }
 
+/**
+ * 입력이 원본 문자열의 부분 문자열인지 검사
+ * @param originalValue 
+ * @returns validator 
+ */
 export function subsetValidator(originalValue: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
         const originalTrimValue = originalValue.trim();

@@ -23,6 +23,8 @@ import { InventoryWarehouse } from 'app/main/productions/models/inventory-wareho
 import { OliveOrderShipOutPackageService } from 'app/main/sales/services/order-ship-out-package.service';
 import { OrderShipOutPackage } from 'app/main/sales/models/order-ship-out-package.model';
 import { OliveOnShare } from 'app/core/interfaces/on-share';
+import { OliveCountryService } from 'app/main/supports/services/country.service';
+import { Country } from 'app/main/supports/models/country.model';
 
 @Component({
   selector: 'olive-order-ship-out-lister-manager',
@@ -35,6 +37,8 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   pendingOrderShipOuts: OrderShipOut[] = [];
   pendingOrderShipOutPackages: OrderShipOutPackage[] = [];
   parentObject: OliveOnShare = {bool1: false};
+  customsConfigs: Map<string, any>;
+  countries = new Map<number, Country>();
 
   @ViewChild(OliveCheckboxSelectorPanelComponent)
   private warehouseSelector: OliveCheckboxSelectorPanelComponent;
@@ -47,7 +51,8 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     snackBar: MatSnackBar, formBuilder: FormBuilder,
     dataService: OliveInWarehouseService, private orderShipOutService: OliveOrderShipOutService,
     private cacheService: OliveCacheService, private inventoryService: OliveInventoryService,
-    private orderShipOutPackageService: OliveOrderShipOutPackageService
+    private orderShipOutPackageService: OliveOrderShipOutPackageService,
+    private countryService: OliveCountryService
   ) {
     super(
       translator, alertService,
@@ -56,6 +61,8 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
       dataService
     );
   }
+
+  initializeChildComponent() {}
 
   onAfterViewInit() {
     if (this.orderPackageListers.length === 0) {
@@ -77,6 +84,54 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
 
     this.getInventories();
     this.getPendingOrderPackages();
+    this.getConfigs();
+  }
+
+  private getConfigs() {
+    this.getCustomsConfigs();
+    this.getCountryCodes();
+  }
+
+  private getCustomsConfigs() {
+    this.cacheService.getCustomsConfigs()
+      .then((customsConfigs: Map<string, any>) => {
+        this.customsConfigs = customsConfigs;
+        this.setConfigs();
+      });
+  }
+
+  private setConfigs() {
+    this.orderPackageListers.forEach((lister) => {
+      lister.setConfigs(this.customsConfigs, this.countries);
+    });
+  }
+
+  private getCountryCodes() {
+    const itemKey = OliveCacheService.cacheKeys.getItemsKey.country;
+
+    if (!this.cacheService.exist(itemKey)) {
+      this.countryService.getItems()
+        .subscribe(res => {
+          this.cacheService.set(itemKey, res.model);
+          this.setCountriesConfig(res.model);
+        },
+          error => {
+            this.messageHelper.showLoadFailedSticky(error);
+          });
+    }
+    else {
+      this.setCountriesConfig(this.cacheService.get(itemKey));
+    }
+  }  
+
+  private setCountriesConfig(countries: Country[]) {
+    this.countries.clear();
+    
+    for (const country of countries) {
+      this.countries.set(country.id, country);
+    }
+
+    this.setConfigs();
   }
 
   private getPendingOrderPackages(refresh: boolean = false) {

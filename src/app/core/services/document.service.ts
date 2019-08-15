@@ -256,7 +256,6 @@ export class OliveDocumentService {
 
           if (/-ex-width-.*/.test(this.classList[i])) {
             headerColumn.width = Number(this.classList[i].replace('-ex-width-', ''));
-            console.log(headerColumn.width);
           }
         }
 

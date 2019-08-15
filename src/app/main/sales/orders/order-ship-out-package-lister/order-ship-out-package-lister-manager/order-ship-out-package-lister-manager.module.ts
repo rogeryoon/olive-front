@@ -16,6 +16,7 @@ import { OliveProductCustomsPriceEditorModule } from 'app/main/productions/produ
 import { OlivePreviewPickingListComponent } from '../preview-picking-list/preview-picking-list.component';
 import { OlivePreviewPackingListComponent } from '../preview-packing-list/preview-packing-list.component';
 import { OliveProductHsCodesEditorModule } from 'app/main/productions/products/product/product-hs-codes-editor/product-hs-codes-editor.module';
+import { OliveProductCustomsTypeCodesEditorModule } from 'app/main/productions/products/product/product-customs-type-codes-editor/product-customs-type-codes-editor.module';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { OliveProductHsCodesEditorModule } from 'app/main/productions/products/p
     OliveCheckboxSelectorPanelModule,
     OliveProductWeightEditorModule,
     OliveProductCustomsPriceEditorModule,
-    OliveProductHsCodesEditorModule
+    OliveProductHsCodesEditorModule,
+    OliveProductCustomsTypeCodesEditorModule
   ],
   declarations: [
     OliveOrderShipOutPackageListerManagerComponent,

@@ -103,7 +103,12 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
     return this.setting.disabledContextMenus.find(f => f === name) == null;
   }
 
+  /**
+   * Initializes child component 
+   * : virtual - ngOnInit()에서 Call됨
+   */
   initializeChildComponent() { }
+  
   icon(item: any, columnName: string) { return false; }
   iconName(item: any, columnName: string) { return ''; }
   onTdClick(event: any, item: any, columnName: string): boolean { return false; }

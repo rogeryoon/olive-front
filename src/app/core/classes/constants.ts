@@ -10,7 +10,7 @@ export class OliveConstants {
     };
 
     static lengthTypes = [
-        { code: 'I', name: 'Inch', symbol: 'In' },        
+        { code: 'I', name: 'Inch', symbol: 'In' },
         { code: 'C', name: 'Centimeter', symbol: 'Cm' }
     ];
 
@@ -46,7 +46,7 @@ export class OliveConstants {
         static pending = 'access_time';
         static canceled = 'cancel';
         static shipped = 'local_shipping';
-    };    
+    };
 
     static style = class {
         static footerCell = 'text-align: right; padding-right: 0px;';
@@ -63,6 +63,11 @@ export class OliveConstants {
     static customButton = class {
         static cancelOrder = 'cancelOrder';
         static restoreOrder = 'restoreOrder';
+    };
+
+    static customsRule = class {
+        static typeCodes = 'CustomsRule-TypeCodes';
+        static ruleCountryCode = 'CustomsRule-';
     };
 }
 

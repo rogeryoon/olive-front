@@ -20,6 +20,6 @@ export class OliveInWarehouseService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('inwarehouses');
+    this.setApiUrl('inWarehouses');
   }
 }

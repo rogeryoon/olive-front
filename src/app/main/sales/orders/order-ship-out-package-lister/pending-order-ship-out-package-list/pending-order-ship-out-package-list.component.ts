@@ -48,6 +48,8 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
 
   packages: OrderShipOutPackage[] = [];
 
+  customsConfigs: Map<string, any>;
+
   packagesContact = new Map<number, CompanyContact>();
   companyContacts: CompanyContact[] = [];
   marketSellerContacts = new Map<number, CompanyContact[]>();
@@ -131,6 +133,10 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
 
   checkIfAllSelected() {
     this.selectedAll = this.packages.every(x => x.selected);
+  }
+
+  setConfigs(customsConfigs: Map<string, any>) {
+    this.customsConfigs = customsConfigs;
   }
 
   startTable(packages: OrderShipOutPackage[], parentObject: any, refresh: boolean) {
@@ -384,7 +390,6 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   }
 
   // 마켓셀러에 저장된 컨텍이 없을 경우 없는 컨텍만큼 연속으로 팝업을 띠워서 입력을 받는다.
-  // TODO : exportForLogistic
   exportForLogistic() {
     for (const marketSellerId of Array.from(this.marketSellerContacts.keys())) {
       const seller = this.marketSellers.get(marketSellerId);

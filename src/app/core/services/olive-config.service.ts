@@ -20,6 +20,6 @@ export class OliveConfigService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('OliveConfigs');
+    this.setApiUrl('oliveConfigs');
   }
 }

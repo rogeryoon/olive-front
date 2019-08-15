@@ -99,6 +99,10 @@ export class OliveEditPageComponent extends OliveBaseComponent implements OnInit
     return this.setting.translateTitleId;
   }
 
+  /**
+   * Initializes child component 
+   * : virtual - ngOnInit()에서 Call됨
+   */
   initializeChildComponent() { }
 
   loadComponent() {

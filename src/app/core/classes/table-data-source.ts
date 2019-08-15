@@ -113,6 +113,14 @@ export class TableDataSource extends DataSource<any> {
         this.renderItems();
     }
 
+    /**
+     * Creates new form control
+     * @param r 
+     * @param propName 
+     * @param [validators] 
+     * @param [disabled] 
+     * @returns new form control 
+     */
     createNewFormControl(r: any, propName: string, validators: any[] = null, disabled = false): FormControl {
         const stringValue = OliveUtilities.testIsUndefined(r.Obj[propName]) ? '' : r.Obj[propName].toString();
 

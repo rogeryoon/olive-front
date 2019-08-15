@@ -1,11 +1,10 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnChanges, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, FormArray, AbstractControl } from '@angular/forms';
-
-import { String } from 'typescript-string-operations';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveBaseComponent } from '../base/base.component';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
+import { isNumberPattern, isMoneyPattern } from 'app/core/utils/helpers';
 
 @Component({
   selector: 'olive-entity-form-base',
@@ -37,7 +36,12 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
     return this.idVisible && !this.isNewItem;
   }
 
+  /**
+   * Initializes child component 
+   * : virtual - ngOnInit()에서 Call됨
+   */
   initializeChildComponent() {}
+
   buildForm() { this.oForm = this.formBuilder.group({}); }
   resetForm() { this.oForm.reset({}); }
   onChanges() {}
@@ -112,7 +116,7 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
 
   getMoney(value: any) {
     let amount = 0;
-    if (OliveUtilities.isMoneyPattern(value)) {
+    if (isMoneyPattern(value)) {
       amount = +value;
     }
     return amount;
@@ -120,7 +124,7 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
 
   getNumber(value: any) {
     let amount = 0;
-    if (OliveUtilities.isNumberPattern(value)) {
+    if (isNumberPattern(value)) {
       amount = +value;
     }
     return amount;

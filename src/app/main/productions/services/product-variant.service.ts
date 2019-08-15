@@ -21,7 +21,7 @@ export class OliveProductVariantService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('productvariants');
+    this.setApiUrl('productVariants');
   }
 
   search(keyword: any) {

@@ -78,7 +78,12 @@ export class OliveBaseComponent implements OnInit {
   //#endregion Utilities
 
   //#region Forms
-  getControl(name): any {
+  /**
+   * Gets control
+   * @param name 
+   * @returns control 
+   */
+  getControl(name): AbstractControl {
     return this.oForm.get(name);
   }
 
@@ -87,7 +92,7 @@ export class OliveBaseComponent implements OnInit {
   }
 
   protected arrayErrorMessage(name: string, index: number): string {
-    return this.controlErrorMessage(this.getArrayFormGroup(index).get(name));
+    return this.errorMessageByControl(this.getArrayFormGroup(index).get(name));
   }
 
   /**
@@ -100,11 +105,21 @@ export class OliveBaseComponent implements OnInit {
     return String.Format(this.translator.get('common.validate.requiredAny'), inputNamesString);
   }
   
+  /**
+   * Get error message
+   * @param name Control Name
+   * @returns error message 
+   */
   protected errorMessage(name: string): string {
-    return this.controlErrorMessage(this.getControl(name));
+    return this.errorMessageByControl(this.getControl(name));
   }
 
-  private controlErrorMessage(control: AbstractControl): string {
+  /**
+   * Errors message by control
+   * @param control 
+   * @returns error message
+   */
+  protected errorMessageByControl(control: AbstractControl): string {
     let message = '';
 
     if (OliveUtilities.testIsUndefined(control.errors) || !control.touched) {
@@ -136,14 +151,32 @@ export class OliveBaseComponent implements OnInit {
     return message;
   }
 
+  /**
+   * Gets array form group
+   * @param index 
+   * @returns array form group 
+   */
   getArrayFormGroup(index: number): FormGroup {
     return this.oFArray.controls[index] as FormGroup;
   }
-
+  
+  /**
+   * Determines whether array entry error has
+   * @param name 
+   * @param index 
+   * @returns true if array entry error 
+   */
   hasArrayEntryError(name: string, index: number): boolean {
-    return this.controlHasEntryError(this.getArrayFormGroup(index).get(name));
+    return this.hasEntryErrorByControl(this.getArrayFormGroup(index).get(name));
   }
 
+  /**
+   * Determines whether array error has
+   * @param name 
+   * @param errorName 
+   * @param index 
+   * @returns true if array entry error 
+   */
   hasArrayThisError(name: string, errorName: string, index: number): boolean {
     const control = this.getArrayFormGroup(index).get(name);
     
@@ -154,11 +187,21 @@ export class OliveBaseComponent implements OnInit {
     return control.errors.hasOwnProperty(errorName);
   }
 
+  /**
+   * Determines whether entry error has
+   * @param name 
+   * @returns true if entry error 
+   */
   hasEntryError(name: string): boolean {
-    return this.controlHasEntryError(this.getControl(name));
+    return this.hasEntryErrorByControl(this.getControl(name));
   }
 
-  private controlHasEntryError(control: any): boolean {
+  /**
+   * Determines whether entry error
+   * @param control 
+   * @returns true if entry error
+   */
+  protected hasEntryErrorByControl(control: any): boolean {
     let hasError = false;
 
     if (OliveUtilities.testIsUndefined(control.errors)) {

@@ -20,6 +20,6 @@ export class OliveVoidPurchaseOrderService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('voidpurchaseorders');
+    this.setApiUrl('voidPurchaseOrders');
   }
 }

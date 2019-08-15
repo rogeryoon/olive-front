@@ -20,7 +20,7 @@ export class OliveMarketExcelRowService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('marketexcelrows');
+    this.setApiUrl('marketExcelRows');
   }
 
   getStatus(excelId: number) {

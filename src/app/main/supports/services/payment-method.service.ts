@@ -20,6 +20,6 @@ export class OlivePaymentMethodService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('paymentmethods');
+    this.setApiUrl('paymentMethods');
   }
 }

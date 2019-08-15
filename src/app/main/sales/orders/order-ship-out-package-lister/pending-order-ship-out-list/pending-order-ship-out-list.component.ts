@@ -37,6 +37,11 @@ import { OliveConstants } from 'app/core/classes/constants';
 import { numberFormat } from 'app/core/utils/helpers';
 import { ProductHsCode } from 'app/main/productions/models/product-hs-code.model';
 import { OliveProductHsCodesEditorComponent } from 'app/main/productions/products/product/product-hs-codes-editor/product-hs-codes-editor.component';
+import { ProductCustomsTypeCode } from 'app/main/productions/models/product-customs-type-code.model';
+import { Country } from 'app/main/supports/models/country.model';
+import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
+import { isCustomsTypeCodeError } from 'app/core/classes/customs-validators';
+import { OliveProductCustomsTypeCodesEditorComponent } from 'app/main/productions/products/product/product-customs-type-codes-editor/product-customs-type-codes-editor.component';
 
 class AllocatedQuantity {
   productVariantId: number;
@@ -64,6 +69,9 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   orders: OrderShipOut[] = [];
   // 오더에 매칭한 기대수량과 실제 할당 수량을 저장
   ordersQuantities = new Map<number, AllocatedQuantity[]>();
+  countries: Map<number, Country>;
+
+  customsConfigs: Map<string, any>;
 
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
@@ -182,6 +190,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     return totalRows === 0 ? '' : ` (${this.commaNumber(totalRows)}/${this.commaNumber(totalWeight)}Kg${nullWeightExists ? '-?' : ''})`;
   }
 
+  setConfigs(customsConfigs: Map<string, any>, countries: Map<number, Country>) {
+    this.customsConfigs = customsConfigs;
+    this.countries = countries;
+  }
+
   /**
    * 주문 아이템 세관신고 합을 구한다.
    * @param order OrderShipOut
@@ -226,7 +239,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * Gets item weight
    * @param item OrderShipOutDetail
    * @returns item weight (Kilo)
-   */  
+   */
   static getItemKiloWeight(item: OrderShipOutDetail): number {
     return this.getOverrideKiloWeight(item) || item.kiloGramWeight;
   }
@@ -888,18 +901,35 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     );
   }
 
-  private listOrders() {
-    // HS Code 입력 안한 내용이 있는지 검사한다.
+  /**
+   * Determines whether same country is
+   * @param warehouse 
+   * @param order 
+   * @returns  
+   */
+  private isSameCountry(warehouse: Warehouse, order: OrderShipOut) {
+    return warehouse.companyMasterBranchFk.addressFk.countryId === order.deliveryAddressFk.countryId;
+  }
+
+  /**
+   * HS CODE 편집 작업대상 데이터가 있으면 일괄 편집창을 팝업
+   * @returns false if HS CODE entries 
+   */
+  private getHsCodeEntries(): boolean {
+    // HS CODE 입력 안한 내용이 있는지 검사한다.
     const hsCodeEntryProducts = new Map<number, ProductHsCode>();
     for (const order of this.selectedOrders) {
+      // 같은 국가면 HS Code입력 불필요.
+      if (this.isSameCountry(this.warehouse, order)) { continue; }
+
       for (const item of order.orderShipOutDetails) {
-        if (!item.hsCode) {
-          hsCodeEntryProducts.set(item.productId, {id: item.productId, name: item.name});
+        if (!hsCodeEntryProducts.has(item.productId) && !item.hsCode) {
+          hsCodeEntryProducts.set(item.productId, { id: item.productId, name: item.name });
         }
       }
     }
 
-    // 미입력 HS Code들이 있으면 일괄 입력창을 팝업
+    // 미입력 HS Code가 있으면 일괄 입력창을 팝업
     if (hsCodeEntryProducts.size > 0) {
       this.alertService.showDialog(
         this.translator.get('common.title.confirm'),
@@ -910,6 +940,211 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         this.translator.get('common.button.yes'),
         this.translator.get('common.button.no')
       );
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Opens HS CODE editor
+   * @param products ProductHsCode[]
+   */
+  openHsCodeEditor(products: ProductHsCode[]) {
+    const setting = new OliveDialogSetting(
+      OliveProductHsCodesEditorComponent,
+      {
+        item: products,
+        itemType: ProductHsCode,
+        customTitle: this.translator.get('sales.pendingOrderShipOutList.productHsCodeEditorTitle'),
+        hideDelete: true
+      } as OliveOnEdit
+    );
+
+    const dialogRef = this.dialog.open(
+      OliveEditDialogComponent,
+      {
+        disableClose: true,
+        panelClass: 'mat-dialog-md',
+        data: setting
+      });
+
+    dialogRef.afterClosed().subscribe((results: ProductHsCode[]) => {
+      if (results) {
+        // 관련 HS Code를 모두 업데이트 한다.
+        for (const order of this.orders) {
+          for (const item of order.orderShipOutDetails) {
+            const source = results.find(x => x.id === item.productId);
+            if (source) {
+              item.hsCode = source.hsCode;
+            }
+          }
+        }
+
+        // 리스팅을 다시한다.
+        this.listOrders();
+      }
+    });
+  }
+
+  /**
+   * 국가 그룹 CustomsRule을 만든다.
+   * @param countryIds 
+   * @returns country rules 
+   */
+  private getCountryRules(countryIds: Set<number>): Map<string, any> {
+    const configs = new Map<string, any>();
+
+    // 입력타입코드 정의
+    let key = (OliveConstants.customsRule.typeCodes).toUpperCase();
+    configs.set(key, this.customsConfigs.get(key));
+
+    for (const countryId of Array.from(countryIds.keys())) {
+      // 국가 ID를 국가 코드로 변환
+      const countryCode = this.countries.get(countryId).code;
+
+      // 해당 국가코드 통관규칙
+      key = (OliveConstants.customsRule.ruleCountryCode + countryCode).toUpperCase();
+      configs.set(key, this.customsConfigs.get(key));
+    }
+
+    return configs;
+  }
+
+  /**
+   * CustomsTypeCode 편집 작업대상 데이터가 있으면 일괄 편집창을 팝업
+   * @returns false if CustomsTypeCode entries 
+   */
+  private getCustomsTypeCodeEntries(): boolean {
+    // 제품별로 어떤 국가로 출고되는지 조사
+    const productCountries = new Map<number, Set<number>>();
+    for (const order of this.selectedOrders) {
+      // 같은 국가면 통관 타입 입력 불필요
+      if (this.isSameCountry(this.warehouse, order)) { continue; }
+
+      const countryId = order.deliveryAddressFk.countryId;
+
+      for (const item of order.orderShipOutDetails) {
+        if (!productCountries.has(item.productId)) {
+          productCountries.set(item.productId, new Set([countryId]));
+        }
+
+        const countryIds = productCountries.get(item.productId);
+
+        if (!countryIds.has(countryId)) {
+          countryIds.add(countryId);
+        }
+      }
+    }
+
+    // 국가 그룹별 CustomsRule을 만든다.
+    const customsRulesByCountryGroup = new Map<string, Map<string, any>>();
+    for (const countryIds of Array.from(productCountries.values())) {
+      const key = Array.from(countryIds.keys()).join();
+      if (!customsRulesByCountryGroup.has(key)) {
+        customsRulesByCountryGroup.set(key, this.getCountryRules(countryIds));
+      }
+    }
+
+    // 미입력 Customs Type Code가 있는지 검사한다.
+    const typeCodeEntryProducts = new Map<number, ProductCustomsTypeCode>();
+    const validatedProductIds = new Set<number>();
+    for (const order of this.selectedOrders) {
+      // 같은 국가면 통관 타입 입력 불필요
+      if (this.isSameCountry(this.warehouse, order)) { continue; }
+
+      for (const item of order.orderShipOutDetails) {
+        if (typeCodeEntryProducts.has(item.productId) || validatedProductIds.has(item.productId)) { continue; }
+
+        const customsRules = customsRulesByCountryGroup.get(
+          Array.from(productCountries.get(item.productId).keys()).join());
+
+        const error = isCustomsTypeCodeError(item.customsTypeCode, customsRules, true);
+
+        // 데이터가 유효하지 않다면 입력을 받는다.        
+        if (error) {
+          typeCodeEntryProducts.set(
+            item.productId,
+            {
+              id: item.productId, 
+              name: item.name,
+              customsTypeCode: item.customsTypeCode,
+              customsRules: customsRules
+            });
+        }
+
+        validatedProductIds.add(item.productId);
+      }
+    }
+
+    // 미입력 Customs Type Code가 있으면 일괄 입력창을 팝업
+    if (typeCodeEntryProducts.size > 0) {
+      this.alertService.showDialog(
+        this.translator.get('common.title.confirm'),
+        String.Format(this.translator.get('sales.pendingOrderShipOutList.confirmNeedCustomsTypeCodeEntry'), typeCodeEntryProducts.size),
+        DialogType.confirm,
+        () => this.openCustomsTypeCodeEditor(Array.from(typeCodeEntryProducts.values())),
+        () => null,
+        this.translator.get('common.button.yes'),
+        this.translator.get('common.button.no')
+      );
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Opens CustomsTypeCode editor
+   * @param products ProductCustomsTypeCode[]
+   */
+  openCustomsTypeCodeEditor(products: ProductCustomsTypeCode[]) {
+    const customsTypeCodes = products[0].customsRules.get(OliveConstants.customsRule.typeCodes.toUpperCase()) as string[];
+
+    const setting = new OliveDialogSetting(
+      OliveProductCustomsTypeCodesEditorComponent,
+      {
+        item: products,
+        itemType: ProductCustomsTypeCode,
+        customTitle: String.Format(this.translator.get('sales.pendingOrderShipOutList.productCustomsTypeCodeEditorTitle'), customsTypeCodes.join()),
+        hideDelete: true,
+        extraParameter: null
+      } as OliveOnEdit
+    );
+
+    const dialogRef = this.dialog.open(
+      OliveEditDialogComponent,
+      {
+        disableClose: true,
+        panelClass: 'mat-dialog-md',
+        data: setting
+      });
+
+    dialogRef.afterClosed().subscribe((results: ProductCustomsTypeCode[]) => {
+      if (results) {
+        // 관련 HS Code를 모두 업데이트 한다.
+        for (const order of this.orders) {
+          for (const item of order.orderShipOutDetails) {
+            const source = results.find(x => x.id === item.productId);
+            if (source) {
+              item.customsTypeCode = source.customsTypeCode;
+            }
+          }
+        }
+
+        // 리스팅을 다시한다.
+        this.listOrders();
+      }
+    });
+  }
+
+  private listOrders() {
+
+    if (!this.getHsCodeEntries()) {
+      return;
+    }
+
+    if (!this.getCustomsTypeCodeEntries()) {
       return;
     }
 
@@ -945,44 +1180,6 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         }
       }
     );
-  }
-
-  /**
-   * Opens HS CODE editor
-   * @param products 
-   */
-  openHsCodeEditor(products: ProductHsCode[]) {
-    const setting = new OliveDialogSetting(
-      OliveProductHsCodesEditorComponent,
-      {
-        item: products,
-        itemType: ProductHsCode,
-        customTitle: this.translator.get('sales.pendingOrderShipOutList.productHsCodeEditorTitle'),
-        hideDelete: true
-      } as OliveOnEdit
-    );
-
-    const dialogRef = this.dialog.open(
-      OliveEditDialogComponent,
-      {
-        disableClose: true,
-        panelClass: 'mat-dialog-md',
-        data: setting
-      });
-
-    dialogRef.afterClosed().subscribe((results: ProductHsCode[]) => {
-      if (results) {
-        // 관련 HS Code를 모두 업데이트 한다.
-        for (const order of this.selectedOrders) {
-          for (const item of order.orderShipOutDetails) {
-            const source = results.find(x => x.id === item.productId);
-            if (source) {
-              item.hsCode = source.hsCode;
-            }
-          }
-        }
-      }
-    });    
   }
 
   private showRefreshDialog(message: string) {

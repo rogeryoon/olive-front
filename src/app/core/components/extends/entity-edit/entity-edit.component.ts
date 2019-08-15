@@ -65,7 +65,12 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   private initializeComponent() {
   }
 
+  /**
+   * Initializes child component 
+   * : virtual - ngOnInit()에서 Call됨
+   */
   initializeChildComponent() { }
+  
   buildForm() { }
   getEditedItem(): any { }
   resetForm() { }

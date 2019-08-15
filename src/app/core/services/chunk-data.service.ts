@@ -20,7 +20,7 @@ export class OliveChunkDataService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('chunkdatas');
+    this.setApiUrl('chunkDatas');
   }
 
   getUserNames(userNames: string[]) {

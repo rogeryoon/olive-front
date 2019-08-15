@@ -65,9 +65,9 @@ export class OliveCacheService {
     };
 
     static oliveConfigCacheKey = 'oliveConfig';
-    static oliveConfig = class {
-      static customsTypeCodes = 'CustomsRule-TypeCodes';
-      static customsRuleKR = 'CustomsRule-KR';
+
+    static getItemsKey = class {
+      static country = 'country';
     };
   };
 
@@ -408,6 +408,39 @@ export class OliveCacheService {
     unlock();
 
     this.set(cacheKey, configs, this.ONE_DAY_AGE);
+  }
+
+  /**
+   * 세관 통관 관련 환경설정들을 반환
+   * @returns customs configs 
+   */
+  async getCustomsConfigs(): Promise<any> {
+    let configs: OliveConfig[] = [];
+
+    const cacheKey = OliveCacheService.cacheKeys.oliveConfigCacheKey;
+
+    const unlock = await this.oliveConfigsMutex.lock();
+    if (!this.exist(cacheKey)) {
+      try {
+        const response = await this.oliveConfigService.getItems().toPromise();
+        configs = this.set(cacheKey, response.model, this.ONE_DAY_AGE);
+      }
+      catch (error) {
+        this.messageHelper.showLoadFailedSticky(error);
+      }
+    }
+    else {
+      configs = this.get(cacheKey);
+    }
+    unlock();
+
+    const customsConfigs = new Map<string, any>();
+
+    for (const cf of configs.filter(x => x.code.toUpperCase().includes('CustomsRule'.toLocaleUpperCase()))) {
+      customsConfigs.set(cf.code.toLocaleUpperCase(), JSON.parse(cf.data));
+    }
+
+    return customsConfigs;
   }
 
   /**

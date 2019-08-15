@@ -15,7 +15,7 @@ import { OliveProductManagerComponent } from '../../product/product-manager/prod
 import { Product } from '../../../models/product.model';
 import { Permission } from '@quick/models/permission.model';
 import { numberValidator, volumeValidator, requiredValidator } from 'app/core/classes/validators';
-import { OliveUtilities } from 'app/core/classes/utilities';
+import { renderVolumeWeight } from 'app/core/utils/shipping-helpers';
 
 @Component({
   selector: 'olive-product-variant-editor',
@@ -132,7 +132,14 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
     this.lookupProduct.markAsTouched();   
   }
 
+  /**
+   * 부피 무게 문자를 빌드
+   * @param volumeCtrl 
+   * @param weightTypeCtrl 
+   * @param lengthTypeCtrl 
+   * @returns  부피 무게 표현 문자열
+   */    
   renderVolumeWeight(volumeCtrl: any, weightTypeCtrl: any, lengthTypeCtrl: any) {
-    return OliveUtilities.renderVolumeWeight(volumeCtrl, weightTypeCtrl, lengthTypeCtrl);
+    return renderVolumeWeight(volumeCtrl, weightTypeCtrl, lengthTypeCtrl);
   }
 }

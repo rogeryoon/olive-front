@@ -141,18 +141,6 @@ export class OliveUtilities {
         return parseInt(input, 36);
     }
 
-    public static isNumber(input: string, maxDigits: number): boolean {
-        let decimalPattern = '';
-
-        if (maxDigits > 0) {
-            decimalPattern = `(\\.\\d{1,${maxDigits}})?`;
-        }
-
-        const pattern = new RegExp(`^\\s*\\d*${decimalPattern}\\s*$`);
-
-        return pattern.test(input);
-    }
-
     public static addSpanAddedCount(count: number) {
         // ov-td-click를 추가해야지 이중 팝업이 되질 않는다.
         return `<span class="added-count ov-td-click">+${count}</span>`;
@@ -186,14 +174,6 @@ export class OliveUtilities {
             returnValue = input.toString().trim();
         }
         return returnValue;
-    }
-
-    public static isMoneyPattern(input: string) {
-        return /^\s*\d*(\.\d{1,2})?\s*$/.test(input);
-    }
-
-    public static isNumberPattern(input: string) {
-        return /^\s*\d*\s*$/.test(input);
     }
 
     public static showAddress(address: Address) {
@@ -242,57 +222,6 @@ export class OliveUtilities {
         else {
             return this.convertToBase36(id) + '-' + OliveUtilities.getDateCode(date);
         }
-    }
-
-    public static volume(volumeString: string): number | null {
-        const stringValues = volumeString.trim().split(/[ ,]+/).filter(Boolean);
-
-        if (
-            stringValues.length === 3 &&
-            this.isNumber(stringValues[0], 2) &&
-            this.isNumber(stringValues[1], 2) &&
-            this.isNumber(stringValues[2], 2)
-        ) {
-            return +(+stringValues[0] * +stringValues[1] * +stringValues[2]).toFixed(2);
-        }
-
-        return null;
-    }
-
-    public static volumeWeight(volume: number, lengthTypeCode: string, weightTypeCode: string): number {
-
-        let inchVolume = volume;
-        // Centimeter
-        if (lengthTypeCode === 'C') {
-            inchVolume = volume * OliveConstants.unitConversionRate.centimeterToInchVolume;
-        }
-
-        const poundVolumeWeight = +(inchVolume / 166).toFixed(2);
-
-        let returnVolumeWeight = poundVolumeWeight;
-        // Kilogram
-        if (weightTypeCode === 'K') {
-            returnVolumeWeight = poundVolumeWeight * OliveConstants.unitConversionRate.poundToKilo;
-        }
-
-        return +(returnVolumeWeight).toFixed(2);
-    }
-
-    public static renderVolumeWeight(volumeCtrl: any, weightTypeCtrl: any, lengthTypeCtrl: any) {
-        if (volumeCtrl && weightTypeCtrl && weightTypeCtrl.selected && lengthTypeCtrl && lengthTypeCtrl.selected) {
-            const volumeValue = this.volume(volumeCtrl.value);
-            const weightTypeCode = weightTypeCtrl.selected.value;
-            const lengthTypeCode = lengthTypeCtrl.selected.value;
-
-            if (volumeValue != null) {
-                const symbol = OliveConstants.weightTypes.find(e => e.code === weightTypeCode).symbol;
-
-                const volumeWeight = numberFormat(this.volumeWeight(volumeValue, lengthTypeCode, weightTypeCode), 2);
-
-                return `${volumeWeight} ${symbol}`;
-            }
-        }
-        return '';
     }
 
     public static searchOption(extSearches: NameValue[], orderColumnName: string, sort: string = 'asc'): any {

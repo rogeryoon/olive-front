@@ -5,7 +5,7 @@ export class CustomsType {
 }
 
 export class CustomsWarning {
-    typeCode: string;
+    typeCode?: string;
     oneItemMaxQuantity?: number;
     sameTypeMaxQuantity?: number;
     totalMaxPrice?: number;
@@ -13,7 +13,8 @@ export class CustomsWarning {
 }
 
 export class CustomsRule {
-    countryCode: string;
-    warnings: CustomsWarning[];
-    types: CustomsType[];
+    countryCode?: string;
+    requiredGroupCodes?: string[];
+    warnings?: CustomsWarning[];
+    types?: CustomsType[];
 }

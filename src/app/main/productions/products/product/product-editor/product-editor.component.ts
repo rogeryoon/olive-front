@@ -1,5 +1,5 @@
-﻿import { Component  } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+﻿import { Component } from '@angular/core';
+import { FormBuilder, AbstractControl } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
@@ -8,7 +8,8 @@ import { Product } from '../../../models/product.model';
 import { OliveConstants } from 'app/core/classes/constants';
 import { numberValidator, volumeValidator, requiredValidator } from 'app/core/classes/validators';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
+import { renderVolumeWeight } from 'app/core/utils/shipping-helpers';
+import { customsTypeCodeValidator, addCustomsTypeErrorMessageByControl, addCustomsTypeErrorByControl } from 'app/core/classes/customs-validators';
 
 @Component({
   selector: 'olive-product-editor',
@@ -39,7 +40,7 @@ export class OliveProductEditorComponent extends OliveEntityFormComponent {
       customsPrice: formModel.customsPrice,
       customsTypeCode: formModel.customsTypeCode,
       hsCode: formModel.hsCode,
-      memo: formModel.memo,      
+      memo: formModel.memo,
       standPrice: formModel.standPrice,
       weight: formModel.weight,
       weightTypeCode: formModel.weightTypeCode,
@@ -56,7 +57,7 @@ export class OliveProductEditorComponent extends OliveEntityFormComponent {
       customsName: '',
       customsPrice: ['', [numberValidator(this.standCurrency.decimalPoint, false)]],
       customsTypeCode: '',
-      hsCode: '',      
+      hsCode: '',
       memo: '',
       standPrice: ['', [numberValidator(this.standCurrency.decimalPoint, false)]],
       weight: ['', [numberValidator(2, false)]],
@@ -76,7 +77,7 @@ export class OliveProductEditorComponent extends OliveEntityFormComponent {
       customsPrice: this.item.customsPrice || '',
       customsTypeCode: this.item.customsTypeCode || '',
       hsCode: this.item.hsCode || '',
-      memo: this.item.memo || '',      
+      memo: this.item.memo || '',
       standPrice: this.item.standPrice || '',
       weight: this.item.weight || '',
       weightTypeCode: this.item.weightTypeCode || '',
@@ -92,8 +93,15 @@ export class OliveProductEditorComponent extends OliveEntityFormComponent {
             weightTypeCode: setting.productWeightTypeCode,
             lengthTypeCode: setting.productLengthTypeCode
           });
-        });  
+        });
     }
+
+    this.cacheService.getCustomsConfigs()
+      .then((configs: Map<string, any>) => {
+        const control = this.getControl('customsTypeCode');
+        control.clearValidators();
+        control.setValidators([customsTypeCodeValidator(configs, false)]);
+      });
   }
 
   createEmptyObject() {
@@ -104,7 +112,34 @@ export class OliveProductEditorComponent extends OliveEntityFormComponent {
     this.standCurrency = this.cacheService.standCurrency;
   }
 
+  /**
+   * 부피 무게 문자를 빌드
+   * @param volumeCtrl 
+   * @param weightTypeCtrl 
+   * @param lengthTypeCtrl 
+   * @returns  부피 무게 표현 문자열
+   */  
   renderVolumeWeight(volumeCtrl: any, weightTypeCtrl: any, lengthTypeCtrl: any) {
-    return OliveUtilities.renderVolumeWeight(volumeCtrl, weightTypeCtrl, lengthTypeCtrl);
+    return renderVolumeWeight(volumeCtrl, weightTypeCtrl, lengthTypeCtrl);
+  }
+
+  hasEntryErrorByControl(control: any): boolean {
+    let hasError = super.hasEntryErrorByControl(control);
+
+    if (hasError) { return hasError; }
+
+    hasError = addCustomsTypeErrorByControl(control);
+
+    return control.touched && hasError;
+  }
+
+  errorMessageByControl(control: AbstractControl): string {
+    let message = super.errorMessageByControl(control);
+
+    if (message) { return message; }
+
+    message = addCustomsTypeErrorMessageByControl(control, this.translator);       
+
+    return message;
   }
 }

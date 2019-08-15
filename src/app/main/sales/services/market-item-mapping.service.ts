@@ -20,6 +20,6 @@ export class OliveMarketItemMappingService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('marketitemmappings');
+    this.setApiUrl('marketItemMappings');
   }
 }

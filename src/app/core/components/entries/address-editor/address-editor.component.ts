@@ -75,7 +75,11 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
   }
 
   initializeChildComponent() {
-    const itemKey = 'country';
+    this.getCountryCodes();
+  }
+
+  private getCountryCodes() {
+    const itemKey = OliveCacheService.cacheKeys.getItemsKey.country;
     const searchOption = OliveUtilities.searchOption([{name: 'activated', value: true} as NameValue], 'name');
 
     if (!this.cacheService.exist(itemKey)) {

@@ -17,12 +17,12 @@
             <mat-cell *matCellDef="let row">{{row.Obj.name}}</mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="hsCode">
-            <mat-header-cell *matHeaderCellDef>{{'common.word.hsCode' | translate}}</mat-header-cell>
-            <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
+        <ng-container matColumnDef="customsTypeCode">
+            <mat-header-cell *matHeaderCellDef>{{'common.word.customsTypeCode' | translate}}</mat-header-cell>
+            <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('customsTypeCode',i)">
                 <mat-form-field fxFlex='95%'>
-                    <input matInput name="inputHsCode{{row.ObjId}}" formControlName="hsCode" class="small-font olive-error" autocomplete="off">
-                    <mat-error *ngIf="hasArrayEntryError('hsCode',i)">{{arrayErrorMessage('hsCode',i)}}</mat-error>
+                    <input matInput name="inputCustomsTypeCode{{row.ObjId}}" formControlName="customsTypeCode" class="small-font olive-error" autocomplete="off">
+                    <mat-error *ngIf="hasArrayEntryError('customsTypeCode',i)">{{arrayErrorMessage('customsTypeCode',i)}}</mat-error>
                 </mat-form-field>
             </mat-cell>
         </ng-container>

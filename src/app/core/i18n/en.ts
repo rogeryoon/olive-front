@@ -63,7 +63,11 @@ export const locale = {
                 'number' : '숫자 오류입니다. {0}',
                 'decimal' : '(소숫점 최대{0}자리)',
                 'error' : '오류',
-                'requiredAny' : '{0}중 최소 한곳에 입력하십시오.'
+                'requiredAny' : '{0}중 최소 한곳에 입력하십시오.',
+                'customsMatch' : '[{0}]만 입력 가능',
+                'customsDuplicated': '[{0}]을 중복입력했습니다.',
+                'customsRequired': '[{0}]중 1개만 입력하십시오.',
+                'customsOneType': '[{0}]중 1개만 입력하십시오.'
             },
             'title' : {
                 'addNewItem' : '{{title}} 등록',
@@ -443,7 +447,9 @@ export const locale = {
                 'priorityOrders' : '입력 값 우선 순위',
                 'orderShipOutDataNotExistsErrorMessage' : '출고 요청중에 유효하지 않은 주문건(다른 사용자가 이미 출고/취소)이 존재합니다. 확인을 클릭하면 출고작업을 초기화합니다.',
                 'confirmNeedHsCodeEntry': '출고하려면 상품 {0}가지 HS CODE를 입력해야 합니다. 입력하겠습니까?',
-                'productHsCodeEditorTitle': 'HS 코드 입력'
+                'productHsCodeEditorTitle': 'HS 코드 입력',
+                'productCustomsTypeCodeEditorTitle': '통관 타입 입력 - 예: {0}',
+                'confirmNeedCustomsTypeCodeEntry': '출고하려면 상품 {0}가지 통관 타입을 입력해야 합니다. 입력하겠습니까?',
             },
             'pendingOrderShipOutPackageList' : {
                 'finalFinishConfirmMessage' : '출고 마감처리 합니다. 확실합니까?',

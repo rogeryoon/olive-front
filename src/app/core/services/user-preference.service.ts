@@ -20,6 +20,6 @@ export class OliveUserPreferenceService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('UserPreferences');
+    this.setApiUrl('userPreferences');
   }
 }

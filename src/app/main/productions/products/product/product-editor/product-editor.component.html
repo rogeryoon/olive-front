@@ -35,10 +35,11 @@
             <mat-error *ngIf="hasEntryError('customsPrice')">{{errorMessage('customsPrice')}}</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" [matTooltip]="errorMessage('customsTypeCode')">
             <mat-label>{{'common.word.customsTypeCode' | translate}}</mat-label>
-            <input matInput name="customsTypeCode" formControlName="customsTypeCode" maxlength="100">
-            <mat-hint align="end">{{getControl('customsTypeCode').value?.length || 0}}/100</mat-hint>
+            <input matInput name="customsTypeCode" formControlName="customsTypeCode" maxlength="400">
+            <mat-hint align="end">{{getControl('customsTypeCode').value?.length || 0}}/400</mat-hint>
+            <mat-error *ngIf="hasEntryError('customsTypeCode')">{{errorMessage('customsTypeCode')}}</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -47,7 +48,6 @@
             <mat-hint align="end">{{getControl('hsCode').value?.length || 0}}/100</mat-hint>
         </mat-form-field>        
     </div>
-
 
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
         <mat-form-field appearance="outline">

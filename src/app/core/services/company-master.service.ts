@@ -20,6 +20,6 @@ export class OliveCompanyMasterService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('companymasters');
+    this.setApiUrl('companyMasters');
   }
 }

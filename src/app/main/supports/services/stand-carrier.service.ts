@@ -20,6 +20,6 @@ export class OliveStandCarrierService extends OliveEntityService {
       configurations
     );
 
-    this.setApiUrl('standcarriers');
+    this.setApiUrl('standCarriers');
   }
 }

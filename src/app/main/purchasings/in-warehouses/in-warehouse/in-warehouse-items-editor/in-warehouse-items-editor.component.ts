@@ -25,6 +25,7 @@ import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
+import { isNumberPattern } from 'app/core/utils/helpers';
 
 @Component({
   selector: 'olive-in-warehouse-items-editor',
@@ -304,7 +305,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   updateBalance(index: number) {
     const quantityValue = this.getArrayFormGroup(index).get('quantity').value;
 
-    if (OliveUtilities.isNumberPattern(quantityValue)) {
+    if (isNumberPattern(quantityValue)) {
       const item = this.dataSource.items[index];
       item.balance = item.originalBalance - this.getNumber(quantityValue);
     }

@@ -11,6 +11,7 @@ import { InventoryWarehouse } from 'app/main/productions/models/inventory-wareho
 import { OrderShipOutPackage } from 'app/main/sales/models/order-ship-out-package.model';
 import { OlivePendingOrderShipOutPackageListComponent } from '../pending-order-ship-out-package-list/pending-order-ship-out-package-list.component';
 import { OliveOnShare } from 'app/core/interfaces/on-share';
+import { Country } from 'app/main/supports/models/country.model';
 
 @Component({
   selector: 'olive-order-ship-out-package-lister',
@@ -27,6 +28,8 @@ export class OliveOrderShipOutPackageListerComponent extends OliveEntityFormComp
   protected pendingOrders: OrderShipOut[] = [];
   protected inventories: InventoryWarehouse[] = [];
   protected pendingOrderPackages: OrderShipOutPackage[];
+  protected customsConfigs: Map<string, any>;
+  protected countries: Map<number, Country>;
 
   @Output() reload = new EventEmitter<any>();
   @Output() packagesCanceled = new EventEmitter();
@@ -59,6 +62,12 @@ export class OliveOrderShipOutPackageListerComponent extends OliveEntityFormComp
     this.pendingOrderPackages = pendingOrderPackages;
     this.pendingOrderPackageList.startTable(this.pendingOrderPackages, parentObject, refresh);
     this.pendingOrderPackageList.getMarketSellerContacts();
+  }
+
+  setConfigs(customsConfigs: Map<string, any>, countries: Map<number, Country>) {
+    this.customsConfigs = customsConfigs;
+    this.countries = countries;
+    this.pendingOrderList.setConfigs(customsConfigs, countries);
   }
 
   /**

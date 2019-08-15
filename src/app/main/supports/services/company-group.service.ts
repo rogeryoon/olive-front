@@ -20,6 +20,6 @@ export class OliveCompanyGroupService extends OliveEntityService {
       configurations
     );
     
-    this.setApiUrl('companygroups');
+    this.setApiUrl('companyGroups');
   }
 }
