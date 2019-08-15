@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveBaseComponent } from '../base/base.component';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-import { isNumberPattern, isMoneyPattern } from 'app/core/utils/helpers';
+import { isMoneyPattern, isNumberPattern } from 'app/core/utils/string-helper';
 
 @Component({
   selector: 'olive-entity-form-base',

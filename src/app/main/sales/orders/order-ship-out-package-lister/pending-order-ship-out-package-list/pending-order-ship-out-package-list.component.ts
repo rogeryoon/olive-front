@@ -30,7 +30,7 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { OrderShipOutPackageExtra } from 'app/main/sales/models/order-ship-out-package-extra.model';
 import { OrderShipOut } from 'app/main/sales/models/order-ship-out.model';
 import { OlivePendingOrderShipOutListComponent } from '../pending-order-ship-out-list/pending-order-ship-out-list.component';
-import { numberFormat } from 'app/core/utils/helpers';
+import { numberFormat } from 'app/core/utils/number-helper';
 
 @Component({
   selector: 'olive-pending-order-ship-out-package-list',
@@ -389,7 +389,9 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     console.log('exportForTrackingNumberUpdate');
   }
 
-  // 마켓셀러에 저장된 컨텍이 없을 경우 없는 컨텍만큼 연속으로 팝업을 띠워서 입력을 받는다.
+  /**
+   * 택배 엑셀 저장 
+   */
   exportForLogistic() {
     for (const marketSellerId of Array.from(this.marketSellerContacts.keys())) {
       const seller = this.marketSellers.get(marketSellerId);
@@ -414,7 +416,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
       }
     }
 
-    this.shipperExcelService.saveForGps(this.warehousePackages, this.packagesContact);
+    this.shipperExcelService.saveForGps(this.warehousePackages, this.packagesContact, this.customsConfigs);
   }
 
   editCompanyContact(box: OrderShipOutPackage) {

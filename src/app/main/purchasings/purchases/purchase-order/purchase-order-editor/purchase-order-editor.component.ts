@@ -19,7 +19,7 @@ import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator, requiredValidator } from 'app/core/classes/validators';
 import { OliveUtilities } from 'app/core/classes/utilities';
-import { isMoneyPattern } from 'app/core/utils/helpers';
+import { isMoneyPattern } from 'app/core/utils/string-helper';
 
 @Component({
   selector: 'olive-purchase-order-editor',

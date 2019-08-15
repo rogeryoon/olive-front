@@ -34,14 +34,13 @@ import { OliveBackEndErrors } from 'app/core/classes/back-end-errors';
 import { OrderShipOutDetailExtra } from 'app/main/sales/models/order-ship-out-detail-extra.model';
 import { OliveOrderShipOutService } from 'app/main/sales/services/order-ship-out.service';
 import { OliveConstants } from 'app/core/classes/constants';
-import { numberFormat } from 'app/core/utils/helpers';
 import { ProductHsCode } from 'app/main/productions/models/product-hs-code.model';
 import { OliveProductHsCodesEditorComponent } from 'app/main/productions/products/product/product-hs-codes-editor/product-hs-codes-editor.component';
 import { ProductCustomsTypeCode } from 'app/main/productions/models/product-customs-type-code.model';
 import { Country } from 'app/main/supports/models/country.model';
-import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
 import { isCustomsTypeCodeError } from 'app/core/classes/customs-validators';
 import { OliveProductCustomsTypeCodesEditorComponent } from 'app/main/productions/products/product/product-customs-type-codes-editor/product-customs-type-codes-editor.component';
+import { numberFormat } from 'app/core/utils/number-helper';
 
 class AllocatedQuantity {
   productVariantId: number;

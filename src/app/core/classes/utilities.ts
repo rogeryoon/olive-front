@@ -6,10 +6,8 @@ import * as moment from 'moment';
 
 import { NameValue } from '../models/name-value';
 
-import { OliveConstants } from './constants';
 import { Address } from '../models/address.model';
 import { UserName } from '../models/user-name';
-import { numberFormat } from '../utils/helpers';
 
 export class OliveUtilities {
     public static splitStickyWords(input, separator): string {
@@ -67,42 +65,6 @@ export class OliveUtilities {
         source.createdUser = referItem.createdUser;
         source.createdUtc = referItem.createdUtc;
         return source;
-    }
-
-    public static webSiteHostName(url: string): string {
-        url = this.webSiteUrl(url);
-
-        if (url == null) { return null; }
-
-        return this.getLocation(url).hostname.replace(/www./gi, '');
-    }
-
-    public static getLocation(url: string): any {
-        const l = document.createElement('a');
-        l.href = url;
-        return l;
-    }
-
-    private static adjustUrl(url: string): string {
-        // remove prefix
-        url = url.replace(/https?:\/\//gi, '');
-        // append standard url type
-        return 'http://' + url;
-    }
-
-    public static webSiteUrl(url: string): string {
-        if (!url) { return null; }
-
-        url = this.adjustUrl(url);
-        const valid = this.isValidWebSiteUrl(url);
-
-        if (!valid) { return null; }
-
-        return url;
-    }
-
-    public static isValidWebSiteUrl(url: string): boolean {
-        return /^https?:\/\/[^ "]+$/i.test(url);
     }
 
     /**
@@ -260,13 +222,6 @@ export class OliveUtilities {
         }
 
         return value;
-    }
-
-    public static camelize(str) {
-        return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
-          if (+match === 0) { return ''; } // or if (/\s+/.test(match)) for white spaces
-          return index === 0 ? match.toLowerCase() : match.toUpperCase();
-        });
     }
 }
 

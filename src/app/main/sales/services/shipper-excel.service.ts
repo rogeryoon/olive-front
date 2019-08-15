@@ -8,8 +8,11 @@ import { CompanyContact } from 'app/core/models/company-contact.model';
 import { OliveDocumentService } from 'app/core/services/document.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { Address } from 'app/core/models/address.model';
-import { applyPrecision, isoDateString, numberFormat } from 'app/core/utils/helpers';
 import { OlivePendingOrderShipOutListComponent } from '../orders/order-ship-out-package-lister/pending-order-ship-out-list/pending-order-ship-out-list.component';
+import { applyPrecision, numberFormat } from 'app/core/utils/number-helper';
+import { isoDateString } from 'app/core/utils/date-helper';
+import { camelize } from 'app/core/utils/string-helper';
+import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
 
 class ShipItem {
   productVariantId: number;
@@ -97,9 +100,14 @@ export class OliveShipperExcelService {
    * @param packages 
    * @param senders 
    */
-  saveForGps(packages: OrderShipOutPackage[], senders: Map<number, CompanyContact>) {
-    const columns = this.buildGpsHeader();    
-    const rows = this.buildGpsBody(packages, this.buildShipItems(packages), senders);
+  saveForGps(packages: OrderShipOutPackage[], senders: Map<number, CompanyContact>, customsConfigs: Map<string, any>) {
+    const columns = this.buildGpsHeader();
+
+    // 한국 국가코드 통관규칙
+    const key = (OliveConstants.customsRule.ruleCountryCode + 'KR').toUpperCase();
+    const customsRule = customsConfigs.get(key) as CustomsRule;
+
+    const rows = this.buildGpsBody(packages, this.buildShipItems(packages), senders, customsRule);
     let fileName = this.translator.get('sales.pendingOrderShipOutPackageList.shipperExcelFileName');
     fileName = fileName + '-' + isoDateString(new Date(Date.now()), false);
     this.documentService.exportExcel(fileName, columns, rows);
@@ -166,7 +174,7 @@ export class OliveShipperExcelService {
     columns.push({ headerTitle: 'HSCode', type: 'text' } as ExcelColumn);
 
     for (const column of columns) {
-      column.propertyName = OliveUtilities.camelize(column.headerTitle);
+      column.propertyName = camelize(column.headerTitle);
     }
 
     return columns;
@@ -179,7 +187,8 @@ export class OliveShipperExcelService {
    * @param senders 
    * @returns GPS body Rows
    */
-  private buildGpsBody(packages: OrderShipOutPackage[], shipItems: Map<number, ShipItem[]>, senders: Map<number, CompanyContact>): ExcelRowExportGps[] {
+  private buildGpsBody(packages: OrderShipOutPackage[], shipItems: Map<number, ShipItem[]>, 
+    senders: Map<number, CompanyContact>, customsRule: CustomsRule): ExcelRowExportGps[] {
     const rows: ExcelRowExportGps[] = [];
 
     for (const box of packages) {
@@ -199,7 +208,7 @@ export class OliveShipperExcelService {
       // 중량단위(1:Kg, 2:Lbs)
       row.weightTypeID = '2';
       // 일반신청(0:목록,1:일반)
-      row.priceTypeID = '1';
+      row.priceTypeID = this.getGpsCustomsTypeCode(box, customsRule);
       // 전자상거래(1:전자상거래 구매대행, 2:일반, 3:전자상거래 개인직접수입형)
       row.consigneeCustomTypeID = '3';
       // 받는이 구분(1:개인,2:사업자)
@@ -244,6 +253,37 @@ export class OliveShipperExcelService {
     }
 
     return rows;
+  }
+
+
+  private getGpsCustomsTypeCode(box: OrderShipOutPackage, customsRule: CustomsRule): string {
+    // 기본값 : 목록통관 : 0 
+    let customsTypeCode = '0';
+    const generalCustomsTypeName = '일반';
+    const easyCustomsTypeName = '목록';
+
+    // 상품 통관타입 수집
+    const customsTypes = new Set<string>();
+    for (const order of box.orderShipOuts) {
+      for (const item of order.orderShipOutDetails) {
+        // 일반 ?
+        if (item.customsTypeCode.includes(generalCustomsTypeName)) {
+          customsTypes.add(generalCustomsTypeName);
+        }
+        // 목록 ? 
+        else if (item.customsTypeCode.includes(easyCustomsTypeName)) {
+          customsTypes.add(easyCustomsTypeName);
+        }
+        // 일반/목록 외의 사항은 무시
+      }
+    }
+
+    // 통관타입이 섞이면 일반통관
+    if (customsTypes.size > 1) {
+      customsTypeCode = '1';
+    }
+
+    return customsTypeCode;
   }
 
   /**

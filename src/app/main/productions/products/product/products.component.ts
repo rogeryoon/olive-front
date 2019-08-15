@@ -18,7 +18,8 @@ import { OliveSearchProductComponent } from './search-product/search-product.com
 import { OliveProductService } from '../../services/product.service';
 import { Product } from '../../models/product.model';
 import { OliveProductManagerComponent } from './product-manager/product-manager.component';
-import { minNumber, maxNumber, checkIcon } from 'app/core/utils/helpers';
+import { checkIcon } from 'app/core/utils/helpers';
+import { minNumber, maxNumber } from 'app/core/utils/number-helper';
 
 const Selected = 'selected';
 const Id = 'id';

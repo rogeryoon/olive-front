@@ -22,7 +22,7 @@ import { CompanyGroupPreference } from '../models/company-group-preference.model
 import { OliveCompanyGroupPreferenceService } from './company-group-preference.service';
 import { OliveConfig } from '../models/olive-config.model';
 import { OliveConfigService } from './olive-config.service';
-import { numberFormat } from '../utils/helpers';
+import { numberFormat } from '../utils/number-helper';
 
 interface CacheContent {
   expiry: number;

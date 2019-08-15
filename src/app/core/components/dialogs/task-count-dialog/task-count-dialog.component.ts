@@ -4,7 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 import { OliveTaskCountSetting } from 'app/core/interfaces/dialog-setting/task-count-setting';
-import { numberFormat } from 'app/core/utils/helpers';
+import { numberFormat } from 'app/core/utils/number-helper';
 
 @Component({
   selector: 'olive-task-count-dialog',

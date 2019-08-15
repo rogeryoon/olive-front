@@ -12,7 +12,6 @@ import { NavIcons } from 'app/core/navigations/nav-icons';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchCarrierComponent } from './search-carrier/search-carrier.component';
 import { OliveCarrierService } from '../../services/carrier.service';
@@ -20,6 +19,7 @@ import { Carrier } from '../../models/carrier.model';
 import { OliveCarrierManagerComponent } from './carrier-manager/carrier-manager.component';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { checkIcon } from 'app/core/utils/helpers';
+import { webSiteHostName, webSiteUrl } from 'app/core/utils/string-helper';
 
 const Selected  = 'selected';
 const Code = 'code';
@@ -90,7 +90,7 @@ export class OliveCarriersComponent extends OliveEntityListComponent {
         retValue = item.name;
         break;
       case WebSite:
-        retValue = OliveUtilities.webSiteHostName(item.webSite);
+        retValue = webSiteHostName(item.webSite);
         break;
       case CreatedUtc:
         retValue = this.date(item.createdUtc);
@@ -130,7 +130,7 @@ export class OliveCarriersComponent extends OliveEntityListComponent {
 
     switch (columnName) {
       case WebSite:
-        const url = OliveUtilities.webSiteUrl(item.webSite);
+        const url = webSiteUrl(item.webSite);
         if (url) {
           this.setTdId(item.id, columnName);
           retValue = true;

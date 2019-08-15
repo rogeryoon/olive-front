@@ -13,13 +13,13 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveSearchMarketComponent } from './search-market/search-market.component';
 import { OliveMarketService } from '../../services/market.service';
 import { Market } from '../../models/market.model';
 import { OliveMarketManagerComponent } from './market-manager/market-manager.component';
 import { checkIcon } from 'app/core/utils/helpers';
+import { webSiteUrl } from 'app/core/utils/string-helper';
 
 const Selected  = 'selected';
 const Code = 'code';
@@ -124,7 +124,7 @@ export class OliveMarketsComponent extends OliveEntityListComponent {
 
     switch (columnName) {
       case WebSite:
-        const url = OliveUtilities.webSiteUrl(item.webSite);
+        const url = webSiteUrl(item.webSite);
         if (url) {
           this.setTdId(item.id, columnName);
           retValue = true;

@@ -20,6 +20,7 @@ import { OliveSupplierService } from '../../services/supplier.service';
 import { Supplier } from '../../models/supplier.model';
 import { OliveSupplierManagerComponent } from './supplier-manager/supplier-manager.component';
 import { checkIcon } from 'app/core/utils/helpers';
+import { webSiteHostName, webSiteUrl } from 'app/core/utils/string-helper';
 
 const Selected = 'selected';
 const Code = 'code';
@@ -79,7 +80,7 @@ export class OliveSuppliersComponent extends OliveEntityListComponent {
         retValue = item.name;
         break;
       case WebSite:
-        retValue = OliveUtilities.webSiteHostName(item.webSite);
+        retValue = webSiteHostName(item.webSite);
         break;
       case CreatedUtc:
         retValue = this.date(item.createdUtc);
@@ -119,7 +120,7 @@ export class OliveSuppliersComponent extends OliveEntityListComponent {
 
     switch (columnName) {
       case WebSite:
-        const url = OliveUtilities.webSiteUrl(item.webSite);
+        const url = webSiteUrl(item.webSite);
         if (url) {
           this.setTdId(item.id, columnName);
           retValue = true;

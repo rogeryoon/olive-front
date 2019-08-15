@@ -1,5 +1,6 @@
 import { OliveConstants } from '../classes/constants';
-import { numberFormat, isNumber } from './helpers';
+import { isNumber } from './string-helper';
+import { numberFormat } from './number-helper';
 
 /**
  * 입력 문자열의 부피궤적을 반환

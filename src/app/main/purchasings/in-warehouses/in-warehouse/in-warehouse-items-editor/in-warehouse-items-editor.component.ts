@@ -25,7 +25,7 @@ import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { isNumberPattern } from 'app/core/utils/helpers';
+import { isNumberPattern } from 'app/core/utils/string-helper';
 
 @Component({
   selector: 'olive-in-warehouse-items-editor',

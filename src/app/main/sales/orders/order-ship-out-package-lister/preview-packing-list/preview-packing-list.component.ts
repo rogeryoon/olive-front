@@ -8,7 +8,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
 import { OrderShipOutPackage } from 'app/main/sales/models/order-ship-out-package.model';
 import { Address } from 'app/core/models/address.model';
-import { isoDateString } from 'app/core/utils/helpers';
+import { isoDateString } from 'app/core/utils/date-helper';
 
 class PackingItem {
   productVariantId: number;

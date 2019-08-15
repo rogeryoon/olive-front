@@ -68,6 +68,7 @@ export class OliveOrderShipOutPackageListerComponent extends OliveEntityFormComp
     this.customsConfigs = customsConfigs;
     this.countries = countries;
     this.pendingOrderList.setConfigs(customsConfigs, countries);
+    this.pendingOrderPackageList.setConfigs(customsConfigs);
   }
 
   /**

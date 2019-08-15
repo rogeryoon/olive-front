@@ -1,6 +1,6 @@
 import { AbstractControl, ValidatorFn } from '@angular/forms';
-import { isNumber } from '../utils/helpers';
 import { volume } from '../utils/shipping-helpers';
+import { isNumber } from '../utils/string-helper';
 
 /**
  * 다목적 숫자 입력 검사

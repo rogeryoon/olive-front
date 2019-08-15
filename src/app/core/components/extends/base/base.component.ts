@@ -7,7 +7,7 @@ import { OliveUtilities } from 'app/core/classes/utilities';
 import { Address } from 'app/core/models/address.model';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-import { numberFormat } from 'app/core/utils/helpers';
+import { numberFormat } from 'app/core/utils/number-helper';
 
 @Component({
   selector: 'olive-base',
