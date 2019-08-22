@@ -242,7 +242,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
         data: {
           name: 'ProductVariant',
           columnType: 'id',
-          dialogTitle: this.translator.get(NavTranslates.Product.productVariant),
+          itemTitle: this.translator.get(NavTranslates.Product.productVariant),
           dataService: this.productVariantService,
           maxSelectItems: 10,
           newComponent: OliveProductVariantManagerComponent,
@@ -306,7 +306,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
         data: {
           name: 'PurchaseOrder',
           columnType: 'custom',
-          dialogTitle: this.translator.get(NavTranslates.Purchase.list),
+          itemTitle: this.translator.get(NavTranslates.Purchase.list),
           dataService: this.purchaseOrderService,
           maxSelectItems: 10,
           newComponent: OlivePurchaseOrderManagerComponent,

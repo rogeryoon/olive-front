@@ -18,18 +18,18 @@
                             <mat-icon>{{canReleaseCombineShip ? 'link_off' : 'insert_link'}}</mat-icon>
                             {{(canReleaseCombineShip ? 'common.button.cancelCombineShip' : 'common.button.combineShip') | translate}}{{remarkCombinedOrders}}
                         </button>
-                        <button [disabled]="!canListOrders || isloading" mat-raised-button color="warn"
+                        <button [disabled]="!hasSelectedItems || isloading" mat-raised-button color="warn"
                             class="right ml-4" (click)="buttonListOrders()">
                             <mat-icon>arrow_forward</mat-icon>
                             {{'common.button.shipOut' | translate}}{{remarkSelectedOrders}}
                         </button>
 
                         <mat-menu #misc="matMenu">
-                            <button mat-menu-item (click)="buttonPreAssignTrackingNumber()">
+                            <button mat-menu-item [disabled]="isloading" (click)="buttonPreAssignTrackingNumbers()">
                                 <mat-icon>find_replace</mat-icon>
                                 {{'common.button.preAssignTrackingNumber' | translate}}
                             </button>
-                            <button mat-menu-item (click)="exportForTrackingNumberUpdate()"> 
+                            <button mat-menu-item [disabled]="isloading" (click)="exportForTrackingNumberUpdate()"> 
                                 <mat-icon>view_list</mat-icon>
                                 {{'common.button.exportForTrackingNumberUpdate' | translate}}
                             </button>
@@ -56,6 +56,7 @@
                         <th>{{'common.tableHeader.weightKiloGram' | translate}}</th>
                         <th>{{'common.tableHeader.customsPrice' | translate}}</th>
                         <th>{{'common.tableHeader.combinedShipping' | translate}}</th>
+                        <th>{{'common.tableHeader.preTrackingNumber' | translate}}</th>                        
                     </tr>
                 </thead>
                 <tbody>
@@ -87,11 +88,13 @@
                             <mat-icon *ngIf="order.combinedShipAddressName" [ngClass]="{'foreground-blue': order.combinedShipAddressName}">insert_link</mat-icon>
                             {{showCombinedShipping(order)}}
                         </td>
+
+                        <td class="zoom-in" (click)="editOrder(order)"><mat-icon *ngIf="order.trackingNumber">checked</mat-icon></td>                        
                     </tr>
                 </tbody>
                 <tfoot *ngIf="orders?.length == 0">
                     <tr>
-                        <td [attr.colspan]="7" class="no-data-available">{{'common.message.noRecordsFound' | translate}}</td>
+                        <td [attr.colspan]="8" class="no-data-available">{{'common.message.noRecordsFound' | translate}}</td>
                     </tr>
                 </tfoot>
             </table>

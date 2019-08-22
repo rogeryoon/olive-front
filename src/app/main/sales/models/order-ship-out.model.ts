@@ -16,6 +16,11 @@ export class OrderShipOut extends OliveTrackingAttribute {
     orderFk?: Order;
     orderShipOutDetails?: OrderShipOutDetail[];
 
+    trackingNumber?: string;
+    trackingNumberUpdatedUtc?: any;
+    carrierId?: number;
+    carrierBranchId?: number;
+
     dupAddressName?: string;
     combinedShipAddressName?: string;
     combinedShipDeliveryInfoSelected?: boolean;

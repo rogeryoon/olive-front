@@ -393,7 +393,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
           columnType: 'custom',
           disableSearchInput: true,
           customClick: true,
-          dialogTitle: this.translator.get(NavTranslates.InWarehouse.status),
+          itemTitle: this.translator.get(NavTranslates.InWarehouse.status),
           itemType: InWarehouseItem,
           dataService: this.inWarehouseItemService,
           extraSearches: [{ name: 'status', value: item.id }] as NameValue[]

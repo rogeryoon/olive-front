@@ -31,6 +31,7 @@ import { OrderShipOutPackageExtra } from 'app/main/sales/models/order-ship-out-p
 import { OrderShipOut } from 'app/main/sales/models/order-ship-out.model';
 import { OlivePendingOrderShipOutListComponent } from '../pending-order-ship-out-list/pending-order-ship-out-list.component';
 import { numberFormat } from 'app/core/utils/number-helper';
+import { OliveConstants } from 'app/core/classes/constants';
 
 @Component({
   selector: 'olive-pending-order-ship-out-package-list',
@@ -48,7 +49,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
 
   packages: OrderShipOutPackage[] = [];
 
-  customsConfigs: Map<string, any>;
+  customsConfigs = new Map<string, any>();
 
   packagesContact = new Map<number, CompanyContact>();
   companyContacts: CompanyContact[] = [];
@@ -135,8 +136,13 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     this.selectedAll = this.packages.every(x => x.selected);
   }
 
-  setConfigs(customsConfigs: Map<string, any>) {
-    this.customsConfigs = customsConfigs;
+  setConfigs(configType: string, data: any) {
+    switch (configType)
+    {
+      case OliveConstants.listerConfigType.customsConfigs:
+          this.customsConfigs = data;
+      break;
+    }
   }
 
   startTable(packages: OrderShipOutPackage[], parentObject: any, refresh: boolean) {

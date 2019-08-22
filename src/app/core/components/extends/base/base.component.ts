@@ -95,6 +95,21 @@ export class OliveBaseComponent implements OnInit {
     return this.errorMessageByControl(this.getArrayFormGroup(index).get(name));
   }
 
+  get hasRangeError() {
+    return this.oForm.errors && this.oForm.errors['range'];
+  }
+
+  protected rangeErrorMessage(startNumberName: string, endNumberName: string, currentNumberName: string = null): string {
+    const errorValue = this.oForm.errors['range'];
+
+    // currentNumberName까지 들어간 입력양식에 오류가 발생한경우라면
+    if (errorValue === 'T') {
+      return String.Format(this.translator.get('common.validate.rangePlusCurrentValue'), startNumberName, endNumberName, currentNumberName);
+    }
+
+    return String.Format(this.translator.get('common.validate.range'), startNumberName, endNumberName);
+  }
+
   /**
    * 입력 컨트롤중 모두 입력이 안되었으면 표시하는 메시지
    * @param inputNames Input User Names

@@ -124,7 +124,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     this.lookupSupplier.setting = {
       name: 'Supplier',
       columnType: 'code',
-      dialogTitle: this.translator.get(NavTranslates.Company.supplier),
+      itemTitle: this.translator.get(NavTranslates.Company.supplier),
       dataService: this.supplierService,
       maxSelectItems: 1,
       newComponent: OliveSupplierManagerComponent,
@@ -136,7 +136,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     this.lookupWarehouse.setting = {
       name: 'Warehouse',
       columnType: 'code',
-      dialogTitle: this.translator.get(NavTranslates.Company.warehouse),
+      itemTitle: this.translator.get(NavTranslates.Company.warehouse),
       dataService: this.warehouseService,
       maxSelectItems: 1,
       newComponent: OliveWarehouseManagerComponent,

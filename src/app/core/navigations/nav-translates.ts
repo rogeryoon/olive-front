@@ -53,6 +53,7 @@ export class NavTranslates {
         static country = 'navi.basic.country';
         static carrier = 'navi.basic.carrier';
         static standCarrier = 'navi.basic.standCarrier';
+        static carrierTrackingNumberRange = 'navi.basic.carrierTrackingNumberRange';
     };
 
     static Sales = class {

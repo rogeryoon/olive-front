@@ -69,6 +69,12 @@ export class OliveConstants {
         static typeCodes = 'CustomsRule-TypeCodes';
         static ruleCountryCode = 'CustomsRule-';
     };
+
+    static listerConfigType = class {
+        static customsConfigs = 'customsConfigs';
+        static carrierTrackingNumbersGroups = 'carrierTrackingNumbersGroups';
+        static countries = 'countries';
+    };
 }
 
 

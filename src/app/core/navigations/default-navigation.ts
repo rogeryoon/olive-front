@@ -323,7 +323,15 @@ export const defaultNavigation: FuseNavigation[] = [
                         translate: NavTranslates.Basic.carrier,
                         icon: NavIcons.Basic.carrier,
                         url: '/bases/carrier'
-                    }
+                    },
+                    {
+                        id: 'basicCarrierTrackingRange',
+                        title: '캐리어 송장번호',
+                        type: 'item',                        
+                        translate: NavTranslates.Basic.carrierTrackingNumberRange,
+                        icon: NavIcons.Basic.carrierTrackingNumberRange,
+                        url: '/bases/carrierTrackingNumberRange'
+                    }                    
                 ]
             }
         ]

@@ -25,6 +25,9 @@ import { OrderShipOutPackage } from 'app/main/sales/models/order-ship-out-packag
 import { OliveOnShare } from 'app/core/interfaces/on-share';
 import { OliveCountryService } from 'app/main/supports/services/country.service';
 import { Country } from 'app/main/supports/models/country.model';
+import { CarrierTrackingNumbersGroup } from 'app/main/shippings/models/carrier-tracking-numbers-group.model';
+import { OliveConstants } from 'app/core/classes/constants';
+import { OliveCarrierTrackingNumberRangeService } from 'app/main/shippings/services/carrier-tracking-number-range.service';
 
 @Component({
   selector: 'olive-order-ship-out-lister-manager',
@@ -37,8 +40,9 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   pendingOrderShipOuts: OrderShipOut[] = [];
   pendingOrderShipOutPackages: OrderShipOutPackage[] = [];
   parentObject: OliveOnShare = {bool1: false};
-  customsConfigs: Map<string, any>;
+  customsConfigs = new Map<string, any>();
   countries = new Map<number, Country>();
+  carrierTrackingNumbersGroups: CarrierTrackingNumbersGroup[] = [];
 
   @ViewChild(OliveCheckboxSelectorPanelComponent)
   private warehouseSelector: OliveCheckboxSelectorPanelComponent;
@@ -52,7 +56,8 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     dataService: OliveInWarehouseService, private orderShipOutService: OliveOrderShipOutService,
     private cacheService: OliveCacheService, private inventoryService: OliveInventoryService,
     private orderShipOutPackageService: OliveOrderShipOutPackageService,
-    private countryService: OliveCountryService
+    private countryService: OliveCountryService,
+    private carrierTrackingNumberRangeService: OliveCarrierTrackingNumberRangeService
   ) {
     super(
       translator, alertService,
@@ -90,19 +95,35 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   private getConfigs() {
     this.getCustomsConfigs();
     this.getCountryCodes();
+    this.getCarrierTrackingNumbersGroups();
+  }
+
+  private getCarrierTrackingNumbersGroups() {
+    this.carrierTrackingNumberRangeService.get('numbersGroup')
+    .subscribe(res => {
+      this.carrierTrackingNumbersGroups = res.model;
+      // ID를 임의로 만들어준다.
+      let id = 1;
+      for (const group of this.carrierTrackingNumbersGroups) {
+        group.id = id++;
+      }
+      this.setConfigs(OliveConstants.listerConfigType.carrierTrackingNumbersGroups, res.model);
+    }, error => {
+      this.messageHelper.showLoadFailedSticky(error);
+    });
   }
 
   private getCustomsConfigs() {
     this.cacheService.getCustomsConfigs()
       .then((customsConfigs: Map<string, any>) => {
         this.customsConfigs = customsConfigs;
-        this.setConfigs();
+        this.setConfigs(OliveConstants.listerConfigType.customsConfigs, customsConfigs);
       });
   }
 
-  private setConfigs() {
+  private setConfigs(configType: string, data: any) {
     this.orderPackageListers.forEach((lister) => {
-      lister.setConfigs(this.customsConfigs, this.countries);
+      lister.setConfigs(configType, data);
     });
   }
 
@@ -131,7 +152,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
       this.countries.set(country.id, country);
     }
 
-    this.setConfigs();
+    this.setConfigs(OliveConstants.listerConfigType.countries, this.countries);
   }
 
   private getPendingOrderPackages(refresh: boolean = false) {

@@ -2,7 +2,7 @@
     <div class="entry-max-width">
         <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
             <div flex style="width: 200px">
-                <olive-lookup-host #warehouse formControlName="warehouseFk" required [cacheKey]="'warehouse'"
+                <olive-lookup-host #warehouse formControlName="warehouseFk" [cacheKey]="'warehouse'"
                     [placeholder]="'common.word.warehouse' | translate"
                     [isEditMode]="isNewItem" (changed)="onWarehouseChanged($event)"></olive-lookup-host>
             </div>

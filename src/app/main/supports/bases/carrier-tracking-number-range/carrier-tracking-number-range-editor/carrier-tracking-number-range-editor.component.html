@@ -1,0 +1,63 @@
+﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxFlex="1 0 auto" autocomplete="off">
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
+        <mat-form-field appearance="outline" fxFlex="100">
+            <input matInput name="name" formControlName="name" maxlength="200">
+            <mat-label>{{'common.word.name'|translate}}</mat-label>
+            <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
+        </mat-form-field>
+    </div>
+
+    <mat-error *ngIf="hasRangeError">
+        {{rangeErrorMessage('common.word.fromTrackingNumber'|translate, 
+        'common.word.toTrackingNumber'|translate, 'common.word.lastTrackingNumber'|translate)}}
+    </mat-error>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <mat-form-field appearance="outline" fxFlex="33">
+            <input matInput name="fromTrackingNumber" formControlName="fromTrackingNumber" required>
+            <mat-label>{{'common.word.fromTrackingNumber'|translate}}</mat-label>
+            <mat-error *ngIf="hasEntryError('fromTrackingNumber')">{{errorMessage('fromTrackingNumber')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex="34">
+            <input matInput name="toTrackingNumber" formControlName="toTrackingNumber" required>
+            <mat-label>{{'common.word.toTrackingNumber'|translate}}</mat-label>
+            <mat-error *ngIf="hasEntryError('toTrackingNumber')">{{errorMessage('toTrackingNumber')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxFlex="33">
+            <input matInput name="lastTrackingNumber" formControlName="lastTrackingNumber" [readonly]="true">
+            <mat-label>{{'common.word.lastTrackingNumber'|translate}}</mat-label>
+            <mat-error *ngIf="hasEntryError('lastTrackingNumber')">{{errorMessage('lastTrackingNumber')}}</mat-error>
+        </mat-form-field>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <div fxFlex="33">
+            <olive-lookup-host #carrier formControlName="carrierFk" 
+                [placeholder]="'common.word.carrier' | translate" [isEditMode]="true"></olive-lookup-host>
+        </div>
+        <div fxFlex="34">
+            <olive-lookup-host #branch formControlName="branchFk" [required]="false"
+                [placeholder]="'common.word.branch' | translate" [isEditMode]="true"></olive-lookup-host>
+        </div>
+        <div fxFlex="33">
+            <olive-lookup-host #companyGroup formControlName="companyGroupFk" [required]="false"
+                [placeholder]="'common.word.companyGroup' | translate" [isEditMode]="true"></olive-lookup-host>
+        </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <div fxFlex="15">
+            <mat-checkbox formControlName="activated">Activated</mat-checkbox>
+        </div>
+        <mat-form-field appearance="outline" fxFlex="{{isNewItem ? 85 : 40}}">
+            <mat-label>{{'common.word.memo' | translate}}</mat-label>
+            <textarea matInput name="memo" formControlName="memo" rows="1">
+        </textarea>
+        </mat-form-field>
+        <div *ngIf="!isNewItem" fxFlex="45">
+            <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
+        </div>
+    </div>
+</form>

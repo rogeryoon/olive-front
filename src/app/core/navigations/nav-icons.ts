@@ -54,6 +54,7 @@ export class NavIcons {
         static currency = 'attach_money';
         static country = 'landscape';
         static carrier = 'local_shipping';
+        static carrierTrackingNumberRange = 'all_inbox';
     };
 
     static Sales = class {

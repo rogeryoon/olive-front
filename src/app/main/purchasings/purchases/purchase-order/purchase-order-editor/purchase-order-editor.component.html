@@ -11,12 +11,12 @@
         </div>
 
         <div flex>
-            <olive-lookup-host #supplier formControlName="supplierFk" required [placeholder]="'common.word.supplier' | translate"
+            <olive-lookup-host #supplier formControlName="supplierFk" [placeholder]="'common.word.supplier' | translate"
                 [isEditMode]="canAssignPurchaseOrder"></olive-lookup-host>
         </div>
 
         <div flex>
-            <olive-lookup-host #warehouse formControlName="warehouseFk" required [cacheKey]="'warehouse'"
+            <olive-lookup-host #warehouse formControlName="warehouseFk" [cacheKey]="'warehouse'"
                 [placeholder]="'common.word.warehouse' | translate" [isEditMode]="canAssignPurchaseOrder">
             </olive-lookup-host>
         </div>

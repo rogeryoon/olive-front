@@ -47,7 +47,8 @@ export const locale = {
                 'areYouSure' : '정말로 요청작업을 진행하겠습니까?',
                 'outOfStock' : '{0}건이 재고부족으로 출고가 되지 않았습니다.',
                 'cancelOrderShipOutInventory': '할당된 출고 재고를 취소',
-                'assignOrderShipOutInventory': '재고를 할당하여 출고가능 처리'
+                'assignOrderShipOutInventory': '재고를 할당하여 출고가능 처리',
+                'duplicatedCarrierTrackingNumberExists': '입력한 송장번호 범위가 다른 데이터 송장번호와 중첩되건을 발견하여 저장할수 없습니다. 확인하고 다시 입력하세요.'
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
@@ -67,7 +68,9 @@ export const locale = {
                 'customsMatch' : '[{0}]만 입력 가능',
                 'customsDuplicated': '[{0}]을 중복입력했습니다.',
                 'customsRequired': '[{0}]중 1개만 입력하십시오.',
-                'customsOneType': '[{0}]중 1개만 입력하십시오.'
+                'customsOneType': '[{0}]중 1개만 입력하십시오.',
+                'range': '{1}은(는) {0}보다 큰숫자를 입력하여야 합니다.',
+                'rangePlusCurrentValue': '{1}은(는) {0}보다 큰숫자를 입력 / {2}는 {0}와(과){1}의 범위안의 숫자를 입력하세요.'
             },
             'title' : {
                 'addNewItem' : '{{title}} 등록',
@@ -96,7 +99,11 @@ export const locale = {
                 'select': '선택',
                 'pendingShipOut' : '대기',
                 'shipOut' : '출고',
-                'shippingLabelShippersEntry' : '발송회사 입력'
+                'shippingLabelShippersEntry' : '발송회사 입력',
+                'chooseItemOrItemsForName': '{0} 선택',
+                'chooseItem': '아래 목록중 하나를 선택하세요.',
+                'chooseItems': '해당하는 모든 아이템 선택하세요.',
+                'currentItem': '-기존 선택:{0}'
             },
             'button': {
                 'save' : '저장',
@@ -187,9 +194,15 @@ export const locale = {
                 'weightKiloGram' : '무게(Kg)',
                 'combinedShipping': '합배송',
                 'select' : '선택',
-                'customsPrice' : '신고가'
+                'customsPrice' : '신고가',
+                'availTrackingNumbers' : '가용번호',
+                'carrier' : '캐리어',
+                'branch' : '지점',
+                'companyGroup' : '고객사 그룹',
+                'preTrackingNumber': '선송장'
             },
             'word': {
+                'branch': '지점',
                 'id' : 'ID',
                 'warehouse' : '창고',
                 'memo' : '메모',
@@ -263,7 +276,21 @@ export const locale = {
                 'nickName': '별명',
                 'companyName': '회사명',
                 'default': '기본',
-                'productCustomsPrice': '세관 신고 가격'
+                'productCustomsPrice': '세관 신고 가격',
+                'productGroup': '상품 그룹',
+                'selectedItems': '선택 아이템',
+                'brand': '브랜드',
+                'category': '카테고리',
+                'tag': '테그',
+                'company': '회사',
+                'purchase': '발주',
+                'companyGroup': '고객사 그룹',
+                'carrier': '캐리어',
+                'fromTrackingNumber': '시작 송장번호',
+                'toTrackingNumber': '끝 송장번호',
+                'lastTrackingNumber': '마지막 사용 송장번호',
+                'availTrackingNumbers' : '가용번호',
+                'preTrackingNumber': '선송장'
             }
         },
         'page': {
@@ -324,8 +351,9 @@ export const locale = {
 
                 'currency' : '외국 화폐',
                 'country' : '국가 코드',
-                'carrier' : '배송사',
-                'standCarrier' : '시스템 배송사'
+                'carrier' : '캐리어',
+                'standCarrier' : '시스템 캐리어',
+                'carrierTrackingNumberRange' : '캐리어 송장번호'
             },
             'sales' : {
                 'group' : '판매',
@@ -450,6 +478,13 @@ export const locale = {
                 'productHsCodeEditorTitle': 'HS 코드 입력',
                 'productCustomsTypeCodeEditorTitle': '통관 타입 입력 - 예: {0}',
                 'confirmNeedCustomsTypeCodeEntry': '출고하려면 상품 {0}가지 통관 타입을 입력해야 합니다. 입력하겠습니까?',
+                'confirmNoCarrierTrackingNumbersGroupsMessage' : '선발급할 송장번호가 없습니다. 새로 등록하시겠습니까?',
+                'selectCarrierTrackingNumbersGroupsTitle' : '송장발급 그룹 선택',
+                'selectCarrierTrackingNumbersGroupsDescription' : '원하는 송장발급 그룹을 선택하세요',
+                'confirmFoundPreAssignedCarrierTrackingNumberMessage' : '선택한 주문에 이미 등록된 송장번호가 있습니다. 이미 등록된 송장번호를 새 송장번호로 업데이트하겠습니까?',
+                'trackingNumbersShortageErrorMessage': '새로 발급할 송장번호가 부족합니다. 새로 등록하시겠습니까?',
+                'allOrderHaveTrackingNumbers' : '더이상 송장발급을 할 대상이 없습니다.',
+                'confirmIssueOnlyNoTrackingOrders' : '선택한 주문이 없습니다. 발급하지 않은 주문송장만 발급하겠습니까?'
             },
             'pendingOrderShipOutPackageList' : {
                 'finalFinishConfirmMessage' : '출고 마감처리 합니다. 확실합니까?',

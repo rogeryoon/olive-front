@@ -1,7 +1,7 @@
 ﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" autocomplete="off">
 
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
-        <olive-lookup-host #product formControlName="productFk" required [placeholder]="'Product'"
+        <olive-lookup-host #product formControlName="productFk" [placeholder]="'common.word.productGroup' | translate"
             [isEditMode]="canAssignItem" fxFlex="80"></olive-lookup-host>
 
         <mat-form-field appearance="outline" fxFlex="20">

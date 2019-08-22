@@ -256,7 +256,7 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
   lookUpCompanyGroup() {
     const setting = {
       columnType: 'id',
-      dialogTitle: this.translator.get(NavTranslates.Company.groupList),
+      itemTitle: this.translator.get(NavTranslates.Company.groupList),
       dataService: this.companyGroupService,
       maxSelectItems: 1,
       itemType: CompanyGroup

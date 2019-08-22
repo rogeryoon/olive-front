@@ -74,7 +74,7 @@ export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
   initializeChildComponent() {
     this.lookupMarket.setting = {
       columnType: 'id',
-      dialogTitle: this.translator.get(NavTranslates.Company.market),
+      itemTitle: this.translator.get(NavTranslates.Company.market),
       dataService: this.marketService,
       maxSelectItems: 1,
       newComponent: OliveMarketManagerComponent,

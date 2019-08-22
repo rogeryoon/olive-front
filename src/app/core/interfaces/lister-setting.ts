@@ -83,7 +83,7 @@ export class LookupListerSetting implements IListerSetting {
 
     extraSearches?: NameValue[];
 
-    dialogTitle: string;
+    itemTitle: string;
 
     dataService: OliveDataService;
 
@@ -92,6 +92,8 @@ export class LookupListerSetting implements IListerSetting {
     maxSelectItems?: number;
 
     maxNameLength?: number;
+
+    currentItem?: any;
 
     // For New Item Support - Start
     newComponent?: any;

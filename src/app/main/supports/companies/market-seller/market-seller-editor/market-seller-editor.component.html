@@ -7,7 +7,7 @@
             <mat-error *ngIf="hasEntryError('code')">{{errorMessage('code')}}</mat-error>
         </mat-form-field>
 
-        <olive-lookup-host #marketFk formControlName="marketFk" required
+        <olive-lookup-host #marketFk formControlName="marketFk"
             [placeholder]="marketTitle | translate" [isEditMode]="true"></olive-lookup-host>
     </div>
 

@@ -18,6 +18,10 @@ import { OliveSearchCountryComponent } from './country/search-country/search-cou
 import { OliveCarrierManagerModule } from './carrier/carrier-manager/carrier-manager.module';
 import { OliveCarriersComponent } from './carrier/carriers.component';
 import { OliveSearchCarrierComponent } from './carrier/search-carrier/search-carrier.component';
+import { OliveCarrierTrackingNumberRangeManagerModule } from './carrier-tracking-number-range/carrier-tracking-number-range-manager/carrier-tracking-number-range-manager.module';
+import { OliveCarrierTrackingNumberRangesComponent } from './carrier-tracking-number-range/carrier-tracking-number-ranges.component';
+// tslint:disable-next-line:max-line-length
+import { OliveSearchCarrierTrackingNumberRangeComponent } from './carrier-tracking-number-range/search-carrier-tracking-number-range/search-carrier-tracking-number-range.component';
 
 const routes = [
   {
@@ -34,7 +38,12 @@ const routes = [
     path: 'carrier',
     component: OliveCarriersComponent,
     canActivate: [AuthGuard]
-  },  
+  },
+  {
+    path: 'carrierTrackingNumberRange',
+    component: OliveCarrierTrackingNumberRangesComponent,
+    canActivate: [AuthGuard]
+  },    
 ];
 
 @NgModule({
@@ -44,7 +53,8 @@ const routes = [
     TranslateModule.forChild(),
 
     OliveSharedModule,
-    OliveCarrierManagerModule
+    OliveCarrierManagerModule,
+    OliveCarrierTrackingNumberRangeManagerModule
   ],
   declarations: [
     OliveCurrenciesComponent,
@@ -58,7 +68,10 @@ const routes = [
     OliveSearchCountryComponent,
 
     OliveCarriersComponent,
-    OliveSearchCarrierComponent      
+    OliveSearchCarrierComponent,
+    
+    OliveCarrierTrackingNumberRangesComponent,
+    OliveSearchCarrierTrackingNumberRangeComponent
   ],
   providers: [],
   entryComponents: [
@@ -66,7 +79,8 @@ const routes = [
     OliveSearchCurrencyComponent,
     OliveCountryManagerComponent,    
     OliveSearchCountryComponent,
-    OliveSearchCarrierComponent
+    OliveSearchCarrierComponent,
+    OliveSearchCarrierTrackingNumberRangeComponent
   ]
 })
 export class OliveBasesModule { }

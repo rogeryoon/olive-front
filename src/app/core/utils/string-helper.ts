@@ -108,3 +108,17 @@ export function webSiteUrl(url: string): string {
 export function isValidWebSiteUrl(url: string): boolean {
     return /^https?:\/\/[^ "]+$/i.test(url);
 }
+
+/**
+ * 구분자로 정리된 HashSet구성
+ * @param input 입력
+ * @param [delimiter] 구분자
+ * @returns string HashSet
+ */
+export function getDelimiterSet(input: string, delimiter: string = ','): Set<string> {
+    const words = new Set<string>();
+    for (const word of input.split(delimiter)) {
+      words.add(word.trim());
+    }
+    return words;
+}

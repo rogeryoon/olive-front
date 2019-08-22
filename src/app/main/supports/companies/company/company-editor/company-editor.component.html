@@ -7,7 +7,7 @@
             <mat-error *ngIf="hasEntryError('code')">{{errorMessage('code')}}</mat-error>
         </mat-form-field>
 
-        <olive-lookup-host #companyGroupFk formControlName="companyGroupFk" required
+        <olive-lookup-host #companyGroupFk formControlName="companyGroupFk" 
             [placeholder]="companyGroupTitle | translate" [isEditMode]="canAssignCompanyGroups"></olive-lookup-host>
     </div>
 

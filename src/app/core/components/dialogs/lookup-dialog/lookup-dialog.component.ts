@@ -5,6 +5,8 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
 import { DeviceDetectorService } from 'ngx-device-detector';
 
+import { String } from 'typescript-string-operations';
+
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { AlertService } from '@quick/services/alert.service';
@@ -74,6 +76,32 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
   ngOnInit() {
     this.initTable();
     this.initChip();
+  }
+
+  get dialogTitle(): string {
+    let title = '';
+
+    if (this.setting.itemTitle) {
+      title = String.Format(this.translator.get('common.title.chooseItemOrItemsForName'), this.setting.itemTitle);
+    }
+    else if (this.setting.maxSelectItems === 1) {
+      title = this.translator.get('common.title.chooseItem');
+    }
+    else {
+      title = this.translator.get('common.title.chooseItems');
+    }
+    
+    return title;
+  }
+
+  get selectedItemRemark(): string {
+    let remark = '';
+
+    if (this.setting.currentItem && this.setting.currentItem.name) {
+      remark = String.Format(this.translator.get('common.title.currentItem'), this.setting.currentItem.name);
+    }
+
+    return remark;
   }
 
   initChip() {

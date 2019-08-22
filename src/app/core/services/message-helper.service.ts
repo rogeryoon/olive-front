@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { String } from 'typescript-string-operations';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-import { AlertService, MessageSeverity } from '@quick/services/alert.service';
+import { AlertService, MessageSeverity, DialogType } from '@quick/services/alert.service';
 
 import { UserMessage } from '../models/user-message';
 import { Utilities } from '@quick/services/utilities';
@@ -19,6 +19,17 @@ export class OliveMessageHelperService {
     private alertService: AlertService
   ) 
   { 
+  }
+
+  showError(message: string, title: string = null) {
+    if (!title) { title = this.translator.get('common.title.saveError'); }
+    this.alertService.showDialog
+    (
+      title,
+      message,
+      DialogType.alert,
+      () => null
+    );
   }
 
   showDeletedSuccess(itemName: string) {

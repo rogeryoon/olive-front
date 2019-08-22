@@ -118,7 +118,7 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
 
     this.lookupProduct.setting = {
       columnType: 'id',
-      dialogTitle: this.translator.get(NavTranslates.Product.productGroup),
+      itemTitle: this.translator.get(NavTranslates.Product.productGroup),
       dataService: this.productService,
       maxSelectItems: 1,
       newComponent: OliveProductManagerComponent,

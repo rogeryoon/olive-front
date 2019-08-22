@@ -141,7 +141,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
         data: {
           name: 'ProductVariant',
           columnType: 'id',
-          dialogTitle: this.translator.get(NavTranslates.Product.productVariant),
+          itemTitle: this.translator.get(NavTranslates.Product.productVariant),
           dataService: this.productVariantService,
           maxSelectItems: 10,
           newComponent: OliveProductVariantManagerComponent,

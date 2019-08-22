@@ -2,6 +2,8 @@ import { Component, forwardRef, ViewChild, ElementRef, Renderer2, OnInit, Input,
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl, Validator, ValidationErrors, NG_VALIDATORS } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 
+import * as _ from 'lodash';
+
 import { OliveLookupDialogComponent } from '../../dialogs/lookup-dialog/lookup-dialog.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveCacheService } from 'app/core/services/cache.service';
@@ -34,6 +36,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
   @Input() type = 'text';
   @Input() isEditMode = false;
   @Input() classMode = '';
+  @Input() required = true;
 
   @Output() changed = new EventEmitter();
   @Output() selected = new EventEmitter();
@@ -52,7 +55,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
   }
 
   ngOnInit(): void {
-    this.lookupName = new FormControl(null, requiredValidator());
+    this.lookupName = new FormControl(null, this.required ? requiredValidator() : null);
 
     // Cache Value Loading
     this.cacheService.getUserPreference(this.companyGroupIdCacheKey)
@@ -78,12 +81,15 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
   lookUp() {
     if (!this.isEditMode) { return; }
 
+    const setting = _.cloneDeep(this.setting);
+    setting.currentItem = this.value;
+
     const dialogRef = this.dialog.open(
       OliveLookupDialogComponent,
       {
         disableClose: true,
         panelClass: 'mat-dialog-md',
-        data: this.setting
+        data: setting
       });
 
     dialogRef.afterClosed().subscribe(items => {

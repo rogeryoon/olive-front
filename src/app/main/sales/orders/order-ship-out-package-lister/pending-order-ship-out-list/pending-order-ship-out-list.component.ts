@@ -41,6 +41,12 @@ import { Country } from 'app/main/supports/models/country.model';
 import { isCustomsTypeCodeError } from 'app/core/classes/customs-validators';
 import { OliveProductCustomsTypeCodesEditorComponent } from 'app/main/productions/products/product/product-customs-type-codes-editor/product-customs-type-codes-editor.component';
 import { numberFormat } from 'app/core/utils/number-helper';
+import { CarrierTrackingNumbersGroup } from 'app/main/shippings/models/carrier-tracking-numbers-group.model';
+import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
+import { Router } from '@angular/router';
+import { OliveCarrierTrackingNumberRangeService } from 'app/main/shippings/services/carrier-tracking-number-range.service';
+import { OrderShipOutTrackingNumberIssue } from 'app/main/shippings/models/order-ship-out-tracking-number-issue.model';
+import { CarrierTrackingIssueDto } from 'app/main/shippings/models/carrier-tracking-issue.model';
 
 class AllocatedQuantity {
   productVariantId: number;
@@ -69,6 +75,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   // 오더에 매칭한 기대수량과 실제 할당 수량을 저장
   ordersQuantities = new Map<number, AllocatedQuantity[]>();
   countries: Map<number, Country>;
+  carrierTrackingNumbersGroups: CarrierTrackingNumbersGroup[];
 
   customsConfigs: Map<string, any>;
 
@@ -90,7 +97,9 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     private dialog: MatDialog, private alertService: AlertService,
     private orderShipOutPackageService: OliveOrderShipOutPackageService,
     private messageHelper: OliveMessageHelperService, private orderShipOutService: OliveOrderShipOutService,
-    private productService: OliveProductService, private cacheService: OliveCacheService
+    private productService: OliveProductService, private cacheService: OliveCacheService,
+    private queryParams: OliveQueryParameterService, private router: Router,
+    private carrierTrackingNumberRangeService: OliveCarrierTrackingNumberRangeService
   ) {
     super(
       formBuilder, translator
@@ -145,8 +154,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     return this.orders.filter(x => x.choices[this.index]);
   }
 
-  get canListOrders(): boolean {
-    return !this.isNull(this.orders.find(x => x.choices[this.index]));
+  get hasSelectedItems(): boolean {
+    return this.selectedOrders.length > 0;
   }
 
   get remarkCombinedOrders(): string {
@@ -189,9 +198,20 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     return totalRows === 0 ? '' : ` (${this.commaNumber(totalRows)}/${this.commaNumber(totalWeight)}Kg${nullWeightExists ? '-?' : ''})`;
   }
 
-  setConfigs(customsConfigs: Map<string, any>, countries: Map<number, Country>) {
-    this.customsConfigs = customsConfigs;
-    this.countries = countries;
+  setConfigs(configType: string, data: any) {
+    switch (configType) {
+      case OliveConstants.listerConfigType.customsConfigs:
+        this.customsConfigs = data;
+        break;
+
+      case OliveConstants.listerConfigType.countries:
+        this.countries = data;
+        break;
+
+      case OliveConstants.listerConfigType.carrierTrackingNumbersGroups:
+        this.carrierTrackingNumbersGroups = data;
+        break;
+    }
   }
 
   /**
@@ -1065,7 +1085,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
           typeCodeEntryProducts.set(
             item.productId,
             {
-              id: item.productId, 
+              id: item.productId,
               name: item.name,
               customsTypeCode: item.customsTypeCode,
               customsRules: customsRules
@@ -1220,9 +1240,217 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     this.selectedAll = false;
   }
 
-  // TODO : buttonPreAssignTrackingNumber
-  buttonPreAssignTrackingNumber() {
-    console.log('buttonPreAssignTrackingNumber');
+  /**
+   * Gets avail carrier trackings numbers groups
+   */
+  get availCarrierTrackingsNumbersGroups(): CarrierTrackingNumbersGroup[] {
+    return this.carrierTrackingNumbersGroups.filter(x =>
+      x.branchId === this.warehouse.companyMasterBranchId ||
+      x.companyGroupId === this.queryParams.CompanyGroupId ||
+      !x.branchId || !x.companyGroupId);
+  }
+
+  /**
+   * Button - pre assign tracking number
+   */
+  buttonPreAssignTrackingNumbers(carrierTrackingsNumbersGroupsId: number = null, preSelectedOrders: OrderShipOut[] = null) {
+    let targetOrders: OrderShipOut[];
+
+    if (preSelectedOrders) {
+      targetOrders = preSelectedOrders;
+    }
+    else if (this.selectedOrders.length === 0) { 
+      // 모두 이미 송장발급이 되었다면 작업대상이 없다고 오류메시지 표시
+      if (this.orders.every(x => !this.isNull(x.trackingNumber))) {
+        this.messageHelper.showError(this.translator.get('sales.pendingOrderShipOutList.allOrderHaveTrackingNumbers'));
+      }
+      else {
+        // 발급하지 않은 송장만 신규발급하겠냐고 물어본다.
+        this.confirmIssueOnlyNoTrackingOrders(carrierTrackingsNumbersGroupsId);
+      }
+      return;
+    }
+    else {
+      targetOrders = this.selectedOrders;
+    }
+
+    const availCarrierTrackingsNumbersGroups = this.availCarrierTrackingsNumbersGroups;
+
+    // 선발급 송장번호대가 없을 경우 
+    if (availCarrierTrackingsNumbersGroups.length === 0) {
+      this.notifyNotEnoughCarrierTrackingsNumbersGroups(
+        this.translator.get('sales.pendingOrderShipOutList.confirmNoCarrierTrackingNumbersGroupsMessage')
+        );
+      return;
+    }
+
+    // 송장번호대가 멀티일 경우 선택하게 한다.
+    if (!carrierTrackingsNumbersGroupsId && availCarrierTrackingsNumbersGroups.length > 1) {
+      this.popUpSelectCarrierTrackingsNumbersGroupsDialog(availCarrierTrackingsNumbersGroups, targetOrders);
+      return;
+    }
+
+    let carrierTrackingsNumbersGroup = availCarrierTrackingsNumbersGroups[0];
+
+    if (carrierTrackingsNumbersGroupsId) {
+      carrierTrackingsNumbersGroup = availCarrierTrackingsNumbersGroups.find(x => x.id === carrierTrackingsNumbersGroupsId);
+    }
+
+    // 기존 송장번호가 발급된 주문이 존재할 경우 작업을 진행할지 확인
+    if (targetOrders.find(x => !this.isNull(x.trackingNumber))) {
+      this.confirmFoundPreAssignedCarrierTrackingNumber(carrierTrackingsNumbersGroup, targetOrders);
+      return;
+    }
+    
+    // 송장번호 발급
+    this.preAssignTrackingNumbers(carrierTrackingsNumbersGroup, targetOrders);
+  }
+
+  confirmIssueOnlyNoTrackingOrders(carrierTrackingsNumbersGroupsId: number) {
+    this.alertService.showDialog(
+      this.translator.get('common.title.errorConfirm'),
+      this.translator.get('sales.pendingOrderShipOutList.confirmIssueOnlyNoTrackingOrders'),
+      DialogType.confirm,
+      () => {
+        this.buttonPreAssignTrackingNumbers(carrierTrackingsNumbersGroupsId, this.orders.filter(x => this.isNull(x.trackingNumber)));
+      },
+      () => null,
+      this.translator.get('common.button.yes'),
+      this.translator.get('common.button.no')
+    );
+  }
+
+  preAssignTrackingNumbers(carrierTrackingsNumbersGroup: CarrierTrackingNumbersGroup, targetOrders: OrderShipOut[]) {
+
+    const request = new OrderShipOutTrackingNumberIssue();
+
+    request.carrierId = carrierTrackingsNumbersGroup.carrierId;
+    request.branchId = carrierTrackingsNumbersGroup.branchId;
+    request.companyGroupId = carrierTrackingsNumbersGroup.companyGroupId;
+    request.carrierTrackingIssues = [];
+
+    for (const order of targetOrders) {
+      request.carrierTrackingIssues.push({
+        orderShipOutId: order.id,
+        trackingNumber: order.trackingNumber,
+        trackingNumberUpdatedUtc: order.trackingNumberUpdatedUtc
+      });
+    }    
+
+    this.carrierTrackingNumberRangeService.post('issue/', request).subscribe(
+      response => {
+        this.setIsLoading(false);
+
+        // 업데이트 한다.
+        const carrierTrackingIssues = response.model as CarrierTrackingIssueDto[];
+        for (const tracking of carrierTrackingIssues) {
+          for (const order of targetOrders) {
+            if (tracking.orderShipOutId === order.id) {
+              order.trackingNumber = tracking.trackingNumber;
+              order.trackingNumberUpdatedUtc = tracking.trackingNumberUpdatedUtc;
+              order.carrierId = carrierTrackingsNumbersGroup.carrierId;
+              order.carrierBranchId = carrierTrackingsNumbersGroup.branchId;
+            }
+          }
+        }
+
+        this.messageHelper.showSavedSuccess(false, this.translator.get('common.word.preTrackingNumber'));
+      },
+      error => {
+        this.setIsLoading(false);
+        this.alertService.stopLoadingMessage();
+
+        // 발급할 송장번호가 부족해서 모두 발급받지 못했다면, 송장발급실패했다고 오류를 표시한다.
+        if (error.error && error.error.errorCode === OliveBackEndErrors.DataShortageError) {
+          this.notifyNotEnoughCarrierTrackingsNumbersGroups(
+            this.translator.get('sales.pendingOrderShipOutList.trackingNumbersShortageErrorMessage')
+            );
+        }
+        else {
+          this.messageHelper.showStickySaveFailed(error, false);
+        }
+      }
+    );
+  }
+
+  /**
+   * 기존 송장번호가 발급된 주문이 존재할 경우 작업을 진행할지 확인
+   */
+  confirmFoundPreAssignedCarrierTrackingNumber(carrierTrackingsNumbersGroup: CarrierTrackingNumbersGroup, targetOrders: OrderShipOut[]) {
+    this.alertService.showDialog(
+      this.translator.get('common.title.confirm'),
+      this.translator.get('sales.pendingOrderShipOutList.confirmFoundPreAssignedCarrierTrackingNumberMessage'),
+      DialogType.confirm,
+      () => {
+        this.preAssignTrackingNumbers(carrierTrackingsNumbersGroup, targetOrders);
+      },
+      () => null,
+      this.translator.get('common.button.yes'),
+      this.translator.get('common.button.no')
+    );
+  }
+
+  /**
+   * 선발급 송장번호대가 없을 경우 없다고 알린후 송장번호 등록 페이지를 안내
+   */
+  notifyNotEnoughCarrierTrackingsNumbersGroups(errorMessage: string) {
+    this.alertService.showDialog(
+      this.translator.get('common.title.errorConfirm'),
+      errorMessage,
+      DialogType.confirm,
+      () => {
+        this.router.navigateByUrl('/bases/carrierTrackingNumberRange');
+      },
+      () => null,
+      this.translator.get('common.button.yes'),
+      this.translator.get('common.button.no')
+    );
+  }
+
+  /**
+   * 선택 다이알로그를 팝업
+   * @param availCarrierTrackingsNumbersGroups 
+   */
+  popUpSelectCarrierTrackingsNumbersGroupsDialog(availCarrierTrackingsNumbersGroups: CarrierTrackingNumbersGroup[], targetOrders: OrderShipOut[] = null) {
+    const params: IdName[] = [];
+
+    // 라디오 선택창에 보낼 데이터 만들기
+    for (const group of availCarrierTrackingsNumbersGroups) {
+      const names: string[] = [];
+
+      names.push(group.carrierName);
+
+      if (group.branchId) {
+        names.push(`${this.translator.get('common.word.branch')}: ${group.branchCode}`);
+      }
+
+      if (group.companyGroupId) {
+        names.push(`${this.translator.get('common.word.companyGroup')}: ${group.companyGroupName}`);
+      }      
+
+      names.push(`${this.translator.get('common.word.availTrackingNumbers')}: ${group.availNumbers}`);
+
+      params.push({ id: group.id, name: names.join(',') });
+    }
+    
+    const dialogRef = this.dialog.open(
+      OliveSelectOneDialogComponent,
+      {
+        disableClose: false,
+        panelClass: 'mat-dialog-md',
+        data: {
+          title: this.translator.get('sales.pendingOrderShipOutList.selectCarrierTrackingNumbersGroupsTitle'),
+          description: this.translator.get('sales.pendingOrderShipOutList.selectCarrierTrackingNumbersGroupsDescription'),
+          items: params,
+          oneClick: true
+        } as OliveSelectOneSetting
+      });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.buttonPreAssignTrackingNumbers(result, targetOrders);
+      }
+    });
   }
 
   // TODO : exportForTrackingNumberUpdate

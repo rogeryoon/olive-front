@@ -1,5 +1,5 @@
 ﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" autocomplete="off">
-  <olive-chip-input #brands formControlName="brands" [placeholder]="'Brand'" [dataKey]="'brands'"></olive-chip-input>
-  <olive-chip-input #categories formControlName="categories" [placeholder]="'Category'" [dataKey]="'categories'"></olive-chip-input>
-  <olive-chip-input #tags formControlName="tags" [placeholder]="'Tags'" [dataKey]="'tags'"></olive-chip-input>
+  <olive-chip-input #brands formControlName="brands" [placeholder]="'common.word.branch' | translate" [dataKey]="'brands'"></olive-chip-input>
+  <olive-chip-input #categories formControlName="categories" [placeholder]="'common.word.category' | translate" [dataKey]="'categories'"></olive-chip-input>
+  <olive-chip-input #tags formControlName="tags" [placeholder]="'common.word.tag' | translate" [dataKey]="'tags'"></olive-chip-input>
 </form>

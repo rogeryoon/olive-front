@@ -96,7 +96,7 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
     this.lookupWarehouse.setting = {
       name: 'Warehouse',
       columnType: 'code',
-      dialogTitle: this.translator.get(NavTranslates.Company.warehouse),
+      itemTitle: this.translator.get(NavTranslates.Company.warehouse),
       dataService: this.warehouseService,
       maxSelectItems: 1,
       newComponent: OliveWarehouseManagerComponent,

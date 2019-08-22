@@ -7,15 +7,15 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="w-100-p">
-    <mat-label>{{'common.word.memo' | translate}}</mat-label>
+    <mat-label>{{'common.word.name' | translate}}</mat-label>
     <input matInput name="name" formControlName="name" required maxlength="200">
     <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
     <mat-error *ngIf="hasEntryError('name')">{{errorMessage('name')}}</mat-error>
   </mat-form-field>
 
-  <olive-lookup-host #company formControlName="companyFk" required  [placeholder]="'Company'" [isEditMode]="canAssignCompanyGroups"></olive-lookup-host>
+  <olive-lookup-host #company formControlName="companyFk" [placeholder]="'common.word.company' | translate" [isEditMode]="canAssignCompanyGroups"></olive-lookup-host>
 
-  <olive-lookup-host #branch formControlName="companyMasterBranchFk" required [placeholder]="'Branch'" [isEditMode]="canAssignCompanyGroups"></olive-lookup-host>
+  <olive-lookup-host #branch formControlName="companyMasterBranchFk" [placeholder]="'common.word.branch' | translate" [isEditMode]="canAssignCompanyGroups"></olive-lookup-host>
 
   <mat-checkbox formControlName="activated">Activated</mat-checkbox>
 

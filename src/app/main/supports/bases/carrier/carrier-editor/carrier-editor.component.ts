@@ -72,7 +72,7 @@ export class OliveCarrierEditorComponent extends OliveEntityFormComponent {
   initializeChildComponent() {
     this.lookupStandCarrier.setting = {
       columnType: 'code',
-      dialogTitle: this.translator.get(NavTranslates.Basic.standCarrier),
+      itemTitle: this.translator.get(NavTranslates.Basic.standCarrier),
       dataService: this.standCarrierService,
       maxSelectItems: 1,
       itemType: StandCarrier,

@@ -11,7 +11,7 @@ import { Address } from 'app/core/models/address.model';
 import { OlivePendingOrderShipOutListComponent } from '../orders/order-ship-out-package-lister/pending-order-ship-out-list/pending-order-ship-out-list.component';
 import { applyPrecision, numberFormat } from 'app/core/utils/number-helper';
 import { isoDateString } from 'app/core/utils/date-helper';
-import { camelize } from 'app/core/utils/string-helper';
+import { camelize, getDelimiterSet } from 'app/core/utils/string-helper';
 import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
 
 class ShipItem {
@@ -145,31 +145,31 @@ export class OliveShipperExcelService {
     // M
     columns.push({ headerTitle: 'ConsigneeMemo', type: 'text' } as ExcelColumn);
     // N
-    columns.push({ headerTitle: 'ConsigneeTypeID', type: 'text' } as ExcelColumn);
+    columns.push({ headerTitle: 'ConsigneeTypeID', type: 'number' } as ExcelColumn);
     // O
-    columns.push({ headerTitle: 'ConsigneeCustomTypeID', type: 'text' } as ExcelColumn);
+    columns.push({ headerTitle: 'ConsigneeCustomTypeID', type: 'number' } as ExcelColumn);
     // P
-    columns.push({ headerTitle: 'Volume1', type: 'text' } as ExcelColumn);
+    columns.push({ headerTitle: 'Volume1', type: 'number' } as ExcelColumn);
     // Q
-    columns.push({ headerTitle: 'Volume2', type: 'text' } as ExcelColumn);
+    columns.push({ headerTitle: 'Volume2', type: 'number' } as ExcelColumn);
     // R
-    columns.push({ headerTitle: 'Volume3', type: 'text' } as ExcelColumn);
+    columns.push({ headerTitle: 'Volume3', type: 'number' } as ExcelColumn);
     // S
-    columns.push({ headerTitle: 'Weight', type: 'text' } as ExcelColumn);
+    columns.push({ headerTitle: 'Weight', type: 'number' } as ExcelColumn);
     // T
-    columns.push({ headerTitle: 'WeightTypeID', type: 'text' } as ExcelColumn);
+    columns.push({ headerTitle: 'WeightTypeID', type: 'number' } as ExcelColumn);
     // U
-    columns.push({ headerTitle: 'BoxCount', type: 'text' } as ExcelColumn);
+    columns.push({ headerTitle: 'BoxCount', type: 'number' } as ExcelColumn);
     // V
-    columns.push({ headerTitle: 'PriceTypeID', type: 'text' } as ExcelColumn);
+    columns.push({ headerTitle: 'PriceTypeID', type: 'number' } as ExcelColumn);
     // W
     columns.push({ headerTitle: 'ItemDescription', type: 'text' } as ExcelColumn);
     // X
     columns.push({ headerTitle: 'ItemBrand', type: 'text' } as ExcelColumn);
     // Y
-    columns.push({ headerTitle: 'ItemPrice', type: 'text' } as ExcelColumn);
+    columns.push({ headerTitle: 'ItemPrice', type: 'number' } as ExcelColumn);
     // Z
-    columns.push({ headerTitle: 'ItemQuantity', type: 'text' } as ExcelColumn);
+    columns.push({ headerTitle: 'ItemQuantity', type: 'number' } as ExcelColumn);
     // AA
     columns.push({ headerTitle: 'HSCode', type: 'text' } as ExcelColumn);
 
@@ -266,12 +266,13 @@ export class OliveShipperExcelService {
     const customsTypes = new Set<string>();
     for (const order of box.orderShipOuts) {
       for (const item of order.orderShipOutDetails) {
+        const customsTypeCodes = getDelimiterSet(item.customsTypeCode);
         // 일반 ?
-        if (item.customsTypeCode.includes(generalCustomsTypeName)) {
+        if (customsTypeCodes.has(generalCustomsTypeName)) {
           customsTypes.add(generalCustomsTypeName);
         }
         // 목록 ? 
-        else if (item.customsTypeCode.includes(easyCustomsTypeName)) {
+        else if (customsTypeCodes.has(easyCustomsTypeName)) {
           customsTypes.add(easyCustomsTypeName);
         }
         // 일반/목록 외의 사항은 무시

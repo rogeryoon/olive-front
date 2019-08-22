@@ -12,6 +12,8 @@ import { OrderShipOutPackage } from 'app/main/sales/models/order-ship-out-packag
 import { OlivePendingOrderShipOutPackageListComponent } from '../pending-order-ship-out-package-list/pending-order-ship-out-package-list.component';
 import { OliveOnShare } from 'app/core/interfaces/on-share';
 import { Country } from 'app/main/supports/models/country.model';
+import { CarrierTrackingNumbersGroup } from 'app/main/shippings/models/carrier-tracking-numbers-group.model';
+import { OliveConstants } from 'app/core/classes/constants';
 
 @Component({
   selector: 'olive-order-ship-out-package-lister',
@@ -28,8 +30,9 @@ export class OliveOrderShipOutPackageListerComponent extends OliveEntityFormComp
   protected pendingOrders: OrderShipOut[] = [];
   protected inventories: InventoryWarehouse[] = [];
   protected pendingOrderPackages: OrderShipOutPackage[];
-  protected customsConfigs: Map<string, any>;
-  protected countries: Map<number, Country>;
+  customsConfigs = new Map<string, any>();
+  countries = new Map<number, Country>();
+  carrierTrackingNumbersGroups: CarrierTrackingNumbersGroup[] = [];
 
   @Output() reload = new EventEmitter<any>();
   @Output() packagesCanceled = new EventEmitter();
@@ -64,11 +67,24 @@ export class OliveOrderShipOutPackageListerComponent extends OliveEntityFormComp
     this.pendingOrderPackageList.getMarketSellerContacts();
   }
 
-  setConfigs(customsConfigs: Map<string, any>, countries: Map<number, Country>) {
-    this.customsConfigs = customsConfigs;
-    this.countries = countries;
-    this.pendingOrderList.setConfigs(customsConfigs, countries);
-    this.pendingOrderPackageList.setConfigs(customsConfigs);
+  setConfigs(configType: string, data: any) {
+    switch (configType)
+    {
+      case OliveConstants.listerConfigType.customsConfigs:
+          this.customsConfigs = data;
+      break;
+
+      case OliveConstants.listerConfigType.countries:
+          this.countries = data;
+      break;
+      
+      case OliveConstants.listerConfigType.carrierTrackingNumbersGroups:
+          this.carrierTrackingNumbersGroups = data;
+      break;      
+    }
+    
+    this.pendingOrderList.setConfigs(configType, data);
+    this.pendingOrderPackageList.setConfigs(configType, data);
   }
 
   /**
