@@ -5,7 +5,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { Branch } from '../../../models/branch.model';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-branch-editor',

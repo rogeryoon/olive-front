@@ -6,7 +6,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { CompanyGroup } from '../../../models/company-group.model';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-company-group-editor',

@@ -17,7 +17,7 @@ import { Branch } from 'app/main/supports/models/branch.model';
 import { Carrier } from 'app/main/supports/models/carrier.model';
 import { OliveCarrierService } from 'app/main/supports/services/carrier.service';
 import { OliveCarrierManagerComponent } from '../../carrier/carrier-manager/carrier-manager.component';
-import { numberValidator, rangeValidator } from 'app/core/classes/validators';
+import { numberValidator, rangeValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-carrier-tracking-number-range-editor',

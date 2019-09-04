@@ -220,8 +220,13 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   /**
    * 페이지 Refresh 처리 - Refresh인수를 True로 설정할것
    */
-  onReload() {
-    this.getInventories(true);
-    this.getPendingOrderPackages(true);
+  onReload(event: any) {
+    if (event === OliveConstants.constant.carrierTrackingNumberRangeEventKey) {
+      this.getCarrierTrackingNumbersGroups();
+    }
+    else {
+      this.getInventories(true);
+      this.getPendingOrderPackages(true);
+    }
   }
 }

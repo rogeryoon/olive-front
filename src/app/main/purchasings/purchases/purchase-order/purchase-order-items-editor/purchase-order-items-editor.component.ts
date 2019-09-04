@@ -27,7 +27,7 @@ import { NameValue } from 'app/core/models/name-value';
 import { OlivePurchaseOrderLookupDialogComponent } from '../purchase-order-lookup-dialog/purchase-order-lookup-dialog.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { Currency } from 'app/main/supports/models/currency.model';
-import { numberValidator } from 'app/core/classes/validators';
+import { numberValidator } from 'app/core/validators/general-validators';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 

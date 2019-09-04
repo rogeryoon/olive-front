@@ -8,7 +8,7 @@ import { OliveLookupDialogComponent } from '../../dialogs/lookup-dialog/lookup-d
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-lookup-host',

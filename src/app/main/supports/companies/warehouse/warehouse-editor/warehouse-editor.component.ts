@@ -15,7 +15,7 @@ import { OliveBranchManagerComponent } from '../../branch/branch-manager/branch-
 import { Branch } from '../../../models/branch.model';
 import { OliveBranchService } from '../../../services/branch.service';
 import { AccountService } from '@quick/services/account.service';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-warehouse-editor',

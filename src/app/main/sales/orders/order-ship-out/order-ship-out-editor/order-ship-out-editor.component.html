@@ -1,50 +1,50 @@
-﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
-        <mat-form-field appearance="outline" class="w-100-p">
+﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxFlex="1 0 auto" autocomplete="off">
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <mat-form-field appearance="outline">
             <input matInput name="status" formControlName="status" class="center" [style.color]="statusColor"
                 [readonly]="readOnly">
             <mat-label>{{'common.word.orderStatus'|translate}}</mat-label>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="w-100-p">
+        <mat-form-field appearance="outline">
             <input matInput name="marketSellerCode" formControlName="marketSellerCode" maxlength="100"
                 class="center" [readonly]="readOnly">
             <mat-label>{{'common.word.marketSellerCode'|translate}}</mat-label>
         </mat-form-field>        
 
-        <mat-form-field appearance="outline" class="w-100-p">
+        <mat-form-field appearance="outline">
             <input matInput name="marketOrderNumber" formControlName="marketOrderNumber" maxlength="100"
                 class="center" [readonly]="readOnly">
             <mat-label>{{'common.word.marketOrderNumber'|translate}}</mat-label>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="w-100-p">
+        <mat-form-field appearance="outline">
             <input matInput name="marketOrdererName" formControlName="marketOrdererName" maxlength="100" class="center"
                 [readonly]="readOnly">
             <mat-label>{{'common.word.marketOrdererName'|translate}}</mat-label>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="w-100-p">
+        <mat-form-field appearance="outline">
             <input matInput name="marketOrderDate" formControlName="marketOrderDate" class="center"
                 [readonly]="readOnly">
             <mat-label>{{'common.word.marketOrderDate'|translate}}</mat-label>
         </mat-form-field>
     </div>
-    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
-        <mat-form-field appearance="outline" class="w-100-p">
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <mat-form-field appearance="outline" fxFlex="40">
             <input matInput name="marketOrderDescription" formControlName="marketOrderDescription" maxlength="1000"
                 [readonly]="readOnly">
             <mat-label>{{'common.word.marketOrderDescription'|translate}}</mat-label>
         </mat-form-field>
-        <mat-form-field appearance="outline" class="w-100-p">
+        <mat-form-field appearance="outline" fxFlex="{{item.canceledDate ? 20 : 40}}">
             <input matInput name="memo" formControlName="memo">
             <mat-label>{{'common.word.memo'|translate}}</mat-label>
         </mat-form-field>
-        <mat-form-field *ngIf="item.canceledDate" appearance="outline" class="w-100-p" class="center">
+        <mat-form-field *ngIf="item.canceledDate" appearance="outline" class="center" fxFlex="{{item.canceledDate ? 20 : 40}}">
             <input matInput name="canceledUser" formControlName="canceledUser" [readonly]="readOnly">
             <mat-label>{{'common.word.canceledUser'|translate}}</mat-label>
         </mat-form-field>
-        <div class="w-20-p">
+        <div fxFlex="20">
             <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
         </div>
     </div>

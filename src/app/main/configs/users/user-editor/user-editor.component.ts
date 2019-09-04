@@ -12,7 +12,6 @@ import { Permission } from '@quick/models/permission.model';
 import { AlertService, MessageSeverity } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
 
-import { EqualValidator } from '../../../../core/validators/equal.validator';
 import { OliveLookupDialogComponent } from 'app/core/components/dialogs/lookup-dialog/lookup-dialog.component';
 import { MatDialog } from '@angular/material';
 import { OliveCompanyGroupService } from 'app/main/supports/services/company-group.service';
@@ -21,7 +20,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { OliveBaseComponent } from 'app/core/components/extends/base/base.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { CompanyGroup } from 'app/main/supports/models/company-group.model';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator, equalValidator } from 'app/core/validators/general-validators';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -153,7 +152,7 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
       password: this.formBuilder.group({
         currentPassword: ['', requiredValidator()],
         newPassword: ['', [requiredValidator(), Validators.pattern(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}/)]],
-        confirmPassword: ['', [requiredValidator(), EqualValidator('newPassword')]],
+        confirmPassword: ['', [requiredValidator(), equalValidator('newPassword')]],
       }),
       roles: '',
       fullName: '',
@@ -345,7 +344,7 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
 
   private addNewPasswordValidators() {
     this.newPassword.setValidators([requiredValidator(), Validators.pattern(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}/)]);
-    this.confirmPassword.setValidators([requiredValidator(), EqualValidator('newPassword')]);
+    this.confirmPassword.setValidators([requiredValidator(), equalValidator('newPassword')]);
   }
 
   private unlockUser() {

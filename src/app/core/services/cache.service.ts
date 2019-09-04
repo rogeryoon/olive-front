@@ -68,6 +68,8 @@ export class OliveCacheService {
 
     static getItemsKey = class {
       static country = 'country';
+      static carrier = 'carrier';
+      static marketSeller = 'marketSeller';
     };
   };
 

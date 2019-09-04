@@ -75,6 +75,10 @@ export class OliveConstants {
         static carrierTrackingNumbersGroups = 'carrierTrackingNumbersGroups';
         static countries = 'countries';
     };
+
+    static constant = class {
+        static carrierTrackingNumberRangeEventKey = 'numbersGroup';
+    };
 }
 
 

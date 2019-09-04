@@ -12,7 +12,7 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveCompanyGroupService } from '../../../services/company-group.service';
 import { CompanyGroup } from '../../../models/company-group.model';
 import { OliveCompanyGroupManagerComponent } from '../../company-group/company-group-manager/company-group-manager.component';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-company-editor',

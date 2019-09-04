@@ -70,7 +70,8 @@ export const locale = {
                 'customsRequired': '[{0}]중 1개만 입력하십시오.',
                 'customsOneType': '[{0}]중 1개만 입력하십시오.',
                 'range': '{1}은(는) {0}보다 큰숫자를 입력하여야 합니다.',
-                'rangePlusCurrentValue': '{1}은(는) {0}보다 큰숫자를 입력 / {2}는 {0}와(과){1}의 범위안의 숫자를 입력하세요.'
+                'rangePlusCurrentValue': '{1}은(는) {0}보다 큰숫자를 입력 / {2}는 {0}와(과){1}의 범위안의 숫자를 입력하세요.',
+                'requiredAllOrNoneNames' : '{0}모두 입력하거나 아니면 모두 공란이 되어야 합니다.'
             },
             'title' : {
                 'addNewItem' : '{{title}} 등록',
@@ -136,6 +137,8 @@ export const locale = {
                 'printPickingList' : '피킹 리스트',
                 'exportForTrackingNumberUpdate' : '엑셀 (판매 사이트 송장번호)',
                 'exportForLogistic' : '엑셀 (택배사 인계)',
+                'reIssueTrackingNumber' : '송장번호 발급',
+                'issueTrackingNumber' : '송장번호 재발급'
             },
             'menu': {
                 'menuButton' : '부가 기능',
@@ -290,7 +293,9 @@ export const locale = {
                 'toTrackingNumber': '끝 송장번호',
                 'lastTrackingNumber': '마지막 사용 송장번호',
                 'availTrackingNumbers' : '가용번호',
-                'preTrackingNumber': '선송장'
+                'preTrackingNumber': '선송장',
+                'trackingNumber' : '송장번호',
+                'oldTrackingNumber' : '변경전 송장번호'
             }
         },
         'page': {

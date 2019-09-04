@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { TableDataSource } from 'app/core/classes/table-data-source';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { ProductCustomsTypeCode } from 'app/main/productions/models/product-customs-type-code.model';
-import { customsTypeCodeValidator } from 'app/core/classes/customs-validators';
+import { customsTypeCodeValidator } from 'app/core/validators/customs-validators';
 
 export class OliveProductCustomsTypeCodeDataSource extends TableDataSource {
     customsRules: Map<string, any>;

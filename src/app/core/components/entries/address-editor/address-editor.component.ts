@@ -12,7 +12,7 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { NameValue } from 'app/core/models/name-value';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-address-editor',
@@ -45,7 +45,7 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
       stateProvince: formModel.stateProvince,
       postalCode: formModel.postalCode,
       countryId: this.countries.find(item => item.id === formModel.country).id
-    } as Address);
+    });
   }
 
   buildForm() {

@@ -8,7 +8,7 @@ import { Role } from '@quick/models/role.model';
 import { Permission } from '@quick/models/permission.model';
 import { AlertService, MessageSeverity } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-role-editor',

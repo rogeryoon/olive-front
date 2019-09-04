@@ -14,8 +14,9 @@ import { OliveProductService } from '../../../services/product.service';
 import { OliveProductManagerComponent } from '../../product/product-manager/product-manager.component';
 import { Product } from '../../../models/product.model';
 import { Permission } from '@quick/models/permission.model';
-import { numberValidator, volumeValidator, requiredValidator } from 'app/core/classes/validators';
+import { numberValidator, requiredValidator } from 'app/core/validators/general-validators';
 import { renderVolumeWeight } from 'app/core/utils/shipping-helpers';
+import { volumeValidator } from 'app/core/validators/shipping-validators';
 
 @Component({
   selector: 'olive-product-variant-editor',

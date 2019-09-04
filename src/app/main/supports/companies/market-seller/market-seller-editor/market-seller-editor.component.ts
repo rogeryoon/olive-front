@@ -11,7 +11,7 @@ import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-hos
 import { OliveMarketService } from '../../../services/market.service';
 import { OliveMarketManagerComponent } from '../../market/market-manager/market-manager.component';
 import { Market } from '../../../models/market.model';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-market-seller-editor',

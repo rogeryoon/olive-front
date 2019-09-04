@@ -13,7 +13,7 @@ import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edi
 
 import { OliveProductService } from 'app/main/productions/services/product.service';
 import { ProductCustomsTypeCode } from 'app/main/productions/models/product-customs-type-code.model';
-import { addCustomsTypeErrorByControl, addCustomsTypeErrorMessageByControl } from 'app/core/classes/customs-validators';
+import { customsTypeErrorMessageByControl } from 'app/core/utils/customs-helpers';
 
 @Component({
   selector: 'olive-product-customs-type-codes-editor',
@@ -76,12 +76,12 @@ export class OliveProductCustomsTypeCodesEditorComponent extends OliveEntityEdit
     this.onItemSaved.next(this.dataSource.items);
   }
 
-  hasEntryErrorByControl(control: any): boolean {
+  hasEntryErrorByControl(control: AbstractControl): boolean {
     let hasError = super.hasEntryErrorByControl(control);
 
     if (hasError) { return hasError; }
 
-    hasError = addCustomsTypeErrorByControl(control);
+    hasError = customsTypeErrorMessageByControl(control, this.translator) !== null;
 
     return control.touched && hasError;
   }
@@ -91,7 +91,7 @@ export class OliveProductCustomsTypeCodesEditorComponent extends OliveEntityEdit
 
     if (message) { return message; }
 
-    message = addCustomsTypeErrorMessageByControl(control, this.translator);       
+    message = customsTypeErrorMessageByControl(control, this.translator);       
 
     return message;
   }

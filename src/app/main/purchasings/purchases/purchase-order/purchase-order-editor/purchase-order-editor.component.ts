@@ -17,7 +17,7 @@ import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/warehouse/warehouse-manager/warehouse-manager.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { numberValidator, requiredValidator } from 'app/core/classes/validators';
+import { numberValidator, requiredValidator } from 'app/core/validators/general-validators';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { isMoneyPattern } from 'app/core/utils/string-helper';
 

@@ -6,10 +6,12 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { Product } from '../../../models/product.model';
 import { OliveConstants } from 'app/core/classes/constants';
-import { numberValidator, volumeValidator, requiredValidator } from 'app/core/classes/validators';
+import { numberValidator, requiredValidator } from 'app/core/validators/general-validators';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { renderVolumeWeight } from 'app/core/utils/shipping-helpers';
-import { customsTypeCodeValidator, addCustomsTypeErrorMessageByControl, addCustomsTypeErrorByControl } from 'app/core/classes/customs-validators';
+import { customsTypeCodeValidator } from 'app/core/validators/customs-validators';
+import { volumeValidator } from 'app/core/validators/shipping-validators';
+import { customsTypeErrorMessageByControl } from 'app/core/utils/customs-helpers';
 
 @Component({
   selector: 'olive-product-editor',
@@ -128,7 +130,7 @@ export class OliveProductEditorComponent extends OliveEntityFormComponent {
 
     if (hasError) { return hasError; }
 
-    hasError = addCustomsTypeErrorByControl(control);
+    hasError = customsTypeErrorMessageByControl(control, this.translator) !== null;
 
     return control.touched && hasError;
   }
@@ -138,7 +140,7 @@ export class OliveProductEditorComponent extends OliveEntityFormComponent {
 
     if (message) { return message; }
 
-    message = addCustomsTypeErrorMessageByControl(control, this.translator);       
+    message = customsTypeErrorMessageByControl(control, this.translator);       
 
     return message;
   }

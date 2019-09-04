@@ -3,7 +3,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.model';
 import { TableDataSource } from 'app/core/classes/table-data-source';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { numberValidator, requiredValidator } from 'app/core/classes/validators';
+import { numberValidator, requiredValidator } from 'app/core/validators/general-validators';
 export class OlivePurchaseOrderPaymentDataSource extends TableDataSource {
     constructor(cacheService: OliveCacheService) { 
         super(cacheService); 

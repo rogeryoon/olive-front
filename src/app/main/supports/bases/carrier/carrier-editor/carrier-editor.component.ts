@@ -10,7 +10,7 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveStandCarrierService } from '../../../services/stand-carrier.service';
 import { StandCarrier } from '../../../models/stand-carrier.model';
 import { NameValue } from 'app/core/models/name-value';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-carrier-editor',

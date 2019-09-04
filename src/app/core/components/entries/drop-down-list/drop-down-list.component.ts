@@ -4,7 +4,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl, Validator, Valida
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { DropDownSetting } from 'app/core/interfaces/lister-setting';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator } from 'app/core/validators/general-validators';
 
 
 @Component({

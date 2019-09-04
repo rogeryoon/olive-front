@@ -1,10 +1,8 @@
 import { AbstractControl, ValidatorFn } from '@angular/forms';
 
-import { String } from 'typescript-string-operations';
-
-import { OliveConstants } from './constants';
+import { OliveConstants } from '../classes/constants';
 import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
-import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
+import { trimInput } from './general-validators';
 
 /**
  * 입력 콤마 문자열의 요소들이 모두 option 배열과 매치되는지 검사
@@ -15,7 +13,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
  */
 export function customsTypeCodeValidator(customsRules: Map<string, any>, required: boolean): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-        return isCustomsTypeCodeError(control.value.toString().trim(), customsRules, required);
+        return isCustomsTypeCodeError(trimInput(control), customsRules, required);
     };
 }
 
@@ -100,57 +98,4 @@ export function isCustomsTypeCodeError(inputValue: string, customsRules: Map<str
     }
 
     return null;
-}
-
-/**
- * 통관 타입 유효화 검사 추가
- * @param control 
- * @returns true if invalid
- */
-export function addCustomsTypeErrorByControl(control: any): boolean {
-    let hasError: boolean;
-    if (!control.errors) {
-        return false;
-    }
-
-    if (control.errors.hasOwnProperty('customsMatch')) {
-        hasError = true;
-    }
-    else if (control.errors.hasOwnProperty('customsDuplicated')) {
-        hasError = true;
-    }
-    else if (control.errors.hasOwnProperty('customsRequired')) {
-        hasError = true;
-    }
-    else if (control.errors.hasOwnProperty('customsOneType')) {
-        hasError = true;
-    }
-    return hasError;
-}
-
-/**
- * 통관 타입 유효화 검사 오류 메시지 추가
- * @param control 
- * @param message 
- * @returns 오류메시지
- */
-export function addCustomsTypeErrorMessageByControl(control: AbstractControl, translator: FuseTranslationLoaderService) {
-    let message: string;
-    if (!control.errors) {
-        return null;
-    }
-
-    if (control.errors.hasOwnProperty('customsMatch')) {
-      message = String.Format(translator.get('common.validate.customsMatch'), control.errors.customsMatch);
-    }
-    else if (control.errors.hasOwnProperty('customsDuplicated')) {
-      message = String.Format(translator.get('common.validate.customsDuplicated'), control.errors.customsDuplicated);
-    }
-    else if (control.errors.hasOwnProperty('customsRequired')) {
-      message = String.Format(translator.get('common.validate.customsRequired'), control.errors.customsRequired);
-    }
-    else if (control.errors.hasOwnProperty('customsOneType')) {
-      message = String.Format(translator.get('common.validate.customsOneType'), control.errors.customsOneType);
-    }
-    return message;
 }

@@ -9,7 +9,7 @@ import { OliveUtilities } from 'app/core/classes/utilities';
 import { MarketExcelInterface } from '../../../models/market-excel-interface';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveMarketExcelInterfaceService } from '../../../services/market-excel-interface.service';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-market-editor',

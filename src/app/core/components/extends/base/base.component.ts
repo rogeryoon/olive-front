@@ -111,13 +111,14 @@ export class OliveBaseComponent implements OnInit {
   }
 
   /**
-   * 입력 컨트롤중 모두 입력이 안되었으면 표시하는 메시지
-   * @param inputNames Input User Names
-   * @returns error message 
+   * Multi control names error message
+   * @param messageName 
+   * @param inputNames 
+   * @returns control names error message 
    */
-  protected requiredAnyErrorMessage(inputNames: string[]): string {
+  protected multiControlNamesErrorMessage(messageName: string, inputNames: string[]): string {
     const inputNamesString = inputNames.join();
-    return String.Format(this.translator.get('common.validate.requiredAny'), inputNamesString);
+    return String.Format(this.translator.get(messageName), inputNamesString);
   }
   
   /**
@@ -125,7 +126,7 @@ export class OliveBaseComponent implements OnInit {
    * @param name Control Name
    * @returns error message 
    */
-  protected errorMessage(name: string): string {
+  errorMessage(name: string): string {
     return this.errorMessageByControl(this.getControl(name));
   }
 
@@ -183,6 +184,10 @@ export class OliveBaseComponent implements OnInit {
    */
   hasArrayEntryError(name: string, index: number): boolean {
     return this.hasEntryErrorByControl(this.getArrayFormGroup(index).get(name));
+  }
+
+  hasFormError(errorName: string): boolean {
+    return this.oForm.errors && this.oForm.errors[errorName];
   }
 
   /**

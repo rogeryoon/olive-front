@@ -7,7 +7,7 @@ import { AlertService, MessageSeverity } from '@quick/services/alert.service';
 import { AuthService } from '@quick/services/auth.service';
 import { Utilities } from '@quick/services/utilities';
 import { UserLogin } from '@quick/models/user-login.model';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-login-control',

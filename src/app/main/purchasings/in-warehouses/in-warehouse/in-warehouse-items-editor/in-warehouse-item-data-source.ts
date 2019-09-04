@@ -2,7 +2,7 @@ import { FormGroup } from '@angular/forms';
 
 import { TableDataSource } from 'app/core/classes/table-data-source';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { numberValidator } from 'app/core/classes/validators';
+import { numberValidator } from 'app/core/validators/general-validators';
 import { Currency } from 'app/main/supports/models/currency.model';
 import { InWarehouseItem } from '../../../models/in-warehouse-item.model';
 

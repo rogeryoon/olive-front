@@ -129,4 +129,8 @@ export class OliveOrderShipOutManagerComponent extends OliveEntityEditComponent 
     return this.item && buttonId === OliveConstants.customButton.restoreOrder &&
       !this.item.shipOutDate && this.item.canceledDate;
   }
+
+  get trackingReadOnly(): boolean {
+    return this.item.id && !this.item.shipOutDate && !this.item.canceledDate;
+  }
 }

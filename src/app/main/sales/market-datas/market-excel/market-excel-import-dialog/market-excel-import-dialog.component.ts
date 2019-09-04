@@ -12,7 +12,7 @@ import { OliveMarketSellerService } from 'app/main/supports/services/market-sell
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 import { NameValue } from 'app/core/models/name-value';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-market-excel-import-dialog',
@@ -58,7 +58,7 @@ export class OliveMarketExcelImportDialogComponent extends OliveImportFileDialog
   }
 
   initializeChildComponent() {
-    const itemKey = 'marketSeller';
+    const itemKey = OliveCacheService.cacheKeys.getItemsKey.marketSeller;
     const searchOption = OliveUtilities.searchOption([{name: 'activated', value: true} as NameValue], 'name');
 
     if (!this.cacheService.exist(itemKey)) {

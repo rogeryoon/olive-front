@@ -38,7 +38,7 @@ import { ProductHsCode } from 'app/main/productions/models/product-hs-code.model
 import { OliveProductHsCodesEditorComponent } from 'app/main/productions/products/product/product-hs-codes-editor/product-hs-codes-editor.component';
 import { ProductCustomsTypeCode } from 'app/main/productions/models/product-customs-type-code.model';
 import { Country } from 'app/main/supports/models/country.model';
-import { isCustomsTypeCodeError } from 'app/core/classes/customs-validators';
+import { isCustomsTypeCodeError } from 'app/core/validators/customs-validators';
 import { OliveProductCustomsTypeCodesEditorComponent } from 'app/main/productions/products/product/product-customs-type-codes-editor/product-customs-type-codes-editor.component';
 import { numberFormat } from 'app/core/utils/number-helper';
 import { CarrierTrackingNumbersGroup } from 'app/main/shippings/models/carrier-tracking-numbers-group.model';
@@ -1333,7 +1333,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       request.carrierTrackingIssues.push({
         orderShipOutId: order.id,
         trackingNumber: order.trackingNumber,
-        trackingNumberUpdatedUtc: order.trackingNumberUpdatedUtc
+        oldTrackingNumber: order.oldTrackingNumber
       });
     }    
 
@@ -1341,13 +1341,13 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       response => {
         this.setIsLoading(false);
 
-        // 업데이트 한다.
+        // 업데이트 결과를 적용.
         const carrierTrackingIssues = response.model as CarrierTrackingIssueDto[];
         for (const tracking of carrierTrackingIssues) {
           for (const order of targetOrders) {
             if (tracking.orderShipOutId === order.id) {
               order.trackingNumber = tracking.trackingNumber;
-              order.trackingNumberUpdatedUtc = tracking.trackingNumberUpdatedUtc;
+              order.oldTrackingNumber = tracking.oldTrackingNumber;
               order.carrierId = carrierTrackingsNumbersGroup.carrierId;
               order.carrierBranchId = carrierTrackingsNumbersGroup.branchId;
             }
@@ -1355,6 +1355,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         }
 
         this.messageHelper.showSavedSuccess(false, this.translator.get('common.word.preTrackingNumber'));
+
+        this.reload.emit('numbersGroup');
       },
       error => {
         this.setIsLoading(false);

@@ -16,7 +16,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { CompanyContact } from 'app/core/models/company-contact.model';
 import { OliveCompanyGroupPreferenceService } from 'app/core/services/company-group-preference.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
-import { requiredValidator } from 'app/core/classes/validators';
+import { requiredValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-company-contact-editor',

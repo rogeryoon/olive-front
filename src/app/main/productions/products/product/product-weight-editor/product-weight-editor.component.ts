@@ -3,7 +3,7 @@ import { FormBuilder } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { numberValidator, requiredAnyValidator, requiredValidator } from 'app/core/classes/validators';
+import { numberValidator, requiredAnyValidator, requiredValidator } from 'app/core/validators/general-validators';
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { AlertService } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
@@ -62,7 +62,7 @@ export class OliveProductWeightEditorComponent extends OliveEntityEditComponent 
   }
 
   get hasRequiredAnyError() {
-    return this.oForm.errors && this.oForm.errors['requiredAny'];
+    return this.hasFormError('requiredAny');
   }
 
   get inputRequiredNames(): string[] {

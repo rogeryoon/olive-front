@@ -8,7 +8,7 @@
         1. {{'common.word.productGroupWeight' | translate}}
     </div>
 
-    <mat-error *ngIf="hasRequiredAnyError">{{requiredAnyErrorMessage(inputRequiredNames)}}</mat-error>
+    <mat-error *ngIf="hasRequiredAnyError">{{multiControlNamesErrorMessage('common.validate.requiredAny', inputRequiredNames)}}</mat-error>
     
     <div class="h3 mb-8">1. {{'common.word.productGroupWeight' | translate}}</div>
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">

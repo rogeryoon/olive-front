@@ -102,7 +102,7 @@ export class OliveOrderShipOutPackageListerComponent extends OliveEntityFormComp
     this.packagesCanceled.emit();
   }
 
-  onReload() {
-    this.reload.emit();
+  onReload(event: any) {
+    this.reload.emit(event);
   }
 }

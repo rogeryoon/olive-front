@@ -4,7 +4,7 @@ import { FormBuilder } from '@angular/forms';
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { Currency } from '../../../models/currency.model';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-import { numberValidator, requiredValidator } from 'app/core/classes/validators';
+import { numberValidator, requiredValidator } from 'app/core/validators/general-validators';
 
 @Component({
   selector: 'olive-currency-editor',

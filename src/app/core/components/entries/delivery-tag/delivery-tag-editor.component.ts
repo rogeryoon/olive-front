@@ -3,8 +3,6 @@ import { FormBuilder } from '@angular/forms';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 
-import { OliveCacheService } from 'app/core/services/cache.service';
-import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { DeliveryTag } from 'app/core/models/delivery-tag.model';
 
