@@ -13,6 +13,7 @@ import { applyPrecision, numberFormat } from 'app/core/utils/number-helper';
 import { isoDateString } from 'app/core/utils/date-helper';
 import { camelize, getDelimiterSet } from 'app/core/utils/string-helper';
 import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
+import { OliveOrderHelperService } from './order-helper.service';
 
 class ShipItem {
   productVariantId: number;
@@ -31,7 +32,8 @@ export class OliveShipperExcelService {
 
   constructor
   (
-    private documentService: OliveDocumentService, private translator: FuseTranslationLoaderService
+    private documentService: OliveDocumentService, private translator: FuseTranslationLoaderService,
+    private orderHelperService: OliveOrderHelperService
   ) 
   {
   }
@@ -64,7 +66,7 @@ export class OliveShipperExcelService {
         for (const item of order.orderShipOutDetails) {
           const foundItem = items.find(x => x.productVariantId === item.productVariantId);
           const customsPrice = (item.extra && item.extra.customsPrice || item.customsPrice);
-          const customsWeight = OlivePendingOrderShipOutListComponent.getItemKiloWeight(item);
+          const customsWeight = this.orderHelperService.getItemKiloWeight(item);
           if (foundItem) {
             // 평균값 작성
             const totalAmount = (foundItem.customsPrice * foundItem.quantity) + (customsPrice * item.quantity);

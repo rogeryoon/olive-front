@@ -9,6 +9,7 @@ import { OliveOrderShipOutManagerComponent } from './order-ship-out-manager.comp
 import { OliveOrderShipOutEditorComponent } from '../order-ship-out-editor/order-ship-out-editor.component';
 import { OliveOrderShipOutDetailsEditorComponent } from './order-ship-out-details-editor/order-ship-out-details-editor.component';
 import { OliveOrderShipOutTrackingEditorComponent } from '../order-ship-out-tracking-editor/order-ship-out-tracking-editor.component';
+import { OliveOrderShipOutSplitterManagerComponent } from './order-ship-out-splitter-manager/order-ship-out-splitter-manager.component';
 
 @NgModule({
   imports: [
@@ -21,13 +22,18 @@ import { OliveOrderShipOutTrackingEditorComponent } from '../order-ship-out-trac
     OliveOrderShipOutManagerComponent,
     OliveOrderShipOutEditorComponent,
     OliveOrderShipOutDetailsEditorComponent,
-    OliveOrderShipOutTrackingEditorComponent
+    OliveOrderShipOutTrackingEditorComponent,
+    OliveOrderShipOutSplitterManagerComponent
   ],
   exports: [
     OliveOrderShipOutManagerComponent,
     OliveOrderShipOutDetailsEditorComponent,
-    OliveOrderShipOutTrackingEditorComponent
+    OliveOrderShipOutTrackingEditorComponent,
+    OliveOrderShipOutSplitterManagerComponent
   ],
-  entryComponents: [OliveOrderShipOutManagerComponent]
+  entryComponents: [
+    OliveOrderShipOutManagerComponent,
+    OliveOrderShipOutSplitterManagerComponent
+  ]
 })
 export class OliveOrderShipOutManagerModule { }

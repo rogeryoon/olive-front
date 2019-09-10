@@ -31,7 +31,8 @@ import {
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatStepperModule
+    MatStepperModule,
+    MatBadgeModule
 } from '@angular/material';
 
 @NgModule({
@@ -67,7 +68,8 @@ import {
         MatTabsModule,
         MatToolbarModule,
         MatTooltipModule,
-        MatStepperModule
+        MatStepperModule,
+        MatBadgeModule
     ],
     exports: [
         CdkTableModule,
@@ -101,7 +103,8 @@ import {
         MatTabsModule,
         MatToolbarModule,
         MatTooltipModule,
-        MatStepperModule
+        MatStepperModule,
+        MatBadgeModule
     ],
 })
 export class OliveMaterialModule { }

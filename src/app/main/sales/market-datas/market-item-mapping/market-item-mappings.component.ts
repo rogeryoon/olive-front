@@ -1,5 +1,6 @@
 ﻿import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -36,7 +37,7 @@ const Products = 'products';
 export class OliveMarketItemMappingsComponent extends OliveEntityListComponent {
   excelId: number;
   interfaceName: string;
-  sub: any;
+  sub: Subscription;
 
   constructor(
     translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,

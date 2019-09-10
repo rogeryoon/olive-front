@@ -47,6 +47,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   itemDeleted$ = this.onItemDeleted.asObservable();
   customButtonActionEnded$ = this.onCustomButtonActionEnded.asObservable();
   extraParameter: any = null;
+  enableSaveButton = false;
 
   @Input()
   private inputItem: any = null;
@@ -124,24 +125,38 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
 
   customButtonEnable(buttonId: string): boolean { return true; }
 
+  /**
+   * Determines whether save can
+   * @returns true if save 
+   */
   public canSave(): boolean {
     if (this.isSaving || this.isDeleting) {
       return false;
+    }
+    else if (this.enableSaveButton) {
+      return true;
     }
     else if (this.isNewItem) {
       return true;
     }
     else {
       return this.oForm.dirty || this.subControls.some(control => {
-        return control.oForm.dirty;
+        return control && control.oForm && control.oForm.dirty;
       });
     }
   }
 
+  /**
+   * Determines whether delete can
+   * @returns true if delete 
+   */
   public canDelete(): boolean {
     return !this.isDeleting && !this.isSaving;
   }
 
+  /**
+   * Gets whether is sub forms valid
+   */
   get isSubFormsValid(): boolean {
     this.subControls.forEach(control => {
       control.markAsTouched();
@@ -186,18 +201,28 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
       this.saveData();
     }
     else {
-      this.alertService.showDialog(
-        this.saveConfirmTitle,
-        this.saveConfirmMessage,
-        DialogType.confirm,
-        () => this.saveData(),
-        () => null,
-        this.translator.get('common.button.save'),
-        this.translator.get('common.button.cancel')
-      );
+      this.popUpConfirmSaveDialog();
     }
   }
 
+  /**
+   * Pops up confirm save dialog
+   */
+  popUpConfirmSaveDialog() {
+    this.alertService.showDialog(
+      this.saveConfirmTitle,
+      this.saveConfirmMessage,
+      DialogType.confirm,
+      () => this.saveData(),
+      () => null,
+      this.translator.get('common.button.save'),
+      this.translator.get('common.button.cancel')
+    );    
+  }
+
+  /**
+   * Saves data
+   */
   saveData() {
     const editedItem = this.getEditedItem();
 
@@ -227,11 +252,13 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
     }
   }
 
-  onSaveSuccess(data: any) {
-    this.messageHelper.showSavedSuccess(
-      this.isNewItem,
-      data.name
-    );
+  onSaveSuccess(data: any, showStickyResult = true) {
+    if (showStickyResult) {
+      this.messageHelper.showSavedSuccess(
+        this.isNewItem,
+        data.name
+      );
+    }
 
     this.notifyItemSaved(data);
     

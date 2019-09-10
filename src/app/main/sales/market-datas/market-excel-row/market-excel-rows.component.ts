@@ -1,6 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { String } from 'typescript-string-operations';
 
@@ -47,7 +48,7 @@ const OrderId = 'orderId';
 export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
   excelId: number;
   interfaceName: string;
-  sub: any;
+  sub: Subscription;
   excelRowsStatus: MarketExcelRowsStatus;
 
   constructor(

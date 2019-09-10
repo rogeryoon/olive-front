@@ -42,7 +42,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
 
   tdId: string;
 
-  items: any;
+  items: any[];
   recordsTotal: number;
   sourceItem: any;
 
@@ -238,8 +238,27 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
 
   private updateItem(item: any) {
     if (this.sourceItem) {
-      Object.assign(this.sourceItem, item);
-      this.sourceItem = null;
+      if (Array.isArray(item)) {
+        Object.assign(this.sourceItem, item[0]);
+
+        // id 형식
+        if (item[0].id) {
+          let itemIndex = this.items.findIndex(x => x.id === item[0].id);
+          for (let index = 1; index < item.length; index++) {
+            itemIndex++;
+            this.items.splice(itemIndex, 0, item[index]);
+          }
+        }
+        else { // id 형식이 아니면 그냥 삽입
+          for (let index = 1; index < item.length; index++) {
+            this.items.push(item[index]);
+          }
+        }
+      }
+      else {
+        Object.assign(this.sourceItem, item);
+      }
+      this.sourceItem = null;      
     }
     else {
       this.items.push(item);

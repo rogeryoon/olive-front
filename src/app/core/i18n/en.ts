@@ -48,7 +48,6 @@ export const locale = {
                 'outOfStock' : '{0}건이 재고부족으로 출고가 되지 않았습니다.',
                 'cancelOrderShipOutInventory': '할당된 출고 재고를 취소',
                 'assignOrderShipOutInventory': '재고를 할당하여 출고가능 처리',
-                'duplicatedCarrierTrackingNumberExists': '입력한 송장번호 범위가 다른 데이터 송장번호와 중첩되건을 발견하여 저장할수 없습니다. 확인하고 다시 입력하세요.'
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
@@ -71,7 +70,10 @@ export const locale = {
                 'customsOneType': '[{0}]중 1개만 입력하십시오.',
                 'range': '{1}은(는) {0}보다 큰숫자를 입력하여야 합니다.',
                 'rangePlusCurrentValue': '{1}은(는) {0}보다 큰숫자를 입력 / {2}는 {0}와(과){1}의 범위안의 숫자를 입력하세요.',
-                'requiredAllOrNoneNames' : '{0}모두 입력하거나 아니면 모두 공란이 되어야 합니다.'
+                'requiredAllOrNoneNames' : '{0}모두 입력하거나 아니면 모두 공란이 되어야 합니다.',
+                'wrongTrackingNumber' : '올바른 송장번호 형식이 아닙니다.',
+                'duplicatedCarrierTrackingNumberExists': '입력한 송장번호 범위가 다른 데이터 송장번호와 중첩되어 저장할수 없습니다. 확인하고 다시 입력하세요.',
+                'trackingNumberInvalid': '입력한 송장번호가 다른 주문에 사용하고 있거나 자동발급 송장번호를 임의 수동지정하였습니다. 확인하고 다시 입력하세요.'
             },
             'title' : {
                 'addNewItem' : '{{title}} 등록',
@@ -104,7 +106,8 @@ export const locale = {
                 'chooseItemOrItemsForName': '{0} 선택',
                 'chooseItem': '아래 목록중 하나를 선택하세요.',
                 'chooseItems': '해당하는 모든 아이템 선택하세요.',
-                'currentItem': '-기존 선택:{0}'
+                'currentItem': '-기존 선택:{0}',
+                'saveConfirmTitle' : '최종 저장 확인'
             },
             'button': {
                 'save' : '저장',
@@ -137,8 +140,8 @@ export const locale = {
                 'printPickingList' : '피킹 리스트',
                 'exportForTrackingNumberUpdate' : '엑셀 (판매 사이트 송장번호)',
                 'exportForLogistic' : '엑셀 (택배사 인계)',
-                'reIssueTrackingNumber' : '송장번호 발급',
-                'issueTrackingNumber' : '송장번호 재발급'
+                'reIssueTrackingNumber' : '송장번호 재발급',
+                'issueTrackingNumber' : '송장번호 발급'
             },
             'menu': {
                 'menuButton' : '부가 기능',
@@ -202,7 +205,10 @@ export const locale = {
                 'carrier' : '캐리어',
                 'branch' : '지점',
                 'companyGroup' : '고객사 그룹',
-                'preTrackingNumber': '선송장'
+                'preTrackingNumber': '선송장',
+                'marketOrderNumber': '주문',
+                'trackingNumber' : '송장',
+                'order' : '주문'
             },
             'word': {
                 'branch': '지점',
@@ -295,7 +301,9 @@ export const locale = {
                 'availTrackingNumbers' : '가용번호',
                 'preTrackingNumber': '선송장',
                 'trackingNumber' : '송장번호',
-                'oldTrackingNumber' : '변경전 송장번호'
+                'oldTrackingNumber' : '변경전 송장번호',
+                'splitOrder' : '주문 분할/복사',
+                'splitOrderCount' : '주문 분할/복사 갯수'
             }
         },
         'page': {
@@ -489,7 +497,8 @@ export const locale = {
                 'confirmFoundPreAssignedCarrierTrackingNumberMessage' : '선택한 주문에 이미 등록된 송장번호가 있습니다. 이미 등록된 송장번호를 새 송장번호로 업데이트하겠습니까?',
                 'trackingNumbersShortageErrorMessage': '새로 발급할 송장번호가 부족합니다. 새로 등록하시겠습니까?',
                 'allOrderHaveTrackingNumbers' : '더이상 송장발급을 할 대상이 없습니다.',
-                'confirmIssueOnlyNoTrackingOrders' : '선택한 주문이 없습니다. 발급하지 않은 주문송장만 발급하겠습니까?'
+                'confirmIssueOnlyNoTrackingOrders' : '선택한 주문이 없습니다. 발급하지 않은 주문송장만 발급하겠습니까?',
+                'confirmRefreshAfterSplitOrders' : '분할 배송저장이 완료되었습니다. 출고 리스팅을 모두 갱신합니다.'
             },
             'pendingOrderShipOutPackageList' : {
                 'finalFinishConfirmMessage' : '출고 마감처리 합니다. 확실합니까?',
@@ -513,6 +522,10 @@ export const locale = {
             'marketItemMappings' : {
                 'linkProductMenuJobDoneTitle' : '상품 연결 완료',
                 'linkProductMenuJobDoneDescription' : '상품 연결 완료되어 업로드한 엑셀 페이지로 다시 돌아갑니다.',
+            },
+            'orderShipOutSplitterManager' : {
+                'saveConfirmMessage' : '정말 주문 분할/복사를 저장하시겠습니까?',
+                'saveUnmatchedConfirmMessage' : '원래 등록된 상품 갯수와 저장하려는 상품 총갯수가 일치 하지 않습니다. 그래도 주문 분할/복사를 진행할까요?'
             }
         },
         'purchasing' : {

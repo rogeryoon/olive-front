@@ -121,7 +121,7 @@ export function requiredAnyValidator(controlNames: string[]): ValidatorFn {
  */
 export function requiredAllOrNoneValidator(controlNames: string[]): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-        if (!control.touched) {
+        if (!control.dirty) {
             return null;
         }
 
@@ -131,6 +131,7 @@ export function requiredAllOrNoneValidator(controlNames: string[]): ValidatorFn 
                 containsValueCount++;
             }
         }
+
 
         if (containsValueCount === controlNames.length || containsValueCount === 0) {
             return null;

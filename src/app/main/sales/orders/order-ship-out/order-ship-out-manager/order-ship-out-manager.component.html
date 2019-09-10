@@ -1,5 +1,5 @@
 ﻿<form #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()" class="w-100-p" fxLayout="column" fxFlex>
-    <mat-tab-group>
+    <mat-tab-group [selectedIndex]="startTabIndex">
         <mat-tab>
             <ng-template mat-tab-label>
                 <olive-tab-label [hasError]="main.hasError" [tabTitleId]="'tab.title.order'"></olive-tab-label>

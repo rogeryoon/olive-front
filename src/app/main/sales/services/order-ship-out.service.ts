@@ -4,6 +4,7 @@ import { ConfigurationService } from '@quick/services/configuration.service';
 
 import { OliveEntityService } from 'app/core/services/entity-service';
 import { OliveEntityEndpointService } from 'app/core/services/entity-endpoint.service';
+import { OrderShipOutDetail } from '../models/order-ship-out-detail.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,5 +30,9 @@ export class OliveOrderShipOutService extends OliveEntityService {
 
   restoreOrder(id: number) {
     return this.post(`restoreOrder/${id}`, null);
+  }
+
+  splitOrder(id: number, orderItemsGroups: OrderShipOutDetail[][]) {
+    return this.post(`splitOrder/${id}`, orderItemsGroups);
   }
 }

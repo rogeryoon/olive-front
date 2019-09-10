@@ -29,7 +29,7 @@
                                 <mat-icon>find_replace</mat-icon>
                                 {{'common.button.preAssignTrackingNumber' | translate}}
                             </button>
-                            <button mat-menu-item [disabled]="isloading" (click)="exportForTrackingNumberUpdate()"> 
+                            <button mat-menu-item [disabled]="isloading" (click)="exportForTrackingNumberUpdate()">
                                 <mat-icon>view_list</mat-icon>
                                 {{'common.button.exportForTrackingNumberUpdate' | translate}}
                             </button>
@@ -41,63 +41,74 @@
     </tr>
     <tr>
         <td class="pt-20">
-                <div class="tableFixHead">
-            <table id="ordersTable" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
-                class="hover olive-datatable row-border">
-                <thead>
-                    <tr>
-                        <th>
-                            <input type="checkbox" [disabled]="(orders && !orders.length) || allCheckboxesDisabled"
-                                [(ngModel)]="selectedAll" (change)="selectAll();" />
-                        </th>
-                        <th>{{'common.tableHeader.seller' | translate}}</th>
-                        <th>{{'common.tableHeader.consignee' | translate}}</th>
-                        <th>{{'common.tableHeader.inventory' | translate}}</th>
-                        <th>{{'common.tableHeader.weightKiloGram' | translate}}</th>
-                        <th>{{'common.tableHeader.customsPrice' | translate}}</th>
-                        <th>{{'common.tableHeader.combinedShipping' | translate}}</th>
-                        <th>{{'common.tableHeader.preTrackingNumber' | translate}}</th>                        
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let order of orders">
-                        <td>
-                            <input class="select" name="select" type="checkbox" [(ngModel)]="order.choices[index]"
-                                (change)="checkIfAllSelected()" (click)="checkSameCombinedShippingGroup(order)" [attr.disabled]="hasShipOutProblems(order) ? true : null">
-                        </td>
+            <div class="tableFixHead">
+                <table id="ordersTable" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                    class="hover olive-datatable row-border">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" [disabled]="(orders && !orders.length) || allCheckboxesDisabled"
+                                    [(ngModel)]="selectedAll" (change)="selectAll();" />
+                            </th>
+                            <th>{{'common.tableHeader.seller' | translate}}</th>
+                            <th>{{'common.tableHeader.consignee' | translate}}</th>
+                            <th>{{'common.tableHeader.inventory' | translate}}</th>
+                            <th>{{'common.tableHeader.weightKiloGram' | translate}}</th>
+                            <th>{{'common.tableHeader.customsPrice' | translate}}</th>
+                            <th>{{'common.tableHeader.combinedShipping' | translate}}</th>
+                            <th>{{'common.tableHeader.preTrackingNumber' | translate}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let order of orders">
+                            <td>
+                                <input class="select" name="select" type="checkbox" [(ngModel)]="order.choices[index]"
+                                    (change)="checkIfAllSelected()" (click)="checkSameCombinedShippingGroup(order)"
+                                    [attr.disabled]="hasShipOutProblems(order) ? true : null">
+                            </td>
 
-                        <td class="zoom-in" (click)="editOrder(order)">{{order.orderFk.marketSellerFk.code}}</td>
+                            <td class="zoom-in" (click)="editOrder(order)">{{order.orderFk.marketSellerFk.code}}</td>
 
-                        <td class="zoom-in" (click)="editOrder(order)">{{order.deliveryTagFk.consigneeName}}</td>
+                            <td class="zoom-in" (click)="editOrder(order)">{{order.deliveryTagFk.consigneeName}}</td>
 
-                        <td (click)="switchInventory(order)" 
-                            [ngClass]="{'foreground-red': isShortOrderQuantity(order), 'pointer': switchIconVisible(order)}">
-                            <span *ngFor="let item of order.orderShipOutDetails" matTooltip="{{item.name}}">{{showItem(item)}}&nbsp;</span>
-                            <mat-icon *ngIf="switchIconVisible(order)" class="small-icon" matTooltip="{{getInventorySwitchTooltip(order)}}">{{getInventorySwitchIconName(order)}}</mat-icon>
-                        </td>
+                            <td (click)="switchInventory(order)"
+                                [ngClass]="{'foreground-red': isShortOrderQuantity(order), 'pointer': switchIconVisible(order)}">
+                                <span *ngFor="let item of order.orderShipOutDetails"
+                                    matTooltip="{{item.name}}">{{showItem(item)}}&nbsp;</span>
+                                <mat-icon *ngIf="switchIconVisible(order)" class="small-icon"
+                                    matTooltip="{{getInventorySwitchTooltip(order)}}">
+                                    {{getInventorySwitchIconName(order)}}</mat-icon>
+                            </td>
 
-                        <td class="pointer" (click)="editItemsWeight(order)" [ngClass]="{'foreground-red': foundNullWeight(order)}">
-                            {{showWeight(order)}}
-                        </td>
+                            <td class="pointer" (click)="editItemsWeight(order)"
+                                [ngClass]="{'foreground-red': foundNullWeight(order)}">
+                                {{showWeight(order)}}
+                            </td>
 
-                        <td class="pointer" (click)="editCustomsPrice(order)" [ngClass]="{'foreground-red': foundNullCustomsPrice(order)}">
-                            {{showCustomsPrice(order)}}
-                        </td>                        
+                            <td class="pointer" (click)="editCustomsPrice(order)"
+                                [ngClass]="{'foreground-red': foundNullCustomsPrice(order)}">
+                                {{showCustomsPrice(order)}}
+                            </td>
 
-                        <td [ngClass]="{'foreground-red': order.dupAddressName}">
-                            <mat-icon *ngIf="order.combinedShipAddressName" [ngClass]="{'foreground-blue': order.combinedShipAddressName}">insert_link</mat-icon>
-                            {{showCombinedShipping(order)}}
-                        </td>
+                            <td [ngClass]="{'foreground-red': order.dupAddressName}">
+                                <mat-icon *ngIf="order.combinedShipAddressName"
+                                    [ngClass]="{'foreground-blue': order.combinedShipAddressName}">insert_link
+                                </mat-icon>
+                                {{showCombinedShipping(order)}}
+                            </td>
 
-                        <td class="zoom-in" (click)="editOrder(order)"><mat-icon *ngIf="order.trackingNumber">checked</mat-icon></td>                        
-                    </tr>
-                </tbody>
-                <tfoot *ngIf="orders?.length == 0">
-                    <tr>
-                        <td [attr.colspan]="8" class="no-data-available">{{'common.message.noRecordsFound' | translate}}</td>
-                    </tr>
-                </tfoot>
-            </table>
+                            <td class="zoom-in" (click)="editOrder(order, 1)">
+                                <mat-icon *ngIf="order.trackingNumber">checked</mat-icon>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot *ngIf="orders?.length == 0">
+                        <tr>
+                            <td [attr.colspan]="8" class="no-data-available">
+                                {{'common.message.noRecordsFound' | translate}}</td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </td>
     </tr>

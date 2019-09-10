@@ -212,8 +212,8 @@ export class OliveBaseComponent implements OnInit {
    * @param name 
    * @returns true if entry error 
    */
-  hasEntryError(name: string): boolean {
-    return this.hasEntryErrorByControl(this.getControl(name));
+  hasEntryError(name: string, errorName: string = null): boolean {
+    return this.hasEntryErrorByControl(this.getControl(name), errorName);
   }
 
   /**
@@ -221,13 +221,17 @@ export class OliveBaseComponent implements OnInit {
    * @param control 
    * @returns true if entry error
    */
-  protected hasEntryErrorByControl(control: any): boolean {
+  protected hasEntryErrorByControl(control: any, errorName: string = null): boolean {
     let hasError = false;
 
     if (OliveUtilities.testIsUndefined(control.errors)) {
       return hasError = false;
     }
     else 
+    if (errorName && control.errors.hasOwnProperty(errorName)) {
+      return hasError = true;
+    }
+    else
     if (control.errors.hasOwnProperty('required')) {
       hasError = true;
     }

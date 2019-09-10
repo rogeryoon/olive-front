@@ -63,6 +63,7 @@ export class OliveConstants {
     static customButton = class {
         static cancelOrder = 'cancelOrder';
         static restoreOrder = 'restoreOrder';
+        static splitOrder = 'splitOrder';
     };
 
     static customsRule = class {

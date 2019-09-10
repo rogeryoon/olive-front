@@ -23,6 +23,8 @@ import { OliveConstants } from 'app/core/classes/constants';
 
 const Selected = 'selected';
 const Id = 'id';
+const MarketOrderNumber = 'marketOrderNumber';
+const TrackingNumber = 'trackingNumber';
 const SellerCode = 'sellerCode';
 const OrdererName = 'ordererName';
 const ProductName = 'productName';
@@ -65,18 +67,24 @@ export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
         { data: SellerCode, orderable: false, thName: this.translator.get('common.tableHeader.seller'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 4        
-        { data: OrdererName, orderable: false, thName: this.translator.get('common.tableHeader.orderer'), 
+        { data: MarketOrderNumber, orderable: false, thName: this.translator.get('common.tableHeader.marketOrderNumber'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 5
-        { data: ProductName, orderable: false, thName: this.translator.get('common.tableHeader.itemsName'), 
+        { data: TrackingNumber, orderable: false, thName: this.translator.get('common.tableHeader.trackingNumber'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
-        // 6
-        { data: Quantity, orderable: false, thName: this.translator.get('common.tableHeader.quantity'), 
+        // 6        
+        { data: OrdererName, orderable: false, thName: this.translator.get('common.tableHeader.orderer'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 7
-        { data: Status, orderable: false, thName: this.translator.get('common.tableHeader.status'), 
+        { data: ProductName, orderable: false, thName: this.translator.get('common.tableHeader.itemsName'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 8
+        { data: Quantity, orderable: false, thName: this.translator.get('common.tableHeader.quantity'), 
+          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        // 9
+        { data: Status, orderable: false, thName: this.translator.get('common.tableHeader.status'), 
+          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        // 10
         { data: CreatedUtc, orderable: false, thName: this.translator.get('common.tableHeader.createdUtc'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' }
       ],
@@ -86,7 +94,8 @@ export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
       disabledContextMenus: [ OliveConstants.contextMenu.newItem, OliveConstants.contextMenu.upload ],
       editCustomButtons : [
         {id : OliveConstants.customButton.cancelOrder, iconName: 'cancel', titleId: 'common.word.cancelOrder'},
-        {id : OliveConstants.customButton.restoreOrder, iconName: 'cached', titleId: 'common.word.restoreOrder'}
+        {id : OliveConstants.customButton.restoreOrder, iconName: 'cached', titleId: 'common.word.restoreOrder'},
+        {id : OliveConstants.customButton.splitOrder, iconName: 'call_split', titleId: 'common.word.splitOrder'}
       ]
     };
   }
@@ -102,6 +111,12 @@ export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
       case Id:
         retValue = this.id36(item.id);
         break;
+      case MarketOrderNumber:
+        retValue = item.orderFk.marketOrderNumber;
+        break;
+      case TrackingNumber:
+        retValue = item.trackingNumber;
+        break;        
       case SellerCode:
         retValue = item.orderFk.marketSellerFk.code;
         break;
@@ -173,8 +188,12 @@ export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
         addedClass = OliveConstants.foregroundColor.orange;
       }
     }
-    else if (column.data === ProductName && item.orderFk.itemsChanged) {
-      addedClass = OliveConstants.foregroundColor.red;
+    else if (column.data === ProductName) {
+      if (item.orderFk.itemsChanged) {
+        addedClass = OliveConstants.foregroundColor.red;
+      }
+      
+      addedClass += ' font-size-10';
     }
 
     return super.renderTDClass(item, column, addedClass);

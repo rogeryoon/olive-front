@@ -1,0 +1,16 @@
+﻿<form #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()" class="w-100-p" fxLayout="column"
+    fxFlex>
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
+        <mat-form-field appearance="outline" class="ml-4 w-200">
+            <mat-label>{{'common.word.splitOrderCount'|translate}}</mat-label>
+            <mat-select name="orderCount" formControlName="orderCount" (valueChange)="onOrderCountChange($event)">
+                <mat-option *ngFor="let count of maxOrderCount" [value]="count">{{count}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="mat-card mat-elevation-z4 p-24 mb-20" formArrayName="formArray" *ngFor="let order of oFArray.controls; let index = index">
+        <div [formGroupName]="index">
+            <olive-order-ship-out-details-editor #orderItems formControlName="orderItems" [displayIndex]="index"></olive-order-ship-out-details-editor>
+        </div>
+    </div>
+</form>

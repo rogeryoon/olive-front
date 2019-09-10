@@ -1,7 +1,7 @@
 ﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { String } from 'typescript-string-operations';
 import * as _ from 'lodash';
 
@@ -40,13 +40,13 @@ import { ProductCustomsTypeCode } from 'app/main/productions/models/product-cust
 import { Country } from 'app/main/supports/models/country.model';
 import { isCustomsTypeCodeError } from 'app/core/validators/customs-validators';
 import { OliveProductCustomsTypeCodesEditorComponent } from 'app/main/productions/products/product/product-customs-type-codes-editor/product-customs-type-codes-editor.component';
-import { numberFormat } from 'app/core/utils/number-helper';
 import { CarrierTrackingNumbersGroup } from 'app/main/shippings/models/carrier-tracking-numbers-group.model';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
 import { Router } from '@angular/router';
 import { OliveCarrierTrackingNumberRangeService } from 'app/main/shippings/services/carrier-tracking-number-range.service';
 import { OrderShipOutTrackingNumberIssue } from 'app/main/shippings/models/order-ship-out-tracking-number-issue.model';
 import { CarrierTrackingIssueDto } from 'app/main/shippings/models/carrier-tracking-issue.model';
+import { OliveOrderHelperService } from 'app/main/sales/services/order-helper.service';
 
 class AllocatedQuantity {
   productVariantId: number;
@@ -85,6 +85,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   productCustomsPriceSelectedTrigger: Subject<any> = new Subject();
   productCustomsWeightSelectedTrigger: Subject<any> = new Subject();
 
+  trackingAssignTriggerSubscription: Subscription;
+
   selectedAll: any;
 
   saveOrder: OrderShipOut;
@@ -99,7 +101,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     private messageHelper: OliveMessageHelperService, private orderShipOutService: OliveOrderShipOutService,
     private productService: OliveProductService, private cacheService: OliveCacheService,
     private queryParams: OliveQueryParameterService, private router: Router,
-    private carrierTrackingNumberRangeService: OliveCarrierTrackingNumberRangeService
+    private carrierTrackingNumberRangeService: OliveCarrierTrackingNumberRangeService,
+    private orderHelperService: OliveOrderHelperService
   ) {
     super(
       formBuilder, translator
@@ -231,57 +234,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @returns 합산값
    */
   getOrderShipOutKiloWeightDueLocal(order: OrderShipOut): number {
-    return OlivePendingOrderShipOutListComponent.getOrderShipOutKiloWeightDue(order);
-  }
-
-  /**
-   * 주문 아이템 무게 합을 구한다.
-   * @param order OrderShipOut
-   * @returns 합산값
-   */
-  static getOrderShipOutKiloWeightDue(order: OrderShipOut): number {
-    return order.orderShipOutDetails
-      .map(x => this.getItemKiloWeightLineDue(x))
-      .reduce((a, b) => a + (b || 0), 0);
-  }
-
-  /**
-   * Gets item kilo weight line due
-   * @param item 
-   * @returns item kilo weight line due 
-   */
-  static getItemKiloWeightLineDue(item: OrderShipOutDetail): number {
-    return this.getItemKiloWeight(item) * item.quantity;
-  }
-
-  /**
-   * Gets item weight
-   * @param item OrderShipOutDetail
-   * @returns item weight (Kilo)
-   */
-  static getItemKiloWeight(item: OrderShipOutDetail): number {
-    return this.getOverrideKiloWeight(item) || item.kiloGramWeight;
-  }
-
-  /**
-   * 파운드로 입력된 무게는 킬로그램으로 변환
-   * @param item OrderShipOutDetail
-   * @returns 킬로 무게
-   */
-  static getOverrideKiloWeight(item: OrderShipOutDetail): number {
-    let kiloWeight: number;
-
-    if (item.extra == null || !item.extra.customsWeight) {
-      return null;
-    }
-
-    kiloWeight = item.extra.customsWeight;
-
-    if (item.extra.customsWeightTypeCode === OliveConstants.weightTypeCode.Pound) {
-      kiloWeight = kiloWeight * OliveConstants.unitConversionRate.poundToKilo;
-    }
-
-    return +numberFormat(kiloWeight, 2);
+    return this.orderHelperService.getOrderShipOutKiloWeightDue(order);
   }
 
   /**
@@ -353,6 +306,14 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         response => this.updateProductWeight(param.order, param.editItem, response.model),
         error => this.messageHelper.showLoadFailedSticky(error)
       );
+    });
+
+    // Tracking 번호 트랙잭션이 종료되면
+    this.trackingAssignTriggerSubscription = this.orderHelperService.trackingAssignTrigger.subscribe(param => {
+      this.setIsLoading(false);
+      if (param) {
+        this.reload.emit(param);
+      }
     });
   }
 
@@ -776,7 +737,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     });
   }
 
-  editOrder(order: OrderShipOut) {
+  editOrder(order: OrderShipOut, startTabIndex = 0) {
     this.saveOrder = order;
     const setting = new OliveDialogSetting(
       OliveOrderShipOutManagerComponent,
@@ -784,6 +745,10 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         item: _.cloneDeep(order),
         itemType: OrderShipOut,
         customTitle: `${order.orderFk.marketSellerFk.code} - ${order.orderFk.marketOrdererName} (${this.getOrderCount(order)})`,
+        startTabIndex: startTabIndex,
+        customButtons : [
+          {id : OliveConstants.customButton.splitOrder, iconName: 'call_split', titleId: 'common.word.splitOrder'}
+        ]
       } as OliveOnEdit
     );
 
@@ -797,13 +762,19 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     dialogRef.afterClosed().subscribe(item => {
       if (item) {
-        const backup = _.cloneDeep(this.saveOrder);
-        Object.assign(this.saveOrder, item);
-
-        this.saveOrder.choices = _.cloneDeep(backup.choices);
-        this.saveOrder.dupAddressName = backup.dupAddressName;
-        this.saveOrder.combinedShipAddressName = backup.combinedShipAddressName;
-        this.saveOrder.combinedShipDeliveryInfoSelected = backup.combinedShipDeliveryInfoSelected;
+        // 분할 배송의 경우 Refresh한다.
+        if (Array.isArray(item)) {
+          this.showRefreshDialog(this.translator.get('sales.pendingOrderShipOutList.confirmRefreshAfterSplitOrders'));
+        }
+        else {
+          const backup = _.cloneDeep(this.saveOrder);
+          Object.assign(this.saveOrder, item);
+  
+          this.saveOrder.choices = _.cloneDeep(backup.choices);
+          this.saveOrder.dupAddressName = backup.dupAddressName;
+          this.saveOrder.combinedShipAddressName = backup.combinedShipAddressName;
+          this.saveOrder.combinedShipDeliveryInfoSelected = backup.combinedShipDeliveryInfoSelected;
+        }
       }
     });
   }
@@ -1021,6 +992,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     for (const countryId of Array.from(countryIds.keys())) {
       // 국가 ID를 국가 코드로 변환
       const countryCode = this.countries.get(countryId).code;
+      // TODO: Error Point => countries가 null인 상황
 
       // 해당 국가코드 통관규칙
       key = (OliveConstants.customsRule.ruleCountryCode + countryCode).toUpperCase();
@@ -1157,6 +1129,10 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     });
   }
 
+  /**
+   * 백앤드에 출고 요청
+   * @returns  
+   */
   private listOrders() {
 
     if (!this.getHsCodeEntries()) {
@@ -1265,7 +1241,6 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         this.messageHelper.showError(this.translator.get('sales.pendingOrderShipOutList.allOrderHaveTrackingNumbers'));
       }
       else {
-        // 발급하지 않은 송장만 신규발급하겠냐고 물어본다.
         this.confirmIssueOnlyNoTrackingOrders(carrierTrackingsNumbersGroupsId);
       }
       return;
@@ -1278,7 +1253,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     // 선발급 송장번호대가 없을 경우 
     if (availCarrierTrackingsNumbersGroups.length === 0) {
-      this.notifyNotEnoughCarrierTrackingsNumbersGroups(
+      this.orderHelperService.notifyNotEnoughCarrierTrackingsNumbersGroups(
         this.translator.get('sales.pendingOrderShipOutList.confirmNoCarrierTrackingNumbersGroupsMessage')
         );
       return;
@@ -1303,9 +1278,13 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     }
     
     // 송장번호 발급
-    this.preAssignTrackingNumbers(carrierTrackingsNumbersGroup, targetOrders);
+    this.orderHelperService.preAssignTrackingNumbers(carrierTrackingsNumbersGroup, targetOrders);
   }
 
+  /**
+   * 발급하지 않은 송장만 신규발급하겠냐고 물어본다.
+   * @param carrierTrackingsNumbersGroupsId 
+   */
   confirmIssueOnlyNoTrackingOrders(carrierTrackingsNumbersGroupsId: number) {
     this.alertService.showDialog(
       this.translator.get('common.title.errorConfirm'),
@@ -1320,61 +1299,6 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     );
   }
 
-  preAssignTrackingNumbers(carrierTrackingsNumbersGroup: CarrierTrackingNumbersGroup, targetOrders: OrderShipOut[]) {
-
-    const request = new OrderShipOutTrackingNumberIssue();
-
-    request.carrierId = carrierTrackingsNumbersGroup.carrierId;
-    request.branchId = carrierTrackingsNumbersGroup.branchId;
-    request.companyGroupId = carrierTrackingsNumbersGroup.companyGroupId;
-    request.carrierTrackingIssues = [];
-
-    for (const order of targetOrders) {
-      request.carrierTrackingIssues.push({
-        orderShipOutId: order.id,
-        trackingNumber: order.trackingNumber,
-        oldTrackingNumber: order.oldTrackingNumber
-      });
-    }    
-
-    this.carrierTrackingNumberRangeService.post('issue/', request).subscribe(
-      response => {
-        this.setIsLoading(false);
-
-        // 업데이트 결과를 적용.
-        const carrierTrackingIssues = response.model as CarrierTrackingIssueDto[];
-        for (const tracking of carrierTrackingIssues) {
-          for (const order of targetOrders) {
-            if (tracking.orderShipOutId === order.id) {
-              order.trackingNumber = tracking.trackingNumber;
-              order.oldTrackingNumber = tracking.oldTrackingNumber;
-              order.carrierId = carrierTrackingsNumbersGroup.carrierId;
-              order.carrierBranchId = carrierTrackingsNumbersGroup.branchId;
-            }
-          }
-        }
-
-        this.messageHelper.showSavedSuccess(false, this.translator.get('common.word.preTrackingNumber'));
-
-        this.reload.emit('numbersGroup');
-      },
-      error => {
-        this.setIsLoading(false);
-        this.alertService.stopLoadingMessage();
-
-        // 발급할 송장번호가 부족해서 모두 발급받지 못했다면, 송장발급실패했다고 오류를 표시한다.
-        if (error.error && error.error.errorCode === OliveBackEndErrors.DataShortageError) {
-          this.notifyNotEnoughCarrierTrackingsNumbersGroups(
-            this.translator.get('sales.pendingOrderShipOutList.trackingNumbersShortageErrorMessage')
-            );
-        }
-        else {
-          this.messageHelper.showStickySaveFailed(error, false);
-        }
-      }
-    );
-  }
-
   /**
    * 기존 송장번호가 발급된 주문이 존재할 경우 작업을 진행할지 확인
    */
@@ -1384,7 +1308,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       this.translator.get('sales.pendingOrderShipOutList.confirmFoundPreAssignedCarrierTrackingNumberMessage'),
       DialogType.confirm,
       () => {
-        this.preAssignTrackingNumbers(carrierTrackingsNumbersGroup, targetOrders);
+        this.orderHelperService.preAssignTrackingNumbers(carrierTrackingsNumbersGroup, targetOrders);
       },
       () => null,
       this.translator.get('common.button.yes'),
@@ -1392,61 +1316,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     );
   }
 
-  /**
-   * 선발급 송장번호대가 없을 경우 없다고 알린후 송장번호 등록 페이지를 안내
-   */
-  notifyNotEnoughCarrierTrackingsNumbersGroups(errorMessage: string) {
-    this.alertService.showDialog(
-      this.translator.get('common.title.errorConfirm'),
-      errorMessage,
-      DialogType.confirm,
-      () => {
-        this.router.navigateByUrl('/bases/carrierTrackingNumberRange');
-      },
-      () => null,
-      this.translator.get('common.button.yes'),
-      this.translator.get('common.button.no')
-    );
-  }
-
-  /**
-   * 선택 다이알로그를 팝업
-   * @param availCarrierTrackingsNumbersGroups 
-   */
   popUpSelectCarrierTrackingsNumbersGroupsDialog(availCarrierTrackingsNumbersGroups: CarrierTrackingNumbersGroup[], targetOrders: OrderShipOut[] = null) {
-    const params: IdName[] = [];
-
-    // 라디오 선택창에 보낼 데이터 만들기
-    for (const group of availCarrierTrackingsNumbersGroups) {
-      const names: string[] = [];
-
-      names.push(group.carrierName);
-
-      if (group.branchId) {
-        names.push(`${this.translator.get('common.word.branch')}: ${group.branchCode}`);
-      }
-
-      if (group.companyGroupId) {
-        names.push(`${this.translator.get('common.word.companyGroup')}: ${group.companyGroupName}`);
-      }      
-
-      names.push(`${this.translator.get('common.word.availTrackingNumbers')}: ${group.availNumbers}`);
-
-      params.push({ id: group.id, name: names.join(',') });
-    }
-    
-    const dialogRef = this.dialog.open(
-      OliveSelectOneDialogComponent,
-      {
-        disableClose: false,
-        panelClass: 'mat-dialog-md',
-        data: {
-          title: this.translator.get('sales.pendingOrderShipOutList.selectCarrierTrackingNumbersGroupsTitle'),
-          description: this.translator.get('sales.pendingOrderShipOutList.selectCarrierTrackingNumbersGroupsDescription'),
-          items: params,
-          oneClick: true
-        } as OliveSelectOneSetting
-      });
+    const dialogRef = this.orderHelperService.popUpSelectCarrierTrackingsNumbersGroupsDialog(availCarrierTrackingsNumbersGroups);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -1468,7 +1339,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     this.dtOptions = {
       paging: false,
       ordering: false,
-      dom: ''
+      dom: '',
+      scrollX: true
     };
   }
 
@@ -1476,5 +1348,6 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     this.dtTrigger.unsubscribe();
     this.productCustomsPriceSelectedTrigger.unsubscribe();
     this.productCustomsWeightSelectedTrigger.unsubscribe();
+    this.trackingAssignTriggerSubscription.unsubscribe();
   }
 }

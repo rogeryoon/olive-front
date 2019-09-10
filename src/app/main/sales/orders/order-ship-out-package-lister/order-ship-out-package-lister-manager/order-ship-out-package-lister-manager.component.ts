@@ -107,7 +107,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
       for (const group of this.carrierTrackingNumbersGroups) {
         group.id = id++;
       }
-      this.setConfigs(OliveConstants.listerConfigType.carrierTrackingNumbersGroups, res.model);
+      this.setChildConfigs(OliveConstants.listerConfigType.carrierTrackingNumbersGroups, res.model);
     }, error => {
       this.messageHelper.showLoadFailedSticky(error);
     });
@@ -117,11 +117,11 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     this.cacheService.getCustomsConfigs()
       .then((customsConfigs: Map<string, any>) => {
         this.customsConfigs = customsConfigs;
-        this.setConfigs(OliveConstants.listerConfigType.customsConfigs, customsConfigs);
+        this.setChildConfigs(OliveConstants.listerConfigType.customsConfigs, customsConfigs);
       });
   }
 
-  private setConfigs(configType: string, data: any) {
+  private setChildConfigs(configType: string, data: any) {
     this.orderPackageListers.forEach((lister) => {
       lister.setConfigs(configType, data);
     });
@@ -145,14 +145,19 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     }
   }  
 
+  // TODO : 버그 수정
   private setCountriesConfig(countries: Country[]) {
     this.countries.clear();
+
+    if (!countries || countries.length === 0) {
+      console.error('setCountriesConfig');
+    }
     
     for (const country of countries) {
       this.countries.set(country.id, country);
     }
 
-    this.setConfigs(OliveConstants.listerConfigType.countries, this.countries);
+    this.setChildConfigs(OliveConstants.listerConfigType.countries, this.countries);
   }
 
   private getPendingOrderPackages(refresh: boolean = false) {

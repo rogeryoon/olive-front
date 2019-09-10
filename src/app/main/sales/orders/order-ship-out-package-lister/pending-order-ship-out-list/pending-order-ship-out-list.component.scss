@@ -17,11 +17,16 @@
         td mat-icon {
             vertical-align: middle;
         }
+
+        th {
+            background: white;
+            z-index: 100;
+        }
     }
 
     .tableFixHead {
         overflow: auto;
-        height: 400px;
+        height: 545px;
     }
 
     .tableFixHead thead th {

@@ -17,6 +17,21 @@
         td.left {
             text-align: left;
         }
+
+        th {
+            background: white;
+            z-index: 100;
+        }
+    }
+
+    .tableFixHead {
+        overflow: auto;
+        height: 545px;
+    }
+
+    .tableFixHead thead th {
+        position: sticky;
+        top: 0;
     }
 
     .olive-datatable tr {
@@ -30,5 +45,5 @@
     
     .olive-datatable td.zoom-in {
         cursor: zoom-in ;
-    }    
+    }
 }

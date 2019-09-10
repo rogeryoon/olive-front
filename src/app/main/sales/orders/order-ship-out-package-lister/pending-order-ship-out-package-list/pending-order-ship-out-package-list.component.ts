@@ -32,6 +32,7 @@ import { OrderShipOut } from 'app/main/sales/models/order-ship-out.model';
 import { OlivePendingOrderShipOutListComponent } from '../pending-order-ship-out-list/pending-order-ship-out-list.component';
 import { numberFormat } from 'app/core/utils/number-helper';
 import { OliveConstants } from 'app/core/classes/constants';
+import { OliveOrderHelperService } from 'app/main/sales/services/order-helper.service';
 
 @Component({
   selector: 'olive-pending-order-ship-out-package-list',
@@ -69,7 +70,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     private messageHelper: OliveMessageHelperService, private orderShipOutPackageService: OliveOrderShipOutPackageService,
     private dialog: MatDialog, private alertService: AlertService,
     private shipperExcelService: OliveShipperExcelService, private cacheService: OliveCacheService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef, private orderHelperService: OliveOrderHelperService
   ) {
     super(
       formBuilder, translator
@@ -115,7 +116,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
    * @returns 합산값
    */  
   getOrderShipOutWeightDue(order: OrderShipOut): number {
-    return OlivePendingOrderShipOutListComponent.getOrderShipOutKiloWeightDue(order);
+    return this.orderHelperService.getOrderShipOutKiloWeightDue(order);
   }
 
   get isloading(): boolean {

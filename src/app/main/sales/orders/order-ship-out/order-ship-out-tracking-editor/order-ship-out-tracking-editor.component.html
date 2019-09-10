@@ -2,27 +2,27 @@
     <mat-error *ngIf="hasRequiredAllOrNoneError">{{multiControlNamesErrorMessage('common.validate.requiredAllOrNoneNames', inputRequiredAllOrNoneNames)}}</mat-error>
 
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
-        <mat-form-field appearance="outline" fxFlex="{{oldTrackingNumber ? 25 : 33}}">
+        <mat-form-field appearance="outline" fxFlex="{{hasOldTrackingNumber ? 25 : 33}}">
             <mat-label>{{'common.word.carrier'|translate}}</mat-label>
-            <mat-select name="carrier" formControlName="carrier">
+            <mat-select name="carrier" formControlName="carrier" [attr.disabled]="readonly">
                 <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
                 <mat-option *ngFor="let carrier of carriers" [value]="carrier.id">{{carrier.name}}</mat-option>
             </mat-select>
             <mat-error *ngIf="hasEntryError('carrier')">{{errorMessage('carrier')}}</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" fxFlex="{{oldTrackingNumber ? 25 : 34}}">
+        <mat-form-field appearance="outline" fxFlex="{{hasOldTrackingNumber ? 25 : 34}}">
             <input matInput #trackingNumber name="trackingNumber" formControlName="trackingNumber" maxlength="100"
-                class="center">
+                class="center" [readonly]="readonly">
             <mat-label>{{'common.word.trackingNumber'|translate}}</mat-label>
-            <mat-error *ngIf="hasEntryError('trackingNumber')">{{errorMessage('trackingNumber')}}</mat-error>
+            <mat-error *ngIf="hasEntryError('trackingNumber', 'pattern')">{{'common.validate.wrongTrackingNumber'|translate}}</mat-error>
         </mat-form-field>        
 
-        <div fxFlex="{{oldTrackingNumber ? 25 : 33}}" class="pb-16" *ngIf="false">
-            <button mat-raised-button (click)="issueTrackingNumber()"><mat-icon>autorenew</mat-icon> {{(trackingNumber ? 'common.button.reIssueTrackingNumber' : 'common.button.issueTrackingNumber') | translate}}</button>
+        <div fxFlex="{{hasOldTrackingNumber ? 25 : 33}}" class="pb-16">
+            <button mat-raised-button (click)="buttonIssueTrackingNumber()" [attr.disabled]="readonly || issued"><mat-icon>autorenew</mat-icon> {{(hasTrackingNumber ? 'common.button.reIssueTrackingNumber' : 'common.button.issueTrackingNumber') | translate}}</button>
         </div>
 
-        <mat-form-field appearance="outline" *ngIf="oldTrackingNumber" fxFlex="25">
+        <mat-form-field appearance="outline" *ngIf="hasOldTrackingNumber" fxFlex="25">
             <input matInput #oldTrackingNumber name="oldTrackingNumber" formControlName="oldTrackingNumber" [readonly]="true"  maxlength="100"
                 class="center">
             <mat-label>{{'common.word.oldTrackingNumber'|translate}}</mat-label>

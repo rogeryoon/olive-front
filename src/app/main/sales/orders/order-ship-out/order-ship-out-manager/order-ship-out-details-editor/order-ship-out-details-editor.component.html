@@ -22,7 +22,7 @@
         </ng-container>
 
         <ng-container matColumnDef="productName">
-            <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.itemsName' | translate}}</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>{{orderTitle}}</mat-header-cell>
             <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
                 <mat-form-field fxFlex='95%'>
                     <input type="search" name="inputProductName{{row.ObjId}}" matInput formControlName="productName"

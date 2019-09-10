@@ -1,4 +1,4 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, ValidationErrors, 
   NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator } from '@angular/forms';
 import { MatSnackBar, MatDialog } from '@angular/material';
@@ -44,7 +44,8 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
   dataSource: 
   OliveOrderShipOutDetailDataSource = new OliveOrderShipOutDetailDataSource(this.cacheService, this.productVariantService);
 
-  value: any = null;
+  @Input()
+  displayIndex: number = null;
 
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
@@ -58,6 +59,18 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
   }
 
   initializeChildComponent() {
+  }
+
+  get orderTitle(): string {
+    const itemsName = this.translator.get('common.tableHeader.itemsName');
+
+    if (this.displayIndex == null) {
+      return itemsName;
+    }
+
+    const order = this.translator.get('common.tableHeader.order');
+
+    return `${order} #${this.displayIndex + 1} ${itemsName}`;
   }
 
   get items(): any {
@@ -242,13 +255,13 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
   private _onTouched = () => {};
 
   writeValue(obj: any): void {
-    this.value = obj;
+    const value = obj ? obj.orderShipOutDetails : null;
 
-    if (obj) {
-      this.dataSource.loadItems(obj);
+    if (value) {
+      this.dataSource.loadItems(value);
     }
 
-    if (!obj || obj.length === 0) {
+    if (!value || value.length === 0) {
       this.newItem();      
     }
   }

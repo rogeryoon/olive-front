@@ -13,7 +13,7 @@ export class OrderShipOutPackage extends OliveTrackingAttribute {
     deliveryTagFk?: DeliveryTag;
     deliveryAddressId?: number;
     deliveryAddressFk?: Address;
-    carrierTrackingId?: number;
+    carrierId?: number;
     trackingNumber?: string;
     warehouseId?: number;
     orderCount?: number;

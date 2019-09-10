@@ -77,7 +77,7 @@ export class OliveCarrierTrackingNumberRangeManagerComponent extends OliveEntity
     if (error.error && error.error.errorCode === OliveBackEndErrors.ServerValidationError) {
       this.alertService.showMessageBox(
         this.translator.get('common.title.saveError'),
-        this.translator.get('common.message.duplicatedCarrierTrackingNumberExists')
+        this.translator.get('common.validate.duplicatedCarrierTrackingNumberExists')
       );
     }
     else {
