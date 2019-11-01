@@ -34,7 +34,7 @@ export class OliveBaseComponent implements OnInit {
    * @returns  
    */
   commaNumber(amount: number) {
-    return numberFormat(amount, 0, null);
+    return numberFormat(amount, 0);
   }
 
   /**

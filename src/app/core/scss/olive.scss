@@ -89,7 +89,7 @@
 }
 
 .olive-datatable th,
-td {
+.olive-datatable td {
     text-align: center;
 
     input[type=checkbox] {
@@ -182,4 +182,56 @@ input[type=search]::-webkit-search-cancel-button {
 
 .small-icon {
     transform: scale(0.7);
+}
+
+.vh-100 {
+    height: 100vh;
+}
+
+// https://catalin.red/practical-css3-tables-with-rounded-corners/
+// http://jsfiddle.net/rogeryoon/cympaq3w/3/    
+.roger-table {
+    border-collapse: collapse;
+    overflow-x: auto;
+    display: block;
+
+    thead, tbody {
+        display: block;
+    }
+    tbody {
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    td, th {
+        min-width: 100px;
+        max-width: 100px;
+        overflow:hidden;
+        text-overflow: ellipsis;
+    }
+
+    border: solid #ccc 1px;
+
+    tr:hover {
+        background: #fbf8e9;
+        -o-transition: all 0.1s ease-in-out;
+        -webkit-transition: all 0.1s ease-in-out;
+        -moz-transition: all 0.1s ease-in-out;
+        -ms-transition: all 0.1s ease-in-out;
+        transition: all 0.1s ease-in-out;     
+    }
+    
+    td, th {
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+
+    th {
+        background-color: #dce9f9;
+        -webkit-box-shadow: 0 1px 0 rgba(255,255,255,.8) inset; 
+        -moz-box-shadow:0 1px 0 rgba(255,255,255,.8) inset;  
+        box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;        
+        text-shadow: 0 1px 0 rgba(255,255,255,.5); 
+        text-align: center;
+        z-index: 100;
+    }
 }

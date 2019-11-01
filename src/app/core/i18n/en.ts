@@ -141,7 +141,7 @@ export const locale = {
                 'exportForTrackingNumberUpdate' : '엑셀 (판매 사이트 송장번호)',
                 'exportForLogistic' : '엑셀 (택배사 인계)',
                 'reIssueTrackingNumber' : '송장번호 재발급',
-                'issueTrackingNumber' : '송장번호 발급'
+                'issueTrackingNumber' : '송장번호 발급',
             },
             'menu': {
                 'menuButton' : '부가 기능',
@@ -178,6 +178,7 @@ export const locale = {
                 'interfaceName': '인터페이스',
                 'imported': '상품/주문 연결 완료',
                 'orderNumber':  '마켓 주문 #',
+                'orderNumberShort':  '주문 #',
                 'consignee': '수취인',
                 'quantity' : '수량',
                 'productMatched': '상품 연결',
@@ -512,12 +513,15 @@ export const locale = {
                 'notMatchOriginalValue' : '최초 엑셀에 저장되어 있던 (부분) 문자열이 아닙니다'
             },
             'marketExcelRows' : {
-                'unmappedProductsTitle' : '연결대상 상품수',
+                'unmappedProductsTitle' : '상품연결 등록대상 건수',
                 'linkProductMenu' : '상품 연결',
-                'transferableOrdersTitle' : '주문 전환 대상',
-                'finalTransferOrdersConfirmMessage' : '정말 주문전환 할까요? 확실합니까?',
+                'transferableOrdersTitle' : '주문 전환 대상 건수',
+                'finalTransferOrdersConfirmMessage' : '정말 오픈마켓 엑셀 주문을 시스템 관리주문으로 전환할까요? 확실합니까?',
                 'transferOrdersSuccessMessage' : '{0}건 주문전환이 완료되었습니다.',
                 'transferOrders' : '주문 전환',
+                'goToLinkProduct': '클릭하면 판매처상품을 자체 상품과 연결하는 페이지로 이동합니다.',
+                'goToTransferOrders': '클릭하면 오픈마켓 엑셀 주문을 시스템 관리주문으로 전환합니다.',
+                'transferableOrdersSubCount' : '총 주문 {0}건'
             },
             'marketItemMappings' : {
                 'linkProductMenuJobDoneTitle' : '상품 연결 완료',

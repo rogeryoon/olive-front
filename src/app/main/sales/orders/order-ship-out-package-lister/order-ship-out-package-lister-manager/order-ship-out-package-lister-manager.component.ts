@@ -87,9 +87,11 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   warehouseSelected(warehouses: any[]) {
     this.warehouses = warehouses;
 
-    this.getInventories();
-    this.getPendingOrderPackages();
-    this.getConfigs();
+    setTimeout(() => {
+      this.getInventories();
+      this.getPendingOrderPackages();
+      this.getConfigs();      
+    });
   }
 
   private getConfigs() {
@@ -122,6 +124,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   private setChildConfigs(configType: string, data: any) {
+    
     this.orderPackageListers.forEach((lister) => {
       lister.setConfigs(configType, data);
     });
@@ -145,14 +148,9 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     }
   }  
 
-  // TODO : 버그 수정
   private setCountriesConfig(countries: Country[]) {
     this.countries.clear();
 
-    if (!countries || countries.length === 0) {
-      console.error('setCountriesConfig');
-    }
-    
     for (const country of countries) {
       this.countries.set(country.id, country);
     }
@@ -233,5 +231,14 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
       this.getInventories(true);
       this.getPendingOrderPackages(true);
     }
+  }
+
+  public onTabClick(event: any): void { 
+    $('.roger-table').each(function( index ) {
+      const selector = '#' + $(this).attr('id');
+      $(selector).on('scroll', function () {
+        $(`${selector} > *`).width($(selector).width() + $(selector).scrollLeft());
+      }); 
+    });
   }
 }

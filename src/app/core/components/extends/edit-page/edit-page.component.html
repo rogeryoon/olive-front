@@ -7,7 +7,7 @@
     <div class="center">
 
         <!-- HEADER -->
-        <div class="header accent p-16 p-sm-24 olive-header" fxLayout="column" fxLayoutAlign="start" fxLayout.gt-xs="row"
+        <div *ngIf="!setting.noHeader" class="header accent p-16 p-sm-24 olive-header" fxLayout="column" fxLayoutAlign="start" fxLayout.gt-xs="row"
             fxLayoutAlign.gt-xs="space-between center">
 
             <!-- APP TITLE -->
@@ -21,16 +21,14 @@
                 </div>
             </div>
         </div>
-        <!-- / HEADER -->
+        <!-- HEADER -->
 
-        <div class="content-card mat-white-bg">
-            <div class="content p-24">
-                <div layout="column" layout-xs="column" style="width: 100%;">
-                    <ng-template olivePlaceHolder></ng-template>
-                </div>
+        <div class="content-card mat-white-bg" [ngClass]="{'mt-20': setting.noHeader}"> 
+            <div class="content pl-24 pr-24" [ngClass]="{'pt-24': !setting.noHeader}">
+                <ng-template olivePlaceHolder></ng-template>
             </div>
         </div>
-        <mat-toolbar *ngIf="!setting.disableBottomNavigation">
+        <mat-toolbar class="mt-12" *ngIf="!setting.disableBottomNavigation">
             <mat-toolbar-row>
                 <button *ngIf="canManageItems" [disabled]="!canSave" mat-raised-button (click)="save()" color="accent">
                     <mat-icon>save</mat-icon> {{'common.button.save' | translate}}

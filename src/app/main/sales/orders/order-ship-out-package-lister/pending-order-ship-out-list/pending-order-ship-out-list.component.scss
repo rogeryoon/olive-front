@@ -17,32 +17,68 @@
         td mat-icon {
             vertical-align: middle;
         }
+    }
 
-        th {
-            background: white;
-            z-index: 100;
+    .roger-table {
+        width: 638px;
+
+        tbody {
+            font-size: 11px;
+            height: 650px;
         }
-    }
 
-    .tableFixHead {
-        overflow: auto;
-        height: 545px;
-    }
+        tr {
+            cursor: auto ;
+        }
+        td.pointer {
+            cursor: pointer ;
+        }
+        td.zoom-in {
+            cursor: zoom-in ;
+        }
 
-    .tableFixHead thead th {
-        position: sticky;
-        top: 0;
-    }
+        // 체크
+        td:nth-child(1), th:nth-child(1) {
+            min-width: 50px;
+            max-width: 50px;  
+        }
 
-    .olive-datatable tr {
-        cursor: auto ;
-    }
+        // 판매자
+        td:nth-child(2), th:nth-child(2) {
+            min-width: 90px;
+            max-width: 90px;
+        }
 
-    .olive-datatable td.pointer {
-        cursor: pointer ;
-    }
-    
-    .olive-datatable td.zoom-in {
-        cursor: zoom-in ;
+        // 수취인
+        td:nth-child(3), th:nth-child(3) {
+            min-width: 80px;
+            max-width: 80px;
+        }
+
+        // 무게, 신고가
+        td:nth-child(5), th:nth-child(5),
+        td:nth-child(6), th:nth-child(6) {
+            min-width: 80px;
+            max-width: 80px;
+        }
+
+        // 합배송
+        td:nth-child(7), th:nth-child(7) {
+            min-width: 60px;
+            max-width: 60px;
+        }
+
+        // 선송장
+        td:nth-child(8), th:nth-child(8) {
+            min-width: 80px;
+            max-width: 80px;
+        }
+
+        // 선송장
+        td:nth-child(10), th:nth-child(10) {
+            min-width: 600px;
+            max-width: 600px;
+            text-align: justify;
+        }        
     }
 }

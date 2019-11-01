@@ -29,7 +29,6 @@ import { MarketSeller } from 'app/main/supports/models/market-seller.model';
 import { OliveDocumentService } from 'app/core/services/document.service';
 import { OrderShipOutPackageExtra } from 'app/main/sales/models/order-ship-out-package-extra.model';
 import { OrderShipOut } from 'app/main/sales/models/order-ship-out.model';
-import { OlivePendingOrderShipOutListComponent } from '../pending-order-ship-out-list/pending-order-ship-out-list.component';
 import { numberFormat } from 'app/core/utils/number-helper';
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveOrderHelperService } from 'app/main/sales/services/order-helper.service';
@@ -57,13 +56,12 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   marketSellerContacts = new Map<number, CompanyContact[]>();
   marketSellers = new Map<number, MarketSeller>();
 
-  dtOptions: DataTables.Settings = {};
-  dtTrigger: Subject<any> = new Subject();
-
   selectedAll: any;
 
   @Output() packagesCanceled = new EventEmitter();
   @Output() reload = new EventEmitter<any>();
+
+  tableId = 'right-' + Math.floor(Math.random() * 100000);
 
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
@@ -152,8 +150,11 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     this.packages = packages;
 
     if (!refresh) {
-      this.dtTrigger.next();
+      this.initialize();
     }
+  }
+
+  initialize() {
   }
 
   getMarketSellerContacts() {
@@ -572,15 +573,9 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   }
 
   initializeChildComponent() {
-    this.dtOptions = {
-      paging: false,
-      ordering: false,
-      dom: ''
-    };
   }
 
   cleanUpChildComponent() {
-    this.dtTrigger.unsubscribe();
   }
 }
 

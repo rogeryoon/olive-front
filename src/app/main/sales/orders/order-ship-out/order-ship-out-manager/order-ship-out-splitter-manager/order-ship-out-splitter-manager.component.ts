@@ -124,7 +124,7 @@ export class OliveOrderShipOutSplitterManagerComponent extends OliveEntityEditCo
 
     let editedTotalQuantity = 0;
     for (const group of orderItemsGroups) {
-      editedTotalQuantity += +group.map(x => x.quantity).reduce((a, b) => a + b);
+      editedTotalQuantity += +group.map(x => x.quantity).reduce((a, b) => +a + +b);
     }
 
     if (originalOrderTotalQuantity === editedTotalQuantity) {

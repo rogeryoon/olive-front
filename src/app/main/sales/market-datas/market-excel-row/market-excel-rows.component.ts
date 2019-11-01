@@ -164,7 +164,10 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
               panelClass: 'mat-dialog-md',
               data: { 
                 title: this.translator.get('sales.marketExcelRows.unmappedProductsTitle'),
-                count: this.excelRowsStatus.unmappedProducts
+                numerator: this.excelRowsStatus.unmappedProducts,
+                denominator: this.excelRowsStatus.mappedProducts + this.excelRowsStatus.unmappedProducts,
+                buttonDescription: this.translator.get('sales.marketExcelRows.goToLinkProduct'),
+                subCounts: [{name: this.translator.get('sales.marketExcelRows.transferableOrdersSubCount'), value: this.excelRowsStatus.transferableOrders}]
               } as OliveTaskCountSetting
             });
       
@@ -186,7 +189,8 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
               data: { 
                 title: this.translator.get('sales.marketExcelRows.transferableOrdersTitle'),
                 count: this.excelRowsStatus.transferableOrders,
-                buttonColor: 'primary'
+                buttonColor: 'primary',
+                buttonDescription: this.translator.get('sales.marketExcelRows.goToTransferOrders')
               } as OliveTaskCountSetting
             });
       

@@ -1,20 +1,7 @@
-﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxFlex autocomplete="off">
-    <div>
-        <table>
-            <tr>
-                <td class="w-55-p" style="vertical-align: top">
-                    <olive-pending-order-ship-out-list [warehouse]="warehouse" [index]="index"
-                        (shipOutFinished)="onShipOutFinished($event)" (reload)="onReload($event)">
-                    </olive-pending-order-ship-out-list>
-                </td>
-
-                <td class="w-20"></td>
-
-                <td class="w-45-p" style="vertical-align: top">
-                    <olive-pending-order-ship-out-package-list [warehouse]="warehouse" 
-                        (packagesCanceled)="onShipOutPackageCanceled()"></olive-pending-order-ship-out-package-list>
-                </td>
-            </tr>
-        </table>
-    </div>
+﻿<form [formGroup]="oForm" novalidate fxLayout="row" fxLayoutAlign="start start" fxFlex="1 0 auto" fxLayoutGap="12px" autocomplete="off">
+    <olive-pending-order-ship-out-list [warehouse]="warehouse" [index]="index"
+        (shipOutFinished)="onShipOutFinished($event)" (reload)="onReload($event)" fxFlex="50">
+    </olive-pending-order-ship-out-list>
+    <olive-pending-order-ship-out-package-list [warehouse]="warehouse" 
+        (packagesCanceled)="onShipOutPackageCanceled()" fxFlex="50"></olive-pending-order-ship-out-package-list>
 </form>

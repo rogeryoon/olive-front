@@ -25,6 +25,7 @@ export class EditPageSetting {
   // 저장후 이동할 아이템 리스트 페이지
   itemListPath: string;
   disableBottomNavigation?: boolean;
+  noHeader?: boolean;
 }
 
 @Component({

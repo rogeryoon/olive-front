@@ -1,4 +1,9 @@
 <h1 *ngIf="dialogTitle" class="text-center" mat-dialog-title>{{dialogTitle}}</h1>
 <div mat-dialog-content class="text-center pb-20 pt-10">
-    <button mat-fab color="{{buttonColor}}" class="my-fab" (click)="click()">{{taskCount}}</button>
+    <button *ngIf="hasCountValue" mat-fab color="{{buttonColor}}" class="my-fab" [matTooltip]="setting.buttonDescription"
+        (click)="click()">{{taskCount}}</button>
+    <button *ngIf="!hasCountValue" mat-raised-button color="{{buttonColor}}" class="my-raised"
+        [matTooltip]="setting.buttonDescription" (click)="click()">{{setting.numerator}} /
+        {{setting.denominator}}</button>
 </div>
+<h2 *ngFor="let subCount of setting.subCounts" class="text-center font-weight-900">{{subCountText(subCount)}}</h2>

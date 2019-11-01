@@ -1,5 +1,5 @@
 export class InventoryBalance {
-    // Viriant ID
+    // Variant Id
     id: number; 
     productId: number;
     productName: string;

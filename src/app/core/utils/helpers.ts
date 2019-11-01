@@ -79,4 +79,3 @@ export function filterNotNullNameValues(array: NameValue[]): NameValue[] {
 export function checkIcon(condition: boolean): string {
     return condition ? OliveConstants.iconStatus.checked : OliveConstants.iconStatus.unchecked;
 }
-

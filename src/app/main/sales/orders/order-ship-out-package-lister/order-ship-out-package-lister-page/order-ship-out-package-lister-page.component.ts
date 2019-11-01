@@ -45,7 +45,8 @@ export class OliveOrderShipOutPackageListerPageComponent extends OliveEditPageCo
       iconName: NavIcons.Sales.shipOutPackageLister,
       translateTitleId: NavTranslates.Sales.shipOutPackageLister,
       itemListPath: 'inwarehouses/list',
-      disableBottomNavigation: true
+      disableBottomNavigation: true,
+      noHeader: true
     };
 
     this.setting.item = this.warehouses;
