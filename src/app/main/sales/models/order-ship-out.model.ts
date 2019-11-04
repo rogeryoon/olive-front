@@ -23,7 +23,7 @@ export class OrderShipOut extends OliveTrackingAttribute {
 
     dupAddressName?: string;
     combinedShipAddressName?: string;
-    combinedShipDeliveryInfoSelected?: boolean;
+    combinedShipAddressIsPrimary?: boolean;
 
     choices?: boolean[];
 }

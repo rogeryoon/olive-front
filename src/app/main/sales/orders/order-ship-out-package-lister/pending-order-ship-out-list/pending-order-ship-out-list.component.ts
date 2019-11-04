@@ -65,17 +65,29 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
   parentObject: OliveOnShare;
 
-  // 상품별 부족 수량 정리
+  /**
+   * 상품별 부족 수량 정리
+   */
   shortInventories = new Map<number, number>();
   inventories = new Map<number, number>();
-  // 모든 창고탭에 전역으로 사용됨
+
+  /**
+   * 모든 창고탭에 전역으로 사용됨
+   */
   orders: OrderShipOut[] = [];
-  // 오더에 매칭한 기대수량과 실제 할당 수량을 저장
+
+  /**
+   * 오더에 매칭한 기대수량과 실제 할당 수량을 저장
+   */
   ordersQuantities = new Map<number, AllocatedQuantity[]>();
   countries: Map<number, Country>;
   carrierTrackingNumbersGroups: CarrierTrackingNumbersGroup[];
 
   customsConfigs: Map<string, any>;
+  /**
+   * 같은 묶음배송 그룹 안에서 어떻게 묶였는지를 기록
+   */
+  combinedShippingGroups: Map<string, Array<string>>;
 
   productCustomsPriceSelectedTrigger: Subject<any> = new Subject();
   productCustomsWeightSelectedTrigger: Subject<any> = new Subject();
@@ -158,6 +170,9 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     return this.selectedOrders.length > 0;
   }
 
+  /**
+   * 선택 합배송 주문 총액을 반환
+   */
   get remarkCombinedOrders(): string {
     if (!this.canCombineShip || this.canReleaseCombineShip) { return ''; }
 
@@ -251,12 +266,18 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   }
 
   // 묶음배송 체크 자동선택
-  checkSameCombinedShippingGroup(order: OrderShipOut) {
-    if (!order.choices[this.index] && order.dupAddressName) {
-      this.orders.forEach(item => {
-        if (!item.choices[this.index]
-          && order.dupAddressName === item.dupAddressName && !this.hasShipOutProblems(item)) {
-          item.choices[this.index] = true;
+  checkSameCombinedShippingGroup(thisOrder: OrderShipOut) {
+    if (!thisOrder.choices[this.index] && thisOrder.dupAddressName) {
+      const thisOrderTailedDupAddressName = this.getTailedDupAddressName(thisOrder);
+      this.orders.forEach(order => {
+        if 
+        (
+          !order.choices[this.index]
+          && thisOrderTailedDupAddressName === this.getTailedDupAddressName(order) && 
+          !this.hasShipOutProblems(order)
+        ) 
+        {
+          order.choices[this.index] = true;
         }
       });
     }
@@ -271,6 +292,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    */
   startTable(orders: OrderShipOut[], inventories: InventoryWarehouse[], parentObject: any, refresh: boolean) {
     this.parentObject = parentObject;
+
+    this.combinedShippingGroups = new Map<string, Array<string>>();
 
     this.orders = orders;
 
@@ -411,7 +434,35 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   }
 
   showCombinedShipping(order: OrderShipOut): string {
-    return order.dupAddressName;
+    return this.getTailedDupAddressName(order);
+  }
+
+  combinedShippingSummary(thisOrder: OrderShipOut): string {
+    const thisOrderTailedDupAddressName = this.getTailedDupAddressName(thisOrder);
+    if 
+    (
+      thisOrderTailedDupAddressName.length === 0 || 
+      // 끝에 자리가 숫자로 끝나지 않는 합배송은 아직까지 합배송처리가 안되었기때문에 생략
+      isNaN(+thisOrderTailedDupAddressName[thisOrderTailedDupAddressName.length - 1])
+    ) {
+      return '';
+    }
+
+    let totalAmount = 0;
+    let totalCount = 0;
+    let primaryName = '';
+
+    this.orders.filter(x => this.getTailedDupAddressName(x) === thisOrderTailedDupAddressName).forEach(order => {
+      if (this.getTailedDupAddressName(order) === thisOrderTailedDupAddressName) {
+        totalAmount += this.getOrderShipOutCustomsPriceDue(order);
+        totalCount++;
+      }
+      if (order.combinedShipAddressIsPrimary) {
+        primaryName = order.deliveryTagFk.consigneeName;
+      }
+    });
+
+    return `${primaryName} : Total ${totalCount} Orders(${this.cacheService.showMoney(totalAmount)})`;
   }
 
   /**
@@ -677,10 +728,12 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     const combines = this.selectedOrders;
 
+    // 합배송 취소 처리    
     if (!canCombineShip) {
       combines.forEach(order => {
         order.combinedShipAddressName = null;
-        order.combinedShipDeliveryInfoSelected = false;
+        order.combinedShipAddressIsPrimary = false;
+        this.updateCombinedShippingGroups(false);
       });
       this.unCheckSelectedOrders();
       return;
@@ -717,22 +770,92 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.updateCombinedShippingInfos(result);
+          this.setCombinedShippingPrimaryAddress(result);
         }
       });
     }
     else {
-      this.updateCombinedShippingInfos(combines[0].id);
+      this.setCombinedShippingPrimaryAddress(combines[0].id);
     }
   }
 
-  private updateCombinedShippingInfos(combinedShipDeliveryInfoSelectedOrderId: number) {
+  /**
+   * 같은 합배송 대상중에 나누어 묶인 서브 이름을 반환
+   * @param order 
+   * @returns tailed dup address name 
+   */
+  private getTailedDupAddressName(order: OrderShipOut): string {
+    const orderIdsKeys = this.combinedShippingGroups.get(order.dupAddressName);
+    if (!orderIdsKeys) {
+      if (order.dupAddressName != null) {
+        return order.dupAddressName;
+      }
+      return '';
+    }
+
+    let tailedIndex = 0;
+    for (const orderIdsKey of orderIdsKeys) {
+      tailedIndex++;
+
+      if (orderIdsKey.split(',').find(x => +x === order.id)) {
+        return order.dupAddressName + tailedIndex;
+      }      
+    }
+
+    return order.dupAddressName;
+  }
+
+  /**
+   * 멀티 합배송이 어떻게 등록되었는지를 저장 
+   * - 같은 합배송건중 나누어서 합배송 처리하는것 때문에 관리 필요
+   * @param addMode 
+   */
+  private updateCombinedShippingGroups(addMode: boolean): void {
+    const mapKey = this.selectedOrders[0].dupAddressName;
+
+    const orderIdsKey = this.selectedOrders.map(x => x.id).join();
+
+    let orderIdsKeys = [];
+
+    // 추가
+    if (addMode) {
+      if (this.combinedShippingGroups.has(mapKey)) {
+        orderIdsKeys = this.combinedShippingGroups.get(mapKey);
+      }
+      orderIdsKeys.push(orderIdsKey);
+    }
+    // 삭제
+    else {
+      orderIdsKeys = this.combinedShippingGroups.get(mapKey);
+      if (orderIdsKeys) {
+        const foundIndex = orderIdsKeys.indexOf(orderIdsKey);
+        if (foundIndex !== -1) {
+          orderIdsKeys.splice(foundIndex, 1);
+        }
+      }
+    }
+
+    if (!orderIdsKeys || orderIdsKeys.length === 0) {
+      this.combinedShippingGroups.delete(mapKey);
+    }
+    else {
+      this.combinedShippingGroups.set(mapKey, orderIdsKeys);
+    }
+  }
+
+  /**
+   * 멀티 합배송건중 우선주소를 설정
+   * @param combinedShipDeliveryInfoSelectedOrderId 
+   */
+  private setCombinedShippingPrimaryAddress(combinedShipDeliveryInfoSelectedOrderId: number) {
     this.selectedOrders.forEach(order => {
       order.combinedShipAddressName = order.dupAddressName;
       if (order.id === combinedShipDeliveryInfoSelectedOrderId) {
-        order.combinedShipDeliveryInfoSelected = true;
+        order.combinedShipAddressIsPrimary = true;
       }
     });
+
+    this.updateCombinedShippingGroups(true);
 
     this.unCheckSelectedOrders();
   }
@@ -782,7 +905,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
           this.saveOrder.choices = _.cloneDeep(backup.choices);
           this.saveOrder.dupAddressName = backup.dupAddressName;
           this.saveOrder.combinedShipAddressName = backup.combinedShipAddressName;
-          this.saveOrder.combinedShipDeliveryInfoSelected = backup.combinedShipDeliveryInfoSelected;
+          this.saveOrder.combinedShipAddressIsPrimary = backup.combinedShipAddressIsPrimary;
         }
       }
     });
@@ -1001,7 +1124,6 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     for (const countryId of Array.from(countryIds.keys())) {
       // 국가 ID를 국가 코드로 변환
       const countryCode = this.countries.get(countryId).code;
-      // TODO: Error Point => countries가 null인 상황
 
       // 해당 국가코드 통관규칙
       key = (OliveConstants.customsRule.ruleCountryCode + countryCode).toUpperCase();
@@ -1158,8 +1280,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       newPackagesRequest.push({
         orderShipOutId: order.id,
         warehouseId: this.warehouse.id,
-        combinedShipAddressName: order.combinedShipAddressName,
-        primary: order.combinedShipDeliveryInfoSelected
+        combinedShipAddressName: this.getTailedDupAddressName(order),
+        primary: order.combinedShipAddressIsPrimary
       });
     }
 

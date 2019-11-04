@@ -85,7 +85,7 @@
                 {{showCustomsPrice(order)}}
             </td>
 
-            <td [ngClass]="{'foreground-red': order.dupAddressName}">
+            <td [ngClass]="{'foreground-red': order.dupAddressName}" matTooltip="{{combinedShippingSummary(order)}}">
                 <mat-icon *ngIf="order.combinedShipAddressName"
                     [ngClass]="{'foreground-blue': order.combinedShipAddressName}">insert_link
                 </mat-icon>
