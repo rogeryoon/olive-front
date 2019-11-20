@@ -4,7 +4,7 @@
         <div fxLayout="column" fxLayout.lt-sm="column" fxLayoutGap="1em">
             <mat-form-field appearance="outline" class="w-300">
                 <mat-label>{{'common.word.marketSeller' | translate}}</mat-label>
-                <mat-select name="seller" formControlName="seller" required>
+                <mat-select name="seller" formControlName="seller" (valueChange)="onValueChange($event)" required>
                     <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
                     <mat-option *ngFor="let seller of sellers" [value]="seller.id">{{seller.name}}</mat-option>
                 </mat-select>
@@ -12,12 +12,13 @@
             </mat-form-field>
         </div>
 
+        <input hidden #excelFile type="file" id="excelFile" (change)="onUpload($event)" style="display:none;" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>        
+
         <div *ngIf="!uploadData && sellerSelected" fxLayout="column" fxLayout.lt-sm="column" fxLayoutGap="1em" class="mt-8 mb-8">
             {{translate('common.message.clickFileButton')}}
             <button mat-raised-button (click)="excelFile.click()" [disabled]="showLoadingBar" color="primary" class="w-300 mt-4">
-                <mat-icon>ballot</mat-icon> {{translate('common.button.excelFile')}}
+                <mat-icon>ballot</mat-icon> {{translate('common.button.openFile')}}
             </button>
-            <input #excelFile type="file" id="excelFile" (change)="onUpload($event)" style="display:none;" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
         </div>
 
         <div fxLayout="column" fxLayout.lt-sm="column" fxLayoutGap="1em" class="mt-8 mb-8">

@@ -89,7 +89,7 @@ export class OliveProductsComponent extends OliveEntityListComponent {
         retValue = this.id36(item.id);
         break;
       case Name:
-        retValue = item.name;
+        retValue = item.name === '' && item.variants.length === 1 ? item.variants[0].name : item.name;
         break;
       case MinPrice:
         retValue = item.variants ? minNumber(item.variants.filter(f => f.standPrice).map(x => x.standPrice), item.standPrice ? [item.standPrice] : []) : '';
@@ -106,6 +106,13 @@ export class OliveProductsComponent extends OliveEntityListComponent {
     }
 
     return retValue;
+  }
+
+  getEditorCustomTitle(item: any): string { 
+    if (item && item.variants.length === 1) {
+      return item.variants[0].name;
+    }
+    return super.getEditorCustomTitle(item);
   }
 
   icon(item: Product, columnName: string): boolean {

@@ -266,7 +266,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
             if (!dupProductVariantIdCheckSet.has(pvItem.id)) {
               dupProductVariantIdCheckSet.add(pvItem.id);
               duplicatedIdStrings.push(
-                `${this.id36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trimRight());
+                `${this.id36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
             }
           });
       });
@@ -281,7 +281,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
             discount: 0,
             appliedCost: pvItem.standPrice,
             productVariantId: pvItem.id,
-            name: `${pvItem.productFk.name} ${pvItem.name}`.trimRight()
+            name: `${pvItem.productFk.name} ${pvItem.name}`.trim()
           } as PurchaseOrderItem);
           needToRender = true;
         });

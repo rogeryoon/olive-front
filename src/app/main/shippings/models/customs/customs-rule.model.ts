@@ -9,7 +9,7 @@ export class CustomsWarning {
     oneItemMaxQuantity?: number;
     sameTypeMaxQuantity?: number;
     totalMaxPrice?: number;
-    allowedOtherTypeCodes?: string[];
+    pureTypeCode?: boolean;
 }
 
 export class CustomsRule {

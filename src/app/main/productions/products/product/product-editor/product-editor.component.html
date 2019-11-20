@@ -1,7 +1,7 @@
 ﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxFlex="1 0 auto" autocomplete="off">
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto">
         <mat-form-field appearance="outline" fxFlex="100">
-            <mat-label>{{'common.word.name' | translate}}</mat-label>
+            <mat-label>{{'common.word.productGroupName' | translate}}</mat-label>
             <input matInput name="name" formControlName="name" required maxlength="400">
             <mat-hint align="end">{{getControl('name').value?.length || 0}}/400</mat-hint>
             <mat-error *ngIf="hasEntryError('name')">{{errorMessage('name')}}</mat-error>
@@ -24,7 +24,7 @@
 
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
         <mat-form-field appearance="outline">
-            <mat-label>{{'common.word.price' | translate}}</mat-label>
+            <mat-label>{{'common.word.standPrice' | translate}}</mat-label>
             <input matInput name="standPrice" formControlName="standPrice">
             <mat-error *ngIf="hasEntryError('standPrice')">{{errorMessage('standPrice')}}</mat-error>
         </mat-form-field>

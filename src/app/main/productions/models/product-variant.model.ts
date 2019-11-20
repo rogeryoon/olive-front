@@ -13,6 +13,8 @@ export class ProductVariant extends OliveTrackingAttribute {
     lengthTypeCode: string;
     customsName?: string;
     customsPrice?: number;
+    customsTypeCode: string;
+    hsCode: string;
     activated?: boolean;
     memo: string;
 

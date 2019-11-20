@@ -80,6 +80,10 @@ export class OliveConstants {
     static constant = class {
         static carrierTrackingNumberRangeEventKey = 'numbersGroup';
     };
+
+    static uiConfig = class {
+        static maxErrorMessageLength = 400;
+    };
 }
 
 

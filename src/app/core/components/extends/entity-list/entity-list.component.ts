@@ -108,7 +108,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
    * : virtual - ngOnInit()에서 Call됨
    */
   initializeChildComponent() { }
-  
+
   icon(item: any, columnName: string) { return false; }
   iconName(item: any, columnName: string) { return ''; }
   onTdClick(event: any, item: any, columnName: string): boolean { return false; }
@@ -116,11 +116,11 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   convertModel(model: any): any { return model; }
   getEditDialogReadOnly(item: any): boolean { return this.setting.isEditDialogReadOnly; }
   navigateDetailPage(item: any) { }
-  onDestroy() {}
-  onItemsLoaded() {}
-  onSaved(model: any) {}
+  onDestroy() { }
+  onItemsLoaded() { }
+  onSaved(model: any) { }
   customContextMenu(id: string) { }
-  
+
   renderItem(item: any, columnName: string): string { return ''; }
   renderFooterItem(column: any): string { return ''; }
 
@@ -258,13 +258,13 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
       else {
         Object.assign(this.sourceItem, item);
       }
-      this.sourceItem = null;      
+      this.sourceItem = null;
     }
     else {
       this.items.push(item);
     }
 
-    this.onSaved(item);    
+    this.onSaved(item);
   }
 
   protected editItem(item?: any, event?: any, startTabIndex = 0) {
@@ -379,12 +379,25 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
     this.selectedAll = this.items.every(x => x.selected);
   }
 
+  checkAllIfNoItemsSelected() {
+    if (this.documentService.noItemsSelected) {
+      this.selectedAll = true;      
+      this.selectAll();
+    }
+  }
+
   onExcel() {
-    this.documentService.exportHtmlTableToExcel(this.title, this.setting.dataTableId);
+    this.checkAllIfNoItemsSelected();
+    setTimeout(() => {
+      this.documentService.exportHtmlTableToExcel(this.title, this.setting.dataTableId);
+    });
   }
 
   onPrint() {
-    this.documentService.printTable(this.title, this.setting.dataTableId);
+    this.checkAllIfNoItemsSelected();
+    setTimeout(() => {
+      this.documentService.printTable(this.title, this.setting.dataTableId);
+    });
   }
 
   onUploaded(model: any) {
@@ -432,7 +445,8 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
           dialogRef.componentInstance.closeDialog();
         }
         else if (error.error && error.error.errorCode) {
-          if (error.error.errorCode === OliveBackEndErrors.columnsUnmatchedError) {
+          const errorCode = error.error.errorCode;
+          if (errorCode === OliveBackEndErrors.columnsUnmatchedError) {
             const diffs = error.error.errorMessage.split('/');
             if (diffs.length === 3) {
               errorMessage = String.Format(this.translator.get('common.message.uploadColumnMatchError'), diffs[0], diffs[1], diffs[2]);
@@ -440,6 +454,11 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
             else {
               errorMessage = this.translator.get('common.message.errorOccurred');
             }
+          }
+          else if (errorCode.includes(OliveBackEndErrors.concurrencyError)) {
+            const duplicatedKeysString = error.error.errorCode.replace(OliveBackEndErrors.concurrencyError + '-', '');
+            errorMessage = String.Format(this.translator.get('common.entryError.concurrencyKeyName'), duplicatedKeysString);
+            errorMessage = OliveUtilities.trimString(errorMessage, OliveConstants.uiConfig.maxErrorMessageLength);
           }
           else {
             errorMessage = this.translator.get('common.message.uploadDataSignatureUnregistered');
@@ -462,7 +481,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
     let classString = this.isNull(column.tdClass) ? '' : column.tdClass;
 
     if (!this.setting.editComponent && !this.setting.navigateDetailPage) {
-      classString = 'normal-cursor';
+      classString += ' normal-cursor';
     }
 
     if (addedClass) {
@@ -480,7 +499,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
     return this.setting.columns.filter(c => c.data !== 'selected');
   }
 
-  renderTableClass(): string{
+  renderTableClass(): string {
     return 'hover olive-datatable row-border';
   }
 }

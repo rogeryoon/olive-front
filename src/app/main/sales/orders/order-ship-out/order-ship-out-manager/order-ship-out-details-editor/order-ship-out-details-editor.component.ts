@@ -177,7 +177,7 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
               if (!dupProductVariantIdCheckSet.has(pvItem.id)) {
                 dupProductVariantIdCheckSet.add(pvItem.id);
                 duplicatedIdStrings.push(
-                  `${this.id36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trimRight());
+                  `${this.id36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
               }
             });
         });
@@ -190,7 +190,7 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
             this.dataSource.addNewItem({
               quantity: 1,
               productVariantId: pvItem.id,
-              name: `${pvItem.productFk.name} ${pvItem.name}`.trimRight()
+              name: `${pvItem.productFk.name} ${pvItem.name}`.trim()
             } as OrderShipOutDetail);
             needToRender = true;
           });

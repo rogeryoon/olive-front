@@ -165,7 +165,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
               if (!dupProductVariantIdCheckSet.has(pvItem.id)) {
                 dupProductVariantIdCheckSet.add(pvItem.id);
                 duplicatedIdStrings.push(
-                  `${this.id36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trimRight());
+                  `${this.id36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
               }
             });
         });
@@ -178,7 +178,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
             this.dataSource.addNewItem({
               quantity: 1,
               productVariantId: pvItem.id,
-              productName: `${pvItem.productFk.name} ${pvItem.name}`.trimRight()
+              productName: `${pvItem.productFk.name} ${pvItem.name}`.trim()
             } as MarketItemMappingProductVariant);
             needToRender = true;
           });

@@ -71,6 +71,8 @@ export class OliveProductVariantsComponent extends OliveEntityListComponent {
   renderItem(item: ProductVariant, columnName: string): string {
 
     let retValue = '';
+
+    const isSingleItem = item.productFk.name === '' && item.name.length > 0;
     switch (columnName) {
       case Id:
         retValue = OliveDocumentService.numToAlpha(item.shortId - 1);
@@ -79,10 +81,10 @@ export class OliveProductVariantsComponent extends OliveEntityListComponent {
         retValue = item.code;
         break;
       case GroupName:
-        retValue = item.productFk.name;
+        retValue = isSingleItem ? item.name : item.productFk.name;
         break;
       case Name:
-        retValue = item.name;
+        retValue = isSingleItem ? '' : item.name;
         break;
       case StandPrice:
         retValue = item.standPrice ? item.standPrice.toString() : '';

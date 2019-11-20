@@ -8,6 +8,8 @@ import { AlertService, MessageSeverity, DialogType } from '@quick/services/alert
 import { UserMessage } from '../models/user-message';
 import { Utilities } from '@quick/services/utilities';
 import { OliveBackEndErrors } from '../classes/back-end-errors';
+import { OliveUtilities } from '../classes/utilities';
+import { OliveConstants } from '../classes/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -94,8 +96,9 @@ export class OliveMessageHelperService {
 
         default:
           if (error.error.errorCode.includes(concurrencyError)) {
-            const duplicatedKey = error.error.errorCode.replace(concurrencyError + '-', '');
-            errorMessage.message = String.Format(this.translator.get('common.entryError.concurrencyKeyName'), duplicatedKey);
+            const duplicatedKeysString = error.error.errorCode.replace(concurrencyError + '-', '');
+            errorMessage.message = String.Format(this.translator.get('common.entryError.concurrencyKeyName'), duplicatedKeysString);
+            errorMessage.message = OliveUtilities.trimString(errorMessage.message, OliveConstants.uiConfig.maxErrorMessageLength);
           }
           errorMessage.messageSeverity = MessageSeverity.error;        
           break;

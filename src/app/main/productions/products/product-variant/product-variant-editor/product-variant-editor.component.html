@@ -2,39 +2,54 @@
 
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
         <olive-lookup-host #product formControlName="productFk" [placeholder]="'common.word.productGroup' | translate"
-            [isEditMode]="canAssignItem" fxFlex="80"></olive-lookup-host>
+            [isEditMode]="canAssignItem" [required]="false" fxFlex="{{groupWidth}}"></olive-lookup-host>
 
-        <mat-form-field appearance="outline" fxFlex="20">
-            <mat-label>{{'common.word.productVariantName' | translate}}</mat-label>
+        <mat-form-field appearance="outline" fxFlex="{{itemWidth}}">
+            <mat-label>{{(this.haveMultiVariants ? 'common.word.productVariantName' : 'common.word.generalProductVariantName') | translate}}</mat-label>
             <input matInput name="name" formControlName="name" maxlength="200">
             <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
         </mat-form-field>
     </div>
 
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
-        <mat-form-field appearance="outline" fxFlex="25">
+        <mat-form-field appearance="outline" fxFlex="30">
             <mat-label>{{'common.word.code' | translate}}</mat-label>
             <input matInput name="code" formControlName="code" maxlength="100" class="to-uppercase">
             <mat-hint align="end">{{getControl('code').value?.length || 0}}/100</mat-hint>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" fxFlex="45">
+        <mat-form-field appearance="outline" fxFlex="70">
             <mat-label>{{'common.word.customsItemName' | translate}}</mat-label>
             <input matInput name="customsName" formControlName="customsName" maxlength="400">
             <mat-hint align="end">{{getControl('customsName').value?.length || 0}}/400</mat-hint>
         </mat-form-field>
+    </div>
 
-        <mat-form-field appearance="outline" fxFlex="15">
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <mat-form-field appearance="outline">
             <mat-label>{{'common.word.standPrice' | translate}}</mat-label>
             <input matInput name="standPrice" formControlName="standPrice">
             <mat-error *ngIf="hasEntryError('standPrice')">{{errorMessage('standPrice')}}</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" fxFlex="15">
+        <mat-form-field appearance="outline">
             <mat-label>{{'common.word.customsPrice' | translate}}</mat-label>
             <input matInput name="customsPrice" formControlName="customsPrice">
             <mat-error *ngIf="hasEntryError('customsPrice')">{{errorMessage('customsPrice')}}</mat-error>
         </mat-form-field>
+
+        <mat-form-field appearance="outline" [matTooltip]="errorMessage('customsTypeCode')">
+            <mat-label>{{'common.word.customsTypeCode' | translate}}</mat-label>
+            <input matInput name="customsTypeCode" formControlName="customsTypeCode" maxlength="400">
+            <mat-hint align="end">{{getControl('customsTypeCode').value?.length || 0}}/400</mat-hint>
+            <mat-error *ngIf="hasEntryError('customsTypeCode')">{{errorMessage('customsTypeCode')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>{{'common.word.hsCode' | translate}}</mat-label>
+            <input matInput name="hsCode" formControlName="hsCode" maxlength="100">
+            <mat-hint align="end">{{getControl('hsCode').value?.length || 0}}/100</mat-hint>
+        </mat-form-field>        
     </div>
 
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">

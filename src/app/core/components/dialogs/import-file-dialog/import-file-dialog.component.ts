@@ -1,6 +1,6 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, AfterViewInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
@@ -15,12 +15,12 @@ import { OliveEntityFormComponent } from '../../extends/entity-form/entity-form.
   templateUrl: './import-file-dialog.component.html',
   styleUrls: ['./import-file-dialog.component.scss']
 })
-export class OliveImportFileDialogComponent extends OliveEntityFormComponent implements OnInit {
-
+export class OliveImportFileDialogComponent extends OliveEntityFormComponent implements OnInit, AfterViewInit {
   onSave: Subject<any> = new Subject;
   showLoadingBar = false;
   uploadData: any;
   columnNames = [];
+  openFileDialogWhenDialogCreated = true;
 
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService, 
@@ -34,6 +34,17 @@ export class OliveImportFileDialogComponent extends OliveEntityFormComponent imp
 
   ngOnInit() {
     super.ngOnInit();
+  }
+
+  ngAfterViewInit(): void {
+    if (this.openFileDialogWhenDialogCreated) {
+      this.openFileDialog();  
+    }
+  }
+
+  openFileDialog() {
+    const element: HTMLElement = document.querySelector('input[type="file"]') as HTMLElement;
+    element.click();
   }
 
   translate(key: string) {

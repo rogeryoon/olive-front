@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 import * as Excel from 'exceljs/dist/exceljs.js';
 import * as XLSX from 'xlsx';
@@ -62,18 +62,8 @@ export class OliveDocumentService {
       '</style>';
   }
 
-  private get noItemSelected(): boolean {
-    const selectedCheckboxExists = $('input[name="select"]:checked').length > 0;
-
-    if (!selectedCheckboxExists) {
-      this.alertService.showMessageBox(
-        this.translator.get('common.title.notSelected'),
-        this.translator.get('common.message.selectItem')
-      );
-      return true;
-    }
-
-    return false;
+  get noItemsSelected(): boolean {
+    return $('input[name="select"]:checked').length === 0;
   }
 
   exportExcel(fileName: string, columns: ExcelColumn[], rows: any[], sheetName: string = null) {
@@ -105,7 +95,7 @@ export class OliveDocumentService {
 
         const columnValue = row[column.propertyName];
 
-        if (columnValue) { 
+        if (columnValue) {
           if (column.type === 'number') {
             let amount = parseFloat(columnValue.replace(/,/g, ''));
             if (isNaN(amount)) { amount = 0.0; }
@@ -208,7 +198,7 @@ export class OliveDocumentService {
   }
 
   exportHtmlTableToExcel(fileName: string, tableId: string, selectable = true, summaries: string[] = []): void {
-    if (selectable && this.noItemSelected) { return; }
+    if (selectable && this.noItemsSelected) { console.error('No Items Selected'); return; }
 
     const workbook = new Excel.Workbook();
 
@@ -345,28 +335,37 @@ export class OliveDocumentService {
     printerWindow.close();
   }
 
-  printTable(documentTitle: string, tableId: string): void {
-    if (this.noItemSelected) { return; }
+  printTable(documentTitle: string, tableId: string, selectable = true): void {
+    if (selectable && this.noItemsSelected) { console.error('No Items Selected'); return; }
 
-    const printerWindow = window.open('');
+    const pWindow = window.open('');
 
-    printerWindow.document.write(`<html><head><title>${documentTitle}</title>`);
-    printerWindow.document.write(this.stylesheet);
-    printerWindow.document.write('</head><body>');
-    printerWindow.document.write('<table>');
+    // pWindow.document.onreadystatechange = function () {
+    //   if (this.readyState === 'complete') {
+    //     this.onreadystatechange = function () { };
+    //     pWindow.focus();
+    //     pWindow.print();
+    //     pWindow.close();
+    //   }
+    // }
 
-    printerWindow.document.write('<thead><tr>');
+    pWindow.document.write(`<html><head><title>${documentTitle}</title>`);
+    pWindow.document.write(this.stylesheet);
+    pWindow.document.write('</head><body>');
+    pWindow.document.write('<table>');
+
+    pWindow.document.write('<thead><tr>');
 
     const table = $(`#${tableId}`);
 
     table.children('thead').find('th').each(function (): void {
       if (this.classList.contains('print')) {
-        printerWindow.document.write(`<th>${this.textContent}</th>`);
+        pWindow.document.write(`<th>${this.textContent}</th>`);
       }
     });
-    printerWindow.document.write('</tr></thead>');
+    pWindow.document.write('</tr></thead>');
 
-    printerWindow.document.write('<tbody>');
+    pWindow.document.write('<tbody>');
 
     table.children('tbody').find('tr').each(function (): void {
       const $this = $(this);
@@ -380,7 +379,7 @@ export class OliveDocumentService {
           checkBoxes[0].classList.contains('select') &&
           (<HTMLInputElement>checkBoxes[0]).checked
         ) {
-          printerWindow.document.write('<tr>');
+          pWindow.document.write('<tr>');
 
           $this.children('td').each(function (): void {
             if (this.classList.contains('print')) {
@@ -392,21 +391,24 @@ export class OliveDocumentService {
                 style = ' class="right"';
               }
 
-              printerWindow.document.write(`<td${style}>${this.textContent}</td>`);
+              pWindow.document.write(`<td${style}>${this.textContent}</td>`);
             }
           });
 
-          printerWindow.document.write('</tr>');
+          pWindow.document.write('</tr>');
         }
       }
     });
 
-    printerWindow.document.write('</tbody>');
-    printerWindow.document.write('</table>');
-    printerWindow.document.write('</body></html>');
+    pWindow.document.write('</tbody>');
+    pWindow.document.write('</table>');
+    pWindow.document.write('</body></html>');
+    pWindow.document.close();
 
-    printerWindow.print();
-    printerWindow.close();
+    setTimeout(() => {
+      pWindow.print();
+      pWindow.close();
+    });
   }
 
   public static numToAlpha(num: number): string {
@@ -511,15 +513,11 @@ export class OliveDocumentService {
 
       $(tableIdExp).hide();
 
-      let cnt = 0;
-      sheetNames.forEach(function (y): void {
-        excelJson = XLSX.utils.sheet_to_json(workbook.Sheets[y]);
+      excelJson = XLSX.utils.sheet_to_json(workbook.Sheets[sheetNames[0]]);
 
-        if (excelJson.length > 0 && cnt === 0) {
-          outThis.bindTable(excelJson, tableIdExp);
-          cnt++;
-        }
-      });
+      if (excelJson.length > 0) {
+        outThis.bindTable(excelJson, tableIdExp);
+      }
     };
 
     reader.readAsArrayBuffer(excelFile);

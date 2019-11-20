@@ -45,10 +45,32 @@ import { OliveQueryParameterService } from 'app/core/services/query-parameter.se
 import { Router } from '@angular/router';
 import { OliveCarrierTrackingNumberRangeService } from 'app/main/shippings/services/carrier-tracking-number-range.service';
 import { OliveOrderHelperService } from 'app/main/sales/services/order-helper.service';
+import { Icon } from 'app/core/models/icon';
+import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
 
 class AllocatedQuantity {
   productVariantId: number;
   quantity: number;
+}
+
+// class CustomsTypeStat {
+//   customsTypeQuantities: Map<string, number>;
+//   customsTypePriceDues: Map<string, number>;
+//   customsTypeOneItemMaxQuantities: Map<string, Map<number, number>>;
+
+//   public constructor(init?: CustomsTypeStat) {
+//     Object.assign(this, init);
+//   }
+// }
+
+class CustomsTypeDue {
+  quantity: number;
+  price: number;
+  oneItemMaxQuantities: Map<number, number>;
+
+  public constructor(init?: CustomsTypeDue) {
+        Object.assign(this, init);
+  }  
 }
 
 @Component({
@@ -83,7 +105,12 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   countries: Map<number, Country>;
   carrierTrackingNumbersGroups: CarrierTrackingNumbersGroup[];
 
+
+  /**
+   * 세관 통관 규칙
+   */
   customsConfigs: Map<string, any>;
+
   /**
    * 같은 묶음배송 그룹 안에서 어떻게 묶였는지를 기록
    */
@@ -160,6 +187,10 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
   hasShipOutProblems(order: OrderShipOut): boolean {
     return this.isShortOrderQuantity(order) || this.foundNullWeight(order) || this.foundNullCustomsPrice(order);
+  }
+
+  get allOrders(): OrderShipOut[] {
+    return this.orders;
   }
 
   get selectedOrders(): OrderShipOut[] {
@@ -270,13 +301,12 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     if (!thisOrder.choices[this.index] && thisOrder.dupAddressName) {
       const thisOrderTailedDupAddressName = this.getTailedDupAddressName(thisOrder);
       this.orders.forEach(order => {
-        if 
-        (
+        if
+          (
           !order.choices[this.index]
-          && thisOrderTailedDupAddressName === this.getTailedDupAddressName(order) && 
+          && thisOrderTailedDupAddressName === this.getTailedDupAddressName(order) &&
           !this.hasShipOutProblems(order)
-        ) 
-        {
+        ) {
           order.choices[this.index] = true;
         }
       });
@@ -409,16 +439,34 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   }
 
   isShortOrderQuantity(order: OrderShipOut): boolean {
-    return this.getActualQuantity(order) - this.getOrderQuantity(order) !== 0;
+    return this.getShortOrderQuantity(order) !== 0;
+  }
+
+  getShortOrderQuantity(order: OrderShipOut): number {
+    return this.getActualQuantity(order) - this.getOrderQuantity(order);
+  }
+
+  popUpCustomTypeCodeEntries(): void {
+    this.getCustomsTypeCodeEntries(false);
   }
 
   /**
-   * 널이 있는 무게가 있는지 조사
+   * 국가별 필수 통관코드 입력 체크
+   * @param order 
+   * @returns true if no input custom type code 
+   */
+  foundCustomTypeCodeEntryError(order: OrderShipOut, customsRules: Map<string, any>): boolean {
+    return !this.isNull(order.orderShipOutDetails.find(x => isCustomsTypeCodeError(x.customsTypeCode, customsRules, true) != null));
+  }
+
+  /**
+   * 널이 있는 무게가 존재 체크
    * @param order 
    * @returns true if null weight 
    */
   foundNullWeight(order: OrderShipOut): boolean {
-    return !this.isNull(order.orderShipOutDetails.find(x => x.kiloGramWeight == null && (x.extra == null || x.extra.customsWeight == null)));
+    return !this.isSameCountry(this.warehouse, order) &&
+      !this.isNull(order.orderShipOutDetails.find(x => x.kiloGramWeight == null && (x.extra == null || x.extra.customsWeight == null)));
   }
 
   showWeight(order: OrderShipOut): string {
@@ -439,9 +487,9 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
   combinedShippingSummary(thisOrder: OrderShipOut): string {
     const thisOrderTailedDupAddressName = this.getTailedDupAddressName(thisOrder);
-    if 
-    (
-      thisOrderTailedDupAddressName.length === 0 || 
+    if
+      (
+      thisOrderTailedDupAddressName.length === 0 ||
       // 끝에 자리가 숫자로 끝나지 않는 합배송은 아직까지 합배송처리가 안되었기때문에 생략
       isNaN(+thisOrderTailedDupAddressName[thisOrderTailedDupAddressName.length - 1])
     ) {
@@ -715,7 +763,220 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @returns true if null price 
    */
   foundNullCustomsPrice(order: OrderShipOut): boolean {
-    return !this.isNull(order.orderShipOutDetails.find(x => x.customsPrice == null && (x.extra == null || x.extra.customsPrice == null)));
+    return !this.isSameCountry(this.warehouse, order) &&
+      !this.isNull(order.orderShipOutDetails.find(x => x.customsPrice == null && (x.extra == null || x.extra.customsPrice == null)));
+  }
+
+  getShipOutStatusIcons(order: OrderShipOut): Icon[] {
+    const icons = new Array<Icon>();
+
+    const shortageQuantity = this.getShortOrderQuantity(order);
+
+    if (shortageQuantity !== 0) {
+      icons.push({
+        name: 'shopping_cart',
+        tooltip: `${this.translator.get('common.message.outOfStockStatus')} (${shortageQuantity})`
+      });
+    }
+
+    if (this.foundNullWeight(order)) {
+      icons.push({
+        name: 'speed',
+        tooltip: this.translator.get('common.message.noWeightInputStatus')
+      });
+    }
+
+    if (this.foundNullCustomsPrice(order)) {
+      icons.push({
+        name: 'attach_money',
+        tooltip: this.translator.get('common.message.noProductPriceInput')
+      });
+
+      return icons;
+    }
+
+    if (this.isSameCountry(this.warehouse, order)) {
+      return icons;
+    }
+
+    const countryCustomRule = this.getCountryRules(new Set([order.deliveryAddressFk.countryId]));
+
+    if (this.foundCustomTypeCodeEntryError(order, countryCustomRule)) {
+      icons.push({
+        name: 'comment',
+        tooltip: this.translator.get('common.message.customsTypeEntryStatus')
+      });
+
+      return icons;
+    }
+
+    const customsWarningIcon = this.getCustomsWarningIcon(order);
+    if (customsWarningIcon) {
+      icons.push(customsWarningIcon);
+    }
+
+    return icons;
+  }
+
+  getCustomsWarningIcon(thisOrder: OrderShipOut): Icon {
+    const countryCode = this.countries.get(thisOrder.deliveryAddressFk.countryId).code;
+    const customsRuleKey = (OliveConstants.customsRule.ruleCountryCode + countryCode).toUpperCase();
+    const customsRule = this.customsConfigs.get(customsRuleKey) as CustomsRule;
+    const groupCustomsTypeMap = new Map<string, Set<string>>();
+
+    for (const customsType of customsRule.types.filter(x => x.groupCode !== null)) {
+      if (groupCustomsTypeMap.has(customsType.groupCode)) {
+        const codeSet = groupCustomsTypeMap.get(customsType.groupCode);
+        codeSet.add(customsType.code);
+        groupCustomsTypeMap.set(customsType.groupCode, codeSet);
+      }
+      else {
+        groupCustomsTypeMap.set(customsType.groupCode, new Set<string>([customsType.code]));
+      }
+    }
+
+    const thisOrderTailedDupAddressName = this.getTailedDupAddressName(thisOrder);
+
+    const customsTypeMap = new Map<string, CustomsTypeDue>();
+
+    this.getOrderCustomsTypeStats(thisOrder, customsRule, customsTypeMap);
+
+    if
+      (
+      thisOrderTailedDupAddressName.length > 1 &&
+      // 끝에 자리가 숫자로 끝난 합배송은 합배송건을 찾아서 추가 집계한다.
+      !isNaN(+thisOrderTailedDupAddressName[thisOrderTailedDupAddressName.length - 1])
+    ) {
+      this.orders.forEach(order => {
+        if
+          (
+          order.id !== thisOrder.id &&
+          thisOrderTailedDupAddressName === this.getTailedDupAddressName(order)
+        ) {
+          this.getOrderCustomsTypeStats(order, customsRule, customsTypeMap);
+        }
+      });
+    }
+
+    for (const customsTypeCode of Array.from(customsTypeMap.keys())) {
+      const warnings = customsRule.warnings.filter(x => x.typeCode);
+
+      if (warnings.length === 0) {
+        console.error('customsRule.warnings is empty');
+        return null;
+      }
+
+      for (const warning of warnings.filter(x => x.typeCode === customsTypeCode)) {
+
+        const customsTypeQuantity = customsTypeMap.get(customsTypeCode).quantity;
+        const customsTypePrice = customsTypeMap.get(customsTypeCode).price;
+
+        if 
+        (
+          // 예) 건기식 6병 제한
+          warning.sameTypeMaxQuantity !== null &&
+          customsTypeQuantity > warning.sameTypeMaxQuantity
+        ) {
+          return {
+            name: 'offline_bolt',
+            tooltip: String.Format(this.translator.get('common.message.sameTypeMaxQuantityStatus'), warning.typeCode, warning.sameTypeMaxQuantity)
+          };
+        }
+
+        // 예) 전자 제품 제품별 1개 제한
+        if ( warning.oneItemMaxQuantity !== null) {
+          const productMap = customsTypeMap.get(customsTypeCode).oneItemMaxQuantities;
+          for (const quantity of Array.from(productMap.values())) {
+            if (quantity > warning.oneItemMaxQuantity) {
+              return {
+                name: 'computer',
+                tooltip: String.Format(this.translator.get('common.message.oneItemMaxQuantityStatus'), warning.typeCode, warning.oneItemMaxQuantity, quantity)
+              };
+            }
+          }
+        }
+
+        // 금액 제한 통관 경고
+        if (warning.totalMaxPrice !== null) {
+          let sameGroupCustomsTypeCodes: string[];
+          for (const groupSet of Array.from(groupCustomsTypeMap.values())) {
+            if (groupSet.has(customsTypeCode)) {
+              sameGroupCustomsTypeCodes = Array.from(groupSet.values());
+              break;
+            }
+          }
+
+          if (sameGroupCustomsTypeCodes === null) {
+            console.error('sameGroupCustomsTypeCodes is null');
+          }
+
+          // 예) 일반 / 목록통관이 섞여 있는 경우
+          const intersection = sameGroupCustomsTypeCodes.filter(x => Array.from(customsTypeMap.keys()).includes(x));
+          const isMixedCustomsType = intersection.length > 1;
+
+          // 다른 통관코드를 허용하지 않는데 다른 통관코드가 섞여 있을 경우 해당사항이 없으므로 스킵한다.
+          // 예) 목록통관의 경우 일반통관건이 섞여 있으면 더이상 목록통관이 아니다.
+          if (warning.pureTypeCode && isMixedCustomsType) {
+            continue;
+          }
+
+          let totalPrice = customsTypePrice;          
+          for (const interSectionCustomsTypeCode of intersection) {
+            totalPrice += customsTypeMap.get(interSectionCustomsTypeCode).price;
+          }
+
+          if (totalPrice > warning.totalMaxPrice) {
+            return {
+              name: 'monetization_on',
+              tooltip: String.Format(this.translator.get('common.message.totalMaxPriceStatus'), warning.typeCode, warning.totalMaxPrice, totalPrice)
+            };
+          }
+        }
+      }
+
+    }
+
+    return null;
+  }
+
+  /**
+   * 통관코드별 상품수량합, 가격합, 제품별 수량합 계산
+   * @param order 
+   * @param customsRule 
+   * @param stat 
+   * @returns order customs type codes stat 
+   */
+  getOrderCustomsTypeStats(order: OrderShipOut, customsRule: CustomsRule, customsTypeMap: Map<string, CustomsTypeDue>): void {
+    for (const item of order.orderShipOutDetails) {
+      for (const customsTypeCode of item.customsTypeCode.split(',')) {
+        const key = customsTypeCode.toUpperCase();
+        const productId = item.productVariantId;
+
+        if (customsTypeMap.has(key)) {
+          const customsTypeDue = customsTypeMap.get(key);
+
+          const quantityMap = customsTypeDue.oneItemMaxQuantities;
+
+          if (quantityMap.has(productId)) {
+            quantityMap.set(productId, quantityMap.get(productId) + item.quantity);
+          }
+          else {
+            quantityMap.set(productId, item.quantity);
+          }          
+
+          customsTypeDue.quantity += item.quantity;
+          customsTypeDue.price += item.quantity * item.customsPrice;
+          customsTypeDue.oneItemMaxQuantities = quantityMap;
+        }
+        else {
+          customsTypeMap.set(key, { 
+            quantity: item.quantity, 
+            price: item.quantity * item.customsPrice, 
+            oneItemMaxQuantities: new Map<number, number>([[productId, item.quantity]])
+          });
+        }
+      }
+    }
   }
 
   /**
@@ -799,7 +1060,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
       if (orderIdsKey.split(',').find(x => +x === order.id)) {
         return order.dupAddressName + tailedIndex;
-      }      
+      }
     }
 
     return order.dupAddressName;
@@ -1135,12 +1396,16 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
   /**
    * CustomsTypeCode 편집 작업대상 데이터가 있으면 일괄 편집창을 팝업
-   * @returns false if CustomsTypeCode entries 
+   * @param [selectedOrderOnly] 선택주문 / 전체 주문 대상여부
+   * @returns false if customs type code entries 
    */
-  private getCustomsTypeCodeEntries(): boolean {
+  private getCustomsTypeCodeEntries(selectedOrderOnly: boolean = true): boolean {
     // 제품별로 어떤 국가로 출고되는지 조사
     const productCountries = new Map<number, Set<number>>();
-    for (const order of this.selectedOrders) {
+
+    const orders = selectedOrderOnly ? this.selectedOrders : this.allOrders;
+
+    for (const order of orders) {
       // 같은 국가면 통관 타입 입력 불필요
       if (this.isSameCountry(this.warehouse, order)) { continue; }
 
@@ -1171,7 +1436,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     // 미입력 Customs Type Code가 있는지 검사한다.
     const typeCodeEntryProducts = new Map<number, ProductCustomsTypeCode>();
     const validatedProductIds = new Set<number>();
-    for (const order of this.selectedOrders) {
+    for (const order of orders) {
       // 같은 국가면 통관 타입 입력 불필요
       if (this.isSameCountry(this.warehouse, order)) { continue; }
 
@@ -1201,15 +1466,21 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     // 미입력 Customs Type Code가 있으면 일괄 입력창을 팝업
     if (typeCodeEntryProducts.size > 0) {
-      this.alertService.showDialog(
-        this.translator.get('common.title.confirm'),
-        String.Format(this.translator.get('sales.pendingOrderShipOutList.confirmNeedCustomsTypeCodeEntry'), typeCodeEntryProducts.size),
-        DialogType.confirm,
-        () => this.openCustomsTypeCodeEditor(Array.from(typeCodeEntryProducts.values())),
-        () => null,
-        this.translator.get('common.button.yes'),
-        this.translator.get('common.button.no')
-      );
+      if (selectedOrderOnly) {
+        this.alertService.showDialog(
+          this.translator.get('common.title.confirm'),
+          String.Format(this.translator.get('sales.pendingOrderShipOutList.confirmNeedCustomsTypeCodeEntry'), typeCodeEntryProducts.size),
+          DialogType.confirm,
+          () => this.openCustomsTypeCodeEditor(Array.from(typeCodeEntryProducts.values())),
+          () => null,
+          this.translator.get('common.button.yes'),
+          this.translator.get('common.button.no')
+        );
+      }
+      else {
+        this.openCustomsTypeCodeEditor(Array.from(typeCodeEntryProducts.values()), false);
+      }
+
       return false;
     }
 
@@ -1220,7 +1491,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * Opens CustomsTypeCode editor
    * @param products ProductCustomsTypeCode[]
    */
-  openCustomsTypeCodeEditor(products: ProductCustomsTypeCode[]) {
+  openCustomsTypeCodeEditor(products: ProductCustomsTypeCode[], listOrderWhenFinished = true) {
     const customsTypeCodes = products[0].customsRules.get(OliveConstants.customsRule.typeCodes.toUpperCase()) as string[];
 
     const setting = new OliveDialogSetting(
@@ -1255,7 +1526,9 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         }
 
         // 리스팅을 다시한다.
-        this.listOrders();
+        if (listOrderWhenFinished) {
+          this.listOrders();
+        }
       }
     });
   }

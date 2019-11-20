@@ -201,6 +201,10 @@ export class OliveUtilities {
         return option;
     }
 
+    public static trimString(input: string, maxLength: number): string {
+        return input.length > maxLength ?  input.substring(0, maxLength - 3) + '...' : input;
+    }
+
     public static showEventDateAndName(date: any, userName: UserName) {
         let value = null;
 

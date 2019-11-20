@@ -22,10 +22,10 @@ export const locale = {
                 'updated' : '"{0}"(이)가 저장되었습니다.', // '"{0}" was saved successfully'
                 'updatedGeneral' : '데이터가 저장되었습니다.', // 'The item was saved successfully'
                 'saveError' : 'The below errors occurred whilst saving your changes:',
-                'selectItem' : '원하는 항목을 체크 선택해주세요.',
                 'notSupportHtml5' : 'Sorry! Your browser does not support HTML5.',
                 'invalidSelectedFiles' : '선택한 파일이 없습니다.',
                 'clickFileButton' : '파일열기 버튼을 눌러 업로드 파일을 선택해 주십시오.',
+                'selectImportFile' : '원하는 파일을 선택하여 주십시오.',
                 'confirmDelete' : '정말 삭제하겠습니까{0}?',
                 'errorDeleting' : 'The below errors occurred while deleting the item:',
                 'deleting' : 'Deleting...',
@@ -48,6 +48,13 @@ export const locale = {
                 'outOfStock' : '{0}건이 재고부족으로 출고가 되지 않았습니다.',
                 'cancelOrderShipOutInventory': '할당된 출고 재고를 취소',
                 'assignOrderShipOutInventory': '재고를 할당하여 출고가능 처리',
+                'outOfStockStatus': '재고 부족',
+                'noWeightInputStatus': '무게 미입력',
+                'customsTypeEntryStatus': '통관타입 미입력',
+                'noProductPriceInput' : '상품 가격 미입력',
+                'sameTypeMaxQuantityStatus' : '{0}-갯수제한({1})',
+                'oneItemMaxQuantityStatus' : '{0}-제품별 갯수 {1}개 초과({2})',
+                'totalMaxPriceStatus' :  '{0} ${1} 초과({2})'
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
@@ -81,7 +88,6 @@ export const locale = {
                 'itemDetails' : '{{name}}',
                 'success' : '작업 완료',
                 'saveError' : '저장 오류 발생',
-                'notSelected' : '선택 항목 없음',
                 'errorOccurred' : '오류 안내',
                 'importDialog' : '파일 업로드',
                 'deleteError' : '삭제 오류', // 'Delete Error',
@@ -114,7 +120,7 @@ export const locale = {
                 'delete' : '삭제',
                 'cancel' : '취소',
                 'close' : '닫기',
-                'excelFile' : '파일 열기..',
+                'openFile' : '파일 열기..',
                 'refresh' : '새로고침',
                 'confirmDelete' : '삭제알림',
                 'select' : '선택',
@@ -142,6 +148,7 @@ export const locale = {
                 'exportForLogistic' : '엑셀 (택배사 인계)',
                 'reIssueTrackingNumber' : '송장번호 재발급',
                 'issueTrackingNumber' : '송장번호 발급',
+                'filter' : '필터'
             },
             'menu': {
                 'menuButton' : '부가 기능',
@@ -209,7 +216,9 @@ export const locale = {
                 'preTrackingNumber': '선송장',
                 'marketOrderNumber': '주문',
                 'trackingNumber' : '송장',
-                'order' : '주문'
+                'order' : '주문',
+                'shipOutStatus' : '비고',
+                'customsTypeCode' : '통관 타입',
             },
             'word': {
                 'branch': '지점',
@@ -225,6 +234,8 @@ export const locale = {
                 'price' : '가격',
                 'standPrice' : '구매가',
                 'productVariantName' : '타입',
+                'generalProductVariantName' : '품명',
+                'productGroupName' : '상품 그룹명',
                 'remark' : '비고',
                 'freight' : '배송비',
                 'tax' : '세금',
@@ -637,4 +648,3 @@ export const locale = {
         }
     }
 };
-

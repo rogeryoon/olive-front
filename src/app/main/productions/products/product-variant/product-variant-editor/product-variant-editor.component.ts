@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, AbstractControl } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { AccountService } from '@quick/services/account.service';
@@ -17,6 +17,9 @@ import { Permission } from '@quick/models/permission.model';
 import { numberValidator, requiredValidator } from 'app/core/validators/general-validators';
 import { renderVolumeWeight } from 'app/core/utils/shipping-helpers';
 import { volumeValidator } from 'app/core/validators/shipping-validators';
+import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
+import { customsTypeErrorMessageByControl } from 'app/core/utils/customs-helpers';
+import { customsTypeCodeValidator } from 'app/core/validators/customs-validators';
 
 @Component({
   selector: 'olive-product-variant-editor',
@@ -24,21 +27,33 @@ import { volumeValidator } from 'app/core/validators/shipping-validators';
   styleUrls: ['./product-variant-editor.component.scss']
 })
 export class OliveProductVariantEditorComponent extends OliveEntityFormComponent {
-  @ViewChild('product') 
+  @ViewChild('product')
   lookupProduct: OliveLookupHostComponent;
 
   weightTypes: any[] = OliveConstants.weightTypes;
   lengthTypes: any[] = OliveConstants.lengthTypes;
+  variantCount = 0;
 
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private accountService: AccountService, private productService: OliveProductService,
-    private cacheService: OliveCacheService
-  ) 
-  {
+    private cacheService: OliveCacheService, private messageHelper: OliveMessageHelperService
+  ) {
     super(
       formBuilder, translator
     );
+  }
+
+  get haveMultiVariants(): boolean {
+    return this.variantCount > 1;
+  }
+
+  get groupWidth(): number {
+    return this.haveMultiVariants ? 70 : 30;
+  }
+
+  get itemWidth(): number {
+    return this.haveMultiVariants ? 30 : 70;
   }
 
   getEditedItem(): any {
@@ -48,15 +63,17 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
       code: formModel.code,
       name: formModel.name,
       activated: formModel.activated,
-      memo: formModel.memo,      
+      memo: formModel.memo,
       standPrice: formModel.standPrice,
+      customsTypeCode: formModel.customsTypeCode,
+      hsCode: formModel.hsCode,
       weight: formModel.weight,
       weightTypeCode: formModel.weightTypeCode,
       volume: formModel.volume,
       lengthTypeCode: formModel.lengthTypeCode,
       customsName: formModel.customsName,
       customsPrice: formModel.customsPrice,
-      productId: formModel.productFk.id      
+      productId: formModel.productFk.id
     } as ProductVariant);
   }
 
@@ -65,7 +82,7 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
       code: '',
       name: '',
       activated: false,
-      memo: '',      
+      memo: '',
       standPrice: ['', [numberValidator(this.standCurrency.decimalPoint, false)]],
       weight: ['', [numberValidator(2, false)]],
       weightTypeCode: ['', requiredValidator()],
@@ -73,37 +90,70 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
       volumeWeight: '',
       lengthTypeCode: ['', requiredValidator()],
       customsName: '',
-      customsPrice: ['', [numberValidator(this.standCurrency.decimalPoint, false)]],    
+      customsPrice: ['', [numberValidator(this.standCurrency.decimalPoint, false)]],
+      customsTypeCode: '',
+      hsCode: '',
       productFk: null
     });
   }
 
   resetForm() {
+    this.getVariantCount();
+
     this.oForm.reset({
       code: this.item.code || '',
       name: this.item.name || '',
       activated: this.boolValue(this.item.activated),
-      memo: this.item.memo || '',      
+      memo: this.item.memo || '',
       standPrice: this.item.standPrice || '',
       weight: this.item.weight || '',
       weightTypeCode: this.item.weightTypeCode || '',
       volume: this.item.volume || '',
       volumeWeight: this.item.volume || '',
       lengthTypeCode: this.item.lengthTypeCode || '',
-      customsName: this.item.customsName || '',
-      customsPrice: this.item.customsPrice || '',         
+      customsName:  this.item.customsName || '',
+      customsPrice: this.item.customsPrice || '',
+      customsTypeCode: this.item.productFk ? this.item.productFk.customsTypeCode || '' : '',
+      hsCode: this.item.productFk ? this.item.productFk.hsCode || '' : '',      
       productFk: this.item.productFk || ''
     });
 
+    // 무게 또는 길이 규격이 없는게 있다면 회사 기본 값을 설정
     if (!this.item.weightTypeCode || !this.item.lengthTypeCode) {
       this.cacheService.GetCompanyGroupSetting()
         .then(setting => {
-          this.oForm.patchValue({
-            weightTypeCode: setting.productWeightTypeCode,
-            lengthTypeCode: setting.productLengthTypeCode
-          });
-        });  
+          if (!this.item.weightTypeCode) {
+            this.oForm.patchValue({
+              weightTypeCode: setting.productWeightTypeCode
+            });
+          }
+          if (!this.item.lengthTypeCode) {
+            this.oForm.patchValue({
+              lengthTypeCode: setting.productLengthTypeCode
+            });
+          }
+        });
     }
+
+    this.cacheService.getCustomsConfigs()
+    .then((configs: Map<string, any>) => {
+      const control = this.getControl('customsTypeCode');
+      control.clearValidators();
+      control.setValidators([customsTypeCodeValidator(configs, false)]);
+    });    
+  }
+
+  getVariantCount() {
+    if (!this.item.productFk) {
+      return;
+    }
+
+    this.productService.getVariantCount(this.item.productFk.id).subscribe(response => {
+      this.variantCount = response.model;
+    },
+      error => {
+        this.messageHelper.showLoadFailedSticky(error);
+      });
   }
 
   createEmptyObject() {
@@ -130,7 +180,7 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
   }
 
   markCustomControlsTouched() {
-    this.lookupProduct.markAsTouched();   
+    this.lookupProduct.markAsTouched();
   }
 
   /**
@@ -139,8 +189,28 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
    * @param weightTypeCtrl 
    * @param lengthTypeCtrl 
    * @returns  부피 무게 표현 문자열
-   */    
+   */
   renderVolumeWeight(volumeCtrl: any, weightTypeCtrl: any, lengthTypeCtrl: any) {
     return renderVolumeWeight(volumeCtrl, weightTypeCtrl, lengthTypeCtrl);
+  }
+
+  hasEntryErrorByControl(control: any): boolean {
+    let hasError = super.hasEntryErrorByControl(control);
+
+    if (hasError) { return hasError; }
+
+    hasError = customsTypeErrorMessageByControl(control, this.translator) !== null;
+
+    return control.touched && hasError;
+  }
+
+  errorMessageByControl(control: AbstractControl): string {
+    let message = super.errorMessageByControl(control);
+
+    if (message) { return message; }
+
+    message = customsTypeErrorMessageByControl(control, this.translator);
+
+    return message;
   }
 }

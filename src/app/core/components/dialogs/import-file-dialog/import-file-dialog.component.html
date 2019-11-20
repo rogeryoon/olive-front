@@ -1,10 +1,12 @@
 <h1 mat-dialog-title>{{translate('common.title.importDialog')}}</h1>
 <div mat-dialog-content>
-    {{translate('common.message.clickFileButton')}}
-    <button mat-raised-button (click)="excelFile.click()" [disabled]="showLoadingBar" color="primary"><mat-icon>ballot</mat-icon> {{translate('common.button.excelFile')}}</button>
-    <input #excelFile type="file" id="excelFile" (change)="onUpload($event)" style="display:none;"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/> 
+    <div>
+        {{translate('common.message.selectImportFile')}}&nbsp;&nbsp;
+        <button mat-raised-button (click)="excelFile.click()" [disabled]="showLoadingBar" color="primary"><mat-icon>ballot</mat-icon> {{translate('common.button.openFile')}}</button>
+        <input #excelFile type="file" id="excelFile" (change)="onUpload($event)" style="display:none;"  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/> 
+    </div>
 
-    <div class="mt-15 mt-10">
+    <div class="mt-8 mb-8">
         <mat-progress-bar *ngIf="showLoadingBar" class="loading-bar" color="accent" mode="indeterminate"></mat-progress-bar>
         <table id="import-table" class="display" style="width:100%"></table>
     </div>

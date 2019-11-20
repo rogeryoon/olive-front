@@ -54,6 +54,8 @@ export class OliveProductVariantManagerComponent extends OliveEntityEditComponen
       lengthTypeCode: productVariant.lengthTypeCode,
       customsName: productVariant.customsName,
       customsPrice: productVariant.customsPrice,
+      customsTypeCode: productVariant.customsTypeCode,
+      hsCode: productVariant.hsCode,      
       productId: productVariant.productId
     });
   }

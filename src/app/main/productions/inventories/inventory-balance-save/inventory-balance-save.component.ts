@@ -46,8 +46,7 @@ export class OliveInventoryBalanceSaveComponent implements AfterViewInit, OnDest
     private accountService: AccountService,
     private messageHelper: OliveMessageHelperService,
     private inventoryService: OliveInventoryService,
-    private documentService: OliveDocumentService,
-    private dialog: MatDialog
+    private documentService: OliveDocumentService
   ) {
   }
 

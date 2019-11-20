@@ -22,4 +22,8 @@ export class OliveProductService extends OliveEntityService {
 
     this.setApiUrl('products');
   }
+
+  getVariantCount(id: number) {
+    return this.get(`variantCount/${id}`);
+  }
 }

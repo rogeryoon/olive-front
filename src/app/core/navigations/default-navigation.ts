@@ -132,7 +132,9 @@ export const defaultNavigation: FuseNavigation[] = [
                         type: 'item',
                         icon: NavIcons.Product.inventoriesWarehouse,
                         url: '/inventories/warehouse'
-                    },
+                    }
+                    /*
+                    , 임시삭제
                     {
                         id: 'inventoriesHistory',
                         title: '품목별 재고',
@@ -141,6 +143,7 @@ export const defaultNavigation: FuseNavigation[] = [
                         icon: NavIcons.Product.inventoriesHistory,
                         url: '/inventories/history'
                     }
+                    */
                 ]
             },
             {

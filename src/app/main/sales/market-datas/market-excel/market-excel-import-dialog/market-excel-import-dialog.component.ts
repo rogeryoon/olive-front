@@ -36,6 +36,8 @@ export class OliveMarketExcelImportDialogComponent extends OliveImportFileDialog
       documentService, alertService, 
       dialogRef, data
     );
+
+    this.openFileDialogWhenDialogCreated = false;
   }
 
   get sellerSelected(): any {
@@ -81,5 +83,9 @@ export class OliveMarketExcelImportDialogComponent extends OliveImportFileDialog
       this.uploadData['sellerId'] = this.sellerId;
     }
     super.save();
+  }
+
+  onValueChange(sellerId: number) {
+    this.openFileDialog();
   }
 }

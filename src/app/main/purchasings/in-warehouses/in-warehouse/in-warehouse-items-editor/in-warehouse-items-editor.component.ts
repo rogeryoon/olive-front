@@ -241,7 +241,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
                 if (!dupPOItemIdCheckSet.has(sItem.id)) {
                   dupPOItemIdCheckSet.add(sItem.id);
                   duplicatedIdStrings.push(
-                    `${this.id36(sItem.id)}: ${sItem.name}`.trimRight());
+                    `${this.id36(sItem.id)}: ${sItem.name}`.trim());
                 }
               });
           });

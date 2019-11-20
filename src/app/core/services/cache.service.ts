@@ -438,8 +438,8 @@ export class OliveCacheService {
 
     const customsConfigs = new Map<string, any>();
 
-    for (const cf of configs.filter(x => x.code.toUpperCase().includes('CustomsRule'.toLocaleUpperCase()))) {
-      customsConfigs.set(cf.code.toLocaleUpperCase(), JSON.parse(cf.data));
+    for (const cf of configs.filter(x => x.code.toUpperCase().includes('CustomsRule'.toUpperCase()))) {
+      customsConfigs.set(cf.code.toUpperCase(), JSON.parse(cf.data));
     }
 
     return customsConfigs;

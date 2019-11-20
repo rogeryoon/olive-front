@@ -75,9 +75,11 @@ export class OliveInventoryWarehousesComponent extends OliveEntityListComponent 
         // 2
         { data: Id, orderable: true, thName: this.translator.get('common.word.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: ProductName, thName: this.translator.get('common.word.productName'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
+        { data: ProductName, orderable: false, thName: this.translator.get('common.word.productName'), 
+          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         // 4
-        { data: VariantName, thName: this.translator.get('common.word.productType'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: VariantName, orderable: false, thName: this.translator.get('common.word.productType'), 
+          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 5
         { data: TotalQuantity, thName: this.translator.get('common.word.quantity'), tdClass: 'print -ex-type-number', thClass: 'print' }
     ];
@@ -117,15 +119,16 @@ export class OliveInventoryWarehousesComponent extends OliveEntityListComponent 
   renderItem(item: InventoryWarehouse, columnName: string): string {
 
     let retValue = '';
+    const isSingleItem = item.productName === '' && item.variantName.length > 0;
     switch (columnName) {
       case Id:
         retValue = this.id36(item.id);
         break;
       case ProductName:
-        retValue = item.productName;
+        retValue = isSingleItem ? item.variantName : item.productName;
         break;
       case VariantName:
-        retValue = item.variantName;
+        retValue = isSingleItem ? '' : item.variantName;
         break;        
       case TotalQuantity:
         retValue = this.commaNumber(item.totalQuantity);

@@ -70,10 +70,22 @@ export class OliveProductEditorComponent extends OliveEntityFormComponent {
     });
   }
 
+  get groupName(): string {
+    if (this.isNull(this.item.name)) {
+      return '';
+    }
+
+    if (this.item.variants.length === 1) {
+      return this.item.variants[0].name;
+    }
+
+    return this.item.name;
+  }
+
   resetForm() {
     this.oForm.reset({
       code: this.item.code || '',
-      name: this.item.name || '',
+      name: this.groupName,
       activated: this.boolValue(this.item.activated),
       customsName: this.item.customsName || '',
       customsPrice: this.item.customsPrice || '',
@@ -88,13 +100,20 @@ export class OliveProductEditorComponent extends OliveEntityFormComponent {
       lengthTypeCode: this.item.lengthTypeCode || ''
     });
 
+    // 무게 또는 길이 규격이 없는게 있다면 회사 기본 값을 설정
     if (!this.item.weightTypeCode || !this.item.lengthTypeCode) {
       this.cacheService.GetCompanyGroupSetting()
         .then(setting => {
-          this.oForm.patchValue({
-            weightTypeCode: setting.productWeightTypeCode,
-            lengthTypeCode: setting.productLengthTypeCode
-          });
+          if (!this.item.weightTypeCode) {
+            this.oForm.patchValue({
+              weightTypeCode: setting.productWeightTypeCode
+            });
+          }
+          if (!this.item.lengthTypeCode) {
+            this.oForm.patchValue({
+              lengthTypeCode: setting.productLengthTypeCode
+            });
+          }
         });
     }
 
@@ -120,7 +139,7 @@ export class OliveProductEditorComponent extends OliveEntityFormComponent {
    * @param weightTypeCtrl 
    * @param lengthTypeCtrl 
    * @returns  부피 무게 표현 문자열
-   */  
+   */
   renderVolumeWeight(volumeCtrl: any, weightTypeCtrl: any, lengthTypeCtrl: any) {
     return renderVolumeWeight(volumeCtrl, weightTypeCtrl, lengthTypeCtrl);
   }
@@ -140,7 +159,7 @@ export class OliveProductEditorComponent extends OliveEntityFormComponent {
 
     if (message) { return message; }
 
-    message = customsTypeErrorMessageByControl(control, this.translator);       
+    message = customsTypeErrorMessageByControl(control, this.translator);
 
     return message;
   }

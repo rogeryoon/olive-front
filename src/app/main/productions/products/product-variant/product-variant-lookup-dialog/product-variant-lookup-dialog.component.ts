@@ -63,7 +63,7 @@ export class OliveProductVariantLookupDialogComponent extends OliveLookupDialogC
   }
 
   getItemName(item: ProductVariant) {
-    return `${item.productFk.name} ${item.name}`.trimRight();
+    return `${item.productFk.name} ${item.name}`.trim();
   }
 
   createChip(item: ProductVariant) {
