@@ -14,6 +14,8 @@ import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edi
 import { OliveProductService } from 'app/main/productions/services/product.service';
 import { ProductCustomsTypeCode } from 'app/main/productions/models/product-customs-type-code.model';
 import { customsTypeErrorMessageByControl } from 'app/core/utils/customs-helpers';
+import { OliveUtilities } from 'app/core/classes/utilities';
+import { isCustomsTypeCodeError } from 'app/core/validators/customs-validators';
 
 @Component({
   selector: 'olive-product-customs-type-codes-editor',
@@ -21,10 +23,10 @@ import { customsTypeErrorMessageByControl } from 'app/core/utils/customs-helpers
   styleUrls: ['./product-customs-type-codes-editor.component.scss']
 })
 export class OliveProductCustomsTypeCodesEditorComponent extends OliveEntityEditComponent {
-  displayedColumns = ['id', 'name', 'customsTypeCode'];
+  readonly customsTypeCodeName = 'customsTypeCode';
+  displayedColumns = ['id', 'name', this.customsTypeCodeName];
   dataSource: OliveProductCustomsTypeCodeDataSource = new OliveProductCustomsTypeCodeDataSource(this.cacheService);
-  customsRules: Map<string, any>;
-
+  
   value: any = null;
 
   constructor(
@@ -52,8 +54,6 @@ export class OliveProductCustomsTypeCodesEditorComponent extends OliveEntityEdit
   }
 
   resetForm() {
-    this.dataSource.customsRules = this.extraParameter;
-
     if (this.item) {
       this.dataSource.loadItems(this.item);
     }
@@ -74,6 +74,27 @@ export class OliveProductCustomsTypeCodesEditorComponent extends OliveEntityEdit
 
   notifyItemSaved(_updateCount: number) {
     this.onItemSaved.next(this.dataSource.items);
+  }
+
+  /**
+   * 유효검사후 정상이면 Empty CustomsTypeCode값인곳에 모두 복사한다.
+   * @param index 
+   */
+  copyToEmptyCell(index: number) {
+    const thisFormGroup = this.getArrayFormGroup(index);
+    const thisCustomsTypeCode = OliveUtilities.toTrimString(thisFormGroup.get(this.customsTypeCodeName).value);
+
+    const customsRule = this.dataSource.items[index].customsRules;
+
+    if (isCustomsTypeCodeError(thisCustomsTypeCode, customsRule, true) == null) {
+      for (const formGroup of this.oFArray.controls) {
+        const customsTypeCode = OliveUtilities.toTrimString(formGroup.get(this.customsTypeCodeName).value);
+
+        if (customsTypeCode.length === 0) {
+          formGroup.patchValue( {customsTypeCode : thisCustomsTypeCode});
+        }
+      }
+    }
   }
 
   hasEntryErrorByControl(control: AbstractControl): boolean {

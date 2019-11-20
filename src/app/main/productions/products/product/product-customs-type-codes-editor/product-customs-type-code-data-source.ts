@@ -6,8 +6,6 @@ import { ProductCustomsTypeCode } from 'app/main/productions/models/product-cust
 import { customsTypeCodeValidator } from 'app/core/validators/customs-validators';
 
 export class OliveProductCustomsTypeCodeDataSource extends TableDataSource {
-    customsRules: Map<string, any>;
-
     constructor(
         cacheService: OliveCacheService
     ) {

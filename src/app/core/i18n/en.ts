@@ -54,7 +54,8 @@ export const locale = {
                 'noProductPriceInput' : '상품 가격 미입력',
                 'sameTypeMaxQuantityStatus' : '{0}-갯수제한({1})',
                 'oneItemMaxQuantityStatus' : '{0}-제품별 갯수 {1}개 초과({2})',
-                'totalMaxPriceStatus' :  '{0} ${1} 초과({2})'
+                'totalMaxPriceStatus' :  '{0} ${1} 초과({2})',
+                'copyAllToEmptyCell' : '해당값을 모든 공란 셀에 복사합니다.'
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
