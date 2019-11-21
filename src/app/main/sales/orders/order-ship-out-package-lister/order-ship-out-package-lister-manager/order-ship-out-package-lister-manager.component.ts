@@ -29,6 +29,47 @@ import { CarrierTrackingNumbersGroup } from 'app/main/shippings/models/carrier-t
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveCarrierTrackingNumberRangeService } from 'app/main/shippings/services/carrier-tracking-number-range.service';
 
+class OliveTable {
+  static readonly selector = '.roger-table';
+
+  public static topTableSelector(param: any) {
+    return '#' + $(param).attr('id').replace('-bottom', '-top');
+  }
+
+  public static bottomTableSelector(param: any) {
+    return '#' + $(param).attr('id');
+  }
+
+  public static setBottomTableWidth() {
+    $(this.selector).each(function () {
+      $(OliveTable.bottomTableSelector(this)).width(100);
+      
+      $(OliveTable.bottomTableSelector(this))
+        .width($(OliveTable.topTableSelector(this)).width());
+    });
+  }
+
+  public static setBottomTableScrollWidth() {
+    $(this.selector).each(function () {
+      const bottomTableSelector = OliveTable.bottomTableSelector(this);
+      $(bottomTableSelector).on('scroll', function () {
+        $(`${bottomTableSelector} > *`).width($(bottomTableSelector).width() + $(bottomTableSelector).scrollLeft());
+      });
+    });
+  }
+
+  public static bindTopTableResizeEvent() {
+    $(this.selector).each(function () {
+      const topTableSelector = OliveTable.topTableSelector(this);
+
+      $(window).off('resize').on('resize', function () {
+        OliveTable.setBottomTableWidth();
+        OliveTable.setBottomTableScrollWidth();
+      });
+    });
+  }
+}
+
 @Component({
   selector: 'olive-order-ship-out-lister-manager',
   templateUrl: './order-ship-out-package-lister-manager.component.html',
@@ -39,7 +80,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   inventories: InventoryWarehouse[];
   pendingOrderShipOuts: OrderShipOut[] = [];
   pendingOrderShipOutPackages: OrderShipOutPackage[] = [];
-  parentObject: OliveOnShare = {bool1: false};
+  parentObject: OliveOnShare = { bool1: false };
   customsConfigs = new Map<string, any>();
   countries = new Map<number, Country>();
   carrierTrackingNumbersGroups: CarrierTrackingNumbersGroup[] = [];
@@ -67,7 +108,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     );
   }
 
-  initializeChildComponent() {}
+  initializeChildComponent() { }
 
   onAfterViewInit() {
     if (this.orderPackageListers.length === 0) {
@@ -90,7 +131,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     setTimeout(() => {
       this.getInventories();
       this.getPendingOrderPackages();
-      this.getConfigs();      
+      this.getConfigs();
     });
   }
 
@@ -102,17 +143,17 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
 
   private getCarrierTrackingNumbersGroups() {
     this.carrierTrackingNumberRangeService.get('numbersGroup')
-    .subscribe(res => {
-      this.carrierTrackingNumbersGroups = res.model;
-      // ID를 임의로 만들어준다.
-      let id = 1;
-      for (const group of this.carrierTrackingNumbersGroups) {
-        group.id = id++;
-      }
-      this.setChildConfigs(OliveConstants.listerConfigType.carrierTrackingNumbersGroups, res.model);
-    }, error => {
-      this.messageHelper.showLoadFailedSticky(error);
-    });
+      .subscribe(res => {
+        this.carrierTrackingNumbersGroups = res.model;
+        // ID를 임의로 만들어준다.
+        let id = 1;
+        for (const group of this.carrierTrackingNumbersGroups) {
+          group.id = id++;
+        }
+        this.setChildConfigs(OliveConstants.listerConfigType.carrierTrackingNumbersGroups, res.model);
+      }, error => {
+        this.messageHelper.showLoadFailedSticky(error);
+      });
   }
 
   private getCustomsConfigs() {
@@ -124,7 +165,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   private setChildConfigs(configType: string, data: any) {
-    
+
     this.orderPackageListers.forEach((lister) => {
       lister.setConfigs(configType, data);
     });
@@ -146,7 +187,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     else {
       this.setCountriesConfig(this.cacheService.get(itemKey));
     }
-  }  
+  }
 
   private setCountriesConfig(countries: Country[]) {
     this.countries.clear();
@@ -175,7 +216,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   private getInventories(refresh: boolean = false) {
     const searchOption = OliveUtilities.searchOption([
       { name: 'quantity', value: 0 } as NameValue,
-      { name: 'warehouse', value: this.warehouses.map(a => a.id).join() } as NameValue], 
+      { name: 'warehouse', value: this.warehouses.map(a => a.id).join() } as NameValue],
       'id', 'desc'
     );
 
@@ -210,9 +251,9 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   private switchWarehouseSelector() {
-    this.warehouseSelector.visible = 
-      this.warehouses == null && 
-      this.inventories == null && 
+    this.warehouseSelector.visible =
+      this.warehouses == null &&
+      this.inventories == null &&
       this.pendingOrderShipOuts == null;
   }
 
@@ -233,12 +274,9 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     }
   }
 
-  public onTabClick(event: any): void { 
-    $('.roger-table').each(function( index ) {
-      const selector = '#' + $(this).attr('id');
-      $(selector).on('scroll', function () {
-        $(`${selector} > *`).width($(selector).width() + $(selector).scrollLeft());
-      }); 
-    });
+  public onTabClick(event: any): void {
+    OliveTable.setBottomTableWidth();    
+    OliveTable.setBottomTableScrollWidth();
+    OliveTable.bindTopTableResizeEvent();
   }
 }

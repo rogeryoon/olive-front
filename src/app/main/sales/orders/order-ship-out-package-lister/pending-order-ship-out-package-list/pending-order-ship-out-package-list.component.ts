@@ -1,6 +1,5 @@
 ﻿import { Component, Input, Output, EventEmitter, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { String } from 'typescript-string-operations';
 
 import * as _ from 'lodash';

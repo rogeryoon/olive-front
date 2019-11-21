@@ -1,6 +1,6 @@
 ﻿<mat-progress-bar *ngIf="isloading" mode="query"></mat-progress-bar>
 
-<table class="w-100-p">
+<table id="{{tableId}}-top" class="w-100-p" #topTable>
     <tr>
         <td class="w-30-p title">
             <mat-icon>access_time</mat-icon><span
@@ -51,7 +51,7 @@
     </tr>
 </table>
 
-<table id="{{tableId}}" class="roger-table mt-20">
+<table id="{{tableId}}-bottom" class="roger-table mt-20">
     <thead>
         <tr>
             <th>

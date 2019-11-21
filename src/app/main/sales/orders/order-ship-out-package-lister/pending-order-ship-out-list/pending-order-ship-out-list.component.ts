@@ -1,4 +1,4 @@
-﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
+﻿import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Subject, Subscription } from 'rxjs';
@@ -42,8 +42,6 @@ import { isCustomsTypeCodeError } from 'app/core/validators/customs-validators';
 import { OliveProductCustomsTypeCodesEditorComponent } from 'app/main/productions/products/product/product-customs-type-codes-editor/product-customs-type-codes-editor.component';
 import { CarrierTrackingNumbersGroup } from 'app/main/shippings/models/carrier-tracking-numbers-group.model';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
-import { Router } from '@angular/router';
-import { OliveCarrierTrackingNumberRangeService } from 'app/main/shippings/services/carrier-tracking-number-range.service';
 import { OliveOrderHelperService } from 'app/main/sales/services/order-helper.service';
 import { Icon } from 'app/core/models/icon';
 import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
@@ -52,16 +50,6 @@ class AllocatedQuantity {
   productVariantId: number;
   quantity: number;
 }
-
-// class CustomsTypeStat {
-//   customsTypeQuantities: Map<string, number>;
-//   customsTypePriceDues: Map<string, number>;
-//   customsTypeOneItemMaxQuantities: Map<string, Map<number, number>>;
-
-//   public constructor(init?: CustomsTypeStat) {
-//     Object.assign(this, init);
-//   }
-// }
 
 class CustomsTypeDue {
   quantity: number;
@@ -78,12 +66,15 @@ class CustomsTypeDue {
   templateUrl: './pending-order-ship-out-list.component.html',
   styleUrls: ['./pending-order-ship-out-list.component.scss']
 })
-export class OlivePendingOrderShipOutListComponent extends OliveEntityFormComponent {
+export class OlivePendingOrderShipOutListComponent extends OliveEntityFormComponent implements AfterViewInit {
   @Input()
   warehouse: Warehouse;
 
   @Input()
   index: number;
+
+  @ViewChild('topTable')
+  private topTable: ElementRef;
 
   parentObject: OliveOnShare;
 
@@ -136,13 +127,17 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     private orderShipOutPackageService: OliveOrderShipOutPackageService,
     private messageHelper: OliveMessageHelperService, private orderShipOutService: OliveOrderShipOutService,
     private productService: OliveProductService, private cacheService: OliveCacheService,
-    private queryParams: OliveQueryParameterService, private router: Router,
-    private carrierTrackingNumberRangeService: OliveCarrierTrackingNumberRangeService,
-    private orderHelperService: OliveOrderHelperService
+    private queryParams: OliveQueryParameterService, private orderHelperService: OliveOrderHelperService
   ) {
     super(
       formBuilder, translator
     );
+  }
+
+  ngAfterViewInit() {
+    this.topTable.nativeElement.addEventListener('onresize', function() {
+      console.log('B');
+    });
   }
 
   get isloading(): boolean {

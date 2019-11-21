@@ -1,5 +1,5 @@
 ﻿<mat-progress-bar *ngIf="isloading" mode="query"></mat-progress-bar>
-<table class="w-100-p">
+<table id="{{tableId}}-top" class="w-100-p">
     <tr>
         <td class="w-70-p left">
             <button [disabled]="!selectedPackages.length || isloading" mat-raised-button color="basic"
@@ -53,7 +53,7 @@
     </tr>
 </table>
 
-<table id="{{tableId}}" class="roger-table mt-20">
+<table id="{{tableId}}-bottom" class="roger-table mt-20">
     <thead>
         <tr>
             <th>
