@@ -21,6 +21,7 @@ import { ProductWeight } from 'app/main/productions/models/product-weight.model'
 })
 export class OliveProductWeightEditorComponent extends OliveEntityEditComponent {
   weightTypes: any[] = OliveConstants.weightTypes;
+  variantCount = 0;
 
   constructor(
     translator: FuseTranslationLoaderService, alertService: AlertService,
@@ -72,7 +73,13 @@ export class OliveProductWeightEditorComponent extends OliveEntityEditComponent 
     ];
   }
 
+  get isMultiProductVariants(): boolean {
+    return this.variantCount > 1;
+  }
+
   resetForm() {
+    this.getVariantCount();
+
     this.oForm.reset({
       productGroupWeight: this.item.productGroupWeight || '',
       productGroupWeightTypeCode: this.item.productGroupWeightTypeCode || '',
@@ -101,6 +108,21 @@ export class OliveProductWeightEditorComponent extends OliveEntityEditComponent 
             productOverrideWeightTypeCode: setting.productWeightTypeCode
           });
         }
+      });
+  }
+
+  getVariantCount() {
+    if (!this.item.productFk) {
+      return;
+    }
+
+    const productService = this.dataService as OliveProductService;
+
+    productService.getVariantCount(this.item.productId).subscribe(response => {
+      this.variantCount = response.model;
+    },
+      error => {
+        this.messageHelper.showLoadFailedSticky(error);
       });
   }
 

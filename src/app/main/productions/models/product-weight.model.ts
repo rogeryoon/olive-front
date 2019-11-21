@@ -1,4 +1,5 @@
 ﻿export class ProductWeight {
+    productId?: number;
     productVariantId?: number;
     productGroupWeight?: number;
     productGroupWeightTypeCode?: string;

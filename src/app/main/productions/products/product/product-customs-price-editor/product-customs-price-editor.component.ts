@@ -18,6 +18,8 @@ import { ProductCustomsPrice } from 'app/main/productions/models/product-customs
   styleUrls: ['./product-customs-price-editor.component.scss']
 })
 export class OliveProductCustomsPriceEditorComponent extends OliveEntityEditComponent {
+  variantCount = 0;
+
   constructor(
     translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
@@ -62,12 +64,33 @@ export class OliveProductCustomsPriceEditorComponent extends OliveEntityEditComp
     ];
   }
 
+  get isMultiProductVariants(): boolean {
+    return this.variantCount > 1;
+  }
+
   resetForm() {
+    this.getVariantCount();
+
     this.oForm.reset({
       productGroupCustomsPrice: this.item.productGroupCustomsPrice || '',
       productVariantCustomsPrice: this.item.productVariantCustomsPrice || '',
       productOverrideCustomsPrice: this.extraParameter && this.extraParameter.overrideCustomsPrice || ''
     });
+  }
+
+  getVariantCount() {
+    if (!this.item.productFk) {
+      return;
+    }
+
+    const productService = this.dataService as OliveProductService;
+
+    productService.getVariantCount(this.item.productId).subscribe(response => {
+      this.variantCount = response.model;
+    },
+      error => {
+        this.messageHelper.showLoadFailedSticky(error);
+      });
   }
 
   get productName() {
