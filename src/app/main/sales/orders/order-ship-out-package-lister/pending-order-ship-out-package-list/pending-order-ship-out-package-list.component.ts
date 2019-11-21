@@ -67,7 +67,8 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     private messageHelper: OliveMessageHelperService, private orderShipOutPackageService: OliveOrderShipOutPackageService,
     private dialog: MatDialog, private alertService: AlertService,
     private shipperExcelService: OliveShipperExcelService, private cacheService: OliveCacheService,
-    private cdRef: ChangeDetectorRef, private orderHelperService: OliveOrderHelperService
+    private cdRef: ChangeDetectorRef, private orderHelperService: OliveOrderHelperService,
+    private documentService: OliveDocumentService
   ) {
     super(
       formBuilder, translator
@@ -424,6 +425,25 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     }
 
     this.shipperExcelService.saveForGps(this.warehousePackages, this.packagesContact, this.customsConfigs);
+  }
+
+  /**
+   * Exports order list
+   */
+  // TODO : exportOrderList : 와꾸미정이라 보류중  
+  exportOrderList() {
+    this.documentService.exportHtmlTableToExcel(
+      this.translator.get('sales.pendingOrderShipOutList.fileName'), 
+      this.tableId + '-bottom', 
+      false,
+      null,
+      [
+        // 재고 열 아이콘 제거
+        { appliedIndex: 4, exclusive: true, searchPattern: /-?[A-Z]+[0-9]+/gi },
+        // 합배송 열 아이콘 제거
+        { appliedIndex: 6, exclusive: true, searchPattern: /[A-Z]+[0-9]?/g }
+      ]
+    );
   }
 
   editCompanyContact(box: OrderShipOutPackage) {

@@ -22,6 +22,7 @@
             <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
                 <mat-form-field fxFlex='95%'>
                     <input matInput name="inputHsCode{{row.ObjId}}" formControlName="hsCode" class="small-font olive-error" autocomplete="off">
+                    <mat-icon matSuffix class="secondary-text link-cursor" (click)="copyToEmptyCell(i)" title="{{'common.message.copyAllToEmptyCell' | translate}}">offline_bolt</mat-icon>
                     <mat-error *ngIf="hasArrayEntryError('hsCode',i)">{{arrayErrorMessage('hsCode',i)}}</mat-error>
                 </mat-form-field>
             </mat-cell>

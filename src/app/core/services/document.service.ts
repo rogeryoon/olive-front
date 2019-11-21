@@ -8,6 +8,8 @@ import * as FileSaver from 'file-saver';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { AlertService } from '@quick/services/alert.service';
 import { ExcelColumn } from '../models/excel-column';
+import { SearchUnit } from '../models/search-unit';
+import { OliveUtilities } from '../classes/utilities';
 
 @Injectable({
   providedIn: 'root'
@@ -197,12 +199,13 @@ export class OliveDocumentService {
     }
   }
 
-  exportHtmlTableToExcel(fileName: string, tableId: string, selectable = true, summaries: string[] = []): void {
+  exportHtmlTableToExcel(fileName: string, tableId: string, selectable = true, 
+    summaries: string[] = [], replaces: SearchUnit[] = []): void {
     if (selectable && this.noItemsSelected) { console.error('No Items Selected'); return; }
 
     const workbook = new Excel.Workbook();
 
-    const worksheet = workbook.addWorksheet(fileName);
+    const worksheet = workbook.addWorksheet('Sheet1');
 
     const table = $(`#${tableId}`);
 
@@ -210,12 +213,16 @@ export class OliveDocumentService {
 
     rowIndex = this.setExcelColumnsHeaderForHtmlTable(table, worksheet, rowIndex);
 
-    this.setExcelTbodyTable(table, worksheet, selectable, rowIndex);
+    this.setExcelTbodyTable(table, worksheet, selectable, rowIndex, replaces);
 
     this.saveExcelWorkbook(fileName, workbook);
   }
 
   private setExcelSummaries(worksheet: any, summaries: string[]): number {
+    if (!summaries) {
+      return 0;
+    }
+
     let rowIndex = 0;
     summaries.forEach(summary => {
       rowIndex++;
@@ -256,7 +263,7 @@ export class OliveDocumentService {
     return this.setExcelColumnsHeader(headerColumns, worksheet, rowIndex);
   }
 
-  private setExcelTbodyTable(table: any, worksheet: any, selectable: boolean, rowIndex: number) {
+  private setExcelTbodyTable(table: any, worksheet: any, selectable: boolean, rowIndex: number, replaces: SearchUnit[]) {
     let makeRow = false;
 
     table.children('tbody').find('tr').each(function (): void {
@@ -295,7 +302,7 @@ export class OliveDocumentService {
                     newRow.getCell(colIndex).value = amount;
                   }
                   else {
-                    newRow.getCell(colIndex).value = columnValue.toString();
+                    newRow.getCell(colIndex).value = OliveUtilities.ReplaceValue(columnValue.toString(), replaces, colIndex);
                   }
                   break;
                 }

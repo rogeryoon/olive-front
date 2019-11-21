@@ -458,7 +458,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
           else if (errorCode.includes(OliveBackEndErrors.concurrencyError)) {
             const duplicatedKeysString = error.error.errorCode.replace(OliveBackEndErrors.concurrencyError + '-', '');
             errorMessage = String.Format(this.translator.get('common.entryError.concurrencyKeyName'), duplicatedKeysString);
-            errorMessage = OliveUtilities.trimString(errorMessage, OliveConstants.uiConfig.maxErrorMessageLength);
+            errorMessage = OliveUtilities.trimStringByMaxLength(errorMessage, OliveConstants.uiConfig.maxErrorMessageLength);
           }
           else {
             errorMessage = this.translator.get('common.message.uploadDataSignatureUnregistered');

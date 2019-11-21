@@ -13,6 +13,8 @@ import { ProductHsCode } from 'app/main/productions/models/product-hs-code.model
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 
 import { OliveProductService } from 'app/main/productions/services/product.service';
+import { trimInput } from 'app/core/validators/general-validators';
+import { OliveUtilities } from 'app/core/classes/utilities';
 
 @Component({
   selector: 'olive-product-hs-codes-editor',
@@ -20,6 +22,7 @@ import { OliveProductService } from 'app/main/productions/services/product.servi
   styleUrls: ['./product-hs-codes-editor.component.scss']
 })
 export class OliveProductHsCodesEditorComponent extends OliveEntityEditComponent {
+  readonly hsCodeName = 'hsCode';
   displayedColumns = ['id', 'name', 'hsCode'];
   dataSource: 
   OliveProductHsCodeDataSource = new OliveProductHsCodeDataSource(this.cacheService);
@@ -58,6 +61,25 @@ export class OliveProductHsCodesEditorComponent extends OliveEntityEditComponent
 
   createEmptyObject() {
     return new ProductHsCode();
+  }
+
+  /**
+   * 유효검사후 정상이면 Empty셀에 복사한다.
+   * @param index 
+   */
+  copyToEmptyCell(index: number) {
+    const thisFormGroup = this.getArrayFormGroup(index);
+    const thisHsCodeName = OliveUtilities.toTrimString(thisFormGroup.get(this.hsCodeName).value);
+
+    if (thisHsCodeName.length > 0) {
+      for (const formGroup of this.oFArray.controls) {
+        const hsCode = OliveUtilities.toTrimString(formGroup.get(this.hsCodeName).value);
+
+        if (hsCode.length === 0) {
+          formGroup.patchValue( {hsCode : thisHsCodeName});
+        }
+      }
+    }
   }
 
   sendToEndPoint(items: ProductHsCode[]) {

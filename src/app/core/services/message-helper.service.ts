@@ -98,7 +98,7 @@ export class OliveMessageHelperService {
           if (error.error.errorCode.includes(concurrencyError)) {
             const duplicatedKeysString = error.error.errorCode.replace(concurrencyError + '-', '');
             errorMessage.message = String.Format(this.translator.get('common.entryError.concurrencyKeyName'), duplicatedKeysString);
-            errorMessage.message = OliveUtilities.trimString(errorMessage.message, OliveConstants.uiConfig.maxErrorMessageLength);
+            errorMessage.message = OliveUtilities.trimStringByMaxLength(errorMessage.message, OliveConstants.uiConfig.maxErrorMessageLength);
           }
           errorMessage.messageSeverity = MessageSeverity.error;        
           break;

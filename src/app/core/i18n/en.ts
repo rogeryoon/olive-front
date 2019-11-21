@@ -140,13 +140,7 @@ export const locale = {
                 'cancelCombineShip' : '합배송 취소',
                 'cancelShipOut' : '출고 취소',
                 'finishShipOutPackage' : '출고 완료',
-                'preAssignTrackingNumber' : '송장 선발급',
                 'misc' : '기타',
-                'printPackingList' : '팩킹 리스트',
-                'printShippingLabel' : '운송장',
-                'printPickingList' : '피킹 리스트',
-                'exportForTrackingNumberUpdate' : '엑셀 (판매 사이트 송장번호)',
-                'exportForLogistic' : '엑셀 (택배사 인계)',
                 'reIssueTrackingNumber' : '송장번호 재발급',
                 'issueTrackingNumber' : '송장번호 발급',
                 'filter' : '필터'
@@ -158,7 +152,13 @@ export const locale = {
                 'printList' : '인쇄', // 'Print List',
                 'upload' : '대량 업로드', // 'Upload',
                 'productLookUp' : '상품 조회',
-                'purchaseOrderLookup' : '발주 조회'
+                'purchaseOrderLookup' : '발주 조회',
+                'exportForTrackingNumberUpdate' : '엑셀 (판매 사이트 송장번호)',
+                'printShippingLabel' : '운송장',
+                'exportForLogistic' : '엑셀 (택배사 인계)',
+                'printPackingList' : '팩킹 리스트',
+                'printPickingList' : '피킹 리스트',
+                'preAssignTrackingNumber' : '송장 선발급',
             },
             'form': {
                 'createdDateFrom' : '등록일 시작',
@@ -511,7 +511,8 @@ export const locale = {
                 'trackingNumbersShortageErrorMessage': '새로 발급할 송장번호가 부족합니다. 새로 등록하시겠습니까?',
                 'allOrderHaveTrackingNumbers' : '더이상 송장발급을 할 대상이 없습니다.',
                 'confirmIssueOnlyNoTrackingOrders' : '선택한 주문이 없습니다. 발급하지 않은 주문송장만 발급하겠습니까?',
-                'confirmRefreshAfterSplitOrders' : '분할 배송저장이 완료되었습니다. 출고 리스팅을 모두 갱신합니다.'
+                'confirmRefreshAfterSplitOrders' : '분할 배송저장이 완료되었습니다. 출고 리스팅을 모두 갱신합니다.',
+                'fileName' : '출고 대기'
             },
             'pendingOrderShipOutPackageList' : {
                 'finalFinishConfirmMessage' : '출고 마감처리 합니다. 확실합니까?',
@@ -519,7 +520,8 @@ export const locale = {
                 'clickAddButtonForItems' : '다른 선택또는 해당건만 수정하려면 추가를 클릭하세요.',
                 'warningForUpdateAll' : '아래 내용을 수정/저장할 경우 연결된 모든 출고건들이 모두 업데이트됩니다.',
                 'confirmCanNotProcessDueToNoCompanyContact': '해당 작업을 진행하려면 {0} 발송회사정보를 입력해야 합니다. 입력하겠습니까?',
-                'shipperExcelFileName': '택배'
+                'shipperExcelFileName': '택배',
+                'fileName' : '출고 확정'
             },
             'marketItemMappingExcelColumnsEditor' : {
                 'notMatchOriginalValue' : '최초 엑셀에 저장되어 있던 (부분) 문자열이 아닙니다'

@@ -45,6 +45,7 @@ import { OliveQueryParameterService } from 'app/core/services/query-parameter.se
 import { OliveOrderHelperService } from 'app/main/sales/services/order-helper.service';
 import { Icon } from 'app/core/models/icon';
 import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
+import { SearchUnit } from 'app/core/models/search-unit';
 
 class AllocatedQuantity {
   productVariantId: number;
@@ -66,7 +67,7 @@ class CustomsTypeDue {
   templateUrl: './pending-order-ship-out-list.component.html',
   styleUrls: ['./pending-order-ship-out-list.component.scss']
 })
-export class OlivePendingOrderShipOutListComponent extends OliveEntityFormComponent implements AfterViewInit {
+export class OlivePendingOrderShipOutListComponent extends OliveEntityFormComponent {
   @Input()
   warehouse: Warehouse;
 
@@ -127,19 +128,13 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     private orderShipOutPackageService: OliveOrderShipOutPackageService,
     private messageHelper: OliveMessageHelperService, private orderShipOutService: OliveOrderShipOutService,
     private productService: OliveProductService, private cacheService: OliveCacheService,
-    private queryParams: OliveQueryParameterService, private orderHelperService: OliveOrderHelperService
+    private queryParams: OliveQueryParameterService, private orderHelperService: OliveOrderHelperService,
+    private documentService: OliveDocumentService
   ) {
     super(
       formBuilder, translator
     );
   }
-
-  ngAfterViewInit() {
-    this.topTable.nativeElement.addEventListener('onresize', function() {
-      console.log('B');
-    });
-  }
-
   get isloading(): boolean {
     return this.parentObject && this.parentObject.bool1;
   }
@@ -1727,13 +1722,25 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
   // TODO : exportForTrackingNumberUpdate
   exportForTrackingNumberUpdate() {
-    // const name = '#' + this.tableId;
-    // // console.log('exportForTrackingNumberUpdate');
-    // $(name).on('scroll', function () {
-    //   console.log('scroll', name);
-    //   $(`${name} > *`).width($(name).width() + $(name).scrollLeft());
-    // });    
   }
+
+  /**
+   * Exports order list
+   */
+  exportOrderList() {
+    this.documentService.exportHtmlTableToExcel(
+      this.translator.get('sales.pendingOrderShipOutList.fileName'), 
+      this.tableId + '-bottom', 
+      false,
+      null,
+      [
+        // 재고 열 아이콘 제거
+        { appliedIndex: 4, exclusive: true, searchPattern: /-?[A-Z]+[0-9]+/gi },
+        // 합배송 열 아이콘 제거
+        { appliedIndex: 6, exclusive: true, searchPattern: /[A-Z]+[0-9]?/g }
+      ]
+    );
+  }  
 
   get canPreAssignTrackingNumber(): boolean {
     return true;

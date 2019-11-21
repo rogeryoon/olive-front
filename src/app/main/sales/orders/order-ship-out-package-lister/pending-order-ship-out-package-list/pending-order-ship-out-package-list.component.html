@@ -22,28 +22,32 @@
                 <button [disabled]="!selectedPackages.length || isloading" mat-menu-item
                     (click)="printPickingList()">
                     <mat-icon>gavel</mat-icon>
-                    {{'common.button.printPickingList' | translate}}
+                    {{'common.menu.printPickingList' | translate}}
                 </button>
                 <button [disabled]="!selectedPackages.length || isloading" mat-menu-item
                     (click)="printPackingList()">
                     <mat-icon>subject</mat-icon>
-                    {{'common.button.printPackingList' | translate}}
+                    {{'common.menu.printPackingList' | translate}}
                 </button>
                 <button [disabled]="!selectedPackages.length || isloading" mat-menu-item
                     (click)="printShippingLabel()">
                     <mat-icon>label</mat-icon>
-                    {{'common.button.printShippingLabel' | translate}}
+                    {{'common.menu.printShippingLabel' | translate}}
                 </button>
                 <button [disabled]="!selectedPackages.length || isloading" mat-menu-item
                     (click)="exportForTrackingNumberUpdate()">
                     <mat-icon>view_list</mat-icon>
-                    {{'common.button.exportForTrackingNumberUpdate' | translate}}
+                    {{'common.menu.exportForTrackingNumberUpdate' | translate}}
                 </button>
                 <button [disabled]="!selectedPackages.length || isloading" mat-menu-item
                     (click)="exportForLogistic()">
                     <mat-icon>toc</mat-icon>
-                    {{'common.button.exportForLogistic' | translate}}
+                    {{'common.menu.exportForLogistic' | translate}}
                 </button>
+                <button mat-menu-item [disabled]="isloading" (click)="exportOrderList()">
+                    <mat-icon>cancel_presentation</mat-icon>
+                    {{'common.menu.exportExcelFile' | translate}}
+                </button>                
             </mat-menu>
         </td>
         <td class="w-30-p title">
@@ -60,12 +64,12 @@
                 <input type="checkbox" [disabled]="warehousePackages && !warehousePackages.length"
                     [(ngModel)]="selectedAll" (change)="selectAll();" />
             </th>
-            <th>{{'common.tableHeader.seller' | translate}}</th>
-            <th>{{'common.tableHeader.consignee' | translate}}</th>
-            <th>{{'common.tableHeader.quantity' | translate}}</th>
-            <th>{{'common.tableHeader.weightKiloGram' | translate}}</th>
-            <th>{{'common.tableHeader.combinedShipping' | translate}}</th>
-            <th>{{'common.tableHeader.trackingNumber' | translate}}</th>
+            <th class="print -ex-type-text">{{'common.tableHeader.seller' | translate}}</th>
+            <th class="print -ex-type-text">{{'common.tableHeader.consignee' | translate}}</th>
+            <th class="print -ex-type-number">{{'common.tableHeader.quantity' | translate}}</th>
+            <th class="print -ex-type-number">{{'common.tableHeader.weightKiloGram' | translate}}</th>
+            <th class="print -ex-type-number">{{'common.tableHeader.combinedShipping' | translate}}</th>
+            <th class="print -ex-type-text">{{'common.tableHeader.trackingNumber' | translate}}</th>
         </tr>
     </thead>
     <tbody *ngIf="warehousePackages?.length > 0">
@@ -74,15 +78,15 @@
                 <input name="select" type="checkbox" [(ngModel)]="package.selected"
                     (change)="checkIfAllSelected();" [attr.disabled]="false ? true : null">
             </td>
-            <td class="pointer" (click)="editCompanyContact(package)">{{showSeller(package)}}-<span
+            <td class="pointer print -ex-type-text" (click)="editCompanyContact(package)">{{showSeller(package)}}-<span
                     class="font-weight-900"
                     matTooltip="{{showSenderCompany(package)}}">{{showSenderCharacters(package)}}</span>
             </td>
-            <td>{{package.deliveryTagFk.consigneeName}}</td>
-            <td>{{showQuantity(package)}}</td>
-            <td>{{showWeight(package)}}</td>
-            <td>{{package.orderCount}}</td>
-            <td>{{package.trackingNumber}}</td>
+            <td class="print -ex-type-text">{{package.deliveryTagFk.consigneeName}}</td>
+            <td class="print -ex-type-number">{{showQuantity(package)}}</td>
+            <td class="print -ex-type-number">{{showWeight(package)}}</td>
+            <td class="print -ex-type-number">{{package.orderCount}}</td>
+            <td class="print -ex-type-text">{{package.trackingNumber}}</td>
         </tr>
     </tbody>
     <tbody *ngIf="warehousePackages?.length == 0">

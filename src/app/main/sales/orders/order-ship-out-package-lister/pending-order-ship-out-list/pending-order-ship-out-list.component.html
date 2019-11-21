@@ -29,23 +29,27 @@
             <mat-menu #filter="matMenu">
                 <button mat-menu-item [disabled]="isloading" (click)="buttonPreAssignTrackingNumbers()">
                     <mat-icon>find_replace</mat-icon>
-                    {{'common.button.preAssignTrackingNumber' | translate}}
+                    {{'common.menu.preAssignTrackingNumber' | translate}}
                 </button>
                 <button mat-menu-item [disabled]="isloading" (click)="exportForTrackingNumberUpdate()">
                     <mat-icon>view_list</mat-icon>
-                    {{'common.button.exportForTrackingNumberUpdate' | translate}}
+                    {{'common.menu.exportForTrackingNumberUpdate' | translate}}
                 </button>
             </mat-menu>            
 
             <mat-menu #misc="matMenu">
                 <button mat-menu-item [disabled]="isloading" (click)="buttonPreAssignTrackingNumbers()">
                     <mat-icon>find_replace</mat-icon>
-                    {{'common.button.preAssignTrackingNumber' | translate}}
+                    {{'common.menu.preAssignTrackingNumber' | translate}}
                 </button>
                 <button mat-menu-item [disabled]="isloading" (click)="exportForTrackingNumberUpdate()">
                     <mat-icon>view_list</mat-icon>
-                    {{'common.button.exportForTrackingNumberUpdate' | translate}}
+                    {{'common.menu.exportForTrackingNumberUpdate' | translate}}
                 </button>
+                <button mat-menu-item [disabled]="isloading" (click)="exportOrderList()">
+                    <mat-icon>cancel_presentation</mat-icon>
+                    {{'common.menu.exportExcelFile' | translate}}
+                </button>                
             </mat-menu>
         </td>
     </tr>
@@ -58,47 +62,47 @@
                 <input type="checkbox" [disabled]="(orders && !orders.length) || allCheckboxesDisabled"
                     [(ngModel)]="selectedAll" (change)="selectAll();" />
             </th>
-            <th>{{'common.tableHeader.seller' | translate}}</th>
-            <th>{{'common.tableHeader.orderNumberShort' | translate}}</th>            
-            <th>{{'common.tableHeader.consignee' | translate}}</th>
-            <th>{{'common.tableHeader.inventory' | translate}}</th>
-            <th>{{'common.tableHeader.customsPrice' | translate}}</th>
-            <th>{{'common.tableHeader.combinedShipping' | translate}}</th>
+            <th class="print -ex-type-text">{{'common.tableHeader.seller' | translate}}</th>
+            <th class="print -ex-type-id">{{'common.tableHeader.orderNumberShort' | translate}}</th>            
+            <th class="print -ex-type-text">{{'common.tableHeader.consignee' | translate}}</th>
+            <th class="print -ex-type-text">{{'common.tableHeader.inventory' | translate}}</th>
+            <th class="print -ex-type-number">{{'common.tableHeader.customsPrice' | translate}}</th>
+            <th class="print -ex-type-text">{{'common.tableHeader.combinedShipping' | translate}}</th>
             <th>{{'common.tableHeader.shipOutStatus' | translate}}</th>
-            <th>{{'common.tableHeader.preTrackingNumber' | translate}}</th>
-            <th>{{'common.tableHeader.weightKiloGram' | translate}}</th>
-            <th>{{'common.tableHeader.itemsName' | translate}}</th>
+            <th class="print -ex-type-text">{{'common.tableHeader.preTrackingNumber' | translate}}</th>
+            <th class="print -ex-type-text">{{'common.tableHeader.weightKiloGram' | translate}}</th>
+            <th class="print -ex-type-text -ex-width-80">{{'common.tableHeader.itemsName' | translate}}</th>
         </tr>
     </thead>
     <tbody *ngIf="orders?.length > 0">
-        <tr *ngFor="let order of orders">
+        <tr *ngFor="let order of orders" class="print">
             <td>
                 <input *ngIf="!hasShipOutProblems(order)" name="select" type="checkbox" [(ngModel)]="order.choices[index]"
                     (change)="checkIfAllSelected()" (click)="checkSameCombinedShippingGroup(order)"
                     [attr.disabled]="hasShipOutProblems(order) ? true : null">
             </td>
 
-            <td class="zoom-in" (click)="editOrder(order)">{{order.orderFk.marketSellerFk.code}}</td>
+            <td class="zoom-in print -ex-type-text" (click)="editOrder(order)">{{order.orderFk.marketSellerFk.code}}</td>
 
-            <td>{{order.orderFk.marketOrderNumber}}</td>
+            <td class="print -ex-type-id">{{order.orderFk.marketOrderNumber}}</td>
 
-            <td class="zoom-in" (click)="editOrder(order)">{{order.deliveryTagFk.consigneeName}}</td>
+            <td class="zoom-in print -ex-type-text" (click)="editOrder(order)">{{order.deliveryTagFk.consigneeName}}</td>
 
-            <td (click)="switchInventory(order)"
+            <td class="print -ex-type-text" (click)="switchInventory(order)"
                 [ngClass]="{'foreground-red': isShortOrderQuantity(order), 'pointer': switchIconVisible(order)}">
                 <span *ngFor="let item of order.orderShipOutDetails"
-                    matTooltip="{{item.name}}">{{showItem(item)}}&nbsp;</span>
+                    matTooltip="{{item.name}}">{{isShortOrderQuantity(order) ? '-' : ''}}{{showItem(item)}}&nbsp;</span>
                 <mat-icon *ngIf="switchIconVisible(order)" class="small-icon"
                     matTooltip="{{getInventorySwitchTooltip(order)}}">
                     {{getInventorySwitchIconName(order)}}</mat-icon>
             </td>
 
-            <td class="pointer" (click)="editCustomsPrice(order)"
+            <td class="pointer print -ex-type-number" (click)="editCustomsPrice(order)"
                 [ngClass]="{'foreground-red': foundNullCustomsPrice(order)}">
                 {{showCustomsPrice(order)}}
             </td>
 
-            <td [ngClass]="{'foreground-red': order.dupAddressName}" matTooltip="{{combinedShippingSummary(order)}}">
+            <td class="print -ex-type-text" [ngClass]="{'foreground-red': order.dupAddressName}" matTooltip="{{combinedShippingSummary(order)}}">
                 <mat-icon *ngIf="order.combinedShipAddressName" 
                     [ngClass]="{'foreground-blue': order.combinedShipAddressName}">insert_link
                 </mat-icon>
@@ -110,16 +114,16 @@
                 <mat-icon *ngFor="let icon of getShipOutStatusIcons(order)" class="small-icon" title="{{icon.tooltip}}">{{icon.name}}</mat-icon>
             </td>
 
-            <td [ngClass]="{'zoom-in' : !order.trackingNumber}" (click)="!order.trackingNumber ? editOrder(order, 1) : null">
+            <td class="print -ex-type-text" [ngClass]="{'zoom-in' : !order.trackingNumber}" (click)="!order.trackingNumber ? editOrder(order, 1) : null">
                 {{order.trackingNumber ? order.trackingNumber : ''}}
             </td>
 
-            <td class="pointer" (click)="editItemsWeight(order)"
+            <td class="pointer print -ex-type-number" (click)="editItemsWeight(order)"
                 [ngClass]="{'foreground-red': foundNullWeight(order)}">
                 {{showWeight(order)}}
             </td>
 
-            <td class="zoom-in" (click)="editOrder(order)">{{showItemsName(order)}}</td>
+            <td class="zoom-in print -ex-type-text" (click)="editOrder(order)">{{showItemsName(order)}}</td>
         </tr>
     </tbody>
     <tbody *ngIf="orders?.length == 0">

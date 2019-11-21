@@ -77,7 +77,7 @@ export class OliveProductCustomsTypeCodesEditorComponent extends OliveEntityEdit
   }
 
   /**
-   * 유효검사후 정상이면 Empty CustomsTypeCode값인곳에 모두 복사한다.
+   * 유효검사후 정상이면 Empty셀에 복사한다.
    * @param index 
    */
   copyToEmptyCell(index: number) {

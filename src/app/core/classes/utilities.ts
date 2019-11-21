@@ -8,6 +8,7 @@ import { NameValue } from '../models/name-value';
 
 import { Address } from '../models/address.model';
 import { UserName } from '../models/user-name';
+import { SearchUnit } from '../models/search-unit';
 
 export class OliveUtilities {
     public static splitStickyWords(input, separator): string {
@@ -201,8 +202,8 @@ export class OliveUtilities {
         return option;
     }
 
-    public static trimString(input: string, maxLength: number): string {
-        return input.length > maxLength ?  input.substring(0, maxLength - 3) + '...' : input;
+    public static trimStringByMaxLength(input: string, maxLength: number): string {
+        return input.length > maxLength ? input.substring(0, maxLength - 3) + '...' : input;
     }
 
     public static showEventDateAndName(date: any, userName: UserName) {
@@ -226,6 +227,31 @@ export class OliveUtilities {
         }
 
         return value;
+    }
+
+    /**
+     * Regex 패턴으로 검색 치환
+     * @param input 
+     * @param units 
+     * @returns 치환 결과값 
+     */
+    public static ReplaceValue(input: string, units: SearchUnit[], index: number = null): string {
+        for (const unit of units) {
+            if (!OliveUtilities.testIsUndefined(unit.appliedIndex) && index !== unit.appliedIndex) {
+                continue;
+            }
+
+            if (unit.exclusive) {
+                const matches = input.match(unit.searchPattern);
+                if (matches && matches.length > 0) {
+                    return matches[0];
+                }
+            }
+            else {
+                input = input.replace(unit.searchPattern, unit.replaceValue ? unit.replaceValue : '');
+            }
+        }
+        return input;
     }
 }
 
