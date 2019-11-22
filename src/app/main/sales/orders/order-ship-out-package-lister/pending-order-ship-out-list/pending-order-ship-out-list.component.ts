@@ -275,12 +275,12 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    */
   selectAll() {
     this.orders.forEach(order => {
-      order.choices[this.index] = this.selectedAll && !this.isShortOrderQuantity(order);
+      order.choices[this.index] = this.selectedAll && !this.hasShipOutProblems(order);
     });
   }
 
   /**
-   * Checks if all selected
+   * Checks if all selectedㄴ
    */
   checkIfAllSelected() {
     this.selectedAll = this.orders.every(x => x.choices[this.index]);
@@ -827,9 +827,9 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     const thisOrderTailedDupAddressName = this.getTailedDupAddressName(thisOrder);
 
-    const customsTypeMap = new Map<string, CustomsTypeDue>();
+    const customsTypeStats = new Map<string, CustomsTypeDue>();
 
-    this.getOrderCustomsTypeStats(thisOrder, customsRule, customsTypeMap);
+    this.getOrderCustomsTypeStats(thisOrder, customsTypeStats);
 
     if
       (
@@ -843,87 +843,86 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
           order.id !== thisOrder.id &&
           thisOrderTailedDupAddressName === this.getTailedDupAddressName(order)
         ) {
-          this.getOrderCustomsTypeStats(order, customsRule, customsTypeMap);
+          this.getOrderCustomsTypeStats(order, customsTypeStats);
         }
       });
     }
 
-    for (const customsTypeCode of Array.from(customsTypeMap.keys())) {
-      const warnings = customsRule.warnings.filter(x => x.typeCode);
+    for (const customsTypeCode of Array.from(customsTypeStats.keys())) {
+      const warning = customsRule.warnings.find(x => x.typeCode === customsTypeCode);
 
-      if (warnings.length === 0) {
+      if (!warning) {
         console.error('customsRule.warnings is empty');
         return null;
       }
 
-      for (const warning of warnings.filter(x => x.typeCode === customsTypeCode)) {
+      const customsTypeQuantity = customsTypeStats.get(customsTypeCode).quantity;
 
-        const customsTypeQuantity = customsTypeMap.get(customsTypeCode).quantity;
-        const customsTypePrice = customsTypeMap.get(customsTypeCode).price;
+      if 
+      (
+        // 예) 건기식 6병 제한
+        warning.sameTypeMaxQuantity !== null &&
+        customsTypeQuantity > warning.sameTypeMaxQuantity
+      ) {
+        return {
+          name: 'offline_bolt',
+          tooltip: String.Format(this.translator.get('common.message.sameTypeMaxQuantityStatus'), warning.typeCode, warning.sameTypeMaxQuantity)
+        };
+      }
 
-        if 
-        (
-          // 예) 건기식 6병 제한
-          warning.sameTypeMaxQuantity !== null &&
-          customsTypeQuantity > warning.sameTypeMaxQuantity
-        ) {
-          return {
-            name: 'offline_bolt',
-            tooltip: String.Format(this.translator.get('common.message.sameTypeMaxQuantityStatus'), warning.typeCode, warning.sameTypeMaxQuantity)
-          };
-        }
-
-        // 예) 전자 제품 제품별 1개 제한
-        if ( warning.oneItemMaxQuantity !== null) {
-          const productMap = customsTypeMap.get(customsTypeCode).oneItemMaxQuantities;
-          for (const quantity of Array.from(productMap.values())) {
-            if (quantity > warning.oneItemMaxQuantity) {
-              return {
-                name: 'computer',
-                tooltip: String.Format(this.translator.get('common.message.oneItemMaxQuantityStatus'), warning.typeCode, warning.oneItemMaxQuantity, quantity)
-              };
-            }
-          }
-        }
-
-        // 금액 제한 통관 경고
-        if (warning.totalMaxPrice !== null) {
-          let sameGroupCustomsTypeCodes: string[];
-          for (const groupSet of Array.from(groupCustomsTypeMap.values())) {
-            if (groupSet.has(customsTypeCode)) {
-              sameGroupCustomsTypeCodes = Array.from(groupSet.values());
-              break;
-            }
-          }
-
-          if (sameGroupCustomsTypeCodes === null) {
-            console.error('sameGroupCustomsTypeCodes is null');
-          }
-
-          // 예) 일반 / 목록통관이 섞여 있는 경우
-          const intersection = sameGroupCustomsTypeCodes.filter(x => Array.from(customsTypeMap.keys()).includes(x));
-          const isMixedCustomsType = intersection.length > 1;
-
-          // 다른 통관코드를 허용하지 않는데 다른 통관코드가 섞여 있을 경우 해당사항이 없으므로 스킵한다.
-          // 예) 목록통관의 경우 일반통관건이 섞여 있으면 더이상 목록통관이 아니다.
-          if (warning.pureTypeCode && isMixedCustomsType) {
-            continue;
-          }
-
-          let totalPrice = customsTypePrice;          
-          for (const interSectionCustomsTypeCode of intersection) {
-            totalPrice += customsTypeMap.get(interSectionCustomsTypeCode).price;
-          }
-
-          if (totalPrice > warning.totalMaxPrice) {
+      // 예) 전자 제품 제품별 1개 제한
+      if ( warning.oneItemMaxQuantity !== null) {
+        const productMap = customsTypeStats.get(customsTypeCode).oneItemMaxQuantities;
+        for (const quantity of Array.from(productMap.values())) {
+          if (quantity > warning.oneItemMaxQuantity) {
             return {
-              name: 'monetization_on',
-              tooltip: String.Format(this.translator.get('common.message.totalMaxPriceStatus'), warning.typeCode, warning.totalMaxPrice, totalPrice)
+              name: 'computer',
+              tooltip: String.Format(this.translator.get('common.message.oneItemMaxQuantityStatus'), warning.typeCode, warning.oneItemMaxQuantity, quantity)
             };
           }
         }
       }
 
+      // 금액 제한 통관 경고
+      if (warning.totalMaxPrice == null) {
+        continue;
+      }
+
+      // 일반, 목록 같은 같은 그룹
+      let sameGroupCustomsTypeCodes: string[];
+      for (const groupSet of Array.from(groupCustomsTypeMap.values())) {
+        if (groupSet.has(customsTypeCode)) {
+          sameGroupCustomsTypeCodes = Array.from(groupSet.values());
+          break;
+        }
+      }
+
+      if (sameGroupCustomsTypeCodes === null) {
+        console.error('sameGroupCustomsTypeCodes is null');
+        continue;
+      }
+
+      // 예) 일반 / 목록통관이 섞여 있는 경우
+      const intersection = sameGroupCustomsTypeCodes.filter(x => Array.from(customsTypeStats.keys()).includes(x));
+      const isMixedCustomsType = intersection.length > 1;
+
+      // 다른 통관코드를 허용하지 않는데 다른 통관코드가 섞여 있을 경우 해당사항이 없으므로 스킵한다.
+      // 예) 목록통관의 경우 일반통관건이 섞여 있으면 더이상 목록통관이 아니다.
+      if (warning.pureTypeCode && isMixedCustomsType) {
+        continue;
+      }
+
+      let totalPrice = 0;          
+      for (const interSectionCustomsTypeCode of intersection) {
+        totalPrice += customsTypeStats.get(interSectionCustomsTypeCode).price;
+      }
+
+      if (totalPrice > warning.totalMaxPrice) {
+        return {
+          name: 'monetization_on',
+          tooltip: String.Format(this.translator.get('common.message.totalMaxPriceStatus'), warning.typeCode, warning.totalMaxPrice, totalPrice)
+        };
+      }
     }
 
     return null;
@@ -936,30 +935,30 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @param stat 
    * @returns order customs type codes stat 
    */
-  getOrderCustomsTypeStats(order: OrderShipOut, customsRule: CustomsRule, customsTypeMap: Map<string, CustomsTypeDue>): void {
+  getOrderCustomsTypeStats(order: OrderShipOut, customsTypeStats: Map<string, CustomsTypeDue>): void {
     for (const item of order.orderShipOutDetails) {
       for (const customsTypeCode of item.customsTypeCode.split(',')) {
-        const key = customsTypeCode.toUpperCase();
+        const customsTypeCodeKey = customsTypeCode.toUpperCase();
         const productId = item.productVariantId;
 
-        if (customsTypeMap.has(key)) {
-          const customsTypeDue = customsTypeMap.get(key);
+        if (customsTypeStats.has(customsTypeCodeKey)) {
+          const customsTypeDue = customsTypeStats.get(customsTypeCodeKey);
 
-          const quantityMap = customsTypeDue.oneItemMaxQuantities;
+          const productQuantities = customsTypeDue.oneItemMaxQuantities;
 
-          if (quantityMap.has(productId)) {
-            quantityMap.set(productId, quantityMap.get(productId) + item.quantity);
+          if (productQuantities.has(productId)) {
+            productQuantities.set(productId, productQuantities.get(productId) + item.quantity);
           }
           else {
-            quantityMap.set(productId, item.quantity);
+            productQuantities.set(productId, item.quantity);
           }          
 
           customsTypeDue.quantity += item.quantity;
           customsTypeDue.price += item.quantity * item.customsPrice;
-          customsTypeDue.oneItemMaxQuantities = quantityMap;
+          customsTypeDue.oneItemMaxQuantities = productQuantities;
         }
         else {
-          customsTypeMap.set(key, { 
+          customsTypeStats.set(customsTypeCodeKey, { 
             quantity: item.quantity, 
             price: item.quantity * item.customsPrice, 
             oneItemMaxQuantities: new Map<number, number>([[productId, item.quantity]])
