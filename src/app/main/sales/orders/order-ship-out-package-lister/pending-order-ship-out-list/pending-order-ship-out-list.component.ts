@@ -74,9 +74,6 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   @Input()
   index: number;
 
-  @ViewChild('topTable')
-  private topTable: ElementRef;
-
   parentObject: OliveOnShare;
 
   /**
@@ -121,6 +118,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   @Output() reload = new EventEmitter<any>();
 
   tableId = 'left-' + Math.floor(Math.random() * 100000);
+
+  readonly shortageQuantityIcon = 'shopping_cart';
+  readonly nullWeightIcon = 'view_agenda';
+  readonly nullCustomsPriceIcon = 'attach_money';
+  readonly customsTypeCodeErrorIcon = 'comment';
 
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
@@ -441,6 +443,47 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   }
 
   /**
+   * 출고 오류 문맥에 따라 편집창을 다르게 팝업
+   * @param order 
+   * @param icon 
+   */
+  contextPopUp(order: OrderShipOut, icon: Icon) {
+    // 아이콘 없는 콜은 현재 사용되지 않음 
+    // TD에서 클릭하는 이벤트 문맥에 근거하여 팝업을 띄우려고 했으나
+    // 아이콘 클릭 이벤트랑 중첩되어 팝업이 이중으로 뜨는 문제가 발생 잠정 중단
+    if (!icon) {
+      if (this.foundNullWeight(order)) {
+        this.popUpItemsWeightEntry(order);
+      }
+      else if (this.foundNullCustomsPrice(order)) {
+        this.popUpCustomsPriceEntry(order);
+      }
+      else if (this.foundCustomTypeCodeEntryError(order, this.customsConfigs)) {
+        this.popUpCustomTypeCodeEntries();
+      }
+      return;
+    }
+
+    switch (icon.name) {
+      case this.nullWeightIcon:
+        this.popUpItemsWeightEntry(order);
+        break;
+        
+      case this.nullCustomsPriceIcon:
+          this.popUpCustomsPriceEntry(order);
+        break;
+        
+      case this.customsTypeCodeErrorIcon:
+        this.popUpCustomTypeCodeEntries();
+        break;
+
+      default:
+        this.popUpOrderEntry(order);
+        break;
+    }
+  }
+
+  /**
    * 국가별 필수 통관코드 입력 체크
    * @param order 
    * @returns true if no input custom type code 
@@ -568,7 +611,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * 상품 무게 수정
    * @param order OrderShipOut
    */
-  editItemsWeight(order: OrderShipOut) {
+  popUpItemsWeightEntry(order: OrderShipOut) {
     this.getEditItem(order, this.productCustomsWeightSelectedTrigger);
   }
 
@@ -653,7 +696,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * 세관신고 상품 금액 수정
    * @param order OrderShipOut
    */
-  editCustomsPrice(order: OrderShipOut) {
+  popUpCustomsPriceEntry(order: OrderShipOut) {
     this.getEditItem(order, this.productCustomsPriceSelectedTrigger);
   }
 
@@ -776,21 +819,21 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     if (shortageQuantity !== 0) {
       icons.push({
-        name: 'shopping_cart',
+        name: this.shortageQuantityIcon,
         tooltip: `${this.translator.get('common.message.outOfStockStatus')} (${shortageQuantity})`
       });
     }
 
     if (this.foundNullWeight(order)) {
       icons.push({
-        name: 'speed',
+        name: this.nullWeightIcon,
         tooltip: this.translator.get('common.message.noWeightInputStatus')
       });
     }
 
     if (this.foundNullCustomsPrice(order)) {
       icons.push({
-        name: 'attach_money',
+        name: this.nullCustomsPriceIcon,
         tooltip: this.translator.get('common.message.noProductPriceInput')
       });
 
@@ -805,7 +848,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     if (this.foundCustomTypeCodeEntryError(order, countryCustomRule)) {
       icons.push({
-        name: 'comment',
+        name: this.customsTypeCodeErrorIcon,
         tooltip: this.translator.get('common.message.customsTypeEntryStatus')
       });
 
@@ -1128,7 +1171,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     });
   }
 
-  editOrder(order: OrderShipOut, startTabIndex = 0) {
+  popUpOrderEntry(order: OrderShipOut, startTabIndex = 0) {
     this.saveOrder = order;
     const setting = new OliveDialogSetting(
       OliveOrderShipOutManagerComponent,

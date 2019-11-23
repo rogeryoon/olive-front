@@ -7,21 +7,21 @@
                 class="ml-4">{{'common.title.pendingShipOut' | translate}}{{remarkAllOrders}}</span>
         </td>
         <td class="w-70-p right">
-            <button mat-icon-button [matMenuTriggerFor]="misc" [disabled]="isloading" mat-raised-button class="right ml-4"
-                matTooltip="{{'common.button.misc' | translate}}">
+            <button mat-icon-button [matMenuTriggerFor]="misc" [disabled]="isloading" mat-raised-button
+                class="right ml-4" matTooltip="{{'common.button.misc' | translate}}">
                 <mat-icon>dialpad</mat-icon>
             </button>
-            <button mat-icon-button [matMenuTriggerFor]="filter" [disabled]="isloading" mat-raised-button class="right ml-4"
-                matTooltip="{{'common.button.filter' | translate}}">
+            <button mat-icon-button [matMenuTriggerFor]="filter" [disabled]="isloading" mat-raised-button
+                class="right ml-4" matTooltip="{{'common.button.filter' | translate}}">
                 <mat-icon>filter_list</mat-icon>
-            </button>            
-            <button [disabled]="!(canCombineShip || canReleaseCombineShip) || isloading" mat-raised-button
-                color="basic" class="right ml-4" (click)="combineShip()" matTooltip="{{remarkCombinedOrders}}">
+            </button>
+            <button [disabled]="!(canCombineShip || canReleaseCombineShip) || isloading" mat-raised-button color="basic"
+                class="right ml-4" (click)="combineShip()" matTooltip="{{remarkCombinedOrders}}">
                 <mat-icon>{{canReleaseCombineShip ? 'link_off' : 'insert_link'}}</mat-icon>
                 {{(canReleaseCombineShip ? 'common.button.cancelCombineShip' : 'common.button.combineShip') | translate}}{{remarkCombinedOrders}}
             </button>
-            <button [disabled]="!hasSelectedItems || isloading" mat-raised-button color="warn"
-                class="right ml-4" (click)="buttonListOrders()">
+            <button [disabled]="!hasSelectedItems || isloading" mat-raised-button color="warn" class="right ml-4"
+                (click)="buttonListOrders()">
                 <mat-icon>arrow_forward</mat-icon>
                 {{'common.button.shipOut' | translate}}{{remarkSelectedOrders}}
             </button>
@@ -35,7 +35,7 @@
                     <mat-icon>view_list</mat-icon>
                     {{'common.menu.exportForTrackingNumberUpdate' | translate}}
                 </button>
-            </mat-menu>            
+            </mat-menu>
 
             <mat-menu #misc="matMenu">
                 <button mat-menu-item [disabled]="isloading" (click)="buttonPreAssignTrackingNumbers()">
@@ -49,7 +49,7 @@
                 <button mat-menu-item [disabled]="isloading" (click)="exportOrderList()">
                     <mat-icon>cancel_presentation</mat-icon>
                     {{'common.menu.exportExcelFile' | translate}}
-                </button>                
+                </button>
             </mat-menu>
         </td>
     </tr>
@@ -63,7 +63,7 @@
                     [(ngModel)]="selectedAll" (change)="selectAll();" />
             </th>
             <th class="print -ex-type-text">{{'common.tableHeader.seller' | translate}}</th>
-            <th class="print -ex-type-id">{{'common.tableHeader.orderNumberShort' | translate}}</th>            
+            <th class="print -ex-type-id">{{'common.tableHeader.orderNumberShort' | translate}}</th>
             <th class="print -ex-type-text">{{'common.tableHeader.consignee' | translate}}</th>
             <th class="print -ex-type-text">{{'common.tableHeader.inventory' | translate}}</th>
             <th class="print -ex-type-number">{{'common.tableHeader.customsPrice' | translate}}</th>
@@ -77,16 +77,19 @@
     <tbody *ngIf="orders?.length > 0">
         <tr *ngFor="let order of orders" class="print">
             <td>
-                <input *ngIf="!hasShipOutProblems(order)" name="select" type="checkbox" [(ngModel)]="order.choices[index]"
-                    (change)="checkIfAllSelected()" (click)="checkSameCombinedShippingGroup(order)"
+                <input *ngIf="!hasShipOutProblems(order)" name="select" type="checkbox"
+                    [(ngModel)]="order.choices[index]" (change)="checkIfAllSelected()"
+                    (click)="checkSameCombinedShippingGroup(order)"
                     [attr.disabled]="hasShipOutProblems(order) ? true : null">
             </td>
 
-            <td class="zoom-in print -ex-type-text" (click)="editOrder(order)">{{order.orderFk.marketSellerFk.code}}</td>
+            <td class="zoom-in print -ex-type-text" (click)="popUpOrderEntry(order)">
+                {{order.orderFk.marketSellerFk.code}}</td>
 
             <td class="print -ex-type-id">{{order.orderFk.marketOrderNumber}}</td>
 
-            <td class="zoom-in print -ex-type-text" (click)="editOrder(order)">{{order.deliveryTagFk.consigneeName}}</td>
+            <td class="zoom-in print -ex-type-text" (click)="popUpOrderEntry(order)">
+                {{order.deliveryTagFk.consigneeName}}</td>
 
             <td class="print -ex-type-text" (click)="switchInventory(order)"
                 [ngClass]="{'foreground-red': isShortOrderQuantity(order), 'pointer': switchIconVisible(order)}">
@@ -97,41 +100,51 @@
                     {{getInventorySwitchIconName(order)}}</mat-icon>
             </td>
 
-            <td class="pointer print -ex-type-number" (click)="editCustomsPrice(order)"
+            <td class="pointer print -ex-type-number" (click)="popUpCustomsPriceEntry(order)"
                 [ngClass]="{'foreground-red': foundNullCustomsPrice(order)}">
                 {{showCustomsPrice(order)}}
             </td>
 
-            <td class="print -ex-type-text" [ngClass]="{'foreground-red': order.dupAddressName}" matTooltip="{{combinedShippingSummary(order)}}">
-                <mat-icon *ngIf="order.combinedShipAddressName" 
+            <td class="print -ex-type-text" [ngClass]="{'foreground-red': order.dupAddressName}"
+                matTooltip="{{combinedShippingSummary(order)}}">
+                <mat-icon *ngIf="order.combinedShipAddressName"
                     [ngClass]="{'foreground-blue': order.combinedShipAddressName}">insert_link
                 </mat-icon>
                 {{showCombinedShipping(order)}}
             </td>
 
-            <td [ngClass]="{'error-background': getShipOutStatusIcons(order).length>0, 'pointer': foundCustomTypeCodeEntryError(order, customsConfigs)}"
-                (click)="popUpCustomTypeCodeEntries()">
-                <mat-icon *ngFor="let icon of getShipOutStatusIcons(order)" class="small-icon" title="{{icon.tooltip}}">{{icon.name}}</mat-icon>
+            <td [ngClass]="{'error-background': getShipOutStatusIcons(order).length>0, 'pointer': getShipOutStatusIcons(order).length>0}">
+                <span *ngFor="let icon of getShipOutStatusIcons(order)" (click)="contextPopUp(order, icon)">
+                    <mat-icon class="small-icon" title="{{icon.tooltip}}">{{icon.name}}</mat-icon>
+                </span>
             </td>
 
-            <td class="print -ex-type-text" [ngClass]="{'zoom-in' : !order.trackingNumber}" (click)="!order.trackingNumber ? editOrder(order, 1) : null">
+            <td class="print -ex-type-text" [ngClass]="{'zoom-in' : !order.trackingNumber}"
+                (click)="!order.trackingNumber ? popUpOrderEntry(order, 1) : null">
                 {{order.trackingNumber ? order.trackingNumber : ''}}
             </td>
 
-            <td class="pointer print -ex-type-number" (click)="editItemsWeight(order)"
+            <td class="pointer print -ex-type-number" (click)="popUpItemsWeightEntry(order)"
                 [ngClass]="{'foreground-red': foundNullWeight(order)}">
                 {{showWeight(order)}}
             </td>
 
-            <td class="zoom-in print -ex-type-text" (click)="editOrder(order)">{{showItemsName(order)}}</td>
+            <td class="zoom-in print -ex-type-text" (click)="popUpOrderEntry(order)">{{showItemsName(order)}}</td>
         </tr>
     </tbody>
     <tbody *ngIf="orders?.length == 0">
         <tr>
-            <td></td><td></td><td></td>
-            <td></td><td></td><td></td>
-            <td></td><td></td><td></td>
-            <td></td><td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
         <tr>
             <td [attr.colspan]="11" class="no-data-available">
