@@ -50,18 +50,11 @@ export class OliveProductCustomsPriceEditorComponent extends OliveEntityEditComp
       productGroupCustomsPrice: ['', [numberValidator(2, false)]],
       productVariantCustomsPrice: ['', [numberValidator(2, false)]],
       productOverrideCustomsPrice: ['', [numberValidator(2, false)]],
-    }, { validators: [requiredAnyValidator(['productGroupCustomsPrice', 'productVariantCustomsPrice'])] } );
+    });
   }
 
   get hasRequiredAnyError() {
     return this.oForm.errors && this.oForm.errors['requiredAny'];
-  }
-
-  get inputRequiredNames(): string[] {
-    return [
-      this.translator.get('common.word.productGroupCustomsPrice'), 
-      this.translator.get('common.word.productVariantCustomsPrice')
-    ];
   }
 
   get isMultiProductVariants(): boolean {
@@ -109,9 +102,11 @@ export class OliveProductCustomsPriceEditorComponent extends OliveEntityEditComp
   notifyItemSaved(customsPrice: number) {
     const formModel = this.oForm.value;
 
+    const overrideCustomsPrice = formModel.productOverrideCustomsPrice.toString().trim() as string;
+
     this.onItemSaved.next({
       customsPrice: customsPrice, 
-      overrideCustomsPrice : formModel.productOverrideCustomsPrice
+      overrideCustomsPrice : overrideCustomsPrice.length === 0 ? null : overrideCustomsPrice
     });
   }
 }

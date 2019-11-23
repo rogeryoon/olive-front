@@ -59,18 +59,11 @@ export class OliveProductWeightEditorComponent extends OliveEntityEditComponent 
       productVariantWeightTypeCode: ['', requiredValidator()],
       productOverrideWeight: ['', [numberValidator(2, false)]],
       productOverrideWeightTypeCode: ['', requiredValidator()]
-    }, { validators: [requiredAnyValidator(['productGroupWeight', 'productVariantWeight'])] });
+    });
   }
 
   get hasRequiredAnyError() {
     return this.hasFormError('requiredAny');
-  }
-
-  get inputRequiredNames(): string[] {
-    return [
-      this.translator.get('common.word.productGroupWeight'),
-      this.translator.get('common.word.productVariantWeight')
-    ];
   }
 
   get isMultiProductVariants(): boolean {
@@ -142,9 +135,11 @@ export class OliveProductWeightEditorComponent extends OliveEntityEditComponent 
   notifyItemSaved(kiloWeight: number) {
     const formModel = this.oForm.value;
 
+    const overrideWeight = formModel.productOverrideWeight.toString().trim() as string;
+
     this.onItemSaved.next({
       customsWeight: kiloWeight, 
-      overrideCustomsWeight : formModel.productOverrideWeight,
+      overrideCustomsWeight : overrideWeight.length === 0 ? null : overrideWeight,
       overrideWeightTypeCode : formModel.productOverrideWeightTypeCode,
     });
   }

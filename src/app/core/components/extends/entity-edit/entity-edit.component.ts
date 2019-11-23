@@ -256,7 +256,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
     if (showStickyResult) {
       this.messageHelper.showSavedSuccess(
         this.isNewItem,
-        data.name
+        data ? data.name : null
       );
     }
 

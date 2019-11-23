@@ -8,9 +8,6 @@
         <span *ngIf="isMultiProductVariants">3. {{'common.word.productGroupCustomsPrice' | translate}}</span>
     </div>
 
-    <mat-error *ngIf="hasRequiredAnyError">
-        {{multiControlNamesErrorMessage('common.validate.requiredAny', inputRequiredNames)}}</mat-error>
-
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
         <mat-form-field appearance="outline">
             <mat-label>1. {{'common.word.productOverrideCustomsPrice' | translate}}</mat-label>

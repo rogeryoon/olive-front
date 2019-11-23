@@ -580,8 +580,16 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    */
   private updateProductWeight(order: OrderShipOut, editItem: OrderShipOutDetail, weight: ProductWeight) {
     const savedCustomsWeight = editItem.kiloGramWeight;
-    const savedOverrideWeight = editItem.extra && editItem.extra.customsWeight || null;
-    const savedOverrideWeightTypeCode = editItem.extra && editItem.extra.customsWeightTypeCode || null;
+    let savedOverrideWeight = null;
+    let savedOverrideWeightTypeCode = null;
+
+    if (editItem.extra && editItem.extra.customsWeight) {
+      savedOverrideWeight = editItem.extra.customsWeight;
+    }
+
+    if (editItem.extra && editItem.extra.customsWeightTypeCode) {
+      savedOverrideWeightTypeCode = editItem.extra.customsWeightTypeCode;
+    }
 
     // 상품 무게 수정창 오픈
     const itemId = OliveDocumentService.numToAlpha(editItem.productVariantShortId - 1);
@@ -656,7 +664,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    */
   private updateCustomsPrice(order: OrderShipOut, editItem: OrderShipOutDetail, price: ProductCustomsPrice) {
     const savedCustomsPrice = editItem.customsPrice;
-    const savedOverridePrice = editItem.extra && editItem.extra.customsPrice || null;
+    let savedOverridePrice = null;
+
+    if (editItem.extra && editItem.extra.customsPrice) {
+      savedOverridePrice = editItem.extra.customsPrice;
+    }
 
     // 세관신고 상품가격 수정창 오픈
     const itemId = OliveDocumentService.numToAlpha(editItem.productVariantShortId - 1);

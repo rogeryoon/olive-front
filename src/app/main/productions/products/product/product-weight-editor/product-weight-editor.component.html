@@ -8,8 +8,6 @@
         <span *ngIf="isMultiProductVariants">3. {{'common.word.productGroupWeight' | translate}}</span>
     </div>
 
-    <mat-error *ngIf="hasRequiredAnyError">{{multiControlNamesErrorMessage('common.validate.requiredAny', inputRequiredNames)}}</mat-error>
-
     <div class="h3 mb-8">1. {{'common.word.productOverrideWeight' | translate}}</div>
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
         <mat-form-field appearance="outline">

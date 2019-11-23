@@ -39,7 +39,7 @@ export class OliveMessageHelperService {
 
     this.alertService.showMessage(
       this.translator.get('common.title.success'),
-      Utilities.TestIsUndefined(itemName) ?
+      OliveUtilities.testIsUndefined(itemName) ?
         this.translator.get('common.message.deletedGeneral') :
         String.Format(this.translator.get('common.message.deleted'), itemName), 
       MessageSeverity.success
@@ -52,7 +52,7 @@ export class OliveMessageHelperService {
     if (isNewItem) {
       this.alertService.showMessage(
         this.translator.get('common.title.success'),
-        Utilities.TestIsUndefined(itemName) || itemName.length === 0 ? 
+        OliveUtilities.testIsUndefined(itemName) || itemName.length === 0 ? 
           this.translator.get('common.message.newItemCreatedGeneral') :
           String.Format(this.translator.get('common.message.newItemCreated'), itemName), 
         MessageSeverity.success
@@ -61,7 +61,7 @@ export class OliveMessageHelperService {
     else {
       this.alertService.showMessage(
         this.translator.get('common.title.success'),
-        Utilities.TestIsUndefined(itemName) || itemName.length === 0 ? 
+        OliveUtilities.testIsUndefined(itemName) || itemName.length === 0 ? 
           this.translator.get('common.message.updatedGeneral') :
           String.Format(this.translator.get('common.message.updated'), itemName), 
           MessageSeverity.success
