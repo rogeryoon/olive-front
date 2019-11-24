@@ -45,7 +45,6 @@ import { OliveQueryParameterService } from 'app/core/services/query-parameter.se
 import { OliveOrderHelperService } from 'app/main/sales/services/order-helper.service';
 import { Icon } from 'app/core/models/icon';
 import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
-import { SearchUnit } from 'app/core/models/search-unit';
 
 class AllocatedQuantity {
   productVariantId: number;
@@ -58,8 +57,8 @@ class CustomsTypeDue {
   oneItemMaxQuantities: Map<number, number>;
 
   public constructor(init?: CustomsTypeDue) {
-        Object.assign(this, init);
-  }  
+    Object.assign(this, init);
+  }
 }
 
 @Component({
@@ -88,6 +87,16 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   orders: OrderShipOut[] = [];
 
   /**
+   * 필더된 오더
+   */
+  filteredOrders: OrderShipOut[] = null;
+
+  /**
+   * 필터링하기전 사용자 선택 내용 저장
+   */
+  savedUserChecks = new Map<number, number>();
+
+  /**
    * 오더에 매칭한 기대수량과 실제 할당 수량을 저장
    */
   ordersQuantities = new Map<number, AllocatedQuantity[]>();
@@ -113,6 +122,10 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   selectedAll: any;
 
   saveOrder: OrderShipOut;
+
+  filterHasShipOutProblems = null;
+  filterKeyword = '';
+  filterCombinedShipping = null;
 
   @Output() shipOutFinished = new EventEmitter<any>();
   @Output() reload = new EventEmitter<any>();
@@ -165,8 +178,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
   get allCheckboxesDisabled(): boolean {
     let allDisabled = true;
-    for (let index = 0; index < this.orders.length; index++) {
-      const order = this.orders[index];
+    for (let index = 0; index < this.allOrders.length; index++) {
+      const order = this.allOrders[index];
 
       if (!this.hasShipOutProblems(order)) {
         allDisabled = false;
@@ -177,16 +190,25 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     return allDisabled;
   }
 
-  hasShipOutProblems(order: OrderShipOut): boolean {
-    return this.isShortOrderQuantity(order) || this.foundNullWeight(order) || this.foundNullCustomsPrice(order);
-  }
-
   get allOrders(): OrderShipOut[] {
+    if (this.filteredOrders) {
+      return this.filteredOrders;
+    }
     return this.orders;
   }
 
+  set allOrders(value: OrderShipOut[]) {
+    this.orders = value;
+  }
+
   get selectedOrders(): OrderShipOut[] {
-    return this.orders.filter(x => x.choices[this.index]);
+    return this.allOrders.filter(x => x.choices[this.index]);
+  }
+
+  get filtered(): boolean {
+    return this.filterHasShipOutProblems != null ||
+      this.filterCombinedShipping != null ||
+      this.filterKeyword.length > 0;
   }
 
   get hasSelectedItems(): boolean {
@@ -223,7 +245,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     let nullWeightExists = false;
     let totalWeight = 0;
 
-    this.orders.forEach(order => {
+    this.allOrders.forEach(order => {
       totalWeight += this.getOrderShipOutKiloWeightDueLocal(order);
 
       if (!nullWeightExists) {
@@ -231,9 +253,55 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       }
     });
 
-    const totalRows = this.orders.length;
+    const totalRows = this.allOrders.length;
 
     return totalRows === 0 ? '' : ` (${this.commaNumber(totalRows)}/${this.commaNumber(totalWeight)}Kg${nullWeightExists ? '-?' : ''})`;
+  }
+
+  onSearchChange(searchValue: string): void {  
+    this.filterKeyword = searchValue.trim();
+
+    if (this.filterKeyword.length === 0 && !this.filtered) {
+      this.buttonRemoveFilters();
+      return;
+    }
+
+    this.filterOrders();
+  }
+
+  private filterOrders() {
+    this.filteredOrders = this.orders;
+    const keyword = this.filterKeyword.toLowerCase();
+    if (keyword.length > 0) {
+      this.filteredOrders = this.filteredOrders.filter(order => 
+        order.orderFk.marketSellerFk.code && order.orderFk.marketSellerFk.code.toLowerCase().includes(keyword) ||
+        order.orderFk.marketOrderNumber && order.orderFk.marketOrderNumber.toLowerCase().includes(keyword) ||
+        order.deliveryTagFk.consigneeName && order.deliveryTagFk.consigneeName.toLowerCase().includes(keyword) ||
+        order.trackingNumber && order.trackingNumber.toLowerCase().includes(keyword) ||
+        order.orderShipOutDetails.find(x => x.name && x.name.toLowerCase().includes(keyword)));
+    }
+
+    // 합배송건
+    if (this.filterCombinedShipping) {
+      this.filteredOrders = this.filteredOrders.filter(order => this.getTailedDupAddressName(order).length > 0);
+    }
+    // 단일배송건
+    else if (this.filterCombinedShipping === false) {
+      this.filteredOrders = this.filteredOrders.filter(order => this.getTailedDupAddressName(order).length === 0);
+    }
+
+    // 출고 불가건
+    if (this.filterHasShipOutProblems) {
+      this.filteredOrders = this.filteredOrders.filter(order => this.hasShipOutProblems(order));
+    }
+    // 출고 가능건
+    else if (this.filterHasShipOutProblems === false) {
+      this.filteredOrders = this.filteredOrders.filter(order => !this.hasShipOutProblems(order));
+    }
+  }
+
+  hasShipOutProblems(order: OrderShipOut): boolean {
+    return this.isShortOrderQuantity(order) || this.foundNullWeight(order) || this.foundNullCustomsPrice(order);
   }
 
   setConfigs(configType: string, data: any) {
@@ -276,7 +344,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * Selects all
    */
   selectAll() {
-    this.orders.forEach(order => {
+    this.allOrders.forEach(order => {
       order.choices[this.index] = this.selectedAll && !this.hasShipOutProblems(order);
     });
   }
@@ -285,14 +353,14 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * Checks if all selectedㄴ
    */
   checkIfAllSelected() {
-    this.selectedAll = this.orders.every(x => x.choices[this.index]);
+    this.selectedAll = this.allOrders.every(x => x.choices[this.index]);
   }
 
   // 묶음배송 체크 자동선택
   checkSameCombinedShippingGroup(thisOrder: OrderShipOut) {
     if (!thisOrder.choices[this.index] && thisOrder.dupAddressName) {
       const thisOrderTailedDupAddressName = this.getTailedDupAddressName(thisOrder);
-      this.orders.forEach(order => {
+      this.allOrders.forEach(order => {
         if
           (
           !order.choices[this.index]
@@ -317,7 +385,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     this.combinedShippingGroups = new Map<string, Array<string>>();
 
-    this.orders = orders;
+    this.allOrders = orders;
 
     this.setWarehouseInventories(inventories);
 
@@ -361,7 +429,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * Allocates order inventories
    */
   private allocateOrderInventories() {
-    for (const order of this.orders) {
+    for (const order of this.allOrders) {
       const orderQuantities: AllocatedQuantity[] = [];
 
       let shortage = false;
@@ -468,11 +536,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       case this.nullWeightIcon:
         this.popUpItemsWeightEntry(order);
         break;
-        
+
       case this.nullCustomsPriceIcon:
-          this.popUpCustomsPriceEntry(order);
+        this.popUpCustomsPriceEntry(order);
         break;
-        
+
       case this.customsTypeCodeErrorIcon:
         this.popUpCustomTypeCodeEntries();
         break;
@@ -514,10 +582,6 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     return this.numberFormat(weightDue, 2) + (foundNull ? ' ?' : '');
   }
 
-  showCombinedShipping(order: OrderShipOut): string {
-    return this.getTailedDupAddressName(order);
-  }
-
   combinedShippingSummary(thisOrder: OrderShipOut): string {
     const thisOrderTailedDupAddressName = this.getTailedDupAddressName(thisOrder);
     if
@@ -533,7 +597,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     let totalCount = 0;
     let primaryName = '';
 
-    this.orders.filter(x => this.getTailedDupAddressName(x) === thisOrderTailedDupAddressName).forEach(order => {
+    this.allOrders.filter(x => this.getTailedDupAddressName(x) === thisOrderTailedDupAddressName).forEach(order => {
       if (this.getTailedDupAddressName(order) === thisOrderTailedDupAddressName) {
         totalAmount += this.getOrderShipOutCustomsPriceDue(order);
         totalCount++;
@@ -676,7 +740,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         }
 
         let update = true;
-        for (const od of this.orders) {
+        for (const od of this.allOrders) {
           for (const it of od.orderShipOutDetails.filter(x => x.productVariantId === weight.productVariantId)) {
             if (savedCustomsWeight === result.customsWeight) {
               update = false;
@@ -750,7 +814,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         }
 
         let update = true;
-        for (const od of this.orders) {
+        for (const od of this.allOrders) {
           for (const it of od.orderShipOutDetails.filter(x => x.productVariantId === price.productVariantId)) {
             if (savedCustomsPrice === result.customsPrice) {
               update = false;
@@ -892,7 +956,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       // 끝에 자리가 숫자로 끝난 합배송은 합배송건을 찾아서 추가 집계한다.
       !isNaN(+thisOrderTailedDupAddressName[thisOrderTailedDupAddressName.length - 1])
     ) {
-      this.orders.forEach(order => {
+      this.allOrders.forEach(order => {
         if
           (
           order.id !== thisOrder.id &&
@@ -913,8 +977,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
       const customsTypeQuantity = customsTypeStats.get(customsTypeCode).quantity;
 
-      if 
-      (
+      if
+        (
         // 예) 건기식 6병 제한
         warning.sameTypeMaxQuantity !== null &&
         customsTypeQuantity > warning.sameTypeMaxQuantity
@@ -926,7 +990,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       }
 
       // 예) 전자 제품 제품별 1개 제한
-      if ( warning.oneItemMaxQuantity !== null) {
+      if (warning.oneItemMaxQuantity !== null) {
         const productMap = customsTypeStats.get(customsTypeCode).oneItemMaxQuantities;
         for (const quantity of Array.from(productMap.values())) {
           if (quantity > warning.oneItemMaxQuantity) {
@@ -967,7 +1031,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         continue;
       }
 
-      let totalPrice = 0;          
+      let totalPrice = 0;
       for (const interSectionCustomsTypeCode of intersection) {
         totalPrice += customsTypeStats.get(interSectionCustomsTypeCode).price;
       }
@@ -1006,16 +1070,16 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
           }
           else {
             productQuantities.set(productId, item.quantity);
-          }          
+          }
 
           customsTypeDue.quantity += item.quantity;
           customsTypeDue.price += item.quantity * item.customsPrice;
           customsTypeDue.oneItemMaxQuantities = productQuantities;
         }
         else {
-          customsTypeStats.set(customsTypeCodeKey, { 
-            quantity: item.quantity, 
-            price: item.quantity * item.customsPrice, 
+          customsTypeStats.set(customsTypeCodeKey, {
+            quantity: item.quantity,
+            price: item.quantity * item.customsPrice,
             oneItemMaxQuantities: new Map<number, number>([[productId, item.quantity]])
           });
         }
@@ -1399,7 +1463,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     dialogRef.afterClosed().subscribe((results: ProductHsCode[]) => {
       if (results) {
         // 관련 HS Code를 모두 업데이트 한다.
-        for (const order of this.orders) {
+        for (const order of this.allOrders) {
           for (const item of order.orderShipOutDetails) {
             const source = results.find(x => x.id === item.productId);
             if (source) {
@@ -1560,7 +1624,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     dialogRef.afterClosed().subscribe((results: ProductCustomsTypeCode[]) => {
       if (results) {
         // 관련 HS Code를 모두 업데이트 한다.
-        for (const order of this.orders) {
+        for (const order of this.allOrders) {
           for (const item of order.orderShipOutDetails) {
             const source = results.find(x => x.id === item.productId);
             if (source) {
@@ -1652,11 +1716,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       this.showRefreshDialog(String.Format(this.translator.get('common.message.outOfStock'), shortInventoryOrderIds.length));
     }
     else { // 재고가 저장된것 빼고 삭제한다.
-      for (let i = this.orders.length - 1; i >= 0; i--) {
-        const orderId = this.orders[i].id;
-        if (this.orders[i].choices[this.index] && (!shortInventoryOrderIds || shortInventoryOrderIds.every(x => x !== orderId))) {
+      for (let i = this.allOrders.length - 1; i >= 0; i--) {
+        const orderId = this.allOrders[i].id;
+        if (this.allOrders[i].choices[this.index] && (!shortInventoryOrderIds || shortInventoryOrderIds.every(x => x !== orderId))) {
           this.ordersQuantities.delete(orderId);
-          this.orders.splice(i, 1);
+          this.allOrders.splice(i, 1);
         }
       }
     }
@@ -1674,6 +1738,28 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       !x.branchId || !x.companyGroupId);
   }
 
+  buttonFilterHasShipOutProblems() {
+    this.filterHasShipOutProblems = true;
+    this.filterOrders();
+  }
+
+  buttonFilterHasOkShipOuts() {
+    this.filterHasShipOutProblems = false;
+    this.filterOrders();
+  }
+
+  buttonFilterCombinedOrders() {
+    this.filterCombinedShipping = true;
+    this.filterOrders();
+  }
+
+  buttonRemoveFilters() {
+    this.filterHasShipOutProblems = null;
+    this.filterCombinedShipping = null;
+    this.filterKeyword = '';
+    this.filteredOrders = null;
+  }
+
   /**
    * Button - pre assign tracking number
    */
@@ -1685,7 +1771,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     }
     else if (this.selectedOrders.length === 0) {
       // 모두 이미 송장발급이 되었다면 작업대상이 없다고 오류메시지 표시
-      if (this.orders.every(x => !this.isNull(x.trackingNumber))) {
+      if (this.allOrders.every(x => !this.isNull(x.trackingNumber))) {
         this.messageHelper.showError(this.translator.get('sales.pendingOrderShipOutList.allOrderHaveTrackingNumbers'));
       }
       else {
@@ -1739,7 +1825,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       this.translator.get('sales.pendingOrderShipOutList.confirmIssueOnlyNoTrackingOrders'),
       DialogType.confirm,
       () => {
-        this.buttonPreAssignTrackingNumbers(carrierTrackingsNumbersGroupsId, this.orders.filter(x => this.isNull(x.trackingNumber)));
+        this.buttonPreAssignTrackingNumbers(carrierTrackingsNumbersGroupsId, this.allOrders.filter(x => this.isNull(x.trackingNumber)));
       },
       () => null,
       this.translator.get('common.button.yes'),
@@ -1783,8 +1869,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    */
   exportOrderList() {
     this.documentService.exportHtmlTableToExcel(
-      this.translator.get('sales.pendingOrderShipOutList.fileName'), 
-      this.tableId + '-bottom', 
+      this.translator.get('sales.pendingOrderShipOutList.fileName'),
+      this.tableId + '-bottom',
       false,
       null,
       [
@@ -1794,7 +1880,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         { appliedIndex: 6, exclusive: true, searchPattern: /[A-Z]+[0-9]?/g }
       ]
     );
-  }  
+  }
 
   get canPreAssignTrackingNumber(): boolean {
     return true;

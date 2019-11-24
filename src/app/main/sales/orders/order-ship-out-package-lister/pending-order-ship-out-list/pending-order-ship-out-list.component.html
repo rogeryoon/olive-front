@@ -2,18 +2,23 @@
 
 <table id="{{tableId}}-top" class="w-100-p" #topTable>
     <tr>
-        <td class="w-30-p title">
+        <td class="title">
             <mat-icon>access_time</mat-icon><span
                 class="ml-4">{{'common.title.pendingShipOut' | translate}}{{remarkAllOrders}}</span>
         </td>
-        <td class="w-70-p right">
-            <button mat-icon-button [matMenuTriggerFor]="misc" [disabled]="isloading" mat-raised-button
-                class="right ml-4" matTooltip="{{'common.button.misc' | translate}}">
-                <mat-icon>dialpad</mat-icon>
-            </button>
-            <button mat-icon-button [matMenuTriggerFor]="filter" [disabled]="isloading" mat-raised-button
-                class="right ml-4" matTooltip="{{'common.button.filter' | translate}}">
+        <td class="right">
+            <input type="text" name="filterString" size="4" placeholder="{{'common.word.keyword' | translate}}" [(ngModel)]="filterKeyword" (input)="onSearchChange($event.target.value)">&nbsp;
+            <button *ngIf="!filtered" mat-icon-button [matMenuTriggerFor]="filter" [disabled]="isloading"
+                mat-raised-button class="right ml-4" matTooltip="{{'common.button.filter' | translate}}">
                 <mat-icon>filter_list</mat-icon>
+            </button>
+            <button *ngIf="filtered" mat-icon-button [disabled]="isloading" mat-raised-button class="right ml-4"
+                matTooltip="{{'common.button.removeFilter' | translate}}" (click)="buttonRemoveFilters()">
+                <mat-icon color="accent">cached</mat-icon>
+            </button>
+            <button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="isloading" mat-raised-button
+                class="right ml-4" matTooltip="{{'common.button.menu' | translate}}">
+                <mat-icon>dialpad</mat-icon>
             </button>
             <button [disabled]="!(canCombineShip || canReleaseCombineShip) || isloading" mat-raised-button color="basic"
                 class="right ml-4" (click)="combineShip()" matTooltip="{{remarkCombinedOrders}}">
@@ -27,17 +32,21 @@
             </button>
 
             <mat-menu #filter="matMenu">
-                <button mat-menu-item [disabled]="isloading" (click)="buttonPreAssignTrackingNumbers()">
-                    <mat-icon>find_replace</mat-icon>
-                    {{'common.menu.preAssignTrackingNumber' | translate}}
+                <button mat-menu-item [disabled]="isloading" (click)="buttonFilterHasShipOutProblems()">
+                    <mat-icon>report_problem</mat-icon>
+                    {{'common.menu.filterHasShipOutProblems' | translate}}
                 </button>
-                <button mat-menu-item [disabled]="isloading" (click)="exportForTrackingNumberUpdate()">
-                    <mat-icon>view_list</mat-icon>
-                    {{'common.menu.exportForTrackingNumberUpdate' | translate}}
+                <button mat-menu-item [disabled]="isloading" (click)="buttonFilterHasOkShipOuts()">
+                    <mat-icon>done</mat-icon>
+                    {{'common.menu.filterHasOkShipOuts' | translate}}
+                </button>
+                <button mat-menu-item [disabled]="isloading" (click)="buttonFilterCombinedOrders()">
+                    <mat-icon>insert_link</mat-icon>
+                    {{'common.menu.filterCombinedOrders' | translate}}
                 </button>
             </mat-menu>
 
-            <mat-menu #misc="matMenu">
+            <mat-menu #menu="matMenu">
                 <button mat-menu-item [disabled]="isloading" (click)="buttonPreAssignTrackingNumbers()">
                     <mat-icon>find_replace</mat-icon>
                     {{'common.menu.preAssignTrackingNumber' | translate}}
@@ -59,7 +68,7 @@
     <thead>
         <tr>
             <th>
-                <input type="checkbox" [disabled]="(orders && !orders.length) || allCheckboxesDisabled"
+                <input type="checkbox" [disabled]="(allOrders && !allOrders.length) || allCheckboxesDisabled"
                     [(ngModel)]="selectedAll" (change)="selectAll();" />
             </th>
             <th class="print -ex-type-text">{{'common.tableHeader.seller' | translate}}</th>
@@ -74,8 +83,8 @@
             <th class="print -ex-type-text -ex-width-80">{{'common.tableHeader.itemsName' | translate}}</th>
         </tr>
     </thead>
-    <tbody *ngIf="orders?.length > 0">
-        <tr *ngFor="let order of orders" class="print">
+    <tbody *ngIf="allOrders?.length > 0">
+        <tr *ngFor="let order of allOrders" class="print">
             <td>
                 <input *ngIf="!hasShipOutProblems(order)" name="select" type="checkbox"
                     [(ngModel)]="order.choices[index]" (change)="checkIfAllSelected()"
@@ -110,10 +119,11 @@
                 <mat-icon *ngIf="order.combinedShipAddressName"
                     [ngClass]="{'foreground-blue': order.combinedShipAddressName}">insert_link
                 </mat-icon>
-                {{showCombinedShipping(order)}}
+                {{getTailedDupAddressName(order)}}
             </td>
 
-            <td [ngClass]="{'error-background': getShipOutStatusIcons(order).length>0, 'pointer': getShipOutStatusIcons(order).length>0}">
+            <td
+                [ngClass]="{'error-background': getShipOutStatusIcons(order).length>0, 'pointer': getShipOutStatusIcons(order).length>0}">
                 <span *ngFor="let icon of getShipOutStatusIcons(order)" (click)="contextPopUp(order, icon)">
                     <mat-icon class="small-icon" title="{{icon.tooltip}}">{{icon.name}}</mat-icon>
                 </span>
@@ -132,7 +142,7 @@
             <td class="zoom-in print -ex-type-text" (click)="popUpOrderEntry(order)">{{showItemsName(order)}}</td>
         </tr>
     </tbody>
-    <tbody *ngIf="orders?.length == 0">
+    <tbody *ngIf="allOrders?.length == 0">
         <tr>
             <td></td>
             <td></td>

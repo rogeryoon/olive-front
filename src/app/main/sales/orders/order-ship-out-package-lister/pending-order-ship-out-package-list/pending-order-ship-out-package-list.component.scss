@@ -1,4 +1,9 @@
 ﻿:host {
+    .mat-raised-button {
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+        
     table {
         td {
             text-align: center;

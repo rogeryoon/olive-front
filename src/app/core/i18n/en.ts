@@ -140,10 +140,11 @@ export const locale = {
                 'cancelCombineShip' : '합배송 취소',
                 'cancelShipOut' : '출고 취소',
                 'finishShipOutPackage' : '출고 완료',
-                'misc' : '기타',
+                'menu' : '메뉴',
                 'reIssueTrackingNumber' : '송장번호 재발급',
                 'issueTrackingNumber' : '송장번호 발급',
-                'filter' : '필터'
+                'filter' : '필터',
+                'removeFilter' : '필터 제거'
             },
             'menu': {
                 'menuButton' : '부가 기능',
@@ -159,6 +160,9 @@ export const locale = {
                 'printPackingList' : '팩킹 리스트',
                 'printPickingList' : '피킹 리스트',
                 'preAssignTrackingNumber' : '송장 선발급',
+                'filterHasShipOutProblems' : '출고 불가',
+                'filterHasOkShipOuts' : '출고 가능',
+                'filterCombinedOrders' : '합배송'
             },
             'form': {
                 'createdDateFrom' : '등록일 시작',
@@ -222,6 +226,7 @@ export const locale = {
                 'customsTypeCode' : '통관 타입',
             },
             'word': {
+                'keyword': '키워드',
                 'branch': '지점',
                 'id' : 'ID',
                 'warehouse' : '창고',
