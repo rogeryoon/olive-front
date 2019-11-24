@@ -501,6 +501,8 @@ export const locale = {
                 'selectDeliveryInfoTitle' : '다중 배달 정보 발견',
                 'selectDeliveryInfoDescription' : '어떤 배달 정보를 사용할것인지 선택하세요',
                 'confirmCombinedShipExists' : '합배송 처리 하지 않은 합배송 대상건이 있습니다. 합배송처리하지 않고 출고하겠습니까?',
+                'confirmCustomsIssueExists' : '통관에 문제가 있는 주문 {0}-{1}{2}이(가) 존재합니다. 정말 출고처리하겠습니까?',
+                'extraDataCount' : ' 외 {0}건',
                 'selectProductTitle' : '상품 선택',
                 'selectProductDescription' : '원하는 상품을 선택하세요',
                 'priorityOrders' : '입력 값 우선 순위',

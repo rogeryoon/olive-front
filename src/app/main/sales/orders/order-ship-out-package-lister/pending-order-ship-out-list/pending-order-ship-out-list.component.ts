@@ -886,6 +886,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       !this.isNull(order.orderShipOutDetails.find(x => x.customsPrice == null && (x.extra == null || x.extra.customsPrice == null)));
   }
 
+  /**
+   * Gets ship out status icons
+   * @param order 
+   * @returns ship out status icons 
+   */
   getShipOutStatusIcons(order: OrderShipOut): Icon[] {
     const icons = new Array<Icon>();
 
@@ -1385,10 +1390,29 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     const uncombinedOrderExists = Array.from(uncombinedOrderChecker.values()).some(x => x > 1);
 
-    let confirmMessage = this.translator.get('common.message.areYouSure');
+    let confirmMessage = null;
     // 합배송처리 안하고 그냥 출고하는 거라면 컨펌 받는다.
     if (uncombinedOrderExists) {
       confirmMessage = this.translator.get('sales.pendingOrderShipOutList.confirmCombinedShipExists');
+    }
+
+    if (!confirmMessage) {
+      const customsIssues = this.selectedOrders.filter(order => this.getShipOutStatusIcons(order).length > 0);
+
+      if (customsIssues.length > 0) {
+        confirmMessage = String.Format(
+          this.translator.get('sales.pendingOrderShipOutList.confirmCustomsIssueExists'),
+          customsIssues[0].orderFk.marketOrderNumber,
+          customsIssues[0].deliveryTagFk.consigneeName,
+          customsIssues.length === 1 ? '' : 
+          String.Format(this.translator.get('sales.pendingOrderShipOutList.extraDataCount'), customsIssues.length - 1)
+        );
+      }
+    }
+
+    // 아무런 User Confirm 메시지가 없다면 기본 확인 메시지를 설정
+    if (!confirmMessage) {
+      confirmMessage = this.translator.get('common.message.areYouSure');
     }
 
     this.alertService.showDialog(
