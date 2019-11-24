@@ -3,11 +3,11 @@
 <table id="{{tableId}}-top" class="w-100-p" #topTable>
     <tr>
         <td class="title">
-            <mat-icon>access_time</mat-icon><span
-                class="ml-4">{{'common.title.pendingShipOut' | translate}}{{remarkAllOrders}}</span>
+            <mat-icon>access_time</mat-icon>
+            <span class="ml-4">{{'common.title.pendingShipOut' | translate}}{{remarkAllOrders}}</span>
         </td>
         <td class="right">
-            <input type="text" name="filterString" size="4" placeholder="{{'common.word.keyword' | translate}}" [(ngModel)]="filterKeyword" (input)="onSearchChange($event.target.value)">&nbsp;
+            <input type="text" name="filterString" size="4" placeholder="{{'common.word.keyword' | translate}}" class="mr-4" [(ngModel)]="filterKeyword" (input)="onSearchChange($event.target.value)">
             <button *ngIf="!filtered" mat-icon-button [matMenuTriggerFor]="filter" [disabled]="isloading"
                 mat-raised-button class="right ml-4" matTooltip="{{'common.button.filter' | translate}}">
                 <mat-icon>filter_list</mat-icon>

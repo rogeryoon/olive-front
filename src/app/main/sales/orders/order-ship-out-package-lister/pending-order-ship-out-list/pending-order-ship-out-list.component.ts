@@ -592,14 +592,21 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     return this.numberFormat(weightDue, 2) + (foundNull ? ' ?' : '');
   }
 
+  /**
+   * Determines whether pending combined dup address name is
+   * 예) A1 : 합배송 처리됨, B : 합배송대상
+   * @param dupAddressName 
+   * @returns true if pending combined dup address name 
+   */
+  isPendingCombinedDupAddressName(dupAddressName: string): boolean {
+    return dupAddressName.length === 0 || isNaN(+dupAddressName[dupAddressName.length - 1]);
+  }
+
   combinedShippingSummary(thisOrder: OrderShipOut): string {
     const thisOrderTailedDupAddressName = this.getTailedDupAddressName(thisOrder);
-    if
-      (
-      thisOrderTailedDupAddressName.length === 0 ||
-      // 끝에 자리가 숫자로 끝나지 않는 합배송은 아직까지 합배송처리가 안되었기때문에 생략
-      isNaN(+thisOrderTailedDupAddressName[thisOrderTailedDupAddressName.length - 1])
-    ) {
+
+    // 끝에 자리가 숫자로 끝나지 않는 합배송은 아직까지 합배송처리가 안되었기때문에 생략
+    if (this.isPendingCombinedDupAddressName(thisOrderTailedDupAddressName)) {
       return '';
     }
 
@@ -1692,10 +1699,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     const newPackagesRequest = [];
 
     for (const order of this.selectedOrders) {
+      const dupAddressName = this.getTailedDupAddressName(order);
       newPackagesRequest.push({
         orderShipOutId: order.id,
         warehouseId: this.warehouse.id,
-        combinedShipAddressName: this.getTailedDupAddressName(order),
+        combinedShipAddressName: this.isPendingCombinedDupAddressName(dupAddressName) ? '' : dupAddressName,
         primary: order.combinedShipAddressIsPrimary
       });
     }
