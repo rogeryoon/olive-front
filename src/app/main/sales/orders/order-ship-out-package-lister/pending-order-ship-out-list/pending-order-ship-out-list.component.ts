@@ -92,11 +92,6 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   filteredOrders: OrderShipOut[] = null;
 
   /**
-   * 필터링하기전 사용자 선택 내용 저장
-   */
-  savedUserChecks = new Map<number, number>();
-
-  /**
    * 오더에 매칭한 기대수량과 실제 할당 수량을 저장
    */
   ordersQuantities = new Map<number, AllocatedQuantity[]>();
@@ -258,7 +253,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     return totalRows === 0 ? '' : ` (${this.commaNumber(totalRows)}/${this.commaNumber(totalWeight)}Kg${nullWeightExists ? '-?' : ''})`;
   }
 
-  onSearchChange(searchValue: string): void {  
+  /**
+   * 키워드 검색 입력 이벤트 처리
+   * @param searchValue 
+   */
+  onSearchChange(searchValue: string) {  
     this.filterKeyword = searchValue.trim();
 
     if (this.filterKeyword.length === 0 && !this.filtered) {
@@ -269,6 +268,9 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     this.filterOrders();
   }
 
+  /**
+   * Filters orders
+   */
   private filterOrders() {
     this.filteredOrders = this.orders;
     const keyword = this.filterKeyword.toLowerCase();
@@ -300,6 +302,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     }
   }
 
+  /**
+   * Determines whether ship out problems has
+   * @param order 
+   * @returns true if ship out problems 
+   */
   hasShipOutProblems(order: OrderShipOut): boolean {
     return this.isShortOrderQuantity(order) || this.foundNullWeight(order) || this.foundNullCustomsPrice(order);
   }
@@ -356,7 +363,10 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     this.selectedAll = this.allOrders.every(x => x.choices[this.index]);
   }
 
-  // 묶음배송 체크 자동선택
+  /**
+   * 묶음배송 체크 자동선택
+   * @param thisOrder 
+   */
   checkSameCombinedShippingGroup(thisOrder: OrderShipOut) {
     if (!thisOrder.choices[this.index] && thisOrder.dupAddressName) {
       const thisOrderTailedDupAddressName = this.getTailedDupAddressName(thisOrder);
