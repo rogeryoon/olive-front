@@ -517,7 +517,8 @@ export const locale = {
                 'confirmFoundPreAssignedCarrierTrackingNumberMessage' : '선택한 주문에 이미 등록된 송장번호가 있습니다. 이미 등록된 송장번호를 새 송장번호로 업데이트하겠습니까?',
                 'trackingNumbersShortageErrorMessage': '새로 발급할 송장번호가 부족합니다. 새로 등록하시겠습니까?',
                 'allOrderHaveTrackingNumbers' : '더이상 송장발급을 할 대상이 없습니다.',
-                'confirmIssueOnlyNoTrackingOrders' : '선택한 주문이 없습니다. 발급하지 않은 주문송장만 발급하겠습니까?',
+                'confirmIssueOnlyNoTrackingOrders' : '선택한 주문이 없습니다. 송장번호가 없는건들을 선송장 발급하겠습니까?',
+                'confirmIssueOnlyNoTrackingOrders2' : '송장번호가 없는 데이터가 있습니다. 송장번호가 없는건들을 선송장발급하겠습니까?',
                 'confirmRefreshAfterSplitOrders' : '분할 배송저장이 완료되었습니다. 출고 리스팅을 모두 갱신합니다.',
                 'fileName' : '출고 대기'
             },

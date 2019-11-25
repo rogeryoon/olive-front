@@ -1,4 +1,4 @@
-﻿import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Subject, Subscription } from 'rxjs';
@@ -1803,7 +1803,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   }
 
   /**
-   * Button - pre assign tracking number
+   * 선송장 발급 버튼 처리
    */
   buttonPreAssignTrackingNumbers(carrierTrackingsNumbersGroupsId: number = null, preSelectedOrders: OrderShipOut[] = null) {
     let targetOrders: OrderShipOut[];
@@ -1892,6 +1892,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     );
   }
 
+  /**
+   * 송장번호 대역이 멀티일 경우 선택하는 팝업창
+   * @param availCarrierTrackingsNumbersGroups 
+   * @param [targetOrders] 
+   */
   popUpSelectCarrierTrackingsNumbersGroupsDialog(availCarrierTrackingsNumbersGroups: CarrierTrackingNumbersGroup[], targetOrders: OrderShipOut[] = null) {
     const dialogRef = this.orderHelperService.popUpSelectCarrierTrackingsNumbersGroupsDialog(availCarrierTrackingsNumbersGroups);
 
@@ -1904,6 +1909,29 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
   // TODO : exportForTrackingNumberUpdate
   exportForTrackingNumberUpdate() {
+    // 선송장을 발급하지 않는 대상이 있다면 발급한다.
+    if (this.allOrders.some(x => this.isNull(x.trackingNumber))) {
+      this.alertService.showDialog(
+        this.translator.get('common.title.confirm'),
+        this.translator.get('sales.pendingOrderShipOutList.confirmIssueOnlyNoTrackingOrders2'),
+        DialogType.confirm,
+        () => {
+          this.buttonPreAssignTrackingNumbers(null, this.allOrders.filter(x => this.isNull(x.trackingNumber)));
+        },
+        () => null,
+        this.translator.get('common.button.yes'),
+        this.translator.get('common.button.no')
+      );
+    }
+
+    if (this.allOrders.every(x => !this.isNull(x.trackingNumber))) {
+      this.generateTrackingNumberExcels();
+    }
+  }
+
+  generateTrackingNumberExcels() {
+    // 마켓 엑셀 인터페이스 로드
+    // 
   }
 
   /**

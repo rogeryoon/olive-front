@@ -4,7 +4,7 @@
         padding-left: 5px;
     }
 
-    input {
+    input[type=text] {
         border: 0;
         outline: 0;
         background: transparent;
@@ -45,6 +45,11 @@
         tr {
             cursor: auto ;
         }
+
+        th, td {
+            padding: 3px;
+        }
+
         td.pointer {
             cursor: pointer ;
         }
@@ -116,10 +121,14 @@
         }        
 
         // 아이템
-        td:nth-child(11), th:nth-child(11) {
+        th:nth-child(11) {
             min-width: 600px;
             max-width: 600px;
+        }
+        td:nth-child(11) {
+            min-width: 600px;
+            max-width: 600px;            
             text-align: justify;
-        }        
+        }
     }
 }
