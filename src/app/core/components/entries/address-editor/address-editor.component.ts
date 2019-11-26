@@ -27,7 +27,6 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private cacheService: OliveCacheService,
-    private messageHelper: OliveMessageHelperService,
     private countryService: OliveCountryService
   ) {
     super(
@@ -79,22 +78,11 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
   }
 
   private getCountryCodes() {
-    const itemKey = OliveCacheService.cacheKeys.getItemsKey.country;
     const searchOption = OliveUtilities.searchOption([{name: 'activated', value: true} as NameValue], 'name');
-
-    if (!this.cacheService.exist(itemKey)) {
-      this.countryService.getItems(searchOption)
-        .subscribe(res => {
-          this.cacheService.set(itemKey, res.model);
-          this.countries = res.model;
-        },
-          error => {
-            this.messageHelper.showLoadFailedSticky(error);
-          });
-    }
-    else {
-      this.countries = this.cacheService.get(itemKey);
-    }
+    this.cacheService.getItems(this.countryService, OliveCacheService.cacheKeys.getItemsKey.country, searchOption)
+    .then((items: Country[]) => {
+      this.countries = items;
+    });
   }
 }
 

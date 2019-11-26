@@ -45,6 +45,9 @@ import { OliveQueryParameterService } from 'app/core/services/query-parameter.se
 import { OliveOrderHelperService } from 'app/main/sales/services/order-helper.service';
 import { Icon } from 'app/core/models/icon';
 import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
+import { OliveMarketExcelInterfaceService } from 'app/main/supports/services/market-excel-interface.service';
+import { OliveMarketService } from 'app/main/supports/services/market.service';
+import { OliveOrderTrackingExcelService } from 'app/main/sales/services/order-tracking-excel.service';
 
 class AllocatedQuantity {
   productVariantId: number;
@@ -139,7 +142,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     private messageHelper: OliveMessageHelperService, private orderShipOutService: OliveOrderShipOutService,
     private productService: OliveProductService, private cacheService: OliveCacheService,
     private queryParams: OliveQueryParameterService, private orderHelperService: OliveOrderHelperService,
-    private documentService: OliveDocumentService
+    private documentService: OliveDocumentService, private orderTrackingExcelService: OliveOrderTrackingExcelService
   ) {
     super(
       formBuilder, translator
@@ -257,7 +260,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * 키워드 검색 입력 이벤트 처리
    * @param searchValue 
    */
-  onSearchChange(searchValue: string) {  
+  onSearchChange(searchValue: string) {
     this.filterKeyword = searchValue.trim();
 
     if (this.filterKeyword.length === 0 && !this.filtered) {
@@ -275,7 +278,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     this.filteredOrders = this.orders;
     const keyword = this.filterKeyword.toLowerCase();
     if (keyword.length > 0) {
-      this.filteredOrders = this.filteredOrders.filter(order => 
+      this.filteredOrders = this.filteredOrders.filter(order =>
         order.orderFk.marketSellerFk.code && order.orderFk.marketSellerFk.code.toLowerCase().includes(keyword) ||
         order.orderFk.marketOrderNumber && order.orderFk.marketOrderNumber.toLowerCase().includes(keyword) ||
         order.deliveryTagFk.consigneeName && order.deliveryTagFk.consigneeName.toLowerCase().includes(keyword) ||
@@ -1411,8 +1414,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
           this.translator.get('sales.pendingOrderShipOutList.confirmCustomsIssueExists'),
           customsIssues[0].orderFk.marketOrderNumber,
           customsIssues[0].deliveryTagFk.consigneeName,
-          customsIssues.length === 1 ? '' : 
-          String.Format(this.translator.get('sales.pendingOrderShipOutList.extraDataCount'), customsIssues.length - 1)
+          customsIssues.length === 1 ? '' :
+            String.Format(this.translator.get('sales.pendingOrderShipOutList.extraDataCount'), customsIssues.length - 1)
         );
       }
     }
@@ -1917,21 +1920,16 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         DialogType.confirm,
         () => {
           this.buttonPreAssignTrackingNumbers(null, this.allOrders.filter(x => this.isNull(x.trackingNumber)));
+          this.orderTrackingExcelService.saveTrackingNumberExcels(this.allOrders);
         },
         () => null,
         this.translator.get('common.button.yes'),
         this.translator.get('common.button.no')
       );
     }
-
-    if (this.allOrders.every(x => !this.isNull(x.trackingNumber))) {
-      this.generateTrackingNumberExcels();
+    else {
+      this.orderTrackingExcelService.saveTrackingNumberExcels(this.allOrders);
     }
-  }
-
-  generateTrackingNumberExcels() {
-    // 마켓 엑셀 인터페이스 로드
-    // 
   }
 
   /**

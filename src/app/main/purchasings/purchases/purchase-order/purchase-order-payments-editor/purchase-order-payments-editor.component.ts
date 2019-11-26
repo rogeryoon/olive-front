@@ -42,8 +42,8 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
 
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
-    private messageHelper: OliveMessageHelperService, private snackBar: MatSnackBar,
-    private cacheService: OliveCacheService, private paymentMethodService: OlivePaymentMethodService
+    private snackBar: MatSnackBar, private cacheService: OliveCacheService, 
+    private paymentMethodService: OlivePaymentMethodService
   ) {
     super(
       formBuilder, translator
@@ -52,19 +52,14 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
 
   initializeChildComponent() {
     this.standCurrency = this.cacheService.standCurrency;
-    const key = OliveCacheService.cacheKeys.paymentMethod;
-    if (!this.cacheService.exist(key)) {
-      this.paymentMethodService.getItems()
-        .subscribe(response => {
-          this.paymentMethods = this.cacheService.set(key, response.model);
-        },
-          error => {
-            this.messageHelper.showLoadFailedSticky(error);
-          });
-    }
-    else {
-      this.paymentMethods = this.cacheService.get(key);
-    }
+    this.getPaymentMethods();
+  }
+
+  private getPaymentMethods() {
+    this.cacheService.getItems(this.paymentMethodService, OliveCacheService.cacheKeys.getItemsKey.paymentMethod)
+    .then((items: PaymentMethod[]) => {
+      this.paymentMethods = items;
+    });
   }
 
   get items(): any {

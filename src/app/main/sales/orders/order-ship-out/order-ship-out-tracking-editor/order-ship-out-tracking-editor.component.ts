@@ -132,22 +132,11 @@ export class OliveOrderShipOutTrackingEditorComponent extends OliveEntityFormCom
   }
 
   private getCarriers() {
-    const itemKey = OliveCacheService.cacheKeys.getItemsKey.carrier;
     const searchOption = OliveUtilities.searchOption([{name: 'activated', value: true} as NameValue], 'name');
-
-    if (!this.cacheService.exist(itemKey)) {
-      this.carrierService.getItems(searchOption)
-        .subscribe(res => {
-          this.cacheService.set(itemKey, res.model);
-          this.carriers = res.model;
-        },
-          error => {
-            this.messageHelper.showLoadFailedSticky(error);
-          });
-    }
-    else {
-      this.carriers = this.cacheService.get(itemKey);
-    }
+    this.cacheService.getItems(this.carrierService, OliveCacheService.cacheKeys.getItemsKey.carrier, searchOption)
+    .then((items: Carrier[]) => {
+      this.carriers = items;
+    });    
   }
 
   buttonIssueTrackingNumber(carrierTrackingsNumbersGroupsId: number = null) {

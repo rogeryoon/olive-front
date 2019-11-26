@@ -48,7 +48,6 @@ export class OliveCacheService {
   private _standCurrency: Currency;
 
   static cacheKeys = class {
-    static paymentMethod = 'paymentMethod';
     static userName = 'usr';
 
     static userPreferenceCacheKey = 'userPreference';
@@ -70,6 +69,9 @@ export class OliveCacheService {
       static country = 'country';
       static carrier = 'carrier';
       static marketSeller = 'marketSeller';
+      static marketExcelInterface = 'marketExcelInterfaces';
+      static market = 'market';
+      static paymentMethod = 'paymentMethod';
     };
   };
 
@@ -82,20 +84,20 @@ export class OliveCacheService {
   ) {
   }
 
-  set(key: string, value: any, maxAge: number = this.DEFAULT_MAX_AGE): any {
+  private set(key: string, value: any, maxAge: number = this.DEFAULT_MAX_AGE): any {
     this.cache.set(key, { value: value, expiry: Date.now() + maxAge });
     return value;
   }
 
-  get(key: string): any {
+  private get(key: string): any {
     return this.cache.get(key).value;
   }
 
-  exist(key): boolean {
+  private exist(key): boolean {
     return this.hasValidCachedValue(key);
   }
 
-  delete(key): void {
+  private delete(key): void {
     this.cache.delete(key);
   }
 

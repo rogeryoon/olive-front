@@ -28,6 +28,7 @@ import { Country } from 'app/main/supports/models/country.model';
 import { CarrierTrackingNumbersGroup } from 'app/main/shippings/models/carrier-tracking-numbers-group.model';
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveCarrierTrackingNumberRangeService } from 'app/main/shippings/services/carrier-tracking-number-range.service';
+import { createMapFrom } from 'app/core/utils/array-helpers';
 
 class OliveTable {
   static readonly selector = '.roger-table';
@@ -172,31 +173,11 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   private getCountryCodes() {
-    const itemKey = OliveCacheService.cacheKeys.getItemsKey.country;
-
-    if (!this.cacheService.exist(itemKey)) {
-      this.countryService.getItems()
-        .subscribe(res => {
-          this.cacheService.set(itemKey, res.model);
-          this.setCountriesConfig(res.model);
-        },
-          error => {
-            this.messageHelper.showLoadFailedSticky(error);
-          });
-    }
-    else {
-      this.setCountriesConfig(this.cacheService.get(itemKey));
-    }
-  }
-
-  private setCountriesConfig(countries: Country[]) {
-    this.countries.clear();
-
-    for (const country of countries) {
-      this.countries.set(country.id, country);
-    }
-
-    this.setChildConfigs(OliveConstants.listerConfigType.countries, this.countries);
+    this.cacheService.getItems(this.countryService, OliveCacheService.cacheKeys.getItemsKey.country)
+    .then((items: Country[]) => {
+      this.countries = createMapFrom(items);
+      this.setChildConfigs(OliveConstants.listerConfigType.countries, this.countries);
+    });
   }
 
   private getPendingOrderPackages(refresh: boolean = false) {

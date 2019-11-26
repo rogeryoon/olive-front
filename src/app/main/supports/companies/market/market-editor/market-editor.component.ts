@@ -69,7 +69,7 @@ export class OliveMarketEditorComponent extends OliveEntityFormComponent {
       marketExcelInterface: this.item.marketExcelInterfaceFk ? this.item.marketExcelInterfaceFk.id : null
     });
 
-    this.cacheService.getItems(this.marketExcelInterfaceService, 'marketExcelInterfaces', null)
+    this.cacheService.getItems(this.marketExcelInterfaceService, OliveCacheService.cacheKeys.getItemsKey.marketExcelInterface, null)
     .then((items: MarketExcelInterface[]) => {
       this.marketExcelInterfaces = items.filter(e => e.activated);
       this.oForm.patchValue({marketExcelInterface: this.item.marketExcelInterfaceFk ? this.item.marketExcelInterfaceFk.id : null});

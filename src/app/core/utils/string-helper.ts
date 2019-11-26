@@ -33,9 +33,9 @@ export function isMoneyPattern(input: string): boolean {
  * @returns camelized string
  */
 export function camelize(str): string {
-    return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
-      if (+match === 0) { return ''; } // or if (/\s+/.test(match)) for white spaces
-      return index === 0 ? match.toLowerCase() : match.toUpperCase();
+    return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+        if (+match === 0) { return ''; } // or if (/\s+/.test(match)) for white spaces
+        return index === 0 ? match.toLowerCase() : match.toUpperCase();
     });
 }
 
@@ -118,7 +118,7 @@ export function isValidWebSiteUrl(url: string): boolean {
 export function getDelimiterSet(input: string, delimiter: string = ','): Set<string> {
     const words = new Set<string>();
     for (const word of input.split(delimiter)) {
-      words.add(word.trim());
+        words.add(word.trim());
     }
     return words;
 }

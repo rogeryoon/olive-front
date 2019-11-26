@@ -1,6 +1,7 @@
 import { NameValue } from '../models/name-value';
 import { OliveConstants } from '../classes/constants';
 import { isoDateString } from './date-helper';
+import { camelCase } from 'lodash';
 
 export function isUndefined(value: any) {
     return typeof value === 'undefined';
@@ -78,4 +79,25 @@ export function filterNotNullNameValues(array: NameValue[]): NameValue[] {
  */
 export function checkIcon(condition: boolean): string {
     return condition ? OliveConstants.iconStatus.checked : OliveConstants.iconStatus.unchecked;
+}
+
+/**
+ * Object Property 첫글자가 대문자인것을 소문자로 변경
+ * 재귀함수 호출로 Nested Object 모두 적용됨
+ * @param obj 
+ * @returns 변경완료 Object
+ */
+export function camelizeKeys(obj) {
+    if (Array.isArray(obj)) {
+        return obj.map(v => camelizeKeys(v));
+    } else if (obj !== null && obj.constructor === Object) {
+        return Object.keys(obj).reduce(
+            (result, key) => ({
+                ...result,
+                [camelCase(key)]: camelizeKeys(obj[key]),
+            }),
+            {},
+        );
+    }
+    return obj;
 }

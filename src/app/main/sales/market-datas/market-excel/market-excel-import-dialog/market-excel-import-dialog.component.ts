@@ -29,7 +29,6 @@ export class OliveMarketExcelImportDialogComponent extends OliveImportFileDialog
     dialogRef: MatDialogRef<OliveImportFileDialogComponent>, 
     @Inject(MAT_DIALOG_DATA) data: {importType: string},
     private cacheService: OliveCacheService, private marketSellerService: OliveMarketSellerService,
-    private messageHelper: OliveMessageHelperService,
   ) { 
     super(
       formBuilder, translator, 
@@ -60,22 +59,15 @@ export class OliveMarketExcelImportDialogComponent extends OliveImportFileDialog
   }
 
   initializeChildComponent() {
-    const itemKey = OliveCacheService.cacheKeys.getItemsKey.marketSeller;
-    const searchOption = OliveUtilities.searchOption([{name: 'activated', value: true} as NameValue], 'name');
+    this.getMarketSellers();
+  }
 
-    if (!this.cacheService.exist(itemKey)) {
-      this.marketSellerService.getItems(searchOption)
-        .subscribe(res => {
-          this.cacheService.set(itemKey, res.model);
-          this.sellers = res.model;
-        },
-          error => {
-            this.messageHelper.showLoadFailedSticky(error);
-          });
-    }
-    else {
-      this.sellers = this.cacheService.get(itemKey);
-    }
+  private getMarketSellers() {
+    const searchOption = OliveUtilities.searchOption([{name: 'activated', value: true} as NameValue], 'name');
+    this.cacheService.getItems(this.marketSellerService, OliveCacheService.cacheKeys.getItemsKey.marketSeller, searchOption)
+    .then((items: MarketSeller[]) => {
+      this.sellers = items;
+    });
   }
 
   save(): void {
