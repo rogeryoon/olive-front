@@ -1910,7 +1910,9 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     });
   }
 
-  // TODO : exportForTrackingNumberUpdate
+  /**
+   * Exports for tracking number update
+   */
   exportForTrackingNumberUpdate() {
     // 선송장을 발급하지 않는 대상이 있다면 발급한다.
     if (this.allOrders.some(x => this.isNull(x.trackingNumber))) {

@@ -6,6 +6,7 @@ export class Order extends OliveTrackingAttribute {
     id?: number;
     marketOrderNumber: string;
     marketOrdererName: string;
+    marketSellerName: string;
     marketOrderDate?: any;
     marketOrderDescription: string;
     memo: string;    

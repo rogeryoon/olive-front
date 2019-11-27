@@ -112,10 +112,12 @@ export class OliveInWarehousePendingComponent extends OliveEntityListComponent {
     }
   }
 
+  // TODO : onPrint
   onPrint() {
     console.log('print');
   }
 
+  // TODO : onExcel
   onExcel() {
     console.log('excel');
   }

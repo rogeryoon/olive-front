@@ -7,7 +7,8 @@
             <span class="ml-4">{{'common.title.pendingShipOut' | translate}}{{remarkAllOrders}}</span>
         </td>
         <td class="right">
-            <input type="text" name="filterString" size="4" placeholder="{{'common.word.keyword' | translate}}" class="mr-4" [(ngModel)]="filterKeyword" (input)="onSearchChange($event.target.value)">
+            <input type="text" name="filterString" size="4" placeholder="{{'common.word.keyword' | translate}}" (keydown.enter)="$event.preventDefault()"
+                class="mr-4" [(ngModel)]="filterKeyword" (input)="onSearchChange($event.target.value)">
             <button *ngIf="!filtered" mat-icon-button [matMenuTriggerFor]="filter" [disabled]="isloading"
                 mat-raised-button class="right ml-4" matTooltip="{{'common.button.filter' | translate}}">
                 <mat-icon>filter_list</mat-icon>
