@@ -14,7 +14,7 @@
                 <mat-icon>filter_list</mat-icon>
             </button>
             <button *ngIf="filtered" mat-icon-button [disabled]="isloading" mat-raised-button class="right ml-4"
-                matTooltip="{{'common.button.removeFilter' | translate}}" (click)="buttonRemoveFilters()">
+                matTooltip="{{removeFilterTitle}}" (click)="buttonRemoveFilters()">
                 <mat-icon color="accent">cached</mat-icon>
             </button>
             <button mat-icon-button [matMenuTriggerFor]="menu" [disabled]="isloading" mat-raised-button
@@ -37,13 +37,21 @@
                     <mat-icon>report_problem</mat-icon>
                     {{'common.menu.filterHasShipOutProblems' | translate}}
                 </button>
-                <button mat-menu-item [disabled]="isloading" (click)="buttonFilterHasOkShipOuts()">
-                    <mat-icon>done</mat-icon>
-                    {{'common.menu.filterHasOkShipOuts' | translate}}
-                </button>
                 <button mat-menu-item [disabled]="isloading" (click)="buttonFilterCombinedOrders()">
                     <mat-icon>insert_link</mat-icon>
                     {{'common.menu.filterCombinedOrders' | translate}}
+                </button>
+                <button mat-menu-item [disabled]="isloading" (click)="buttonFilterShortItemsOrders()">
+                    <mat-icon>work_off</mat-icon>
+                    {{'common.menu.filterShortItemOrders' | translate}}
+                </button>
+                <button mat-menu-item [disabled]="isloading" (click)="buttonFilterCustomsIssuesOrders()">
+                    <mat-icon>gavel</mat-icon>
+                    {{'common.menu.filterCustomsIssuesOrders' | translate}}
+                </button>
+                <button mat-menu-item [disabled]="isloading" (click)="buttonFilterHasOkShipOuts()">
+                    <mat-icon>done</mat-icon>
+                    {{'common.menu.filterHasOkShipOuts' | translate}}
                 </button>
             </mat-menu>
 

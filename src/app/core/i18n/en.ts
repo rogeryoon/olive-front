@@ -162,7 +162,9 @@ export const locale = {
                 'preAssignTrackingNumber' : '송장 선발급',
                 'filterHasShipOutProblems' : '출고 불가',
                 'filterHasOkShipOuts' : '출고 가능',
-                'filterCombinedOrders' : '합배송'
+                'filterCombinedOrders' : '합배송',
+                'filterShortItemOrders' : '재고부족',
+                'filterCustomsIssuesOrders' : '통관문제',
             },
             'form': {
                 'createdDateFrom' : '등록일 시작',

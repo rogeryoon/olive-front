@@ -45,8 +45,6 @@ import { OliveQueryParameterService } from 'app/core/services/query-parameter.se
 import { OliveOrderHelperService } from 'app/main/sales/services/order-helper.service';
 import { Icon } from 'app/core/models/icon';
 import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
-import { OliveMarketExcelInterfaceService } from 'app/main/supports/services/market-excel-interface.service';
-import { OliveMarketService } from 'app/main/supports/services/market.service';
 import { OliveOrderTrackingExcelService } from 'app/main/sales/services/order-tracking-excel.service';
 
 class AllocatedQuantity {
@@ -124,6 +122,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   filterHasShipOutProblems = null;
   filterKeyword = '';
   filterCombinedShipping = null;
+  filterShortItems = null;
+  filterCustomsIssues = null;
 
   @Output() shipOutFinished = new EventEmitter<any>();
   @Output() reload = new EventEmitter<any>();
@@ -134,6 +134,9 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   readonly nullWeightIcon = 'view_agenda';
   readonly nullCustomsPriceIcon = 'attach_money';
   readonly customsTypeCodeErrorIcon = 'comment';
+  readonly customsSameTypeMaxQuantityIcon = 'offline_bolt';
+  readonly customsOneItemMaxQuantityIcon = 'computer';
+  readonly customsTotalMaxPriceIcon = 'monetization_on';
 
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
@@ -206,6 +209,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   get filtered(): boolean {
     return this.filterHasShipOutProblems != null ||
       this.filterCombinedShipping != null ||
+      this.filterShortItems != null ||
+      this.filterCustomsIssues != null ||
       this.filterKeyword.length > 0;
   }
 
@@ -303,6 +308,24 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     else if (this.filterHasShipOutProblems === false) {
       this.filteredOrders = this.filteredOrders.filter(order => !this.hasShipOutProblems(order));
     }
+
+    // 재고 보유건
+    if (this.filterShortItems) {
+      this.filteredOrders = this.filteredOrders.filter(order => this.isShortOrderQuantity(order));
+    }
+    // 재고 미보유건
+    else if (this.filterShortItems === false) {
+      this.filteredOrders = this.filteredOrders.filter(order => !this.isShortOrderQuantity(order));
+    }
+
+    // 통관 문제건
+    if (this.filterCustomsIssues) {
+      this.filteredOrders = this.filteredOrders.filter(order => this.getCustomsWarningIcon(order));
+    }
+    // 통관 문제 정상건
+    else if (this.filterCustomsIssues === false) {
+      this.filteredOrders = this.filteredOrders.filter(order => !this.getCustomsWarningIcon(order));
+    }    
   }
 
   /**
@@ -311,7 +334,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @returns true if ship out problems 
    */
   hasShipOutProblems(order: OrderShipOut): boolean {
-    return this.isShortOrderQuantity(order) || this.foundNullWeight(order) || this.foundNullCustomsPrice(order);
+    return this.isShortOrderQuantity(order) || this.foundNullWeight(order) || 
+      this.foundNullCustomsPrice(order) || this.foundCustomTypeCodeEntryError(order, this.customsConfigs);
   }
 
   setConfigs(configType: string, data: any) {
@@ -331,13 +355,22 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   }
 
   /**
+   * Gets item custom price
+   * @param item 
+   * @returns item custom price 
+   */
+  getItemCustomPrice(item: OrderShipOutDetail): number {
+    return (item.extra && item.extra.customsPrice || item.customsPrice) * item.quantity;
+  }
+
+  /**
    * 주문 아이템 세관신고 합을 구한다.
    * @param order OrderShipOut
    * @returns 합산값
    */
   getOrderShipOutCustomsPriceDue(order: OrderShipOut) {
     return order.orderShipOutDetails
-      .map(x => (x.extra && x.extra.customsPrice || x.customsPrice) * x.quantity)
+      .map(x => this.getItemCustomPrice(x))
       .reduce((a, b) => a + (b || 0), 0);
   }
 
@@ -520,7 +553,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   }
 
   popUpCustomTypeCodeEntries(): void {
-    this.getCustomsTypeCodeEntries(false);
+    this.checkCustomsTypeCodeEntries(false);
   }
 
   /**
@@ -556,6 +589,10 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
       case this.customsTypeCodeErrorIcon:
         this.popUpCustomTypeCodeEntries();
+        break;
+
+      case this.customsTotalMaxPriceIcon:
+        this.popUpCustomsPriceEntry(order);
         break;
 
       default:
@@ -1009,7 +1046,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         customsTypeQuantity > warning.sameTypeMaxQuantity
       ) {
         return {
-          name: 'offline_bolt',
+          name: this.customsSameTypeMaxQuantityIcon,
           tooltip: String.Format(this.translator.get('common.message.sameTypeMaxQuantityStatus'), warning.typeCode, warning.sameTypeMaxQuantity)
         };
       }
@@ -1020,7 +1057,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         for (const quantity of Array.from(productMap.values())) {
           if (quantity > warning.oneItemMaxQuantity) {
             return {
-              name: 'computer',
+              name: this.customsOneItemMaxQuantityIcon,
               tooltip: String.Format(this.translator.get('common.message.oneItemMaxQuantityStatus'), warning.typeCode, warning.oneItemMaxQuantity, quantity)
             };
           }
@@ -1063,7 +1100,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
       if (totalPrice > warning.totalMaxPrice) {
         return {
-          name: 'monetization_on',
+          name: this.customsTotalMaxPriceIcon,
           tooltip: String.Format(this.translator.get('common.message.totalMaxPriceStatus'), warning.typeCode, warning.totalMaxPrice, totalPrice)
         };
       }
@@ -1098,13 +1135,13 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
           }
 
           customsTypeDue.quantity += item.quantity;
-          customsTypeDue.price += item.quantity * item.customsPrice;
+          customsTypeDue.price += this.getItemCustomPrice(item);
           customsTypeDue.oneItemMaxQuantities = productQuantities;
         }
         else {
           customsTypeStats.set(customsTypeCodeKey, {
             quantity: item.quantity,
-            price: item.quantity * item.customsPrice,
+            price: this.getItemCustomPrice(item),
             oneItemMaxQuantities: new Map<number, number>([[productId, item.quantity]])
           });
         }
@@ -1387,7 +1424,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     return this.commaNumber(order.orderShipOutDetails.map(x => x.quantity).reduce((a, b) => a + b));
   }
 
-  buttonListOrders() {
+  buttonListOrders(confirmedConfirmMessages: Set<string> = new Set<string>()) {
     const uncombinedOrderChecker = new Map<string, number>();
     this.selectedOrders.filter(x => x.dupAddressName != null && x.combinedShipAddressName == null).forEach(order => {
       if (!uncombinedOrderChecker.has(order.dupAddressName)) {
@@ -1404,11 +1441,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     // 합배송처리 안하고 그냥 출고하는 거라면 컨펌 받는다.
     if (uncombinedOrderExists) {
       confirmMessage = this.translator.get('sales.pendingOrderShipOutList.confirmCombinedShipExists');
+      if (confirmedConfirmMessages.has(confirmMessage)) { confirmMessage = null; }
     }
 
     if (!confirmMessage) {
       const customsIssues = this.selectedOrders.filter(order => this.getShipOutStatusIcons(order).length > 0);
-
       if (customsIssues.length > 0) {
         confirmMessage = String.Format(
           this.translator.get('sales.pendingOrderShipOutList.confirmCustomsIssueExists'),
@@ -1417,6 +1454,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
           customsIssues.length === 1 ? '' :
             String.Format(this.translator.get('sales.pendingOrderShipOutList.extraDataCount'), customsIssues.length - 1)
         );
+        if (confirmedConfirmMessages.has(confirmMessage)) { confirmMessage = null; }
       }
     }
 
@@ -1425,15 +1463,24 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       confirmMessage = this.translator.get('common.message.areYouSure');
     }
 
-    this.alertService.showDialog(
-      this.translator.get('common.title.yesOrNo'),
-      confirmMessage,
-      DialogType.confirm,
-      () => this.listOrders(),
-      () => null,
-      this.translator.get('common.button.yes'),
-      this.translator.get('common.button.no')
-    );
+    if (confirmedConfirmMessages.has(confirmMessage)) {
+      this.listOrders();
+    }
+    else {
+      // 최종 컨펌
+      this.alertService.showDialog(
+        this.translator.get('common.title.yesOrNo'),
+        confirmMessage,
+        DialogType.confirm,
+        () => {
+          confirmedConfirmMessages.add(confirmMessage);
+          this.buttonListOrders(confirmedConfirmMessages);
+        },
+        () => null,
+        this.translator.get('common.button.yes'),
+        this.translator.get('common.button.no')
+      );      
+    }
   }
 
   /**
@@ -1450,7 +1497,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * HS CODE 편집 작업대상 데이터가 있으면 일괄 편집창을 팝업
    * @returns false if HS CODE entries 
    */
-  private getHsCodeEntries(): boolean {
+  private checkHsCodeEntries(): boolean {
     // HS CODE 입력 안한 내용이 있는지 검사한다.
     const hsCodeEntryProducts = new Map<number, ProductHsCode>();
     for (const order of this.selectedOrders) {
@@ -1551,7 +1598,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @param [selectedOrderOnly] 선택주문 / 전체 주문 대상여부
    * @returns false if customs type code entries 
    */
-  private getCustomsTypeCodeEntries(selectedOrderOnly: boolean = true): boolean {
+  private checkCustomsTypeCodeEntries(selectedOrderOnly: boolean = true): boolean {
     // 제품별로 어떤 국가로 출고되는지 조사
     const productCountries = new Map<number, Set<number>>();
 
@@ -1643,7 +1690,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * Opens CustomsTypeCode editor
    * @param products ProductCustomsTypeCode[]
    */
-  openCustomsTypeCodeEditor(products: ProductCustomsTypeCode[], listOrderWhenFinished = true) {
+  openCustomsTypeCodeEditor(products: ProductCustomsTypeCode[], callListOrderWhenFinished = true) {
     const customsTypeCodes = products[0].customsRules.get(OliveConstants.customsRule.typeCodes.toUpperCase()) as string[];
 
     const setting = new OliveDialogSetting(
@@ -1678,7 +1725,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         }
 
         // 리스팅을 다시한다.
-        if (listOrderWhenFinished) {
+        if (callListOrderWhenFinished) {
           this.listOrders();
         }
       }
@@ -1691,11 +1738,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    */
   private listOrders() {
 
-    if (!this.getHsCodeEntries()) {
+    if (!this.checkHsCodeEntries()) {
       return;
     }
 
-    if (!this.getCustomsTypeCodeEntries()) {
+    if (!this.checkCustomsTypeCodeEntries()) {
       return;
     }
 
@@ -1798,17 +1845,65 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     this.filterOrders();
   }
 
+  buttonFilterShortItemsOrders() {
+    this.filterShortItems = true;
+    this.filterOrders();
+  }
+
+  buttonFilterCustomsIssuesOrders() {
+    this.filterCustomsIssues = true;
+    this.filterOrders();    
+  }
+
   buttonRemoveFilters() {
     this.filterHasShipOutProblems = null;
     this.filterCombinedShipping = null;
+    this.filterShortItems = null;
+    this.filterCustomsIssues = null;
     this.filterKeyword = '';
     this.filteredOrders = null;
+  }
+
+  get removeFilterTitle() {
+    let filterName = '';
+
+    if (this.filterHasShipOutProblems) {
+      filterName = this.translator.get('common.menu.filterHasShipOutProblems');
+    }
+    else if (this.filterHasShipOutProblems === false) {
+      filterName = this.translator.get('common.menu.filterHasOkShipOuts');
+    }
+    else if (this.filterCombinedShipping) {
+      filterName = this.translator.get('common.menu.filterCombinedOrders');
+    }
+    else if (this.filterShortItems) {
+      filterName = this.translator.get('common.menu.filterShortItemOrders');
+    }
+    else if (this.filterCustomsIssues) {
+      filterName = this.translator.get('common.menu.filterCustomsIssuesOrders');
+    }
+
+    if (this.filterKeyword.length > 0) {
+      const keywordTitle = this.translator.get('common.word.keyword');
+      if (filterName) {
+        filterName = `${filterName}+${keywordTitle}`;
+      }
+      else {
+        filterName = keywordTitle;
+      }
+    }
+
+    const filterButtonName = this.translator.get('common.button.removeFilter');
+
+    return `${filterButtonName} (${filterName})`;
   }
 
   /**
    * 선송장 발급 버튼 처리
    */
-  buttonPreAssignTrackingNumbers(carrierTrackingsNumbersGroupsId: number = null, preSelectedOrders: OrderShipOut[] = null) {
+  buttonPreAssignTrackingNumbers(carrierTrackingsNumbersGroupsId: number = null, 
+    preSelectedOrders: OrderShipOut[] = null, callExportForTrackingNumberUpdate = false) {
+
     let targetOrders: OrderShipOut[];
 
     if (preSelectedOrders) {
@@ -1820,7 +1915,21 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         this.messageHelper.showError(this.translator.get('sales.pendingOrderShipOutList.allOrderHaveTrackingNumbers'));
       }
       else {
-        this.confirmIssueOnlyNoTrackingOrders(carrierTrackingsNumbersGroupsId);
+        this.alertService.showDialog(
+          this.translator.get('common.title.errorConfirm'),
+          this.translator.get('sales.pendingOrderShipOutList.confirmIssueOnlyNoTrackingOrders'),
+          DialogType.confirm,
+          () => {
+            this.buttonPreAssignTrackingNumbers(
+              carrierTrackingsNumbersGroupsId, 
+              this.allOrders.filter(x => this.isNull(x.trackingNumber)),
+              callExportForTrackingNumberUpdate
+            );
+          },
+          () => null,
+          this.translator.get('common.button.yes'),
+          this.translator.get('common.button.no')
+        );
       }
       return;
     }
@@ -1840,7 +1949,14 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     // 송장번호대가 멀티일 경우 선택하게 한다.
     if (!carrierTrackingsNumbersGroupsId && availCarrierTrackingsNumbersGroups.length > 1) {
-      this.popUpSelectCarrierTrackingsNumbersGroupsDialog(availCarrierTrackingsNumbersGroups, targetOrders);
+      const dialogRef = this.orderHelperService.popUpSelectCarrierTrackingsNumbersGroupsDialog(availCarrierTrackingsNumbersGroups);
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          carrierTrackingsNumbersGroupsId = result;
+          this.buttonPreAssignTrackingNumbers(carrierTrackingsNumbersGroupsId, targetOrders, callExportForTrackingNumberUpdate);
+        }
+      });      
       return;
     }
 
@@ -1858,24 +1974,10 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     // 송장번호 발급
     this.orderHelperService.preAssignTrackingNumbers(carrierTrackingsNumbersGroup, targetOrders);
-  }
 
-  /**
-   * 발급하지 않은 송장만 신규발급하겠냐고 물어본다.
-   * @param carrierTrackingsNumbersGroupsId 
-   */
-  confirmIssueOnlyNoTrackingOrders(carrierTrackingsNumbersGroupsId: number) {
-    this.alertService.showDialog(
-      this.translator.get('common.title.errorConfirm'),
-      this.translator.get('sales.pendingOrderShipOutList.confirmIssueOnlyNoTrackingOrders'),
-      DialogType.confirm,
-      () => {
-        this.buttonPreAssignTrackingNumbers(carrierTrackingsNumbersGroupsId, this.allOrders.filter(x => this.isNull(x.trackingNumber)));
-      },
-      () => null,
-      this.translator.get('common.button.yes'),
-      this.translator.get('common.button.no')
-    );
+    if (callExportForTrackingNumberUpdate) {
+      return this.exportForTrackingNumberUpdate();
+    }
   }
 
   /**
@@ -1901,13 +2003,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @param [targetOrders] 
    */
   popUpSelectCarrierTrackingsNumbersGroupsDialog(availCarrierTrackingsNumbersGroups: CarrierTrackingNumbersGroup[], targetOrders: OrderShipOut[] = null) {
-    const dialogRef = this.orderHelperService.popUpSelectCarrierTrackingsNumbersGroupsDialog(availCarrierTrackingsNumbersGroups);
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.buttonPreAssignTrackingNumbers(result, targetOrders);
-      }
-    });
   }
 
   /**
@@ -1921,8 +2017,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         this.translator.get('sales.pendingOrderShipOutList.confirmIssueOnlyNoTrackingOrders2'),
         DialogType.confirm,
         () => {
-          this.buttonPreAssignTrackingNumbers(null, this.allOrders.filter(x => this.isNull(x.trackingNumber)));
-          this.orderTrackingExcelService.saveTrackingNumberExcels(this.allOrders);
+          this.buttonPreAssignTrackingNumbers(
+            null, 
+            this.allOrders.filter(x => this.isNull(x.trackingNumber)),
+            true
+          );
         },
         () => null,
         this.translator.get('common.button.yes'),
