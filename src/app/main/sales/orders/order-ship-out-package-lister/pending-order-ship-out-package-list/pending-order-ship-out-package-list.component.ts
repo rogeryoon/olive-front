@@ -31,6 +31,7 @@ import { OrderShipOut } from 'app/main/sales/models/order-ship-out.model';
 import { numberFormat } from 'app/core/utils/number-helper';
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveOrderHelperService } from 'app/main/sales/services/order-helper.service';
+import { Icon } from 'app/core/models/icon';
 
 @Component({
   selector: 'olive-pending-order-ship-out-package-list',
@@ -288,6 +289,12 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     });
 
     return numberFormat(weight, 2);
+  }
+
+  getShipOutStatusIcons(box: OrderShipOutPackage): Icon[] {
+    const icons = new Array<Icon>();
+
+    return icons;
   }
 
   cancelShipOutPackages() {

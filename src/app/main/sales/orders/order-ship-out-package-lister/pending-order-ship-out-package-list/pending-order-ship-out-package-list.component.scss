@@ -71,38 +71,38 @@
 
         td.customsNumber,
         th.customsNumber {
-            min-width: 90px;
-            max-width: 90px;
+            min-width: 110px;
+            max-width: 110px;
         }
 
         td.shipOutStatus,
         th.shipOutStatus {
-            min-width: 80px;
-            max-width: 80px;
-        }
-
-        td.quantity,
-        th.quantity {
-            min-width: 60px;
-            max-width: 60px;
-        }
-
-        td.weightKiloGram,
-        th.weightKiloGram {
             min-width: 100px;
             max-width: 100px;
         }
 
+        td.quantity,
+        th.quantity {
+            min-width: 50px;
+            max-width: 50px;
+        }
+
+        td.weightKiloGram,
+        th.weightKiloGram {
+            min-width: 70px;
+            max-width: 70px;
+        }
+
         td.combinedShipping,
         th.combinedShipping {
-            min-width: 80px;
-            max-width: 80px;
+            min-width: 60px;
+            max-width: 60px;
         }
 
         td.trackingNumber,
         th.trackingNumber {
-            min-width: 80px;
-            max-width: 80px;
+            min-width: 90px;
+            max-width: 90px;
         }
 
         th.itemsName {

@@ -7,30 +7,26 @@
                 <mat-icon>cancel</mat-icon>
                 {{'common.button.cancelShipOut' | translate}}{{remarkSelectedPackages}}
             </button>
-            <button [disabled]="!selectedPackages.length || isloading" mat-raised-button color="basic"
-                class="ml-4" (click)="finishShipOutPackage()">
+            <button [disabled]="!selectedPackages.length || isloading" mat-raised-button color="basic" class="ml-4"
+                (click)="finishShipOutPackage()">
                 <mat-icon>local_shipping</mat-icon>
                 {{'common.button.finishShipOutPackage' | translate}}
             </button>
-            <button [disabled]="!selectedPackages.length || isloading" [matMenuTriggerFor]="misc"
-                [disabled]="isloading" mat-raised-button class="right ml-4"
-                matTooltip="{{'common.button.misc' | translate}}">
+            <button [disabled]="!selectedPackages.length || isloading" [matMenuTriggerFor]="misc" [disabled]="isloading"
+                mat-raised-button class="right ml-4" matTooltip="{{'common.button.misc' | translate}}">
                 <mat-icon>dialpad</mat-icon>
             </button>
 
             <mat-menu #misc="matMenu">
-                <button [disabled]="!selectedPackages.length || isloading" mat-menu-item
-                    (click)="printPickingList()">
+                <button [disabled]="!selectedPackages.length || isloading" mat-menu-item (click)="printPickingList()">
                     <mat-icon>gavel</mat-icon>
                     {{'common.menu.printPickingList' | translate}}
                 </button>
-                <button [disabled]="!selectedPackages.length || isloading" mat-menu-item
-                    (click)="printPackingList()">
+                <button [disabled]="!selectedPackages.length || isloading" mat-menu-item (click)="printPackingList()">
                     <mat-icon>subject</mat-icon>
                     {{'common.menu.printPackingList' | translate}}
                 </button>
-                <button [disabled]="!selectedPackages.length || isloading" mat-menu-item
-                    (click)="printShippingLabel()">
+                <button [disabled]="!selectedPackages.length || isloading" mat-menu-item (click)="printShippingLabel()">
                     <mat-icon>label</mat-icon>
                     {{'common.menu.printShippingLabel' | translate}}
                 </button>
@@ -39,15 +35,14 @@
                     <mat-icon>view_list</mat-icon>
                     {{'common.menu.exportForTrackingNumberUpdate' | translate}}
                 </button>
-                <button [disabled]="!selectedPackages.length || isloading" mat-menu-item
-                    (click)="exportForLogistic()">
+                <button [disabled]="!selectedPackages.length || isloading" mat-menu-item (click)="exportForLogistic()">
                     <mat-icon>toc</mat-icon>
                     {{'common.menu.exportForLogistic' | translate}}
                 </button>
                 <button mat-menu-item [disabled]="isloading" (click)="exportOrderList()">
                     <mat-icon>cancel_presentation</mat-icon>
                     {{'common.menu.exportExcelFile' | translate}}
-                </button>                
+                </button>
             </mat-menu>
         </td>
         <td class="w-30-p title">
@@ -71,7 +66,8 @@
             <th class="shipOutStatus">{{'common.tableHeader.shipOutStatus' | translate}}</th>
             <th class="quantity print -ex-type-number">{{'common.tableHeader.quantity' | translate}}</th>
             <th class="weightKiloGram print -ex-type-number">{{'common.tableHeader.weightKiloGram' | translate}}</th>
-            <th class="combinedShipping print -ex-type-number">{{'common.tableHeader.combinedShipping' | translate}}</th>
+            <th class="combinedShipping print -ex-type-number">{{'common.tableHeader.combinedShipping' | translate}}
+            </th>
             <th class="trackingNumber print -ex-type-text">{{'common.tableHeader.trackingNumber' | translate}}</th>
             <th class="itemsName print -ex-type-text -ex-width-80">{{'common.tableHeader.itemsName' | translate}}</th>
         </tr>
@@ -79,17 +75,20 @@
     <tbody *ngIf="warehousePackages?.length > 0">
         <tr *ngFor="let package of warehousePackages; let i = index">
             <td class="checkbox">
-                <input name="select" type="checkbox" [(ngModel)]="package.selected"
-                    (change)="checkIfAllSelected();" [attr.disabled]="false ? true : null">
+                <input name="select" type="checkbox" [(ngModel)]="package.selected" (change)="checkIfAllSelected();"
+                    [attr.disabled]="false ? true : null">
             </td>
-            <td class="seller pointer print -ex-type-text" (click)="editCompanyContact(package)">{{showSeller(package)}}-<span
-                    class="font-weight-900"
+            <td class="seller pointer print -ex-type-text" (click)="editCompanyContact(package)">
+                {{showSeller(package)}}-<span class="font-weight-900"
                     matTooltip="{{showSenderCompany(package)}}">{{showSenderCharacters(package)}}</span>
             </td>
             <td class="orderNumberShort print -ex-type-id">{{showMarketOrderNumbers(package)}}</td>
             <td class="consignee print -ex-type-text">{{package.deliveryTagFk.consigneeName}}</td>
             <td class="customsNumber print -ex-type-text">{{package.deliveryTagFk.customsId}}</td>
-            <td class="shipOutStatus">{{package.deliveryTagFk.consigneeName}}</td>
+            <td class="shipOutStatus"
+                [ngClass]="{'error-background': getShipOutStatusIcons(package).length>0}">
+                <mat-icon *ngFor="let icon of getShipOutStatusIcons(package)" class="small-icon" title="{{icon.tooltip}}">{{icon.name}}</mat-icon>
+            </td>
             <td class="quantity print -ex-type-number">{{showQuantity(package)}}</td>
             <td class="weightKiloGram print -ex-type-number">{{showWeight(package)}}</td>
             <td class="combinedShipping print -ex-type-number">{{package.orderCount}}</td>

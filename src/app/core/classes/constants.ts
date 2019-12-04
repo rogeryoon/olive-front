@@ -84,6 +84,16 @@ export class OliveConstants {
     static uiConfig = class {
         static maxErrorMessageLength = 400;
     };
+
+    static shipOutIcon = class {
+        static shortageQuantityIcon = 'shopping_cart';
+        static nullWeightIcon = 'view_agenda';
+        static nullCustomsPriceIcon = 'attach_money';
+        static customsTypeCodeErrorIcon = 'comment';
+        static customsSameTypeMaxQuantityIcon = 'offline_bolt';
+        static customsOneItemMaxQuantityIcon = 'computer';
+        static customsTotalMaxPriceIcon = 'monetization_on';  
+    };
 }
 
 
