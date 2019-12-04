@@ -224,8 +224,9 @@ export const locale = {
                 'marketOrderNumber': '주문',
                 'trackingNumber' : '송장',
                 'order' : '주문',
-                'shipOutStatus' : '비고',
+                'shipOutStatus' : '참조',
                 'customsTypeCode' : '통관 타입',
+                'customsNumber' : '통관 번호'
             },
             'word': {
                 'keyword': '키워드',

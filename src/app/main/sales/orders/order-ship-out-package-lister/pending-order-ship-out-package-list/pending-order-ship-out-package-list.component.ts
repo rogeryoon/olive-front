@@ -230,6 +230,34 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     return OliveDocumentService.numToAlpha(foundIndex);
   }
 
+  /**
+   * Shows items name
+   * @param box 
+   * @returns items name 
+   */
+  showItemsName(box: OrderShipOutPackage): string {
+    const itemNames = new Map<string, number>();
+    for (const order of box.orderShipOuts) {
+      for (const item of order.orderShipOutDetails) {
+        const itemId = OliveDocumentService.numToAlpha(item.productVariantShortId - 1);
+        const itemNameKey = `${itemId}. ${item.name}`;
+        itemNames.set(itemNameKey, 
+          (itemNames.has(itemNameKey) ? itemNames.get(itemNameKey) : 0) + item.quantity);
+      }
+    }
+
+    const outputItemNames: string[] = [];
+    for (const itemNameKey of Array.from(itemNames.keys())) {
+      outputItemNames.push(`${itemNameKey} (${itemNames.get(itemNameKey)})`);
+    }
+    
+    return outputItemNames.join(' , ');
+  }
+
+  showMarketOrderNumbers(box: OrderShipOutPackage): string {
+    return box.orderShipOuts.map(order => order.orderFk.marketOrderNumber).join();
+  }
+
   showSenderCompany(box: OrderShipOutPackage): string {
     let companyName = '';
     const markerSellerId = box.orderShipOuts[0].orderFk.marketSellerFk.id;

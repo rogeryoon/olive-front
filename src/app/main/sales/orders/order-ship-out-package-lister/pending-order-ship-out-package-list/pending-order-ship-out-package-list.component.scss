@@ -45,36 +45,74 @@
             cursor: zoom-in;
         }
 
-        // 체크
-        td:nth-child(1), th:nth-child(1) {
+        td.checkbox,
+        th.checkbox {
             min-width: 50px;
-            max-width: 50px;  
+            max-width: 50px;
         }
 
-        // 판매자
-        td:nth-child(2), th:nth-child(2) {
-            min-width: 110px;
-            max-width: 110px;
+        td.seller,
+        th.seller {
+            min-width: 90px;
+            max-width: 90px;
         }
 
-        // 수취인
-        td:nth-child(3), th:nth-child(3) {
+        td.orderNumberShort,
+        th.orderNumberShort {
+            min-width: 90px;
+            max-width: 90px;
+        }
+
+        td.consignee,
+        th.consignee {
             min-width: 80px;
             max-width: 80px;
         }
 
-        // 수량, 신고가
-        td:nth-child(4), th:nth-child(4),
-        td:nth-child(5), th:nth-child(5),
-        td:nth-child(6), th:nth-child(6) {
+        td.customsNumber,
+        th.customsNumber {
+            min-width: 90px;
+            max-width: 90px;
+        }
+
+        td.shipOutStatus,
+        th.shipOutStatus {
             min-width: 80px;
             max-width: 80px;
         }
 
-        // 송장번호
-        td:nth-child(7), th:nth-child(7) {
-            min-width: 120px;
-            max-width: 120px;
+        td.quantity,
+        th.quantity {
+            min-width: 60px;
+            max-width: 60px;
+        }
+
+        td.weightKiloGram,
+        th.weightKiloGram {
+            min-width: 100px;
+            max-width: 100px;
+        }
+
+        td.combinedShipping,
+        th.combinedShipping {
+            min-width: 80px;
+            max-width: 80px;
+        }
+
+        td.trackingNumber,
+        th.trackingNumber {
+            min-width: 80px;
+            max-width: 80px;
+        }
+
+        th.itemsName {
+            min-width: 600px;
+            max-width: 600px;
+        }
+        td.itemsName {
+            min-width: 600px;
+            max-width: 600px;            
+            text-align: justify;
         }
     }
 }

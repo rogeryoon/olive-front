@@ -43,91 +43,89 @@
         }
 
         tr {
-            cursor: auto ;
+            cursor: auto;
         }
 
-        th, td {
+        th,
+        td {
             padding: 3px;
         }
 
         td.pointer {
-            cursor: pointer ;
+            cursor: pointer;
         }
+
         td.zoom-in {
-            cursor: zoom-in ;
+            cursor: zoom-in;
         }
 
-        // 체크
-        td:nth-child(1), th:nth-child(1) {
+        td.checkbox,
+        th.checkbox {
             min-width: 50px;
-            max-width: 50px;  
+            max-width: 50px;
         }
 
-        // 판매자
-        td:nth-child(2), th:nth-child(2) {
+        td.seller,
+        th.seller {
             min-width: 90px;
             max-width: 90px;
         }
 
-        // 수취인
-        td:nth-child(3), th:nth-child(3) {
+        td.orderNumberShort,
+        th.orderNumberShort {
+            min-width: 90px;
+            max-width: 90px;
+        }
+
+        td.consignee,
+        th.consignee {
             min-width: 80px;
             max-width: 80px;
         }
 
-        // 재고
-        td:nth-child(4), th:nth-child(4)
-        {
+        td.inventory,
+        th.inventory {
             min-width: 100px;
             max-width: 100px;
-        }        
+        }
 
-        // 신고가
-        td:nth-child(5), th:nth-child(5)
-        {
+        td.customsPrice,
+        th.customsPrice {
             min-width: 80px;
             max-width: 80px;
         }
 
-        // 합배송
-        td:nth-child(6), th:nth-child(6) {
+        td.combinedShipping,
+        th.combinedShipping {
             min-width: 60px;
             max-width: 60px;
         }
 
-        // 상태
-        td:nth-child(7), th:nth-child(7)
-        {
+        td.shipOutStatus,
+        th.shipOutStatus {
             min-width: 100px;
             max-width: 100px;
-        }        
+        }
 
-        // 주문
-        td:nth-child(8), th:nth-child(8) {
+        td.preTrackingNumber,
+        th.preTrackingNumber {
             min-width: 80px;
             max-width: 80px;
         }
 
-        // 선송장
-        td:nth-child(9), th:nth-child(9) {
+        td.weightKiloGram,
+        th.weightKiloGram {
             min-width: 80px;
             max-width: 80px;
         }
 
-        // 무게
-        td:nth-child(10), th:nth-child(10) {
-            min-width: 80px;
-            max-width: 80px;
-        }        
-
-        // 아이템
-        th:nth-child(11) {
+        th.itemsName {
             min-width: 600px;
             max-width: 600px;
         }
-        td:nth-child(11) {
+        td.itemsName {
             min-width: 600px;
-            max-width: 600px;            
+            max-width: 600px;
             text-align: justify;
         }
     }

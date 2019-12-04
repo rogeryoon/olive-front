@@ -76,40 +76,40 @@
 <table id="{{tableId}}-bottom" class="roger-table mt-20">
     <thead>
         <tr>
-            <th>
+            <th class="checkbox">
                 <input type="checkbox" [disabled]="(allOrders && !allOrders.length) || allCheckboxesDisabled"
                     [(ngModel)]="selectedAll" (change)="selectAll();" />
             </th>
-            <th class="print -ex-type-text">{{'common.tableHeader.seller' | translate}}</th>
-            <th class="print -ex-type-id">{{'common.tableHeader.orderNumberShort' | translate}}</th>
-            <th class="print -ex-type-text">{{'common.tableHeader.consignee' | translate}}</th>
-            <th class="print -ex-type-text">{{'common.tableHeader.inventory' | translate}}</th>
-            <th class="print -ex-type-number">{{'common.tableHeader.customsPrice' | translate}}</th>
-            <th class="print -ex-type-text">{{'common.tableHeader.combinedShipping' | translate}}</th>
-            <th>{{'common.tableHeader.shipOutStatus' | translate}}</th>
-            <th class="print -ex-type-text">{{'common.tableHeader.preTrackingNumber' | translate}}</th>
-            <th class="print -ex-type-text">{{'common.tableHeader.weightKiloGram' | translate}}</th>
-            <th class="print -ex-type-text -ex-width-80">{{'common.tableHeader.itemsName' | translate}}</th>
+            <th class="seller print -ex-type-text">{{'common.tableHeader.seller' | translate}}</th>
+            <th class="orderNumberShort print -ex-type-id">{{'common.tableHeader.orderNumberShort' | translate}}</th>
+            <th class="consignee print -ex-type-text">{{'common.tableHeader.consignee' | translate}}</th>
+            <th class="inventory print -ex-type-text">{{'common.tableHeader.inventory' | translate}}</th>
+            <th class="customsPrice print -ex-type-number">{{'common.tableHeader.customsPrice' | translate}}</th>
+            <th class="combinedShipping print -ex-type-text">{{'common.tableHeader.combinedShipping' | translate}}</th>
+            <th class="shipOutStatus">{{'common.tableHeader.shipOutStatus' | translate}}</th>
+            <th class="preTrackingNumber print -ex-type-text">{{'common.tableHeader.preTrackingNumber' | translate}}</th>
+            <th class="weightKiloGram print -ex-type-text">{{'common.tableHeader.weightKiloGram' | translate}}</th>
+            <th class="itemsName print -ex-type-text -ex-width-80">{{'common.tableHeader.itemsName' | translate}}</th>
         </tr>
     </thead>
     <tbody *ngIf="allOrders?.length > 0">
         <tr *ngFor="let order of allOrders" class="print">
-            <td>
+            <td class="checkbox">
                 <input *ngIf="!hasShipOutProblems(order)" name="select" type="checkbox"
                     [(ngModel)]="order.choices[index]" (change)="checkIfAllSelected()"
                     (click)="checkSameCombinedShippingGroup(order)"
                     [attr.disabled]="hasShipOutProblems(order) ? true : null">
             </td>
 
-            <td class="zoom-in print -ex-type-text" (click)="popUpOrderEntry(order)">
+            <td class="seller zoom-in print -ex-type-text" (click)="popUpOrderEntry(order)">
                 {{order.orderFk.marketSellerFk.code}}</td>
 
-            <td class="print -ex-type-id">{{order.orderFk.marketOrderNumber}}</td>
+            <td class="orderNumberShort print -ex-type-id">{{order.orderFk.marketOrderNumber}}</td>
 
-            <td class="zoom-in print -ex-type-text" (click)="popUpOrderEntry(order)">
+            <td class="consignee zoom-in print -ex-type-text" (click)="popUpOrderEntry(order)">
                 {{order.deliveryTagFk.consigneeName}}</td>
 
-            <td class="print -ex-type-text" (click)="switchInventory(order)"
+            <td class="inventory print -ex-type-text" (click)="switchInventory(order)"
                 [ngClass]="{'foreground-red': isShortOrderQuantity(order), 'pointer': switchIconVisible(order)}">
                 <span *ngFor="let item of order.orderShipOutDetails"
                     matTooltip="{{item.name}}">{{isShortOrderQuantity(order) ? '-' : ''}}{{showItem(item)}}&nbsp;</span>
@@ -118,12 +118,12 @@
                     {{getInventorySwitchIconName(order)}}</mat-icon>
             </td>
 
-            <td class="pointer print -ex-type-number" (click)="popUpCustomsPriceEntry(order)"
+            <td class="customsPrice pointer print -ex-type-number" (click)="popUpCustomsPriceEntry(order)"
                 [ngClass]="{'foreground-red': foundNullCustomsPrice(order)}">
                 {{showCustomsPrice(order)}}
             </td>
 
-            <td class="print -ex-type-text" [ngClass]="{'foreground-red': order.dupAddressName}"
+            <td class="combinedShipping print -ex-type-text" [ngClass]="{'foreground-red': order.dupAddressName}"
                 matTooltip="{{combinedShippingSummary(order)}}">
                 <mat-icon *ngIf="order.combinedShipAddressName"
                     [ngClass]="{'foreground-blue': order.combinedShipAddressName}">insert_link
@@ -131,39 +131,39 @@
                 {{getTailedDupAddressName(order)}}
             </td>
 
-            <td
+            <td class="shipOutStatus"
                 [ngClass]="{'error-background': getShipOutStatusIcons(order).length>0, 'pointer': getShipOutStatusIcons(order).length>0}">
                 <span *ngFor="let icon of getShipOutStatusIcons(order)" (click)="contextPopUp(order, icon)">
                     <mat-icon class="small-icon" title="{{icon.tooltip}}">{{icon.name}}</mat-icon>
                 </span>
             </td>
 
-            <td class="print -ex-type-text" [ngClass]="{'zoom-in' : !order.trackingNumber}"
+            <td class="preTrackingNumber print -ex-type-text" [ngClass]="{'zoom-in' : !order.trackingNumber}"
                 (click)="!order.trackingNumber ? popUpOrderEntry(order, 1) : null">
                 {{order.trackingNumber ? order.trackingNumber : ''}}
             </td>
 
-            <td class="pointer print -ex-type-number" (click)="popUpItemsWeightEntry(order)"
+            <td class="weightKiloGram pointer print -ex-type-number" (click)="popUpItemsWeightEntry(order)"
                 [ngClass]="{'foreground-red': foundNullWeight(order)}">
                 {{showWeight(order)}}
             </td>
 
-            <td class="zoom-in print -ex-type-text" (click)="popUpOrderEntry(order)">{{showItemsName(order)}}</td>
+            <td class="itemsName zoom-in print -ex-type-text" (click)="popUpOrderEntry(order)">{{showItemsName(order)}}</td>
         </tr>
     </tbody>
     <tbody *ngIf="allOrders?.length == 0">
         <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="checkbox"></td>
+            <td class="seller"></td>
+            <td class="orderNumberShort"></td>
+            <td class="consignee"></td>
+            <td class="inventory"></td>
+            <td class="customsPrice"></td>
+            <td class="combinedShipping"></td>
+            <td class="shipOutStatus"></td>
+            <td class="preTrackingNumber"></td>
+            <td class="weightKiloGram"></td>
+            <td class="itemsName"></td>
         </tr>
         <tr>
             <td [attr.colspan]="11" class="no-data-available">

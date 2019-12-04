@@ -912,6 +912,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     return this.cacheService.showMoney(priceDue) + (foundNull ? ' ?' : '');
   }
 
+  /**
+   * Shows items name
+   * @param order 
+   * @returns items name 
+   */
   showItemsName(order: OrderShipOut): string {
     const itemsNames: string[] = [];
 
