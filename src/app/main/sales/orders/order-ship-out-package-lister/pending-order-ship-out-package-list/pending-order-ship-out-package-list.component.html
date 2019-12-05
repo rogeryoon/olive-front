@@ -1,7 +1,7 @@
 ﻿<mat-progress-bar *ngIf="isloading" mode="query"></mat-progress-bar>
 <table id="{{tableId}}-top" class="w-100-p">
     <tr>
-        <td class="w-70-p left">
+        <td class="left">
             <button [disabled]="!selectedPackages.length || isloading" mat-raised-button color="basic"
                 (click)="cancelShipOutPackages()">
                 <mat-icon>cancel</mat-icon>
@@ -16,6 +16,28 @@
                 mat-raised-button class="right ml-4" matTooltip="{{'common.button.misc' | translate}}">
                 <mat-icon>dialpad</mat-icon>
             </button>
+            <button *ngIf="!filtered" [matMenuTriggerFor]="filter" [disabled]="isloading" mat-raised-button
+                class="right ml-4" matTooltip="{{'common.button.filter' | translate}}">
+                <mat-icon>filter_list</mat-icon>
+            </button>
+            <button *ngIf="filtered" [disabled]="isloading" mat-raised-button class="right ml-4"
+                matTooltip="{{removeFilterTitle}}" (click)="buttonRemoveFilters()">
+                <mat-icon color="accent">cached</mat-icon>
+            </button>
+            <input type="text" name="filterString" size="4" placeholder="{{'common.word.keyword' | translate}}"
+                (keydown.enter)="$event.preventDefault()" class="ml-4" [(ngModel)]="filterKeyword"
+                (input)="onSearchChange($event.target.value)">
+
+            <mat-menu #filter="matMenu">
+                <button mat-menu-item [disabled]="isloading" (click)="buttonFilterCustomsIssuesPackages()">
+                    <mat-icon>gavel</mat-icon>
+                    {{'common.menu.filterCustomsIssuesOrders' | translate}}
+                </button>
+                <button mat-menu-item [disabled]="isloading" (click)="buttonFilterNoCustomsIssuesPackages()">
+                    <mat-icon>done</mat-icon>
+                    {{'common.menu.filterNoCustomsIssuesOrders' | translate}}
+                </button>
+            </mat-menu>
 
             <mat-menu #misc="matMenu">
                 <button [disabled]="!selectedPackages.length || isloading" mat-menu-item (click)="printPickingList()">
@@ -45,7 +67,7 @@
                 </button>
             </mat-menu>
         </td>
-        <td class="w-30-p title">
+        <td class="title">
             <mat-icon style="vertical-align:middle">assignment_turned_in</mat-icon> <span
                 class="ml-4">{{'common.title.shipOut' | translate}}{{packageRemark}}</span>
         </td>
@@ -56,7 +78,7 @@
     <thead>
         <tr>
             <th class="checkbox">
-                <input type="checkbox" [disabled]="warehousePackages && !warehousePackages.length"
+                <input type="checkbox" [disabled]="allWarehousePackages && !allWarehousePackages.length"
                     [(ngModel)]="selectedAll" (change)="selectAll();" />
             </th>
             <th class="seller print -ex-type-text">{{'common.tableHeader.seller' | translate}}</th>
@@ -72,8 +94,8 @@
             <th class="itemsName print -ex-type-text -ex-width-80">{{'common.tableHeader.itemsName' | translate}}</th>
         </tr>
     </thead>
-    <tbody *ngIf="warehousePackages?.length > 0">
-        <tr *ngFor="let package of warehousePackages; let i = index">
+    <tbody *ngIf="allWarehousePackages?.length > 0">
+        <tr *ngFor="let package of allWarehousePackages; let i = index">
             <td class="checkbox">
                 <input name="select" type="checkbox" [(ngModel)]="package.selected" (change)="checkIfAllSelected();"
                     [attr.disabled]="false ? true : null">
@@ -85,9 +107,9 @@
             <td class="orderNumberShort print -ex-type-id">{{showMarketOrderNumbers(package)}}</td>
             <td class="consignee print -ex-type-text">{{package.deliveryTagFk.consigneeName}}</td>
             <td class="customsNumber print -ex-type-text">{{package.deliveryTagFk.customsId}}</td>
-            <td class="shipOutStatus"
-                [ngClass]="{'error-background': getShipOutStatusIcons(package).length>0}">
-                <mat-icon *ngFor="let icon of getShipOutStatusIcons(package)" class="small-icon" title="{{icon.tooltip}}">{{icon.name}}</mat-icon>
+            <td class="shipOutStatus" [ngClass]="{'error-background': getShipOutStatusIcons(package).length>0}">
+                <mat-icon *ngFor="let icon of getShipOutStatusIcons(package)" class="small-icon"
+                    title="{{icon.tooltip}}">{{icon.name}}</mat-icon>
             </td>
             <td class="quantity print -ex-type-number">{{showQuantity(package)}}</td>
             <td class="weightKiloGram print -ex-type-number">{{showWeight(package)}}</td>
@@ -96,7 +118,7 @@
             <td class="itemsName print -ex-type-text -ex-width-80">{{showItemsName(package)}}</td>
         </tr>
     </tbody>
-    <tbody *ngIf="warehousePackages?.length == 0">
+    <tbody *ngIf="allWarehousePackages?.length == 0">
         <tr>
             <td class="checkbox"></td>
             <td class="seller"></td>

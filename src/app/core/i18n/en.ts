@@ -165,6 +165,7 @@ export const locale = {
                 'filterCombinedOrders' : '합배송',
                 'filterShortItemOrders' : '재고부족',
                 'filterCustomsIssuesOrders' : '통관문제',
+                'filterNoCustomsIssuesOrders' : '정상통관',
             },
             'form': {
                 'createdDateFrom' : '등록일 시작',

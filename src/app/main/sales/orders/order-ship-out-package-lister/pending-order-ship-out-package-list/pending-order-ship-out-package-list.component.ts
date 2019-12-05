@@ -33,6 +33,7 @@ import { OliveConstants } from 'app/core/classes/constants';
 import { OliveOrderShipOutHelperService } from 'app/main/sales/services/order-ship-out-helper.service';
 import { Icon } from 'app/core/models/icon';
 import { Country } from 'app/main/supports/models/country.model';
+import { BoundTextAst } from '@angular/compiler';
 
 @Component({
   selector: 'olive-pending-order-ship-out-package-list',
@@ -50,6 +51,11 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
 
   packages: OrderShipOutPackage[] = [];
 
+  /**
+   * 필더된 오더
+   */
+  filteredPackages: OrderShipOutPackage[] = null;  
+
   countries: Map<number, Country>;
   customsConfigs = new Map<string, any>();
 
@@ -59,6 +65,9 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   marketSellers = new Map<number, MarketSeller>();
 
   selectedAll: any;
+
+  filterCustomsIssues = null;
+  filterKeyword = '';
 
   @Output() packagesCanceled = new EventEmitter();
   @Output() reload = new EventEmitter<any>();
@@ -98,11 +107,31 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     return totalPackageCount === 0 ? '' : ` (${this.commaNumber(totalPackageCount)}/${this.commaNumber(totalWeight)}Kg)`;
   }
 
+  get warehousePackages(): OrderShipOutPackage[] {
+    return this.packages.filter(x => x.warehouseId === this.warehouse.id);
+  }
+
+  get allWarehousePackages(): OrderShipOutPackage[] {
+    if (this.filteredPackages) {
+      return this.filteredPackages;
+    }
+    return this.warehousePackages;
+  }
+
+  get selectedPackages(): OrderShipOutPackage[] {
+    return this.allWarehousePackages.filter(x => x.selected);
+  }
+
+  get filtered(): boolean {
+    return this.filterCustomsIssues != null ||
+      this.filterKeyword.length > 0;
+  }
+
   get packageRemark(): string {
     let totalWeight = 0;
-    const totalPackageCount = this.warehousePackages.length;
+    const totalPackageCount = this.allWarehousePackages.length;
 
-    this.warehousePackages.forEach(item => {
+    this.allWarehousePackages.forEach(item => {
       item.orderShipOuts.forEach(order => {
         totalWeight += this.getOrderShipOutWeightDue(order);
       });
@@ -129,7 +158,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   }
 
   selectAll() {
-    this.warehousePackages.forEach(item => {
+    this.allWarehousePackages.forEach(item => {
       item.selected = this.selectedAll;
     });
   }
@@ -166,7 +195,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
 
   getMarketSellerContacts() {
     // Cache에서 가져올것이 무엇인지 marketSellerFk.id별로 정리한다.
-    for (const box of this.warehousePackages) {
+    for (const box of this.allWarehousePackages) {
       for (const order of box.orderShipOuts) {
         const key = order.orderFk.marketSellerFk.id;
         if (!this.marketSellerContacts.has(key)) {
@@ -188,14 +217,6 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
           });
       }
     }
-  }
-
-  get warehousePackages() {
-    return this.packages.filter(x => x.warehouseId === this.warehouse.id);
-  }
-
-  get selectedPackages(): OrderShipOutPackage[] {
-    return this.warehousePackages.filter(x => x.selected);
   }
 
   showSeller(box: OrderShipOutPackage): string {
@@ -298,6 +319,16 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   }
 
   /**
+   * Determines whether same country is
+   * @param warehouse 
+   * @param order 
+   * @returns  
+   */
+  private isSameCountry(warehouse: Warehouse, countryId: number) {
+    return warehouse.companyMasterBranchFk.addressFk.countryId === countryId;
+  }
+
+  /**
    * Gets ship out status icons
    * @param order 
    * @returns ship out status icons 
@@ -305,12 +336,12 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   getShipOutStatusIcons(box: OrderShipOutPackage): Icon[] {
     const icons = new Array<Icon>();
 
-    if (this.orderShipOutHelperService.isSameCountry(this.warehouse, box.orderShipOuts[0])) {
+    if (this.isSameCountry(this.warehouse, box.deliveryAddressFk.countryId)) {
       return icons;
     }
 
     const customsRule = this.orderShipOutHelperService.getCustomsRule(
-      box.orderShipOuts[0].deliveryAddressFk.countryId, this.countries, this.customsConfigs);
+      box.deliveryAddressFk.countryId, this.countries, this.customsConfigs);
 
     const groupCustomsTypeMap = this.orderShipOutHelperService.getGroupCustomsTypeMap(customsRule);
 
@@ -321,6 +352,90 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     }
 
     return icons;
+  }
+
+  buttonFilterNoCustomsIssuesPackages() {
+    this.filterCustomsIssues = false;
+    this.filterPackages();
+  }
+
+  buttonFilterCustomsIssuesPackages() {
+    this.filterCustomsIssues = true;
+    this.filterPackages();    
+  }
+
+  buttonRemoveFilters() {
+    this.filterCustomsIssues = null;
+    this.filterKeyword = '';
+    this.filteredPackages = null;
+  }
+
+  get removeFilterTitle() {
+    let filterName = '';
+
+    if (this.filterCustomsIssues) {
+      filterName = this.translator.get('common.menu.filterCustomsIssuesOrders');
+    }
+    else if (this.filterCustomsIssues === false) {
+      filterName = this.translator.get('common.menu.filterNoCustomsIssuesOrders');
+    }
+
+    if (this.filterKeyword.length > 0) {
+      const keywordTitle = this.translator.get('common.word.keyword');
+      if (filterName) {
+        filterName = `${filterName}+${keywordTitle}`;
+      }
+      else {
+        filterName = keywordTitle;
+      }
+    }
+
+    const filterButtonName = this.translator.get('common.button.removeFilter');
+
+    return `${filterButtonName} (${filterName})`;
+  }
+
+  /**
+   * 키워드 검색 입력 이벤트 처리
+   * @param searchValue 
+   */
+  onSearchChange(searchValue: string) {
+    this.filterKeyword = searchValue.trim();
+
+    if (this.filterKeyword.length === 0 && !this.filtered) {
+      this.buttonRemoveFilters();
+      return;
+    }
+
+    this.filterPackages();
+  }
+
+  /**
+   * Filters packages
+   */
+  private filterPackages() {
+    this.filteredPackages = this.warehousePackages;
+    const keyword = this.filterKeyword.toLowerCase();
+    if (keyword.length > 0) {
+      this.filteredPackages = this.filteredPackages.filter(box =>
+        box.deliveryTagFk.consigneeName && box.deliveryTagFk.consigneeName.toLocaleLowerCase().includes(keyword) ||
+        box.deliveryTagFk.customsId && box.deliveryTagFk.customsId.toLocaleLowerCase().includes(keyword) ||
+        box.trackingNumber && box.trackingNumber.toLocaleLowerCase().includes(keyword) ||
+        box.orderShipOuts.some(order => 
+          order.orderFk.marketSellerFk.code && order.orderFk.marketSellerFk.code.toLowerCase().includes(keyword) ||
+          order.orderFk.marketOrderNumber && order.orderFk.marketOrderNumber.toLowerCase().includes(keyword) ||
+          order.orderShipOutDetails.find(x => x.name && x.name.toLowerCase().includes(keyword))
+        ));
+    }
+
+    // 통관 문제건
+    if (this.filterCustomsIssues) {
+      this.filteredPackages = this.filteredPackages.filter(order => this.getShipOutStatusIcons(order).length > 0);
+    }
+    // 통관 문제 정상건
+    else if (this.filterCustomsIssues === false) {
+      this.filteredPackages = this.filteredPackages.filter(order => this.getShipOutStatusIcons(order).length === 0);
+    }
   }
 
   /**
@@ -488,7 +603,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
       }
     }
 
-    this.shipperExcelService.saveForGps(this.warehousePackages, this.packagesContact, this.customsConfigs);
+    this.shipperExcelService.saveForGps(this.allWarehousePackages, this.packagesContact, this.customsConfigs);
   }
 
   /**

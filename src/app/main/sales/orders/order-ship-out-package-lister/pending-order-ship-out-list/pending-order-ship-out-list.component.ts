@@ -588,7 +588,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @returns true if null weight 
    */
   foundNullWeight(order: OrderShipOut): boolean {
-    return !this.orderShipOutHelperService.isSameCountry(this.warehouse, order) &&
+    return !this.isSameCountry(this.warehouse, order) &&
       !this.isNull(order.orderShipOutDetails.find(x => x.kiloGramWeight == null && (x.extra == null || x.extra.customsWeight == null)));
   }
 
@@ -906,7 +906,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @returns true if null price 
    */
   foundNullCustomsPrice(order: OrderShipOut): boolean {
-    return !this.orderShipOutHelperService.isSameCountry(this.warehouse, order) &&
+    return !this.isSameCountry(this.warehouse, order) &&
       !this.isNull(order.orderShipOutDetails.find(x => x.customsPrice == null && (x.extra == null || x.extra.customsPrice == null)));
   }
 
@@ -943,7 +943,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       return icons;
     }
 
-    if (this.orderShipOutHelperService.isSameCountry(this.warehouse, order)) {
+    if (this.isSameCountry(this.warehouse, order)) {
       return icons;
     }
 
@@ -1346,7 +1346,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     const hsCodeEntryProducts = new Map<number, ProductHsCode>();
     for (const order of this.selectedOrders) {
       // 같은 국가면 HS Code입력 불필요.
-      if (this.orderShipOutHelperService.isSameCountry(this.warehouse, order)) { continue; }
+      if (this.isSameCountry(this.warehouse, order)) { continue; }
 
       for (const item of order.orderShipOutDetails) {
         if (!hsCodeEntryProducts.has(item.productId) && !item.hsCode) {
@@ -1450,7 +1450,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     for (const order of orders) {
       // 같은 국가면 통관 타입 입력 불필요
-      if (this.orderShipOutHelperService.isSameCountry(this.warehouse, order)) { continue; }
+      if (this.isSameCountry(this.warehouse, order)) { continue; }
 
       const countryId = order.deliveryAddressFk.countryId;
 
@@ -1481,7 +1481,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     const validatedProductIds = new Set<number>();
     for (const order of orders) {
       // 같은 국가면 통관 타입 입력 불필요
-      if (this.orderShipOutHelperService.isSameCountry(this.warehouse, order)) { continue; }
+      if (this.isSameCountry(this.warehouse, order)) { continue; }
 
       for (const item of order.orderShipOutDetails) {
         if (typeCodeEntryProducts.has(item.productId) || validatedProductIds.has(item.productId)) { continue; }
@@ -1623,6 +1623,16 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         }
       }
     );
+  }
+
+  /**
+   * Determines whether same country is
+   * @param warehouse 
+   * @param order 
+   * @returns  
+   */
+  private isSameCountry(warehouse: Warehouse, order: OrderShipOut) {
+    return warehouse.companyMasterBranchFk.addressFk.countryId === order.deliveryAddressFk.countryId;
   }
 
   private showRefreshDialog(message: string, title: string = null) {

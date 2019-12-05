@@ -401,14 +401,4 @@ export class OliveOrderShipOutHelperService {
 
     return groupCustomsTypeMap;
   }
-
-  /**
-   * Determines whether same country is
-   * @param warehouse 
-   * @param order 
-   * @returns  
-   */
-  isSameCountry(warehouse: Warehouse, order: OrderShipOut) {
-    return warehouse.companyMasterBranchFk.addressFk.countryId === order.deliveryAddressFk.countryId;
-  }
 }
