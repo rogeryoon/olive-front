@@ -1,10 +1,8 @@
 ﻿import { Injectable } from '@angular/core';
 
-import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { OliveUtilities } from 'app/core/classes/utilities';
 
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { OliveOrderHelperService } from './order-helper.service';
 import { OrderShipOut } from '../models/order-ship-out.model';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveMarketExcelInterfaceService } from 'app/main/supports/services/market-excel-interface.service';
@@ -19,7 +17,6 @@ import { MarketExcelCellTypes } from 'app/main/supports/models/market-excel-cell
 import { NameValue } from 'app/core/models/name-value';
 import { OliveCarrierService } from 'app/main/supports/services/carrier.service';
 import { Carrier } from 'app/main/supports/models/carrier.model';
-import { camelizeKeys } from 'app/core/utils/helpers';
 
 class EmptyExcelRow { }
 
@@ -30,8 +27,7 @@ export class OliveOrderTrackingExcelService {
 
   constructor
     (
-      private documentService: OliveDocumentService, private translator: FuseTranslationLoaderService,
-      private orderHelperService: OliveOrderHelperService, private cacheService: OliveCacheService,
+      private documentService: OliveDocumentService, private cacheService: OliveCacheService, 
       private marketExcelInterfaceService: OliveMarketExcelInterfaceService, private marketService: OliveMarketService,
       private carrierService: OliveCarrierService
     ) {

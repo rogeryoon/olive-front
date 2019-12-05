@@ -30,8 +30,9 @@ import { OrderShipOutPackageExtra } from 'app/main/sales/models/order-ship-out-p
 import { OrderShipOut } from 'app/main/sales/models/order-ship-out.model';
 import { numberFormat } from 'app/core/utils/number-helper';
 import { OliveConstants } from 'app/core/classes/constants';
-import { OliveOrderHelperService } from 'app/main/sales/services/order-helper.service';
+import { OliveOrderShipOutHelperService } from 'app/main/sales/services/order-ship-out-helper.service';
 import { Icon } from 'app/core/models/icon';
+import { Country } from 'app/main/supports/models/country.model';
 
 @Component({
   selector: 'olive-pending-order-ship-out-package-list',
@@ -49,6 +50,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
 
   packages: OrderShipOutPackage[] = [];
 
+  countries: Map<number, Country>;
   customsConfigs = new Map<string, any>();
 
   packagesContact = new Map<number, CompanyContact>();
@@ -68,7 +70,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     private messageHelper: OliveMessageHelperService, private orderShipOutPackageService: OliveOrderShipOutPackageService,
     private dialog: MatDialog, private alertService: AlertService,
     private shipperExcelService: OliveShipperExcelService, private cacheService: OliveCacheService,
-    private cdRef: ChangeDetectorRef, private orderHelperService: OliveOrderHelperService,
+    private cdRef: ChangeDetectorRef, private orderShipOutHelperService: OliveOrderShipOutHelperService,
     private documentService: OliveDocumentService
   ) {
     super(
@@ -115,7 +117,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
    * @returns 합산값
    */  
   getOrderShipOutWeightDue(order: OrderShipOut): number {
-    return this.orderHelperService.getOrderShipOutKiloWeightDue(order);
+    return this.orderShipOutHelperService.getOrderShipOutKiloWeightDue(order);
   }
 
   get isloading(): boolean {
@@ -142,6 +144,10 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
       case OliveConstants.listerConfigType.customsConfigs:
           this.customsConfigs = data;
       break;
+
+      case OliveConstants.listerConfigType.countries:
+          this.countries = data;
+          break;      
     }
   }
 
@@ -291,12 +297,35 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     return numberFormat(weight, 2);
   }
 
+  /**
+   * Gets ship out status icons
+   * @param order 
+   * @returns ship out status icons 
+   */  
   getShipOutStatusIcons(box: OrderShipOutPackage): Icon[] {
     const icons = new Array<Icon>();
+
+    if (this.orderShipOutHelperService.isSameCountry(this.warehouse, box.orderShipOuts[0])) {
+      return icons;
+    }
+
+    const customsRule = this.orderShipOutHelperService.getCustomsRule(
+      box.orderShipOuts[0].deliveryAddressFk.countryId, this.countries, this.customsConfigs);
+
+    const groupCustomsTypeMap = this.orderShipOutHelperService.getGroupCustomsTypeMap(customsRule);
+
+    const customsWarningIcon = this.orderShipOutHelperService.getCustomsWarningIcon(box.orderShipOuts, customsRule, groupCustomsTypeMap);
+
+    if (customsWarningIcon) {
+      icons.push(customsWarningIcon);
+    }
 
     return icons;
   }
 
+  /**
+   * Cancels ship out packages
+   */
   cancelShipOutPackages() {
     this.setIsLoading(true);
     const orderShipOutIds: number[] = [];

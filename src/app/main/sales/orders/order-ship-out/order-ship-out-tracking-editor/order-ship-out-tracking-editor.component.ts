@@ -16,7 +16,7 @@ import { OliveCarrierService } from 'app/main/supports/services/carrier.service'
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { CarrierTrackingNumbersGroup } from 'app/main/shippings/models/carrier-tracking-numbers-group.model';
 import { OliveCarrierTrackingNumberRangeService } from 'app/main/shippings/services/carrier-tracking-number-range.service';
-import { OliveOrderHelperService } from 'app/main/sales/services/order-helper.service';
+import { OliveOrderShipOutHelperService } from 'app/main/sales/services/order-ship-out-helper.service';
 import { ThrowStmt } from '@angular/compiler';
 import { AlertService, DialogType } from '@quick/services/alert.service';
 
@@ -40,7 +40,7 @@ export class OliveOrderShipOutTrackingEditorComponent extends OliveEntityFormCom
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private cacheService: OliveCacheService, private carrierService: OliveCarrierService,
     private messageHelper: OliveMessageHelperService, private carrierTrackingNumberRangeService: OliveCarrierTrackingNumberRangeService,
-    private orderHelperService: OliveOrderHelperService, private alertService: AlertService
+    private orderShipOutHelperService: OliveOrderShipOutHelperService, private alertService: AlertService
   ) {
     super(
       formBuilder, translator
@@ -113,7 +113,7 @@ export class OliveOrderShipOutTrackingEditorComponent extends OliveEntityFormCom
 
   initializeChildComponent() {
     // Tracking 번호 트랙잭션이 종료되면
-    this.subscription = this.orderHelperService.trackingAssignTrigger.subscribe(param => {
+    this.subscription = this.orderShipOutHelperService.trackingAssignTrigger.subscribe(param => {
       const item = this.item as CarrierTrackingEntry;
       this.oForm.patchValue({
         trackingNumber: item.trackingNumber || '',
@@ -171,7 +171,7 @@ export class OliveOrderShipOutTrackingEditorComponent extends OliveEntityFormCom
 
         // 선발급 송장번호대가 없을 경우
         if (this.carrierTrackingNumbersGroups.length === 0) {
-          this.orderHelperService.notifyNotEnoughCarrierTrackingsNumbersGroups(
+          this.orderShipOutHelperService.notifyNotEnoughCarrierTrackingsNumbersGroups(
             this.translator.get('sales.pendingOrderShipOutList.confirmNoCarrierTrackingNumbersGroupsMessage')
             );
           return;
@@ -183,7 +183,7 @@ export class OliveOrderShipOutTrackingEditorComponent extends OliveEntityFormCom
           return;
         }
 
-        this.orderHelperService.preAssignTrackingNumbers(this.carrierTrackingNumbersGroups[0], [this.item]);
+        this.orderShipOutHelperService.preAssignTrackingNumbers(this.carrierTrackingNumbersGroups[0], [this.item]);
       }, error => {
         this.messageHelper.showLoadFailedSticky(error);
       });
@@ -193,7 +193,7 @@ export class OliveOrderShipOutTrackingEditorComponent extends OliveEntityFormCom
 
     if (carrierTrackingsNumbersGroupsId) {
       const carrierTrackingsNumbersGroup = this.carrierTrackingNumbersGroups.find(x => x.id === carrierTrackingsNumbersGroupsId);
-      this.orderHelperService.preAssignTrackingNumbers(carrierTrackingsNumbersGroup, [this.item]);
+      this.orderShipOutHelperService.preAssignTrackingNumbers(carrierTrackingsNumbersGroup, [this.item]);
     }
   }
 
@@ -201,7 +201,7 @@ export class OliveOrderShipOutTrackingEditorComponent extends OliveEntityFormCom
    * 선택 다이알로그를 팝업
    */
   popUpSelectCarrierTrackingsNumbersGroupsDialog() {
-    const dialogRef = this.orderHelperService.popUpSelectCarrierTrackingsNumbersGroupsDialog(this.carrierTrackingNumbersGroups);
+    const dialogRef = this.orderShipOutHelperService.popUpSelectCarrierTrackingsNumbersGroupsDialog(this.carrierTrackingNumbersGroups);
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {

@@ -22,6 +22,8 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { Subject } from 'rxjs';
 import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
 import { Icon } from 'app/core/models/icon';
+import { Country } from 'app/main/supports/models/country.model';
+import { Warehouse } from 'app/main/supports/models/warehouse.model';
 
 class CustomsTypeDue {
   quantity: number;
@@ -36,17 +38,16 @@ class CustomsTypeDue {
 @Injectable({
   providedIn: 'root'
 })
-export class OliveOrderHelperService {
+export class OliveOrderShipOutHelperService {
   trackingAssignTrigger = new Subject<any>();
 
   constructor
-  (
-    private translator: FuseTranslationLoaderService, private dialog: MatDialog,
-    private alertService: AlertService, private messageHelper: OliveMessageHelperService,
-    private carrierTrackingNumberRangeService: OliveCarrierTrackingNumberRangeService,
-    private router: Router,
-  ) 
-  {
+    (
+      private translator: FuseTranslationLoaderService, private dialog: MatDialog,
+      private alertService: AlertService, private messageHelper: OliveMessageHelperService,
+      private carrierTrackingNumberRangeService: OliveCarrierTrackingNumberRangeService,
+      private router: Router,
+  ) {
   }
 
   /**
@@ -69,7 +70,7 @@ export class OliveOrderHelperService {
         trackingNumber: order.trackingNumber,
         oldTrackingNumber: order.oldTrackingNumber
       });
-    }    
+    }
 
     this.carrierTrackingNumberRangeService.post('issue/', request).subscribe(
       response => {
@@ -96,7 +97,7 @@ export class OliveOrderHelperService {
         if (error.error && error.error.errorCode === OliveBackEndErrors.DataShortageError) {
           this.notifyNotEnoughCarrierTrackingsNumbersGroups(
             this.translator.get('sales.pendingOrderShipOutList.trackingNumbersShortageErrorMessage')
-            );
+          );
         }
         else {
           this.messageHelper.showStickySaveFailed(error, false);
@@ -127,7 +128,7 @@ export class OliveOrderHelperService {
   /**
    * 선택 다이알로그를 팝업
    * @param carrierTrackingsNumbersGroups 
-   */  
+   */
   popUpSelectCarrierTrackingsNumbersGroupsDialog(carrierTrackingsNumbersGroups: CarrierTrackingNumbersGroup[]) {
     const params: IdName[] = [];
     // 라디오 선택창에 보낼 데이터 만들기
@@ -155,7 +156,7 @@ export class OliveOrderHelperService {
     });
     return dialogRef;
   }
-  
+
   /**
    * 주문 아이템 무게 합을 구한다.
    * @param order OrderShipOut
@@ -266,9 +267,9 @@ export class OliveOrderHelperService {
     const customsTypeStats = new Map<string, CustomsTypeDue>();
 
     for (const order of orders) {
-      this.getOrderCustomsTypeStats(order, customsTypeStats);  
+      this.getOrderCustomsTypeStats(order, customsTypeStats);
     }
-    
+
     for (const customsTypeCode of Array.from(customsTypeStats.keys())) {
       const warning = customsRule.warnings.find(x => x.typeCode === customsTypeCode);
 
@@ -347,5 +348,67 @@ export class OliveOrderHelperService {
     }
 
     return null;
+  }
+
+  /**
+   * 국가 그룹 CustomsRule을 만든다.
+   * @param countryIds 
+   * @returns country rules 
+   */
+  // TODO : 성능개선
+  // 계속 Render할때마다 동일한것을 계속 하는데. 각 Warehouse별로 초기화시 한번만 하면 된다.
+  // 그렇다면 리스트 주문들이 모두 동일한 국가여야 하는데 현재는 배송지역이 동일 싱글 국가지만 멀티 국가인 경우는 어떻게 처리하나?
+  // 해결책 : 출고화면 시작시 배송국가가 멀티인경우 선택하는 기능을 추가해야 한다.
+  getCountryCustomsRules(countryIds: Set<number>, customsConfigs: Map<string, any>, countries: Map<number, Country>): Map<string, any> {
+    const configs = new Map<string, any>();
+
+    // 입력타입코드 정의
+    let key = (OliveConstants.customsRule.typeCodes).toUpperCase();
+    configs.set(key, customsConfigs.get(key));
+
+    for (const countryId of Array.from(countryIds.keys())) {
+      // 국가 ID를 국가 코드로 변환
+      const countryCode = countries.get(countryId).code;
+
+      // 해당 국가코드 통관규칙
+      key = (OliveConstants.customsRule.ruleCountryCode + countryCode).toUpperCase();
+      configs.set(key, customsConfigs.get(key));
+    }
+
+    return configs;
+  }
+
+  getCustomsRule(countryId: number, countries: Map<number, Country>, customsConfigs: Map<string, any>): CustomsRule {
+    const countryCode = countries.get(countryId).code;
+    const customsRuleKey = (OliveConstants.customsRule.ruleCountryCode + countryCode).toUpperCase();
+
+    return customsConfigs.get(customsRuleKey) as CustomsRule;
+  }
+
+  getGroupCustomsTypeMap(customsRule: CustomsRule): Map<string, Set<string>> {
+    const groupCustomsTypeMap = new Map<string, Set<string>>();
+
+    for (const customsType of customsRule.types.filter(x => x.groupCode !== null)) {
+      if (groupCustomsTypeMap.has(customsType.groupCode)) {
+        const codeSet = groupCustomsTypeMap.get(customsType.groupCode);
+        codeSet.add(customsType.code);
+        groupCustomsTypeMap.set(customsType.groupCode, codeSet);
+      }
+      else {
+        groupCustomsTypeMap.set(customsType.groupCode, new Set<string>([customsType.code]));
+      }
+    }
+
+    return groupCustomsTypeMap;
+  }
+
+  /**
+   * Determines whether same country is
+   * @param warehouse 
+   * @param order 
+   * @returns  
+   */
+  isSameCountry(warehouse: Warehouse, order: OrderShipOut) {
+    return warehouse.companyMasterBranchFk.addressFk.countryId === order.deliveryAddressFk.countryId;
   }
 }

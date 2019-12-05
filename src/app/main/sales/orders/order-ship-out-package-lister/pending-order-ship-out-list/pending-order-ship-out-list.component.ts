@@ -42,24 +42,13 @@ import { isCustomsTypeCodeError } from 'app/core/validators/customs-validators';
 import { OliveProductCustomsTypeCodesEditorComponent } from 'app/main/productions/products/product/product-customs-type-codes-editor/product-customs-type-codes-editor.component';
 import { CarrierTrackingNumbersGroup } from 'app/main/shippings/models/carrier-tracking-numbers-group.model';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
-import { OliveOrderHelperService } from 'app/main/sales/services/order-helper.service';
+import { OliveOrderShipOutHelperService } from 'app/main/sales/services/order-ship-out-helper.service';
 import { Icon } from 'app/core/models/icon';
-import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
 import { OliveOrderTrackingExcelService } from 'app/main/sales/services/order-tracking-excel.service';
 
 class AllocatedQuantity {
   productVariantId: number;
   quantity: number;
-}
-
-class CustomsTypeDue {
-  quantity: number;
-  price: number;
-  oneItemMaxQuantities: Map<number, number>;
-
-  public constructor(init?: CustomsTypeDue) {
-    Object.assign(this, init);
-  }
 }
 
 @Component({
@@ -136,7 +125,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     private orderShipOutPackageService: OliveOrderShipOutPackageService,
     private messageHelper: OliveMessageHelperService, private orderShipOutService: OliveOrderShipOutService,
     private productService: OliveProductService, private cacheService: OliveCacheService,
-    private queryParams: OliveQueryParameterService, private orderHelperService: OliveOrderHelperService,
+    private queryParams: OliveQueryParameterService, private orderShipOutHelperService: OliveOrderShipOutHelperService,
     private documentService: OliveDocumentService, private orderTrackingExcelService: OliveOrderTrackingExcelService
   ) {
     super(
@@ -353,7 +342,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    */
   getOrderShipOutCustomsPriceDue(order: OrderShipOut) {
     return order.orderShipOutDetails
-      .map(x => this.orderHelperService.getItemCustomsPrice(x))
+      .map(x => this.orderShipOutHelperService.getItemCustomsPrice(x))
       .reduce((a, b) => a + (b || 0), 0);
   }
 
@@ -363,7 +352,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @returns 합산값
    */
   getOrderShipOutKiloWeightDueLocal(order: OrderShipOut): number {
-    return this.orderHelperService.getOrderShipOutKiloWeightDue(order);
+    return this.orderShipOutHelperService.getOrderShipOutKiloWeightDue(order);
   }
 
   /**
@@ -446,7 +435,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     });
 
     // Tracking 번호 트랙잭션이 종료되면
-    this.trackingAssignTriggerSubscription = this.orderHelperService.trackingAssignTrigger.subscribe(param => {
+    this.trackingAssignTriggerSubscription = this.orderShipOutHelperService.trackingAssignTrigger.subscribe(param => {
       this.setIsLoading(false);
       if (param) {
         this.reload.emit(param);
@@ -599,7 +588,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @returns true if null weight 
    */
   foundNullWeight(order: OrderShipOut): boolean {
-    return !this.isSameCountry(this.warehouse, order) &&
+    return !this.orderShipOutHelperService.isSameCountry(this.warehouse, order) &&
       !this.isNull(order.orderShipOutDetails.find(x => x.kiloGramWeight == null && (x.extra == null || x.extra.customsWeight == null)));
   }
 
@@ -917,7 +906,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @returns true if null price 
    */
   foundNullCustomsPrice(order: OrderShipOut): boolean {
-    return !this.isSameCountry(this.warehouse, order) &&
+    return !this.orderShipOutHelperService.isSameCountry(this.warehouse, order) &&
       !this.isNull(order.orderShipOutDetails.find(x => x.customsPrice == null && (x.extra == null || x.extra.customsPrice == null)));
   }
 
@@ -954,11 +943,11 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       return icons;
     }
 
-    if (this.isSameCountry(this.warehouse, order)) {
+    if (this.orderShipOutHelperService.isSameCountry(this.warehouse, order)) {
       return icons;
     }
 
-    const countryCustomRule = this.getCountryRules(new Set([order.deliveryAddressFk.countryId]));
+    const countryCustomRule = this.getCountryCustomsRules(new Set([order.deliveryAddressFk.countryId]));
 
     if (this.foundCustomTypeCodeEntryError(order, countryCustomRule)) {
       icons.push({
@@ -988,6 +977,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     const thisOrderTailedDupAddressName = this.getTailedDupAddressName(thisOrder);
 
+    // 합배송건을 찾아서 추가한다.
     if
       (
       thisOrderTailedDupAddressName.length > 1 &&
@@ -1005,23 +995,12 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       });
     }    
 
-    const countryCode = this.countries.get(thisOrder.deliveryAddressFk.countryId).code;
-    const customsRuleKey = (OliveConstants.customsRule.ruleCountryCode + countryCode).toUpperCase();
-    const customsRule = this.customsConfigs.get(customsRuleKey) as CustomsRule;
-    const groupCustomsTypeMap = new Map<string, Set<string>>();    
+    const customsRule = this.orderShipOutHelperService.getCustomsRule(
+      thisOrder.deliveryAddressFk.countryId, this.countries, this.customsConfigs);
 
-    for (const customsType of customsRule.types.filter(x => x.groupCode !== null)) {
-      if (groupCustomsTypeMap.has(customsType.groupCode)) {
-        const codeSet = groupCustomsTypeMap.get(customsType.groupCode);
-        codeSet.add(customsType.code);
-        groupCustomsTypeMap.set(customsType.groupCode, codeSet);
-      }
-      else {
-        groupCustomsTypeMap.set(customsType.groupCode, new Set<string>([customsType.code]));
-      }
-    }    
+    const groupCustomsTypeMap = this.orderShipOutHelperService.getGroupCustomsTypeMap(customsRule);
 
-    return this.orderHelperService.getCustomsWarningIcon(orders, customsRule, groupCustomsTypeMap);
+    return this.orderShipOutHelperService.getCustomsWarningIcon(orders, customsRule, groupCustomsTypeMap);
   }
 
   /**
@@ -1359,16 +1338,6 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   }
 
   /**
-   * Determines whether same country is
-   * @param warehouse 
-   * @param order 
-   * @returns  
-   */
-  private isSameCountry(warehouse: Warehouse, order: OrderShipOut) {
-    return warehouse.companyMasterBranchFk.addressFk.countryId === order.deliveryAddressFk.countryId;
-  }
-
-  /**
    * HS CODE 편집 작업대상 데이터가 있으면 일괄 편집창을 팝업
    * @returns false if HS CODE entries 
    */
@@ -1377,7 +1346,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     const hsCodeEntryProducts = new Map<number, ProductHsCode>();
     for (const order of this.selectedOrders) {
       // 같은 국가면 HS Code입력 불필요.
-      if (this.isSameCountry(this.warehouse, order)) { continue; }
+      if (this.orderShipOutHelperService.isSameCountry(this.warehouse, order)) { continue; }
 
       for (const item of order.orderShipOutDetails) {
         if (!hsCodeEntryProducts.has(item.productId) && !item.hsCode) {
@@ -1449,7 +1418,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @param countryIds 
    * @returns country rules 
    */
-  private getCountryRules(countryIds: Set<number>): Map<string, any> {
+  private getCountryCustomsRules(countryIds: Set<number>): Map<string, any> {
     const configs = new Map<string, any>();
 
     // 입력타입코드 정의
@@ -1481,7 +1450,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     for (const order of orders) {
       // 같은 국가면 통관 타입 입력 불필요
-      if (this.isSameCountry(this.warehouse, order)) { continue; }
+      if (this.orderShipOutHelperService.isSameCountry(this.warehouse, order)) { continue; }
 
       const countryId = order.deliveryAddressFk.countryId;
 
@@ -1503,7 +1472,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     for (const countryIds of Array.from(productCountries.values())) {
       const key = Array.from(countryIds.keys()).join();
       if (!customsRulesByCountryGroup.has(key)) {
-        customsRulesByCountryGroup.set(key, this.getCountryRules(countryIds));
+        customsRulesByCountryGroup.set(key, this.getCountryCustomsRules(countryIds));
       }
     }
 
@@ -1512,7 +1481,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     const validatedProductIds = new Set<number>();
     for (const order of orders) {
       // 같은 국가면 통관 타입 입력 불필요
-      if (this.isSameCountry(this.warehouse, order)) { continue; }
+      if (this.orderShipOutHelperService.isSameCountry(this.warehouse, order)) { continue; }
 
       for (const item of order.orderShipOutDetails) {
         if (typeCodeEntryProducts.has(item.productId) || validatedProductIds.has(item.productId)) { continue; }
@@ -1816,7 +1785,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     // 선발급 송장번호대가 없을 경우 
     if (availCarrierTrackingsNumbersGroups.length === 0) {
-      this.orderHelperService.notifyNotEnoughCarrierTrackingsNumbersGroups(
+      this.orderShipOutHelperService.notifyNotEnoughCarrierTrackingsNumbersGroups(
         this.translator.get('sales.pendingOrderShipOutList.confirmNoCarrierTrackingNumbersGroupsMessage')
       );
       return;
@@ -1824,7 +1793,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     // 송장번호대가 멀티일 경우 선택하게 한다.
     if (!carrierTrackingsNumbersGroupsId && availCarrierTrackingsNumbersGroups.length > 1) {
-      const dialogRef = this.orderHelperService.popUpSelectCarrierTrackingsNumbersGroupsDialog(availCarrierTrackingsNumbersGroups);
+      const dialogRef = this.orderShipOutHelperService.popUpSelectCarrierTrackingsNumbersGroupsDialog(availCarrierTrackingsNumbersGroups);
 
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
@@ -1848,7 +1817,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     }
 
     // 송장번호 발급
-    this.orderHelperService.preAssignTrackingNumbers(carrierTrackingsNumbersGroup, targetOrders);
+    this.orderShipOutHelperService.preAssignTrackingNumbers(carrierTrackingsNumbersGroup, targetOrders);
 
     if (callExportForTrackingNumberUpdate) {
       return this.exportForTrackingNumberUpdate();
@@ -1864,7 +1833,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       this.translator.get('sales.pendingOrderShipOutList.confirmFoundPreAssignedCarrierTrackingNumberMessage'),
       DialogType.confirm,
       () => {
-        this.orderHelperService.preAssignTrackingNumbers(carrierTrackingsNumbersGroup, targetOrders);
+        this.orderShipOutHelperService.preAssignTrackingNumbers(carrierTrackingsNumbersGroup, targetOrders);
       },
       () => null,
       this.translator.get('common.button.yes'),
