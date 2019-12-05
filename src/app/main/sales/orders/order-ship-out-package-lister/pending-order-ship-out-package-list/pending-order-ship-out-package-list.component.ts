@@ -111,10 +111,6 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     return totalPackageCount === 0 ? '' : ` (${this.commaNumber(totalPackageCount)}/${this.commaNumber(totalWeight)}Kg)`;
   }
 
-  get otherWarehousePackages(): OrderShipOutPackage[] {
-    return this.packages.filter(x => x.warehouseId !== this.warehouse.id);
-  }  
-
   get warehousePackages(): OrderShipOutPackage[] {
     return this.packages.filter(x => x.warehouseId === this.warehouse.id);
   }
@@ -379,10 +375,11 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
    * @returns 합산과세 아이콘 
    */
   getAddUpCustomsTaxingIcon(thisBox: OrderShipOutPackage): Icon {
-    const addUpCustomsTaxingBox = this.otherWarehousePackages.find(box => 
+    const addUpCustomsTaxingBox = this.packages.find(box =>
+      box.id !== thisBox.id && 
       this.addUpCustomsTaxingWarehouseIds.includes(box.warehouseId) &&
-      box.deliveryTagFk.customsId && box.deliveryTagFk.customsId.toLowerCase() === 
-      thisBox.deliveryTagFk.customsId && thisBox.deliveryTagFk.customsId.toLowerCase()
+      box.deliveryTagFk.customsId && thisBox.deliveryTagFk.customsId &&
+      box.deliveryTagFk.customsId.toLowerCase() === thisBox.deliveryTagFk.customsId.toLowerCase()
     );
 
     if (addUpCustomsTaxingBox) {
@@ -394,7 +391,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
       return {
         name: OliveConstants.shipOutIcon.customsAddUpCustomsTaxingIcon,
         tooltip: String.Format(this.translator.get('common.message.addUpCustomsTaxingStatus'), 
-          `${warehouseCode} - ${orderNumberShortTitle}:${boxFirstOrderNumberShortValue} - ${consigneeNameTitle}: ${consigneeNameValue}`)
+        `${warehouseCode} - ${orderNumberShortTitle}:${boxFirstOrderNumberShortValue} - ${consigneeNameTitle}: ${consigneeNameValue}`)
       };
     }
 
