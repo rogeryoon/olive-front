@@ -92,7 +92,8 @@ export class OliveConstants {
         static customsTypeCodeErrorIcon = 'comment';
         static customsSameTypeMaxQuantityIcon = 'offline_bolt';
         static customsOneItemMaxQuantityIcon = 'computer';
-        static customsTotalMaxPriceIcon = 'monetization_on';  
+        static customsTotalMaxPriceIcon = 'monetization_on';
+        static customsAddUpCustomsTaxingIcon = 'control_point_duplicate';
     };
 }
 

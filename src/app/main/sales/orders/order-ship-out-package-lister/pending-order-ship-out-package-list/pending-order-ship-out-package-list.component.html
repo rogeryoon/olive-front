@@ -12,8 +12,8 @@
                 <mat-icon>local_shipping</mat-icon>
                 {{'common.button.finishShipOutPackage' | translate}}
             </button>
-            <button [disabled]="!selectedPackages.length || isloading" [matMenuTriggerFor]="misc" [disabled]="isloading"
-                mat-raised-button class="right ml-4" matTooltip="{{'common.button.misc' | translate}}">
+            <button [disabled]="!selectedPackages.length || isloading" [matMenuTriggerFor]="menu" [disabled]="isloading"
+                mat-raised-button class="right ml-4" matTooltip="{{'common.button.menu' | translate}}">
                 <mat-icon>dialpad</mat-icon>
             </button>
             <button *ngIf="!filtered" [matMenuTriggerFor]="filter" [disabled]="isloading" mat-raised-button
@@ -39,7 +39,7 @@
                 </button>
             </mat-menu>
 
-            <mat-menu #misc="matMenu">
+            <mat-menu #menu="matMenu">
                 <button [disabled]="!selectedPackages.length || isloading" mat-menu-item (click)="printPickingList()">
                     <mat-icon>gavel</mat-icon>
                     {{'common.menu.printPickingList' | translate}}
@@ -61,7 +61,7 @@
                     <mat-icon>toc</mat-icon>
                     {{'common.menu.exportForLogistic' | translate}}
                 </button>
-                <button mat-menu-item [disabled]="isloading" (click)="exportOrderList()">
+                <button mat-menu-item [disabled]="isloading" (click)="exportPackageList()">
                     <mat-icon>cancel_presentation</mat-icon>
                     {{'common.menu.exportExcelFile' | translate}}
                 </button>

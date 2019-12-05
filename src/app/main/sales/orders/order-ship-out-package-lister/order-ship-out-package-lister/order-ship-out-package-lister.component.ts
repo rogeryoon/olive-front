@@ -25,6 +25,9 @@ export class OliveOrderShipOutPackageListerComponent extends OliveEntityFormComp
   warehouse: Warehouse;
 
   @Input()
+  warehouses: Warehouse[];
+
+  @Input()
   index: number;
 
   protected pendingOrders: OrderShipOut[] = [];

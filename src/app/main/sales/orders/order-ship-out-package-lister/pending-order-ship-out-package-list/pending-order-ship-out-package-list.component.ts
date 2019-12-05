@@ -33,7 +33,6 @@ import { OliveConstants } from 'app/core/classes/constants';
 import { OliveOrderShipOutHelperService } from 'app/main/sales/services/order-ship-out-helper.service';
 import { Icon } from 'app/core/models/icon';
 import { Country } from 'app/main/supports/models/country.model';
-import { BoundTextAst } from '@angular/compiler';
 
 @Component({
   selector: 'olive-pending-order-ship-out-package-list',
@@ -43,6 +42,9 @@ import { BoundTextAst } from '@angular/compiler';
 export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFormComponent implements AfterContentChecked {
   @Input()
   warehouse: Warehouse;
+
+  @Input()
+  warehouses: Warehouse[];
 
   @Input()
   index: number;
@@ -68,6 +70,8 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
 
   filterCustomsIssues = null;
   filterKeyword = '';
+
+  addUpCustomsTaxingWarehouseIds: number[];
 
   @Output() packagesCanceled = new EventEmitter();
   @Output() reload = new EventEmitter<any>();
@@ -106,6 +110,10 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
 
     return totalPackageCount === 0 ? '' : ` (${this.commaNumber(totalPackageCount)}/${this.commaNumber(totalWeight)}Kg)`;
   }
+
+  get otherWarehousePackages(): OrderShipOutPackage[] {
+    return this.packages.filter(x => x.warehouseId !== this.warehouse.id);
+  }  
 
   get warehousePackages(): OrderShipOutPackage[] {
     return this.packages.filter(x => x.warehouseId === this.warehouse.id);
@@ -164,7 +172,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   }
 
   checkIfAllSelected() {
-    this.selectedAll = this.packages.every(x => x.selected);
+    this.selectedAll = this.allWarehousePackages.every(x => x.selected);
   }
 
   setConfigs(configType: string, data: any) {
@@ -191,6 +199,11 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   }
 
   initialize() {
+    if (this.packages.length > 0) {
+      this.addUpCustomsTaxingWarehouseIds = this.warehouses.filter(warehouse => 
+        warehouse.companyMasterBranchFk.addressFk.countryId !== this.packages[0].deliveryAddressFk.countryId)
+        .map(warehouse => warehouse.id);
+    }
   }
 
   getMarketSellerContacts() {
@@ -340,6 +353,12 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
       return icons;
     }
 
+    const addUpCustomsTaxingIcon = this.getAddUpCustomsTaxingIcon(box);
+
+    if (addUpCustomsTaxingIcon) {
+      icons.push(addUpCustomsTaxingIcon);
+    }
+
     const customsRule = this.orderShipOutHelperService.getCustomsRule(
       box.deliveryAddressFk.countryId, this.countries, this.customsConfigs);
 
@@ -352,6 +371,34 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     }
 
     return icons;
+  }
+
+  /**
+   * 합산과세 검사
+   * @param thisBox 
+   * @returns 합산과세 아이콘 
+   */
+  getAddUpCustomsTaxingIcon(thisBox: OrderShipOutPackage): Icon {
+    const addUpCustomsTaxingBox = this.otherWarehousePackages.find(box => 
+      this.addUpCustomsTaxingWarehouseIds.includes(box.warehouseId) &&
+      box.deliveryTagFk.customsId && box.deliveryTagFk.customsId.toLowerCase() === 
+      thisBox.deliveryTagFk.customsId && thisBox.deliveryTagFk.customsId.toLowerCase()
+    );
+
+    if (addUpCustomsTaxingBox) {
+      const warehouseCode = this.warehouses.find(warehouse => warehouse.id === thisBox.warehouseId).code;
+      const orderNumberShortTitle = this.translator.get('common.word.orderNumberShort');
+      const boxFirstOrderNumberShortValue = thisBox.orderShipOuts[0].orderFk.marketOrderNumber;
+      const consigneeNameTitle = this.translator.get('common.word.consigneeName');
+      const consigneeNameValue = thisBox.deliveryTagFk.consigneeName;
+      return {
+        name: OliveConstants.shipOutIcon.customsAddUpCustomsTaxingIcon,
+        tooltip: String.Format(this.translator.get('common.message.addUpCustomsTaxingStatus'), 
+          `${warehouseCode} - ${orderNumberShortTitle}:${boxFirstOrderNumberShortValue} - ${consigneeNameTitle}: ${consigneeNameValue}`)
+      };
+    }
+
+    return null;
   }
 
   buttonFilterNoCustomsIssuesPackages() {
@@ -609,10 +656,10 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   /**
    * Exports order list
    */
-  // TODO : exportOrderList : 와꾸미정이라 보류중  
-  exportOrderList() {
+  // TODO : exportPackageList : 와꾸미정이라 보류중  
+  exportPackageList() {
     this.documentService.exportHtmlTableToExcel(
-      this.translator.get('sales.pendingOrderShipOutList.fileName'), 
+      this.translator.get('sales.pendingOrderShipOutPackageList.fileName'), 
       this.tableId + '-bottom', 
       false,
       null,

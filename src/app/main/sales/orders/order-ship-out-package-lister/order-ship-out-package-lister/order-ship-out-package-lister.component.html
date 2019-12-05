@@ -2,6 +2,6 @@
     <olive-pending-order-ship-out-list [warehouse]="warehouse" [index]="index"
         (shipOutFinished)="onShipOutFinished($event)" (reload)="onReload($event)" fxFlex="50">
     </olive-pending-order-ship-out-list>
-    <olive-pending-order-ship-out-package-list [warehouse]="warehouse" 
+    <olive-pending-order-ship-out-package-list [warehouse]="warehouse" [warehouses]="warehouses"
         (packagesCanceled)="onShipOutPackageCanceled()" fxFlex="50"></olive-pending-order-ship-out-package-list>
 </form>
