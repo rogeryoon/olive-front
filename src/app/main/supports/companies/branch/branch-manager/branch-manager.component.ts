@@ -12,6 +12,7 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveBranchEditorComponent } from '../branch-editor/branch-editor.component';
 import { OliveAddressEditorComponent } from 'app/core/components/entries/address-editor/address-editor.component';
+import { OliveCacheService } from 'app/core/services/cache.service';
 
 @Component({
   selector: 'olive-branch-manager',
@@ -29,7 +30,7 @@ export class OliveBranchManagerComponent extends OliveEntityEditComponent {
     translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
-    dataService: OliveBranchService
+    dataService: OliveBranchService, private cacheService: OliveCacheService
   ) {
     super(
       translator, alertService,
@@ -47,6 +48,8 @@ export class OliveBranchManagerComponent extends OliveEntityEditComponent {
   getEditedItem(): any {
     const branch = this.branchEditor.getEditedItem();
     const address = this.addressEditorComponent.getEditedItem();
+
+    this.cacheService.invalidateCaches(OliveCacheService.cacheKeys.getItemsKey.branch);    
 
     return this.itemWithIdNAudit({
       code: branch.code,

@@ -4,5 +4,6 @@ export class Country extends OliveTrackingAttribute {
     id?: number;
     code: string;
     name: string;
+    isShipOutCountry?: boolean;
     activated?: boolean;
 }

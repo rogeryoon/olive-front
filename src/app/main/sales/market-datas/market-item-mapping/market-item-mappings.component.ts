@@ -20,7 +20,7 @@ import { OliveSearchMarketItemMappingComponent } from './search-market-item-mapp
 import { OliveMarketItemMappingService } from '../../services/market-item-mapping.service';
 import { MarketItemMapping } from '../../models/market-item-mapping.model';
 import { OliveMarketItemMappingManagerComponent } from './market-item-mapping-manager/market-item-mapping-manager.component';
-import { OliveUtilities } from 'app/core/classes/utilities';
+import { convertBase36ToNumber } from 'app/core/utils/encode-helpers';
 
 const Selected  = 'selected';
 const Id = 'id';
@@ -60,7 +60,7 @@ export class OliveMarketItemMappingsComponent extends OliveEntityListComponent {
 
   initializeChildComponent() {
     this.sub = this.route.params.subscribe(params => {
-      this.excelId = OliveUtilities.convertBase36ToNumber(params['id']);
+      this.excelId = convertBase36ToNumber(params['id']);
     });
 
     this.interfaceName = decodeURI(this.route.snapshot.queryParamMap.get('name'));

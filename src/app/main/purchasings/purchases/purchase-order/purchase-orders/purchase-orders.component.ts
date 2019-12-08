@@ -13,7 +13,6 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDocumentService } from 'app/core/services/document.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveConstants } from 'app/core/classes/constants';
 
 import { OliveSearchPurchaseOrderComponent } from '../search-purchase-order/search-purchase-order.component';
@@ -30,6 +29,7 @@ import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { NameValue } from 'app/core/models/name-value';
 import { OliveInWarehouseItemService } from '../../../services/in-warehouse-items.service';
 import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.model';
+import { getItemsFirstName, addSpanAddedCount, getItemsFirstCode } from 'app/core/utils/string-helper';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -137,7 +137,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         break;
 
       case ItemsName:
-        retValue = OliveUtilities.getItemsFirstName(item.purchaseOrderItems);
+        retValue = getItemsFirstName(item.purchaseOrderItems);
         break;
 
       case Warehouse:
@@ -149,11 +149,11 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         break;
 
       case PaymentsName:
-        retValue = OliveUtilities.getItemsFirstCode(item.purchaseOrderPayments);
+        retValue = getItemsFirstCode(item.purchaseOrderPayments);
         break;
 
       case PrintLink:
-        retValue = item.printOutCount > 1 ? OliveUtilities.addSpanAddedCount(item.printOutCount - 1) : '';
+        retValue = item.printOutCount > 1 ? addSpanAddedCount(item.printOutCount - 1) : '';
         break;
     }
 

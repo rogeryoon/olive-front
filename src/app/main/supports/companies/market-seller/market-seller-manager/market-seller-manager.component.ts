@@ -12,6 +12,7 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveMarketSellerEditorComponent } from '../market-seller-editor/market-seller-editor.component';
 import { MarketSeller } from '../../../models/market-seller.model';
+import { OliveCacheService } from 'app/core/services/cache.service';
 
 @Component({
   selector: 'olive-market-seller-manager',
@@ -26,7 +27,7 @@ export class OliveMarketSellerManagerComponent extends OliveEntityEditComponent 
     translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService,  
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
-    dataService: OliveMarketSellerService
+    dataService: OliveMarketSellerService, private cacheService: OliveCacheService
   ) {
     super(
       translator, alertService,
@@ -43,12 +44,15 @@ export class OliveMarketSellerManagerComponent extends OliveEntityEditComponent 
   getEditedItem(): any {
     const marketSeller = this.marketSellerEditor.getEditedItem();
 
+    this.cacheService.invalidateCaches(OliveCacheService.cacheKeys.getItemsKey.marketSeller);
+
     return this.itemWithIdNAudit({
       code: marketSeller.code,
       name: marketSeller.name,
       memo: marketSeller.memo,
       activated: marketSeller.activated,
-      marketId: marketSeller.marketId
+      marketId: marketSeller.marketId,
+      companyId: marketSeller.companyId
     } as MarketSeller);
   }
 

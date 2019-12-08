@@ -6,13 +6,13 @@ import { MatSnackBar } from '@angular/material';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OlivePaymentMethodService } from 'app/main/supports/services/payment-method.service';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OlivePurchaseOrderPaymentDataSource } from './purchase-order-payment-data-source';
 import { PaymentMethod } from 'app/main/supports/models/payment-method.model';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.model';
+import { activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
+import { showParamMessage } from 'app/core/utils/string-helper';
 
 @Component({
   selector: 'olive-purchase-order-payments-editor',
@@ -56,7 +56,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   }
 
   private getPaymentMethods() {
-    this.cacheService.getItems(this.paymentMethodService, OliveCacheService.cacheKeys.getItemsKey.paymentMethod)
+    this.cacheService.getItems(this.paymentMethodService, OliveCacheService.cacheKeys.getItemsKey.paymentMethod + 'activated', activatedNameOrderedSearchOption())
     .then((items: PaymentMethod[]) => {
       this.paymentMethods = items;
     });
@@ -122,7 +122,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   private deleteItem(item: any) {
     if (item.Obj.id || item.Obj.amount || item.Obj.paymentMethodId || item.Obj.remarkId) {
       this.snackBar.open(
-        OliveUtilities.showParamMessage(this.translator.get('common.message.confirmDelete')),
+        showParamMessage(this.translator.get('common.message.confirmDelete')),
         this.translator.get('common.button.delete'),
         { duration: 5000 }
       )

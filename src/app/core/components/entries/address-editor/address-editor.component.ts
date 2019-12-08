@@ -8,11 +8,9 @@ import { Address } from 'app/core/models/address.model';
 import { Country } from 'app/main/supports/models/country.model';
 import { OliveCountryService } from 'app/main/supports/services/country.service';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
-import { NameValue } from 'app/core/models/name-value';
 import { requiredValidator } from 'app/core/validators/general-validators';
+import { activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
 
 @Component({
   selector: 'olive-address-editor',
@@ -74,12 +72,11 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
   }
 
   initializeChildComponent() {
-    this.getCountryCodes();
+    this.getCountries();
   }
 
-  private getCountryCodes() {
-    const searchOption = OliveUtilities.searchOption([{name: 'activated', value: true} as NameValue], 'name');
-    this.cacheService.getItems(this.countryService, OliveCacheService.cacheKeys.getItemsKey.country, searchOption)
+  private getCountries() {
+    this.cacheService.getItems(this.countryService, OliveCacheService.cacheKeys.getItemsKey.country+'activated', activatedNameOrderedSearchOption())
     .then((items: Country[]) => {
       this.countries = items;
     });

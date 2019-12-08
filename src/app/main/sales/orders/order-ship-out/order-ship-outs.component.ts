@@ -18,8 +18,8 @@ import { OliveSearchOrderShipOutComponent } from './search-order-ship-out/search
 import { OliveOrderShipOutService } from '../../services/order-ship-out.service';
 import { OrderShipOut } from '../../models/order-ship-out.model';
 import { OliveOrderShipOutManagerComponent } from './order-ship-out-manager/order-ship-out-manager.component';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveConstants } from 'app/core/classes/constants';
+import { getItemsFirstName } from 'app/core/utils/string-helper';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -124,7 +124,7 @@ export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
         retValue = item.orderFk.marketOrdererName;
         break;
       case ProductName:
-        retValue = OliveUtilities.getItemsFirstName(item.orderShipOutDetails);
+        retValue = getItemsFirstName(item.orderShipOutDetails);
         break;
       case Quantity:
         retValue = this.getOrderCount(item);

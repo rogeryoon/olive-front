@@ -6,11 +6,16 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="w-100-p">
-        <mat-label>{{'common.word.memo' | translate}}</mat-label>
+        <mat-label>{{'common.word.name' | translate}}</mat-label>
         <input matInput name="name" formControlName="name" required maxlength="200">
         <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
         <mat-error *ngIf="hasEntryError('name')">{{errorMessage('name')}}</mat-error>
       </mat-form-field>
+
+      <div class="w-100-p mb-8">
+        <mat-checkbox formControlName="activated">{{'common.word.activated' | translate}}</mat-checkbox>&nbsp;
+        <mat-checkbox formControlName="isShipOutCountry">{{'common.word.isShipOutCountry' | translate}}</mat-checkbox>
+      </div>
 
       <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
 </form>

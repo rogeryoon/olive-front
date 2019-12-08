@@ -8,7 +8,7 @@ import { numberValidator, requiredValidator } from 'app/core/validators/general-
 import { MarketItemMappingProductVariant } from '../../../models/market-item-mapping-product-variant.model';
 import { OliveProductVariantService } from 'app/main/productions/services/product-variant.service';
 import { IdName } from 'app/core/models/id-name';
-import { OliveUtilities } from 'app/core/classes/utilities';
+import { convertBase36ToNumber, convertToBase36 } from 'app/core/utils/encode-helpers';
 
 export class OliveMarketItemMappingProductVariantDataSource extends TableDataSource {
 
@@ -22,11 +22,11 @@ export class OliveMarketItemMappingProductVariantDataSource extends TableDataSou
     }
 
     createRowFormGroup(r: any): FormGroup {
-        r.Obj.productVariantId36 = OliveUtilities.convertToBase36(r.Obj.productVariantId);
+        r.Obj.productVariantId36 = convertToBase36(r.Obj.productVariantId);
         const productVariantId36Control = new FormControl(r.Obj.productVariantId36, [requiredValidator()]);
         productVariantId36Control.valueChanges.subscribe(val => { 
             if (val) {
-                r.Obj.productVariantId = OliveUtilities.convertBase36ToNumber(val);
+                r.Obj.productVariantId = convertBase36ToNumber(val);
             }
             else {
                 r.Obj.productVariantId = null;

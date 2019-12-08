@@ -6,10 +6,10 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { AlertService, MessageSeverity, DialogType } from '@quick/services/alert.service';
 
 import { UserMessage } from '../models/user-message';
-import { Utilities } from '@quick/services/utilities';
 import { OliveBackEndErrors } from '../classes/back-end-errors';
-import { OliveUtilities } from '../classes/utilities';
 import { OliveConstants } from '../classes/constants';
+import { trimStringByMaxLength } from '../utils/string-helper';
+import { testIsUndefined } from '../utils/object-helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +39,7 @@ export class OliveMessageHelperService {
 
     this.alertService.showMessage(
       this.translator.get('common.title.success'),
-      OliveUtilities.testIsUndefined(itemName) ?
+      testIsUndefined(itemName) ?
         this.translator.get('common.message.deletedGeneral') :
         String.Format(this.translator.get('common.message.deleted'), itemName), 
       MessageSeverity.success
@@ -52,7 +52,7 @@ export class OliveMessageHelperService {
     if (isNewItem) {
       this.alertService.showMessage(
         this.translator.get('common.title.success'),
-        OliveUtilities.testIsUndefined(itemName) || itemName.length === 0 ? 
+        testIsUndefined(itemName) || itemName.length === 0 ? 
           this.translator.get('common.message.newItemCreatedGeneral') :
           String.Format(this.translator.get('common.message.newItemCreated'), itemName), 
         MessageSeverity.success
@@ -61,7 +61,7 @@ export class OliveMessageHelperService {
     else {
       this.alertService.showMessage(
         this.translator.get('common.title.success'),
-        OliveUtilities.testIsUndefined(itemName) || itemName.length === 0 ? 
+        testIsUndefined(itemName) || itemName.length === 0 ? 
           this.translator.get('common.message.updatedGeneral') :
           String.Format(this.translator.get('common.message.updated'), itemName), 
           MessageSeverity.success
@@ -98,7 +98,7 @@ export class OliveMessageHelperService {
           if (error.error.errorCode.includes(concurrencyError)) {
             const duplicatedKeysString = error.error.errorCode.replace(concurrencyError + '-', '');
             errorMessage.message = String.Format(this.translator.get('common.entryError.concurrencyKeyName'), duplicatedKeysString);
-            errorMessage.message = OliveUtilities.trimStringByMaxLength(errorMessage.message, OliveConstants.uiConfig.maxErrorMessageLength);
+            errorMessage.message = trimStringByMaxLength(errorMessage.message, OliveConstants.uiConfig.maxErrorMessageLength);
           }
           errorMessage.messageSeverity = MessageSeverity.error;        
           break;

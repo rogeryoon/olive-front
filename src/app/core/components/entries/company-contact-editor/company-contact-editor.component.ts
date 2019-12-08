@@ -15,8 +15,8 @@ import { MatSnackBar } from '@angular/material';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { CompanyContact } from 'app/core/models/company-contact.model';
 import { OliveCompanyGroupPreferenceService } from 'app/core/services/company-group-preference.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { requiredValidator } from 'app/core/validators/general-validators';
+import { showParamMessage } from 'app/core/utils/string-helper';
 
 @Component({
   selector: 'olive-company-contact-editor',
@@ -256,7 +256,7 @@ export class OliveCompanyContactEditorComponent extends OliveEntityEditComponent
    */
   deleteContact(contact: CompanyContact) {
     this.snackBar.open(
-      OliveUtilities.showParamMessage(this.translator.get('common.message.confirmDelete')),
+      showParamMessage(this.translator.get('common.message.confirmDelete')),
       this.translator.get('common.button.delete'),
       { duration: 5000 }
     )

@@ -18,8 +18,7 @@ import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/ware
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator, requiredValidator } from 'app/core/validators/general-validators';
-import { OliveUtilities } from 'app/core/classes/utilities';
-import { isMoneyPattern } from 'app/core/utils/string-helper';
+import { isMoneyPattern, toTrimString } from 'app/core/utils/string-helper';
 
 @Component({
   selector: 'olive-purchase-order-editor',
@@ -160,7 +159,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   }
 
   onCurrencyExchangeRateChanged(input: any) {
-    const value = OliveUtilities.toTrimString(input);
+    const value = toTrimString(input);
     if (isMoneyPattern(value)) {
       this.exchangeRateChanged.emit(value);
     }

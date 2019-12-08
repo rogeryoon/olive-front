@@ -4,8 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { Permission } from '@quick/models/permission.model';
 
-import { OliveUtilities } from '../classes/utilities';
 import { AuthService } from '@quick/services/auth.service';
+import { convertBase36ToNumber } from '../utils/encode-helpers';
 
 
 @Injectable({
@@ -32,7 +32,7 @@ export class OliveQueryParameterService {
     let returnCompanyGroupID = this.authService.currentUser.companyGroupId;
 
     if (queryParamGroupIdBase36) {
-      const queryCompanyGroupId = OliveUtilities.convertBase36ToNumber(queryParamGroupIdBase36);
+      const queryCompanyGroupId = convertBase36ToNumber(queryParamGroupIdBase36);
       
       if 
       (

@@ -20,7 +20,6 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveSearchMarketExcelRowComponent } from './search-market-excel-row/search-market-excel-row.component';
 import { OliveMarketExcelRowService } from '../../services/market-excel-row.service';
 import { MarketExcelRow } from '../../models/market-excel-row.model';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { NameValue } from 'app/core/models/name-value';
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveMarketExcelRowManagerComponent } from './market-excel-row-manager/market-excel-row-manager.component';
@@ -29,6 +28,7 @@ import { OliveTaskCountSetting } from 'app/core/interfaces/dialog-setting/task-c
 import { MarketExcelRowsStatus } from '../../models/market-excel-rows-status.model';
 import { MarketExcel } from '../../models/market-excel.model';
 import { checkIcon } from 'app/core/utils/helpers';
+import { convertBase36ToNumber } from 'app/core/utils/encode-helpers';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -70,7 +70,7 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
 
   initializeChildComponent() {
     this.sub = this.route.params.subscribe(params => {
-      this.excelId = OliveUtilities.convertBase36ToNumber(params['id']);
+      this.excelId = convertBase36ToNumber(params['id']);
     });
 
     this.interfaceName = decodeURI(this.route.snapshot.queryParamMap.get('name'));

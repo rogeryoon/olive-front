@@ -18,11 +18,14 @@ import { OliveSearchCountryComponent } from './search-country/search-country.com
 import { OliveCountryService } from '../../services/country.service';
 import { Country } from '../../models/country.model';
 import { OliveCountryManagerComponent } from './country-manager/country-manager.component';
+import { checkIcon } from 'app/core/utils/helpers';
 
 const Selected  = 'selected';
 const Id = 'id';
 const Code = 'code';
 const Name = 'name';
+const Activated = 'activated';
+const IsShipOutCountry = 'isShipOutCountry';
 const CreatedUtc = 'createdUtc';
 
 @Component({
@@ -53,9 +56,11 @@ export class OliveCountriesComponent extends OliveEntityListComponent {
       managePermission: null,
       columns: [
         { data: Selected },
-        { data: Code, thName: 'Code', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
-        { data: Name, thName: 'Name', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
-        { data: CreatedUtc, thName: 'CreatedUtc', tdClass: '', thClass: '' }
+        { data: Code, thName: this.translator.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: Name, thName: this.translator.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
+        { data: Activated, thName: this.translator.get('common.tableHeader.activated'), tdClass: '', thClass: '' },
+        { data: IsShipOutCountry, thName: this.translator.get('common.tableHeader.isShipOutCountry'), tdClass: '', thClass: '' },
+        { data: CreatedUtc, thName: this.translator.get('common.tableHeader.createdUtc'), tdClass: '', thClass: '' }
       ],
       editComponent: OliveCountryManagerComponent,
       searchComponent: OliveSearchCountryComponent,
@@ -79,6 +84,39 @@ export class OliveCountriesComponent extends OliveEntityListComponent {
       case CreatedUtc:
         retValue = this.date(item.createdUtc);
         break;
+    }
+
+    return retValue;
+  }
+
+  icon(item: Country, columnName: string): boolean {
+
+    let retValue = false;
+
+    switch (columnName) {
+      case Activated:
+        retValue = true;
+        break;
+
+      case IsShipOutCountry:
+        retValue = true;
+        break;        
+    }
+
+    return retValue;
+  }
+
+  iconName(item: Country, columnName: string): string {
+
+    let retValue = '';
+    switch (columnName) {
+      case Activated:
+        retValue = checkIcon(item.activated);
+        break;
+
+      case IsShipOutCountry:
+        retValue = checkIcon(item.isShipOutCountry);
+        break;        
     }
 
     return retValue;

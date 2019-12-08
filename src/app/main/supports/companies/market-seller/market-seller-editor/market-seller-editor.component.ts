@@ -5,13 +5,19 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { MarketSeller } from '../../../models/market-seller.model';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
 import { OliveMarketService } from '../../../services/market.service';
 import { OliveMarketManagerComponent } from '../../market/market-manager/market-manager.component';
 import { Market } from '../../../models/market.model';
 import { requiredValidator } from 'app/core/validators/general-validators';
+import { Company } from 'app/main/supports/models/company.model';
+import { NameValue } from 'app/core/models/name-value';
+import { OliveCacheService } from 'app/core/services/cache.service';
+import { OliveCompanyService } from 'app/main/supports/services/company.service';
+import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
+import { searchOption } from 'app/core/utils/search-helpers';
+import { make36Id } from 'app/core/utils/encode-helpers';
 
 @Component({
   selector: 'olive-market-seller-editor',
@@ -19,12 +25,16 @@ import { requiredValidator } from 'app/core/validators/general-validators';
   styleUrls: ['./market-seller-editor.component.scss']
 })
 export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
-  @ViewChild('marketFk') 
+  @ViewChild('marketFk')
   lookupMarket: OliveLookupHostComponent;
+
+  companies: Company[];
+  markets: Market[];
 
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
-    private marketService: OliveMarketService
+    private marketService: OliveMarketService, private cacheService: OliveCacheService,
+    private companyService: OliveCompanyService, private queryParams: OliveQueryParameterService
   ) {
     super(
       formBuilder, translator
@@ -43,7 +53,8 @@ export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
       name: formModel.name,
       memo: formModel.memo,
       activated: formModel.activated,
-      marketId: formModel.marketFk.id
+      marketId: this.markets.find(item => item.id === formModel.market).id,
+      companyId: this.companies.find(item => item.id === formModel.company).id,
     } as MarketSeller);
   }
 
@@ -53,17 +64,19 @@ export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
       name: ['', requiredValidator()],
       memo: '',
       activated: false,
-      marketFk: null
+      market: ['', requiredValidator()],
+      company: ['', requiredValidator()]
     });
   }
 
   resetForm() {
     this.oForm.reset({
-      code: this.item.code || OliveUtilities.make36Id(4),
+      code: this.item.code || make36Id(4),
       name: this.item.name || '',
       memo: this.item.memo || '',
       activated: this.boolValue(this.item.activated),
-      marketFk: this.item.marketFk
+      market: this.item.marketId || '',
+      company: this.item.companyId || ''
     });
   }
 
@@ -72,6 +85,8 @@ export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
   }
 
   initializeChildComponent() {
+    this.getCompanies();
+
     this.lookupMarket.setting = {
       columnType: 'id',
       itemTitle: this.translator.get(NavTranslates.Company.market),
@@ -85,6 +100,21 @@ export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
   }
 
   markCustomControlsTouched() {
-    this.lookupMarket.markAsTouched();   
+    this.lookupMarket.markAsTouched();
+  }
+
+  private getCompanies() {
+    const companyGroupId = this.queryParams.CompanyGroupId.toString();
+
+    // 문맥 회사그룹의 서브 회사를 로드
+    const option = searchOption([
+        { name: 'activated', value: true } as NameValue, 
+        { name: 'companyGroupId', value: companyGroupId }
+      ]);
+
+    this.cacheService.getItems(this.companyService, OliveCacheService.cacheKeys.getItemsKey.country + companyGroupId, option)
+      .then((items: Company[]) => {
+        this.companies = items;
+      });
   }
 }

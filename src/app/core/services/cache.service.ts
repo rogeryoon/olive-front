@@ -48,30 +48,35 @@ export class OliveCacheService {
   private _standCurrency: Currency;
 
   static cacheKeys = class {
-    static userName = 'usr';
+    static userName = 'usr-';
 
-    static userPreferenceCacheKey = 'userPreference';
+    static userPreferenceCacheKey = 'userPreference-';
     static userPreference = class {
-      static warehouseCheckboxes = 'warehouseCheckboxes';
+      static warehouseCheckboxes = 'warehouseCheckboxes-';
       static lookupHost = 'lookupHost-';
       static lastSelectedPaymentMethodId = 'lastSelectedPaymentMethodId';
     };
 
-    static companyGroupPreferenceCacheKey = 'companyGroupPreference';
+    static companyGroupPreferenceCacheKey = 'companyGroupPreference-';
     static companyGroupPreference = class {
-      static shippingLabelShippers = 'shippingLabelShippers';
-      static purchaseOrderCompany = 'purchaseOrderCompany';
+      static shippingLabelShippers = 'shippingLabelShippers-';
+      static purchaseOrderCompany = 'purchaseOrderCompany-';
     };
 
-    static oliveConfigCacheKey = 'oliveConfig';
+    static oliveConfigCacheKey = 'oliveConfig-';
 
     static getItemsKey = class {
-      static country = 'country';
-      static carrier = 'carrier';
-      static marketSeller = 'marketSeller';
-      static marketExcelInterface = 'marketExcelInterfaces';
-      static market = 'market';
-      static paymentMethod = 'paymentMethod';
+      static carrier = 'carrier-';
+      static marketExcelInterface = 'marketExcelInterfaces-';
+
+      // 아래건은 기초코드 저장후에 꼭 Cache를 Invalidate시킬것
+      static country = 'country-';
+      static marketSeller = 'marketSeller-';
+      static market = 'market-';
+      static paymentMethod = 'paymentMethod-';
+      static warehouse = 'warehouse-';
+      static branch = 'branch-';
+      static company = 'company-';
     };
   };
 
@@ -84,23 +89,61 @@ export class OliveCacheService {
   ) {
   }
 
+  /**
+   * Sets olive cache service
+   * @param key 
+   * @param value 
+   * @param [maxAge] 
+   * @returns set 
+   */
   private set(key: string, value: any, maxAge: number = this.DEFAULT_MAX_AGE): any {
     this.cache.set(key, { value: value, expiry: Date.now() + maxAge });
     return value;
   }
 
+  /**
+   * Gets cache value
+   * @param key 
+   * @returns get 
+   */
   private get(key: string): any {
     return this.cache.get(key).value;
   }
 
+  /**
+   * Exists cache key
+   * @param key 
+   * @returns true if exist 
+   */
   private exist(key): boolean {
     return this.hasValidCachedValue(key);
   }
 
+  /**
+   * Deletes cache by key
+   * @param key 
+   */
   private delete(key): void {
     this.cache.delete(key);
   }
 
+  /**
+   * 키값으로 시작하는 문자열을 찾아 캐쉬 삭제
+   * @param keyPartial 
+   */
+  public invalidateCaches(keyPartial: string) {
+    for (const key of Array.from(this.cache.keys())) {
+      if (key.startsWith(keyPartial)) {
+        this.delete(keyPartial)
+      }
+    }
+  }
+
+  /**
+   * Determines whether valid cached value has
+   * @param key 
+   * @returns true if valid cached value 
+   */
   private hasValidCachedValue(key: string): boolean {
     if (this.cache.has(key)) {
       if (this.cache.get(key).expiry < Date.now()) {
@@ -113,6 +156,10 @@ export class OliveCacheService {
     }
   }
 
+  /**
+   * Gets company group setting
+   * @returns company group setting 
+   */
   async GetCompanyGroupSetting(): Promise<CompanyGroupSetting> {
     const companyGroupId = this.queryParams.CompanyGroupId;
     const key = `CompanyGroupSetting-${companyGroupId}`;
@@ -137,6 +184,13 @@ export class OliveCacheService {
     return setting;
   }
 
+  /**
+   * Gets item
+   * @param dataService 
+   * @param key 
+   * @param id 
+   * @returns item 
+   */
   async getItem(dataService: OliveDataService, key: string, id: number): Promise<any> {
     let item: any = null;
 
@@ -164,6 +218,13 @@ export class OliveCacheService {
     return item;
   }
 
+  /**
+   * Gets items
+   * @param dataService 
+   * @param key 
+   * @param [postData] 
+   * @returns items 
+   */
   async getItems(dataService: OliveDataService, key: string, postData: any = null): Promise<any> {
     let item: any = null;
 
@@ -477,6 +538,11 @@ export class OliveCacheService {
     return config ? JSON.parse(config.data) : null;
   }
 
+  /**
+   * Gets chunk items
+   * @param key 
+   * @returns chunk items 
+   */
   async getChunkItems(key: string): Promise<any> {
     let items: any = null;
 
@@ -504,6 +570,11 @@ export class OliveCacheService {
     return items;
   }
 
+  /**
+   * Gets user names
+   * @param keys 
+   * @returns user names 
+   */
   async getUserNames(keys: string[]): Promise<any> {
     const uniqueKeys = new Set();
     keys.forEach(key => {
@@ -543,6 +614,9 @@ export class OliveCacheService {
     return returnUserNames;
   }
 
+  /**
+   * Gets company master
+   */
   get companyMaster() {
     if (!this._companyMaster) {
       this._companyMaster = this.authService.companyMaster;
@@ -550,6 +624,9 @@ export class OliveCacheService {
     return this._companyMaster;
   }
 
+  /**
+   * Gets currencies
+   */
   get currencies() {
     if (!this._currencies) {
       this._currencies = this.authService.currencies;
@@ -557,6 +634,9 @@ export class OliveCacheService {
     return this._currencies;
   }
 
+  /**
+   * Gets stand currency
+   */
   get standCurrency() {
     if (!this._standCurrency) {
       this._standCurrency = this.authService.standCurrency;
@@ -564,19 +644,37 @@ export class OliveCacheService {
     return this._standCurrency;
   }
 
+  /**
+   * Shows money
+   * @param amount 
+   * @param [showSymbol] 
+   * @returns money 
+   */
   showMoney(amount: number, showSymbol = false): string {
     const amountString = numberFormat(amount, this.standCurrency.decimalPoint);
     return showSymbol ? `${this.standCurrency.symbol} ${amountString}` : amountString;
   }
 
+  /**
+   * Gets key warehouse checkboxes
+   */
   get keyWarehouseCheckboxes(): string {
     return OliveCacheService.cacheKeys.userPreference.warehouseCheckboxes + this.queryParams.CompanyGroupId;
   }
 
+  /**
+   * Gets key last selected payment method id
+   */
   get keyLastSelectedPaymentMethodId(): string {
     return OliveCacheService.cacheKeys.userPreference.lastSelectedPaymentMethodId + this.queryParams.CompanyGroupId;
   }
 
+  /**
+   * Keys shipping label shippers
+   * @param warehouseId 
+   * @param marketSellerId 
+   * @returns shipping label shippers 
+   */
   keyShippingLabelShippers(warehouseId: number, marketSellerId: number): string {
     return OliveCacheService.cacheKeys.companyGroupPreference.shippingLabelShippers + '-' + warehouseId + '-' + marketSellerId;
   }

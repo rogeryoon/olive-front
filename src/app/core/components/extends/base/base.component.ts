@@ -3,11 +3,14 @@ import { FormGroup, FormArray, AbstractControl } from '@angular/forms';
 import { String } from 'typescript-string-operations';
 
 import { Currency } from 'app/main/supports/models/currency.model';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { Address } from 'app/core/models/address.model';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { numberFormat } from 'app/core/utils/number-helper';
+import { getShortDate, getMomentDate, dateCode } from 'app/core/utils/date-helper';
+import { showAddress } from 'app/core/utils/string-helper';
+import { convertToBase36 } from 'app/core/utils/encode-helpers';
+import { testIsUndefined } from 'app/core/utils/object-helpers';
 
 @Component({
   selector: 'olive-base',
@@ -49,23 +52,23 @@ export class OliveBaseComponent implements OnInit {
   }
 
   isNull(input: any): boolean {
-    return OliveUtilities.testIsUndefined(input);
+    return testIsUndefined(input);
   }
 
   id36(input: number): string {
-    return OliveUtilities.convertToBase36(input);
+    return convertToBase36(input);
   }
 
   date(input: any): string {
-    return OliveUtilities.getShortDate(input);
+    return getShortDate(input);
   }
 
   moment(input: any): string {
-    return OliveUtilities.getMomentDate(input);
+    return getMomentDate(input);
   }  
 
   dateCode(date: any, id: number = 0): string {
-    return OliveUtilities.dateCode(date, id);
+    return dateCode(date, id);
   }  
 
   boolValue(value?: boolean): boolean {
@@ -73,7 +76,7 @@ export class OliveBaseComponent implements OnInit {
   }
 
   address(address: Address): string {
-    return OliveUtilities.showAddress(address);
+    return showAddress(address);
   }
   //#endregion Utilities
 
@@ -138,7 +141,7 @@ export class OliveBaseComponent implements OnInit {
   protected errorMessageByControl(control: AbstractControl): string {
     let message = '';
 
-    if (OliveUtilities.testIsUndefined(control.errors) || !control.touched) {
+    if (testIsUndefined(control.errors) || !control.touched) {
       return '';
     }
 
@@ -200,7 +203,7 @@ export class OliveBaseComponent implements OnInit {
   hasArrayThisError(name: string, errorName: string, index: number): boolean {
     const control = this.getArrayFormGroup(index).get(name);
     
-    if (OliveUtilities.testIsUndefined(control.errors)) {
+    if (testIsUndefined(control.errors)) {
       return false;
     }
 
@@ -224,7 +227,7 @@ export class OliveBaseComponent implements OnInit {
   protected hasEntryErrorByControl(control: any, errorName: string = null): boolean {
     let hasError = false;
 
-    if (OliveUtilities.testIsUndefined(control.errors)) {
+    if (testIsUndefined(control.errors)) {
       return hasError = false;
     }
     else 

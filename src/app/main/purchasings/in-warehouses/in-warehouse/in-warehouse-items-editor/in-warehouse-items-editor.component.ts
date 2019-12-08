@@ -22,10 +22,9 @@ import { OlivePurchaseOrderService } from 'app/main/purchasings/services/purchas
 import { PurchaseOrder } from 'app/main/purchasings/models/purchase-order.model';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { Warehouse } from 'app/main/supports/models/warehouse.model';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { isNumberPattern } from 'app/core/utils/string-helper';
+import { isNumberPattern, showParamMessage } from 'app/core/utils/string-helper';
 
 @Component({
   selector: 'olive-in-warehouse-items-editor',
@@ -130,7 +129,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   private deleteItem(item: any) {
     if (item.Obj.id || item.Obj.name || item.Obj.quantity || item.Obj.price || item.Obj.remark) {
       this.snackBar.open(
-        OliveUtilities.showParamMessage(this.translator.get('common.message.confirmDelete')),
+        showParamMessage(this.translator.get('common.message.confirmDelete')),
         this.translator.get('common.button.delete'),
         { duration: 5000 }
       )

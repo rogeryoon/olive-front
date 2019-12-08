@@ -4,7 +4,6 @@ import { FormBuilder } from '@angular/forms';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { CompanyGroup } from '../../../models/company-group.model';
 import { requiredValidator } from 'app/core/validators/general-validators';
 

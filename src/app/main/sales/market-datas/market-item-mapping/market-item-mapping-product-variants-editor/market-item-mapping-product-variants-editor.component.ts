@@ -10,7 +10,6 @@ import { AlertService } from '@quick/services/alert.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveMarketItemMappingProductVariantDataSource } from './market-item-mapping-product-variant-data-source';
 import { MarketItemMappingProductVariant } from '../../../models/market-item-mapping-product-variant.model';
 import { OliveProductVariantLookupDialogComponent } from 'app/main/productions/products/product-variant/product-variant-lookup-dialog/product-variant-lookup-dialog.component';
@@ -21,6 +20,8 @@ import { ProductVariant } from 'app/main/productions/models/product-variant.mode
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { IdName } from 'app/core/models/id-name';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
+import { showParamMessage } from 'app/core/utils/string-helper';
+import { convertToBase36 } from 'app/core/utils/encode-helpers';
 
 @Component({
   selector: 'olive-market-item-mapping-product-variants-editor',
@@ -95,7 +96,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
     });
 
     if (foundItem && dupStrings.length === 0) {
-      formGroup.patchValue({productVariantId36: OliveUtilities.convertToBase36(foundItem.id)});
+      formGroup.patchValue({productVariantId36: convertToBase36(foundItem.id)});
     }
 
     if (dupStrings.length > 0) {
@@ -218,7 +219,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
   private deleteItem(item: any) {
     if (item.Obj.productVariantId36) {
       this.snackBar.open(
-        OliveUtilities.showParamMessage(this.translator.get('common.message.confirmDelete')),
+        showParamMessage(this.translator.get('common.message.confirmDelete')),
         this.translator.get('common.button.delete'),
         { duration: 5000 }
       )

@@ -11,6 +11,7 @@ import { OliveCountryService } from '../../../services/country.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveCountryEditorComponent } from '../country-editor/country-editor.component';
+import { OliveCacheService } from 'app/core/services/cache.service';
 
 @Component({
   selector: 'olive-country-manager',
@@ -24,8 +25,8 @@ export class OliveCountryManagerComponent extends OliveEntityEditComponent {
   constructor(
     translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
-    snackBar: MatSnackBar, formBuilder: FormBuilder, 
-    dataService: OliveCountryService
+    snackBar: MatSnackBar, formBuilder: FormBuilder, dataService: OliveCountryService,
+    private cacheService: OliveCacheService
   ) {
     super(
       translator, alertService,
@@ -42,9 +43,13 @@ export class OliveCountryManagerComponent extends OliveEntityEditComponent {
   getEditedItem(): any {
     const country = this.countryEditor.getEditedItem();
 
+    this.cacheService.invalidateCaches(OliveCacheService.cacheKeys.getItemsKey.country);
+
     return this.itemWithIdNAudit({
       code: country.code,
-      name: country.name
+      name: country.name,
+      activated: country.activated,
+      isShipOutCountry: country.isShipOutCountry
     });
   }
 

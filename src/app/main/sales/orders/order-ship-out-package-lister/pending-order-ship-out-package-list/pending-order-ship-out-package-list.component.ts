@@ -71,7 +71,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   filterCustomsIssues = null;
   filterKeyword = '';
 
-  addUpCustomsTaxingWarehouseIds: number[];
+  isAddUpCustomsTaxing = null;
 
   @Output() packagesCanceled = new EventEmitter();
   @Output() reload = new EventEmitter<any>();
@@ -145,13 +145,21 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   }
 
   /**
-   * 주문 아이템 무게 합을 구한다.
-   * @param order OrderShipOut
-   * @returns 합산값
-   */  
-  getOrderShipOutWeightDue(order: OrderShipOut): number {
-    return this.orderShipOutHelperService.getOrderShipOutKiloWeightDue(order);
-  }
+   * 합산과세를 적용할 창고인지 판단
+   */
+  get isAddUpCustomsTaxingWarehouse(): boolean {
+    if (!this.isAddUpCustomsTaxing && this.packages.length > 0) {
+      this.isAddUpCustomsTaxing = this.warehouses.filter(warehouse => 
+        warehouse.companyMasterBranchFk.addressFk.countryId !== this.packages[0].deliveryAddressFk.countryId)
+        .map(warehouse => warehouse.id).includes(this.warehouse.id);
+    }
+
+    if (this.isAddUpCustomsTaxing) {
+      return true;
+    }
+
+    return false;
+  }  
 
   get isloading(): boolean {
     return this.parentObject && this.parentObject.bool1;
@@ -159,6 +167,15 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
 
   setIsLoading(value: boolean) {
     this.parentObject.bool1 = value;
+  }
+
+  /**
+   * 주문 아이템 무게 합을 구한다.
+   * @param order OrderShipOut
+   * @returns 합산값
+   */  
+  getOrderShipOutWeightDue(order: OrderShipOut): number {
+    return this.orderShipOutHelperService.getOrderShipOutKiloWeightDue(order);
   }
 
   selectAll() {
@@ -195,14 +212,9 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
   }
 
   initialize() {
-    if (this.packages.length > 0) {
-      this.addUpCustomsTaxingWarehouseIds = this.warehouses.filter(warehouse => 
-        warehouse.companyMasterBranchFk.addressFk.countryId !== this.packages[0].deliveryAddressFk.countryId)
-        .map(warehouse => warehouse.id);
-    }
   }
 
-  getMarketSellerContacts() {
+  setMarketSellerContacts() {
     // Cache에서 가져올것이 무엇인지 marketSellerFk.id별로 정리한다.
     for (const box of this.allWarehousePackages) {
       for (const order of box.orderShipOuts) {
@@ -369,15 +381,19 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     return icons;
   }
 
+  
   /**
    * 합산과세 검사
    * @param thisBox 
    * @returns 합산과세 아이콘 
    */
   getAddUpCustomsTaxingIcon(thisBox: OrderShipOutPackage): Icon {
+    if (!this.isAddUpCustomsTaxingWarehouse) {
+      return null;
+    }
+
     const addUpCustomsTaxingBox = this.packages.find(box =>
       box.id !== thisBox.id && 
-      this.addUpCustomsTaxingWarehouseIds.includes(box.warehouseId) &&
       box.deliveryTagFk.customsId && thisBox.deliveryTagFk.customsId &&
       box.deliveryTagFk.customsId.toLowerCase() === thisBox.deliveryTagFk.customsId.toLowerCase()
     );
@@ -468,7 +484,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
         box.orderShipOuts.some(order => 
           order.orderFk.marketSellerFk.code && order.orderFk.marketSellerFk.code.toLowerCase().includes(keyword) ||
           order.orderFk.marketOrderNumber && order.orderFk.marketOrderNumber.toLowerCase().includes(keyword) ||
-          order.orderShipOutDetails.find(x => x.name && x.name.toLowerCase().includes(keyword))
+          order.orderShipOutDetails.some(x => x.name && x.name.toLowerCase().includes(keyword))
         ));
     }
 

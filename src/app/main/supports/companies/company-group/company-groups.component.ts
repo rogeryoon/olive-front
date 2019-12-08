@@ -59,17 +59,17 @@ export class OliveCompanyGroupsComponent extends OliveEntityListComponent {
         // 1
         { data: Selected },
         // 2
-        { data: Id, thName: 'ID', tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
+        { data: Id, thName: this.translator.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
-        { data: Name, thName: 'Name',  tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
+        { data: Name, thName: this.translator.get('common.tableHeader.name'),  tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         // 4
-        { data: Companies, thName: 'Count', tdClass: 'print right', thClass: '' },
+        { data: Companies, thName: this.translator.get('common.tableHeader.count'), tdClass: 'print right', thClass: '' },
         // 5
-        { data: Memo, thName: 'Memo', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: Memo, thName: this.translator.get('common.tableHeader.activated'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 6
-        { data: Activated, thName: 'Activated', tdClass: '', thClass: '' },
+        { data: Activated, thName: this.translator.get('common.tableHeader.activated'), tdClass: '', thClass: '' },
         // 7
-        { data: CreateUtc, thName: 'Date', thClass: 'print -ex-type-text' }
+        { data: CreateUtc, thName: this.translator.get('common.tableHeader.createdUtc'), thClass: 'print -ex-type-text' }
       ],
       editComponent: OliveCompanyGroupManagerComponent,
       searchComponent: OliveSearchCompanyGroupComponent,

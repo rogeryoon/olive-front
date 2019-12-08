@@ -2,7 +2,6 @@
 import { OrderShipOutPackage } from '../models/order-ship-out-package.model';
 import { ExcelColumn } from 'app/core/models/excel-column';
 import { ExcelRowExportGps } from '../models/excel-row-export-gps.model';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveConstants } from 'app/core/classes/constants';
 import { CompanyContact } from 'app/core/models/company-contact.model';
 import { OliveDocumentService } from 'app/core/services/document.service';
@@ -13,6 +12,7 @@ import { isoDateString } from 'app/core/utils/date-helper';
 import { camelize, getDelimiterSet } from 'app/core/utils/string-helper';
 import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
 import { OliveOrderShipOutHelperService } from './order-ship-out-helper.service';
+import { convertToBase36 } from 'app/core/utils/encode-helpers';
 
 class ShipItem {
   productVariantId: number;
@@ -230,7 +230,7 @@ export class OliveShipperExcelService {
       row.customSID = box.deliveryTagFk.customsId;
       row.consigneeMemo = box.deliveryTagFk.deliveryMemo;
       
-      row.orderID = 'X-' + OliveUtilities.convertToBase36(box.id);
+      row.orderID = 'X-' + convertToBase36(box.id);
 
       row.weight = this.getTotalPoundWeight(items);
       this.calculateGpsVolumeWeight(items, row);

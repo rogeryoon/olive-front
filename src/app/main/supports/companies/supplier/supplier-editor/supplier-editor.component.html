@@ -51,7 +51,7 @@
 
     <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
         <div class="w-100-p">
-            <mat-checkbox formControlName="activated">Activated</mat-checkbox>
+            <mat-checkbox formControlName="activated">{{'common.word.activated' | translate}}</mat-checkbox>
         </div>
         <div class="w-100-p">
             <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>

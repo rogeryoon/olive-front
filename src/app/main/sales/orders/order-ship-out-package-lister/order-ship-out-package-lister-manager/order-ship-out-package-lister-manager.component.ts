@@ -12,7 +12,6 @@ import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edi
 import { OliveInWarehouseService } from 'app/main/purchasings/services/in-warehouse.service';
 import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { OliveCheckboxSelectorPanelComponent } from 'app/core/components/entries/checkbox-selector-panel/checkbox-selector-panel.component';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { NameValue } from 'app/core/models/name-value';
 import { OliveOrderShipOutService } from 'app/main/sales/services/order-ship-out.service';
 import { OrderShipOut } from 'app/main/sales/models/order-ship-out.model';
@@ -29,6 +28,7 @@ import { CarrierTrackingNumbersGroup } from 'app/main/shippings/models/carrier-t
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveCarrierTrackingNumberRangeService } from 'app/main/shippings/services/carrier-tracking-number-range.service';
 import { createMapFrom } from 'app/core/utils/array-helpers';
+import { searchOption } from 'app/core/utils/search-helpers';
 
 class OliveTable {
   static readonly selector = '.roger-table';
@@ -181,9 +181,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   private getPendingOrderPackages(refresh: boolean = false) {
-    const searchOption = OliveUtilities.searchOption([{ name: 'listing', value: true } as NameValue], 'id', 'desc');
-
-    this.orderShipOutPackageService.getItems(searchOption)
+    this.orderShipOutPackageService.getItems(searchOption([{ name: 'listing', value: true } as NameValue], 'id', 'desc'))
       .subscribe(res => {
         this.pendingOrderShipOutPackages = res.model;
         this.orderPackageListers.forEach((lister) => {
@@ -195,13 +193,16 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   private getInventories(refresh: boolean = false) {
-    const searchOption = OliveUtilities.searchOption([
-      { name: 'quantity', value: 0 } as NameValue,
-      { name: 'warehouse', value: this.warehouses.map(a => a.id).join() } as NameValue],
-      'id', 'desc'
+    const option = searchOption(
+      [
+        { name: 'quantity', value: 0 } as NameValue,
+        { name: 'warehouse', value: this.warehouses.map(a => a.id).join() } as NameValue
+      ],
+      'id', 
+      'desc'
     );
 
-    this.inventoryService.getInventoryWarehouse(searchOption)
+    this.inventoryService.getInventoryWarehouse(option)
       .subscribe(res => {
         this.inventories = res.model;
         this.getPendingOrders(refresh);
@@ -211,9 +212,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   private getPendingOrders(refresh: boolean) {
-    const searchOption = OliveUtilities.searchOption([{ name: 'listing', value: true } as NameValue], 'id', 'desc');
-
-    this.orderShipOutService.getItems(searchOption)
+    this.orderShipOutService.getItems(searchOption([{ name: 'listing', value: true } as NameValue], 'id', 'desc'))
       .subscribe(res => {
         this.pendingOrderShipOuts = res.model;
 

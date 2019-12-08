@@ -11,6 +11,7 @@ import { OlivePaymentMethodService } from '../../../services/payment-method.serv
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OlivePaymentMethodEditorComponent } from '../payment-method-editor/payment-method-editor.component';
+import { OliveCacheService } from 'app/core/services/cache.service';
 
 @Component({
   selector: 'olive-payment-method-manager',
@@ -21,14 +22,11 @@ export class OlivePaymentMethodManagerComponent extends OliveEntityEditComponent
   @ViewChild(OlivePaymentMethodEditorComponent) 
   private paymentMethodEditor: OlivePaymentMethodEditorComponent;
 
-  // @ViewChild(OliveCompanyFkEditorComponent)
-  // private companyFkEditor: OliveCompanyFkEditorComponent;
-
   constructor(
     translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
-    snackBar: MatSnackBar, formBuilder: FormBuilder, 
-    dataService: OlivePaymentMethodService
+    snackBar: MatSnackBar, formBuilder: FormBuilder,  
+    dataService: OlivePaymentMethodService, private cacheService: OliveCacheService
   ) {
     super(
       translator, alertService,
@@ -40,19 +38,18 @@ export class OlivePaymentMethodManagerComponent extends OliveEntityEditComponent
 
   registerSubControl() {
     this.subControls.push(this.paymentMethodEditor);
-    // this.subControls.push(this.companyFkEditor);
   }
 
   getEditedItem(): any {
     const paymentMethod = this.paymentMethodEditor.getEditedItem();
-    // const companyFk = this.companyFkEditor.getEditedItem();
+
+    this.cacheService.invalidateCaches(OliveCacheService.cacheKeys.getItemsKey.paymentMethod);    
 
     return this.itemWithIdNAudit({
       code: paymentMethod.code,
       name: paymentMethod.name,
       memo: paymentMethod.memo,
       activated: paymentMethod.activated,
-      // companyFk: companyFk.companyFk
     });
   }
 

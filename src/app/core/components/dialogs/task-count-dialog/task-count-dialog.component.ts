@@ -8,7 +8,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { OliveTaskCountSetting } from 'app/core/interfaces/dialog-setting/task-count-setting';
 import { numberFormat } from 'app/core/utils/number-helper';
 import { NameValue } from 'app/core/models/name-value';
-import { OliveUtilities } from 'app/core/classes/utilities';
+import { testIsUndefined } from 'app/core/utils/object-helpers';
 
 @Component({
   selector: 'olive-task-count-dialog',
@@ -37,7 +37,7 @@ export class OliveTaskCountDialogComponent implements OnInit {
   }
 
   get hasCountValue(): boolean {
-    return !OliveUtilities.testIsUndefined(this.setting.count);
+    return !testIsUndefined(this.setting.count);
   }
 
   get buttonColor() {

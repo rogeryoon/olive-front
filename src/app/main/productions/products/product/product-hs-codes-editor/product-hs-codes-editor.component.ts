@@ -13,8 +13,7 @@ import { ProductHsCode } from 'app/main/productions/models/product-hs-code.model
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 
 import { OliveProductService } from 'app/main/productions/services/product.service';
-import { trimInput } from 'app/core/validators/general-validators';
-import { OliveUtilities } from 'app/core/classes/utilities';
+import { toTrimString } from 'app/core/utils/string-helper';
 
 @Component({
   selector: 'olive-product-hs-codes-editor',
@@ -69,11 +68,11 @@ export class OliveProductHsCodesEditorComponent extends OliveEntityEditComponent
    */
   copyToEmptyCell(index: number) {
     const thisFormGroup = this.getArrayFormGroup(index);
-    const thisHsCodeName = OliveUtilities.toTrimString(thisFormGroup.get(this.hsCodeName).value);
+    const thisHsCodeName = toTrimString(thisFormGroup.get(this.hsCodeName).value);
 
     if (thisHsCodeName.length > 0) {
       for (const formGroup of this.oFArray.controls) {
-        const hsCode = OliveUtilities.toTrimString(formGroup.get(this.hsCodeName).value);
+        const hsCode = toTrimString(formGroup.get(this.hsCodeName).value);
 
         if (hsCode.length === 0) {
           formGroup.patchValue( {hsCode : thisHsCodeName});

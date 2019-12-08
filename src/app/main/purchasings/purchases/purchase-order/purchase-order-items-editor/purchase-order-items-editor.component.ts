@@ -28,8 +28,8 @@ import { OlivePurchaseOrderLookupDialogComponent } from '../purchase-order-looku
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { Currency } from 'app/main/supports/models/currency.model';
 import { numberValidator } from 'app/core/validators/general-validators';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
+import { showParamMessage } from 'app/core/utils/string-helper';
 
 @Component({
   selector: 'olive-purchase-order-items-editor',
@@ -208,7 +208,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   private deleteItem(item: any) {
     if (item.Obj.id || item.Obj.name || item.Obj.quantity || item.Obj.price || item.Obj.remark) {
       this.snackBar.open(
-        OliveUtilities.showParamMessage(this.translator.get('common.message.confirmDelete')),
+        showParamMessage(this.translator.get('common.message.confirmDelete')),
         this.translator.get('common.button.delete'),
         { duration: 5000 }
       )

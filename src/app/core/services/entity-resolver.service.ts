@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 
 import { OliveDataService } from '../interfaces/data-service';
-import { OliveUtilities } from '../classes/utilities';
+import { isValid36Id, convertBase36ToNumber } from '../utils/encode-helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class OliveEntityResolverService implements Resolve<any> {
   constructor(protected dataService: OliveDataService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    if (!OliveUtilities.isValid36Id(route.paramMap.get('id').toString())) {
+    if (!isValid36Id(route.paramMap.get('id').toString())) {
       return null;
     }
 
@@ -20,7 +20,7 @@ export class OliveEntityResolverService implements Resolve<any> {
 
     if (isNaN(id36)) { return null; }
 
-    const id = OliveUtilities.convertBase36ToNumber(id36.toString());
+    const id = convertBase36ToNumber(id36.toString());
 
     if (id > 0) {
       return this.dataService.getItem(id);

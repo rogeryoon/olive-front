@@ -16,11 +16,11 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 
 import { OliveSearchVoidPurchaseOrderComponent } from './search-void-purchase-order/search-void-purchase-order.component';
 import { OliveVoidPurchaseOrderManagerComponent } from './void-purchase-order-manager/void-purchase-order-manager.component';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { InWarehouse } from '../../models/in-warehouse.model';
 import { VoidPurchaseOrder } from '../../models/void-purchase-order.model';
 import { OliveVoidPurchaseOrderService } from '../../services/void-purchase-order.service';
+import { getItemsFirstName } from 'app/core/utils/string-helper';
 
 const Selected  = 'selected';
 const Id = 'id';
@@ -107,13 +107,13 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
         item.inWarehouseFk.inWarehouseItems.forEach(i => sets.add(i.supplierName));
         const suppliers = [];
         sets.forEach(s => suppliers.push({name: s}));
-        retValue = OliveUtilities.getItemsFirstName(suppliers);
+        retValue = getItemsFirstName(suppliers);
         break;
 
       case Items:
         const items = [];
         item.inWarehouseFk.inWarehouseItems.forEach(i => items.push({name: i.name}));
-        retValue = OliveUtilities.getItemsFirstName(items);
+        retValue = getItemsFirstName(items);
         break;
 
       case Quantity:

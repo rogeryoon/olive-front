@@ -10,7 +10,6 @@ import { AlertService } from '@quick/services/alert.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveProductVariantLookupDialogComponent } from 'app/main/productions/products/product-variant/product-variant-lookup-dialog/product-variant-lookup-dialog.component';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveProductVariantService } from 'app/main/productions/services/product-variant.service';
@@ -21,6 +20,8 @@ import { IdName } from 'app/core/models/id-name';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveOrderShipOutDetailDataSource } from './order-ship-out-detail-data-source';
 import { OrderShipOutDetail } from 'app/main/sales/models/order-ship-out-detail.model';
+import { showParamMessage } from 'app/core/utils/string-helper';
+import { convertToBase36 } from 'app/core/utils/encode-helpers';
 
 @Component({
   selector: 'olive-order-ship-out-details-editor',
@@ -107,7 +108,7 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
     });
 
     if (foundItem && dupStrings.length === 0) {
-      formGroup.patchValue({productVariantId36: OliveUtilities.convertToBase36(foundItem.id)});
+      formGroup.patchValue({productVariantId36: convertToBase36(foundItem.id)});
     }
 
     if (dupStrings.length > 0) {
@@ -230,7 +231,7 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
   private deleteItem(item: any) {
     if (item.Obj.productVariantId36) {
       this.snackBar.open(
-        OliveUtilities.showParamMessage(this.translator.get('common.message.confirmDelete')),
+        showParamMessage(this.translator.get('common.message.confirmDelete')),
         this.translator.get('common.button.delete'),
         { duration: 5000 }
       )

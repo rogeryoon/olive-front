@@ -18,8 +18,8 @@ import { OliveSearchInWarehouseComponent } from './search-in-warehouse/search-in
 import { OliveInWarehouseService } from '../../services/in-warehouse.service';
 import { InWarehouse } from '../../models/in-warehouse.model';
 import { OliveInWarehouseManagerComponent } from './in-warehouse-manager/in-warehouse-manager.component';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveCacheService } from 'app/core/services/cache.service';
+import { getItemsFirstName } from 'app/core/utils/string-helper';
 
 const Selected  = 'selected';
 const Id = 'id';
@@ -106,13 +106,13 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
         item.inWarehouseItems.forEach(i => sets.add(i.supplierName));
         const suppliers = [];
         sets.forEach(s => suppliers.push({name: s}));
-        retValue = OliveUtilities.getItemsFirstName(suppliers);
+        retValue = getItemsFirstName(suppliers);
         break;
 
       case Items:
         const items = [];
         item.inWarehouseItems.forEach(i => items.push({name: i.name}));
-        retValue = OliveUtilities.getItemsFirstName(items);
+        retValue = getItemsFirstName(items);
         break;
 
       case Quantity:

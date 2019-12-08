@@ -48,7 +48,7 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
       this.renderCompanyHtml(item);  
     });  
 
-    this.cacheService.getItems(this.branchService, 'branches')
+    this.cacheService.getItems(this.branchService, OliveCacheService.cacheKeys.getItemsKey.branch)
     .then(items => {
       const branch = items.find(b => b.id === this.order.warehouseFk.companyMasterBranchId);
       if (branch) {

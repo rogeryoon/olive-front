@@ -14,8 +14,8 @@ import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edi
 import { OliveProductService } from 'app/main/productions/services/product.service';
 import { ProductCustomsTypeCode } from 'app/main/productions/models/product-customs-type-code.model';
 import { customsTypeErrorMessageByControl } from 'app/core/utils/customs-helpers';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { isCustomsTypeCodeError } from 'app/core/validators/customs-validators';
+import { toTrimString } from 'app/core/utils/string-helper';
 
 @Component({
   selector: 'olive-product-customs-type-codes-editor',
@@ -82,13 +82,13 @@ export class OliveProductCustomsTypeCodesEditorComponent extends OliveEntityEdit
    */
   copyToEmptyCell(index: number) {
     const thisFormGroup = this.getArrayFormGroup(index);
-    const thisCustomsTypeCode = OliveUtilities.toTrimString(thisFormGroup.get(this.customsTypeCodeName).value);
+    const thisCustomsTypeCode = toTrimString(thisFormGroup.get(this.customsTypeCodeName).value);
 
     const customsRule = this.dataSource.items[index].customsRules;
 
     if (isCustomsTypeCodeError(thisCustomsTypeCode, customsRule, true) == null) {
       for (const formGroup of this.oFArray.controls) {
-        const customsTypeCode = OliveUtilities.toTrimString(formGroup.get(this.customsTypeCodeName).value);
+        const customsTypeCode = toTrimString(formGroup.get(this.customsTypeCodeName).value);
 
         if (customsTypeCode.length === 0) {
           formGroup.patchValue( {customsTypeCode : thisCustomsTypeCode});

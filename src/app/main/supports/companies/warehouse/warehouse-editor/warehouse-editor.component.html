@@ -17,7 +17,7 @@
 
   <olive-lookup-host #branch formControlName="companyMasterBranchFk" [placeholder]="'common.word.branch' | translate" [isEditMode]="canAssignCompanyGroups"></olive-lookup-host>
 
-  <mat-checkbox formControlName="activated">Activated</mat-checkbox>
+  <mat-checkbox formControlName="activated">{{'common.word.activated' | translate}}</mat-checkbox>
 
   <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
 </form>

@@ -11,6 +11,7 @@ import { OliveWarehouseService } from '../../../services/warehouse.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edit/entity-edit.component';
 import { OliveWarehouseEditorComponent } from '../warehouse-editor/warehouse-editor.component';
+import { OliveCacheService } from 'app/core/services/cache.service';
 
 @Component({
   selector: 'olive-warehouse-manager',
@@ -25,7 +26,7 @@ export class OliveWarehouseManagerComponent extends OliveEntityEditComponent {
     translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
-    dataService: OliveWarehouseService
+    dataService: OliveWarehouseService, private cacheService: OliveCacheService
   ) {
     super(
       translator, alertService,
@@ -41,6 +42,8 @@ export class OliveWarehouseManagerComponent extends OliveEntityEditComponent {
 
   getEditedItem(): any {
     const warehouse = this.warehouseEditor.getEditedItem();
+
+    this.cacheService.invalidateCaches(OliveCacheService.cacheKeys.getItemsKey.warehouse);    
 
     return this.itemWithIdNAudit({
       code: warehouse.code,

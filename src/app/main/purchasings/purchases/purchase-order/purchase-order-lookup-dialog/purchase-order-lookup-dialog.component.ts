@@ -12,9 +12,9 @@ import { OliveLookupDialogComponent } from 'app/core/components/dialogs/lookup-d
 
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { IIDName } from 'app/core/models/id-name';
+import { getItemsFirstName } from 'app/core/utils/string-helper';
 
 const Id = 'id';
 const Name = 'name';
@@ -56,7 +56,7 @@ export class OlivePurchaseOrderLookupDialogComponent extends OliveLookupDialogCo
           break;
 
         case Name:
-          retValue = OliveUtilities.getItemsFirstName(item.purchaseOrderItems);
+          retValue = getItemsFirstName(item.purchaseOrderItems);
           break;
 
         case PODate:
@@ -78,7 +78,7 @@ export class OlivePurchaseOrderLookupDialogComponent extends OliveLookupDialogCo
   createChip(item: PurchaseOrder) {
     return {
       id: item.id, 
-      name: OliveUtilities.getItemsFirstName(item.purchaseOrderItems) 
+      name: getItemsFirstName(item.purchaseOrderItems) 
     } as IIDName;
   }
 }

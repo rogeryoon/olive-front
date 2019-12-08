@@ -228,7 +228,14 @@ export const locale = {
                 'order' : '주문',
                 'shipOutStatus' : '참조',
                 'customsTypeCode' : '통관 타입',
-                'customsNumber' : '통관 번호'
+                'customsNumber' : '통관 번호',
+                'company' : '회사',
+                'isShipOutCountry' : '출고 국가',
+                'count' : '갯수',
+                'symbol' : '심볼',
+                'decimalPoint' : '소숫점',
+                'outSourcing' : '협력사',
+                'private' : '비공개'
             },
             'word': {
                 'orderNumberShort':  '주문 #',
@@ -327,7 +334,9 @@ export const locale = {
                 'trackingNumber' : '송장번호',
                 'oldTrackingNumber' : '변경전 송장번호',
                 'splitOrder' : '주문 분할/복사',
-                'splitOrderCount' : '주문 분할/복사 갯수'
+                'splitOrderCount' : '주문 분할/복사 갯수',
+                'activated' : '활동',
+                'isShipOutCountry': '출고 국가'
             }
         },
         'page': {

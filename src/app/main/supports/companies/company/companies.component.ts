@@ -59,15 +59,15 @@ export class OliveCompaniesComponent extends OliveEntityListComponent {
         // 1
         { data: Selected },
         // 2
-        { data: Code, thName: 'Code', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: Code, thName: this.translator.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 3
-        { data: Name, thName: 'Name', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
+        { data: Name, thName: this.translator.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         // 4
-        { data: Memo, thName: 'Memo', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: Memo, thName: this.translator.get('common.tableHeader.activated'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 5
-        { data: Activated, thName: 'Activated', tdClass: '', thClass: '' },
+        { data: Activated, thName: this.translator.get('common.tableHeader.activated'), tdClass: '', thClass: '' },
         // 6
-        { data: CreateUtc, thName: 'Date', thClass: 'print -ex-type-text' }
+        { data: CreateUtc, thName: this.translator.get('common.tableHeader.createdUtc'), thClass: 'print -ex-type-text' }
       ],
       editComponent: OliveCompanyManagerComponent,
       searchComponent: OliveSearchCompanyComponent,

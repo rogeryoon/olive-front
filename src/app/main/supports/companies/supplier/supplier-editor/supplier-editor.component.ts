@@ -4,9 +4,9 @@ import { FormBuilder } from '@angular/forms';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { Supplier } from '../../../models/supplier.model';
 import { requiredValidator } from 'app/core/validators/general-validators';
+import { make36Id } from 'app/core/utils/encode-helpers';
 
 @Component({
   selector: 'olive-supplier-editor',
@@ -51,7 +51,7 @@ export class OliveSupplierEditorComponent extends OliveEntityFormComponent {
 
   resetForm() {
     this.oForm.reset({
-      code: this.item.code || OliveUtilities.make36Id(4),
+      code: this.item.code || make36Id(4),
       name: this.item.name || '',
       phoneNumber: this.item.phoneNumber || '',
       email: this.item.email || '',

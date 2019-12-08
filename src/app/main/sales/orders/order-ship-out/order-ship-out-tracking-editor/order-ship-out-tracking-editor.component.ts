@@ -6,12 +6,10 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { Carrier } from 'app/main/supports/models/carrier.model';
 import { CarrierTrackingEntry } from 'app/main/shippings/models/carrier-tracking-entry.model';
 import { trackingNumberValidator } from 'app/core/validators/shipping-validators';
 import { requiredAllOrNoneValidator } from 'app/core/validators/general-validators';
-import { NameValue } from 'app/core/models/name-value';
 import { OliveCarrierService } from 'app/main/supports/services/carrier.service';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { CarrierTrackingNumbersGroup } from 'app/main/shippings/models/carrier-tracking-numbers-group.model';
@@ -19,6 +17,7 @@ import { OliveCarrierTrackingNumberRangeService } from 'app/main/shippings/servi
 import { OliveOrderShipOutHelperService } from 'app/main/sales/services/order-ship-out-helper.service';
 import { ThrowStmt } from '@angular/compiler';
 import { AlertService, DialogType } from '@quick/services/alert.service';
+import { activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
 
 @Component({
   selector: 'olive-order-ship-out-tracking-editor',
@@ -132,8 +131,7 @@ export class OliveOrderShipOutTrackingEditorComponent extends OliveEntityFormCom
   }
 
   private getCarriers() {
-    const searchOption = OliveUtilities.searchOption([{name: 'activated', value: true} as NameValue], 'name');
-    this.cacheService.getItems(this.carrierService, OliveCacheService.cacheKeys.getItemsKey.carrier, searchOption)
+    this.cacheService.getItems(this.carrierService, OliveCacheService.cacheKeys.getItemsKey.carrier + 'activated', activatedNameOrderedSearchOption())
     .then((items: Carrier[]) => {
       this.carriers = items;
     });    

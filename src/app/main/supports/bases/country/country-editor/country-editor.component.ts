@@ -25,21 +25,27 @@ export class OliveCountryEditorComponent extends OliveEntityFormComponent {
 
     return this.itemWithIdNAudit({
       code: formModel.code,
-      name: formModel.name
+      name: formModel.name,
+      activated: formModel.activated,
+      isShipOutCountry: formModel.isShipOutCountry
     });
   }
 
   buildForm() {
     this.oForm = this.formBuilder.group({
       code: ['', requiredValidator()],
-      name: ['', requiredValidator()]
+      name: ['', requiredValidator()],
+      activated: false,
+      isShipOutCountry: false
     });
 }
 
   resetForm() {
     this.oForm.reset({
       code: this.item.code || '',
-      name: this.item.name || ''
+      name: this.item.name || '',
+      activated: this.boolValue(this.item.activated),
+      isShipOutCountry: this.boolValue(this.item.isShipOutCountry),
     });
   }
 

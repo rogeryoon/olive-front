@@ -4,7 +4,7 @@ import { OliveEntityFormBaseComponent } from '../../extends/entity-form-base/ent
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { UserName } from 'app/core/models/user-name';
-import { OliveUtilities } from 'app/core/classes/utilities';
+import { showEventDateAndName } from 'app/core/utils/date-helper';
 
 @Component({
   selector: 'olive-entity-date',
@@ -116,7 +116,7 @@ export class OliveEntityDateComponent extends OliveEntityFormBaseComponent {
   }
 
   private setUnitTitle(userName: UserName, date: any, personTitle: string): string {
-    let title = OliveUtilities.showEventDateAndName(date, userName);
+    let title = showEventDateAndName(date, userName);
 
     if (this.mode === 'button' && title) {
       title = personTitle + ' : ' + title;

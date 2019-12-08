@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, EventEmitter, Output, OnChanges, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveBaseComponent } from '../base/base.component';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { isMoneyPattern, isNumberPattern } from 'app/core/utils/string-helper';
+import { testIsUndefined, itemWithIdNAudit, markFormGroupTouched } from 'app/core/utils/object-helpers';
 
 @Component({
   selector: 'olive-entity-form-base',
@@ -74,7 +74,7 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
   }
 
   checkItemExists() {
-    if (OliveUtilities.testIsUndefined(this.item) || OliveUtilities.testIsUndefined(this.item.id)) {
+    if (testIsUndefined(this.item) || testIsUndefined(this.item.id)) {
       this.isNewItem = true;
       this.item = this.createEmptyObject();
     }
@@ -84,7 +84,7 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
   }
 
   markAsTouched() {
-    OliveUtilities.markFormGroupTouched(this.oForm);
+    markFormGroupTouched(this.oForm);
     this.markCustomControlsTouched();
   }
 
@@ -97,7 +97,7 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
 
   itemWithIdNAudit(source: any): any
   {
-    return OliveUtilities.itemWithIdNAudit(source, this.item);
+    return itemWithIdNAudit(source, this.item);
   }
 
   // Invalid Control를 찾아 낸다.

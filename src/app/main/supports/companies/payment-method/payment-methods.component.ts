@@ -56,11 +56,11 @@ export class OlivePaymentMethodsComponent extends OliveEntityListComponent {
       managePermission: null,
       columns: [
         { data: Selected },
-        { data: Code, thName: 'Code', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
-        { data: Name, thName: 'Name', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
-        { data: Memo, thName: 'Memo', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
-        { data: Activated, thName: 'Activated', tdClass: '', thClass: '' },
-        { data: CreatedUtc, thName: 'CreatedUtc', tdClass: '', thClass: '' }
+        { data: Code, thName: this.translator.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: Name, thName: this.translator.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
+        { data: Memo, thName: this.translator.get('common.tableHeader.activated'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: Activated, thName: this.translator.get('common.tableHeader.activated'), tdClass: '', thClass: '' },
+        { data: CreatedUtc, thName: this.translator.get('common.tableHeader.createdUtc'), tdClass: '', thClass: '' }
       ],
       editComponent: OlivePaymentMethodManagerComponent,
       searchComponent: OliveSearchPaymentMethodComponent,

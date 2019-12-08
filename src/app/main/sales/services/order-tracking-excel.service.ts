@@ -1,7 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
 
-import { OliveUtilities } from 'app/core/classes/utilities';
-
 import { OliveDocumentService } from 'app/core/services/document.service';
 import { OrderShipOut } from '../models/order-ship-out.model';
 import { OliveCacheService } from 'app/core/services/cache.service';
@@ -14,9 +12,9 @@ import { MarketExcelInterfaceRule } from 'app/main/supports/models/market-excel-
 import { ExcelColumn } from 'app/core/models/excel-column';
 import { isoDateString } from 'app/core/utils/date-helper';
 import { MarketExcelCellTypes } from 'app/main/supports/models/market-excel-cell';
-import { NameValue } from 'app/core/models/name-value';
 import { OliveCarrierService } from 'app/main/supports/services/carrier.service';
 import { Carrier } from 'app/main/supports/models/carrier.model';
+import { testIsUndefined } from 'app/core/utils/object-helpers';
 
 class EmptyExcelRow { }
 
@@ -34,23 +32,22 @@ export class OliveOrderTrackingExcelService {
   }
 
   saveTrackingNumberExcels(allOrders: OrderShipOut[]) {
-    if (allOrders.some(x => OliveUtilities.testIsUndefined(x.trackingNumber))) {
+    if (allOrders.some(x => testIsUndefined(x.trackingNumber))) {
       return;
     }
 
     // 마켓 엑셀 인터페이스 로드
-    this.cacheService.getItems(this.marketExcelInterfaceService, OliveCacheService.cacheKeys.getItemsKey.marketExcelInterface, null)
+    this.cacheService.getItems(this.marketExcelInterfaceService, OliveCacheService.cacheKeys.getItemsKey.marketExcelInterface)
       .then((interfaces: MarketExcelInterface[]) => {
 
         // 마켓 로드
-        this.cacheService.getItems(this.marketService, OliveCacheService.cacheKeys.getItemsKey.market, null)
+        this.cacheService.getItems(this.marketService, OliveCacheService.cacheKeys.getItemsKey.market)
           .then((markets: Market[]) => {
 
             // 캐리어 로드
             this.cacheService.getItems(
               this.carrierService,
-              OliveCacheService.cacheKeys.getItemsKey.carrier,
-              OliveUtilities.searchOption([{ name: 'activated', value: true } as NameValue], 'name')
+              OliveCacheService.cacheKeys.getItemsKey.carrier
             )
               .then((carriers: Carrier[]) => {
                 // 자료 타입화 로딩

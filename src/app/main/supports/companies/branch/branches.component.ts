@@ -63,12 +63,12 @@ export class OliveBranchesComponent extends OliveEntityListComponent {
       managePermission: Permission.assignCompanyGroups,
       columns: [
         { data: Selected },
-        { data: Code, thName: 'Code',  tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
-        { data: Name, thName: 'Name',  tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
-        { data: Outsourcing, thName: '협력사', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
-        { data: Private, thName: '비공개', tdClass: 'print -ex-type-text', thClass: 'print -ex-type-text' },
-        { data: Activated, thName: '활동', tdClass: 'print -ex-type-text', thClass: 'print -ex-type-text' },
-        { data: CreatedUtc, thName: 'Date', thClass: 'print -ex-type-text' }
+        { data: Code, thName: this.translator.get('common.tableHeader.code'),  tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: Name, thName: this.translator.get('common.tableHeader.name'),  tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
+        { data: Outsourcing, thName: this.translator.get('common.tableHeader.outsourcing'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: Private, thName: this.translator.get('common.tableHeader.private'), tdClass: 'print -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: Activated, thName: this.translator.get('common.tableHeader.activated'), tdClass: 'print -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: CreatedUtc, thName: this.translator.get('common.tableHeader.createdUtc'), thClass: 'print -ex-type-text' }
       ],
       editComponent: OliveBranchManagerComponent,
       searchComponent: OliveSearchBranchComponent,

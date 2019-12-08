@@ -13,8 +13,9 @@ import { OliveDataService } from 'app/core/interfaces/data-service';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { Creator } from 'app/core/classes/dynamic-type';
 import { OliveEntityDateComponent } from '../../entries/entity-date/entity-date.component';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveBaseComponent } from '../../extends/base/base.component';
+import { showParamMessage } from 'app/core/utils/string-helper';
+import { itemWithIdNAudit } from 'app/core/utils/object-helpers';
 
 @Component({
   selector: 'olive-entity-edit',
@@ -278,7 +279,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
     const itemToDelete = this.getEditedItem();
 
     this.snackBar.open(
-      OliveUtilities.showParamMessage(this.translator.get('common.message.confirmDelete'), itemToDelete.name),
+      showParamMessage(this.translator.get('common.message.confirmDelete'), itemToDelete.name),
       this.translator.get('common.button.delete'),
       { duration: 5000 }
     )
@@ -315,7 +316,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
    * 공용으로 사용되는 id, updatedUser, updatedUtc, createdUser, createdUtc를 가져옴
    */
   itemWithIdNAudit(source: any): any {
-    return OliveUtilities.itemWithIdNAudit(source, this.item);
+    return itemWithIdNAudit(source, this.item);
   }
 
   /**

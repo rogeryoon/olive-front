@@ -59,17 +59,17 @@ export class OliveCurrenciesComponent extends OliveEntityListComponent {
         // 1
         { data: Selected },
         // 2
-        { data: Code, thName: 'Code', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: Code, thName: this.translator.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 3
-        { data: Name, thName: 'Name', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
+        { data: Name, thName: this.translator.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         // 4
-        { data: Symbols, thName: 'Symbol', tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+        { data: Symbols, thName: this.translator.get('common.tableHeader.symbol'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 5
-        { data: DecimalPoint, thName: 'DecimalPoint', tdClass: 'print right', thClass: '' },
+        { data: DecimalPoint, thName: this.translator.get('common.tableHeader.decimalPoint'), tdClass: 'print right', thClass: '' },
         // 6
-        { data: Activated, thName: 'Activated', tdClass: '', thClass: '' },
+        { data: Activated, thName: this.translator.get('common.tableHeader.activated'), tdClass: '', thClass: '' },
         // 7
-        { data: CreatedUtc, thName: 'CreatedUtc', tdClass: '', thClass: '' }
+        { data: CreatedUtc, thName: this.translator.get('common.tableHeader.createdUtc'), tdClass: '', thClass: '' }
       ],
       editComponent: OliveCurrencyManagerComponent,
       searchComponent: OliveSearchCurrencyComponent,

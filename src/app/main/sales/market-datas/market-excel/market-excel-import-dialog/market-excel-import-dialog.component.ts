@@ -9,10 +9,8 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { MarketSeller } from 'app/main/supports/models/market-seller.model';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveMarketSellerService } from 'app/main/supports/services/market-seller.service';
-import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
-import { NameValue } from 'app/core/models/name-value';
 import { requiredValidator } from 'app/core/validators/general-validators';
+import { activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
 
 @Component({
   selector: 'olive-market-excel-import-dialog',
@@ -63,8 +61,7 @@ export class OliveMarketExcelImportDialogComponent extends OliveImportFileDialog
   }
 
   private getMarketSellers() {
-    const searchOption = OliveUtilities.searchOption([{name: 'activated', value: true} as NameValue], 'name');
-    this.cacheService.getItems(this.marketSellerService, OliveCacheService.cacheKeys.getItemsKey.marketSeller, searchOption)
+    this.cacheService.getItems(this.marketSellerService, OliveCacheService.cacheKeys.getItemsKey.marketSeller+'activated', activatedNameOrderedSearchOption())
     .then((items: MarketSeller[]) => {
       this.sellers = items;
     });

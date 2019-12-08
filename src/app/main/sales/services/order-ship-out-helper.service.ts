@@ -378,6 +378,13 @@ export class OliveOrderShipOutHelperService {
     return configs;
   }
 
+  /**
+   * Gets customs rule
+   * @param countryId 
+   * @param countries 
+   * @param customsConfigs 
+   * @returns customs rule 
+   */
   getCustomsRule(countryId: number, countries: Map<number, Country>, customsConfigs: Map<string, any>): CustomsRule {
     const countryCode = countries.get(countryId).code;
     const customsRuleKey = (OliveConstants.customsRule.ruleCountryCode + countryCode).toUpperCase();
@@ -385,6 +392,12 @@ export class OliveOrderShipOutHelperService {
     return customsConfigs.get(customsRuleKey) as CustomsRule;
   }
 
+  /**
+   * Gets group customs type map
+   * 예: 통관타입(Key) -> 일반,목록(Value)
+   * @param customsRule 
+   * @returns group customs type map 
+   */
   getGroupCustomsTypeMap(customsRule: CustomsRule): Map<string, Set<string>> {
     const groupCustomsTypeMap = new Map<string, Set<string>>();
 

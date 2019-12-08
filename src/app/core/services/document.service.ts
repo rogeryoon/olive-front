@@ -9,7 +9,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { AlertService } from '@quick/services/alert.service';
 import { ExcelColumn } from '../models/excel-column';
 import { SearchUnit } from '../models/search-unit';
-import { OliveUtilities } from '../classes/utilities';
+import { replaceValue } from '../utils/string-helper';
 
 @Injectable({
   providedIn: 'root'
@@ -302,7 +302,7 @@ export class OliveDocumentService {
                     newRow.getCell(colIndex).value = amount;
                   }
                   else {
-                    newRow.getCell(colIndex).value = OliveUtilities.ReplaceValue(columnValue.toString(), replaces, colIndex);
+                    newRow.getCell(colIndex).value = replaceValue(columnValue.toString(), replaces, colIndex);
                   }
                   break;
                 }

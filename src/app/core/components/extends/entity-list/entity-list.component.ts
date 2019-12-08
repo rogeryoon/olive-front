@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ViewEncapsulati
 import { MatDialog } from '@angular/material';
 import { Subject } from 'rxjs';
 import { String } from 'typescript-string-operations';
+import * as _ from 'lodash';
 
 import { DeviceDetectorService } from 'ngx-device-detector';
 
@@ -21,13 +22,12 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { NameValue } from 'app/core/models/name-value';
 import { OliveDataService } from 'app/core/interfaces/data-service';
 import { ListerSetting } from 'app/core/interfaces/lister-setting';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveEditDialogComponent } from '../../dialogs/edit-dialog/edit-dialog.component';
-import * as _ from 'lodash';
 import { OliveBaseComponent } from '../../extends/base/base.component';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveBackEndErrors } from 'app/core/classes/back-end-errors';
+import { trimStringByMaxLength, splitStickyWords } from 'app/core/utils/string-helper';
 
 @Component({
   selector: 'olive-entity-list',
@@ -73,8 +73,8 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   }
   set setting(theSetting: ListerSetting) {
     this._setting = theSetting;
-    this._setting.dataTableId = OliveUtilities
-      .splitStickyWords(this.setting.itemType.name, '-')
+    this._setting.dataTableId = 
+      splitStickyWords(this.setting.itemType.name, '-')
       .toLowerCase() + '-table';
   }
 
@@ -458,7 +458,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
           else if (errorCode.includes(OliveBackEndErrors.concurrencyError)) {
             const duplicatedKeysString = error.error.errorCode.replace(OliveBackEndErrors.concurrencyError + '-', '');
             errorMessage = String.Format(this.translator.get('common.entryError.concurrencyKeyName'), duplicatedKeysString);
-            errorMessage = OliveUtilities.trimStringByMaxLength(errorMessage, OliveConstants.uiConfig.maxErrorMessageLength);
+            errorMessage = trimStringByMaxLength(errorMessage, OliveConstants.uiConfig.maxErrorMessageLength);
           }
           else {
             errorMessage = this.translator.get('common.message.uploadDataSignatureUnregistered');

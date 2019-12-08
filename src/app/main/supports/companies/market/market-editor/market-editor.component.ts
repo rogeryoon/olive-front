@@ -5,11 +5,12 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { Market } from '../../../models/market.model';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { MarketExcelInterface } from '../../../models/market-excel-interface';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveMarketExcelInterfaceService } from '../../../services/market-excel-interface.service';
 import { requiredValidator } from 'app/core/validators/general-validators';
+import { activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
+import { make36Id } from 'app/core/utils/encode-helpers';
 
 @Component({
   selector: 'olive-market-editor',
@@ -59,7 +60,7 @@ export class OliveMarketEditorComponent extends OliveEntityFormComponent {
 
   resetForm() {
     this.oForm.reset({
-      code: this.item.code || OliveUtilities.make36Id(4),
+      code: this.item.code || make36Id(4),
       name: this.item.name || '',
       phoneNumber: this.item.phoneNumber || '',
       email: this.item.email || '',
@@ -69,7 +70,7 @@ export class OliveMarketEditorComponent extends OliveEntityFormComponent {
       marketExcelInterface: this.item.marketExcelInterfaceFk ? this.item.marketExcelInterfaceFk.id : null
     });
 
-    this.cacheService.getItems(this.marketExcelInterfaceService, OliveCacheService.cacheKeys.getItemsKey.marketExcelInterface, null)
+    this.cacheService.getItems(this.marketExcelInterfaceService, OliveCacheService.cacheKeys.getItemsKey.marketExcelInterface + 'activated', activatedNameOrderedSearchOption())
     .then((items: MarketExcelInterface[]) => {
       this.marketExcelInterfaces = items.filter(e => e.activated);
       this.oForm.patchValue({marketExcelInterface: this.item.marketExcelInterfaceFk ? this.item.marketExcelInterfaceFk.id : null});

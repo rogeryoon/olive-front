@@ -16,11 +16,7 @@ export class OliveInventoryResolverService implements Resolve<any> {
 
   resolve() {
     return this.cacheService.getItems(
-      this.warehouseService,
-      'warehouses', {
-        extSearch: [{ name: 'activated', value: true }],
-        columns: [{ data: 'code', name: '', searchable: true, orderable: true, search: { value: '', regex: false} }],
-        order: [{column: 0, dir: 'asc'}]
-      });
+        this.warehouseService,
+        OliveCacheService.cacheKeys.getItemsKey.warehouse);
   }
 }

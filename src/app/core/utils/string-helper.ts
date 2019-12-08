@@ -1,3 +1,8 @@
+import { String } from 'typescript-string-operations';
+
+import { SearchUnit } from '../models/search-unit';
+import { Address } from '../models/address.model';
+import { testIsUndefined } from './object-helpers';
 
 /**
  * 입력 문자열이 필요 소숫점 자릿수를 가지고 있는지 확인
@@ -121,4 +126,166 @@ export function getDelimiterSet(input: string, delimiter: string = ','): Set<str
         words.add(word.trim());
     }
     return words;
+}
+
+/**
+ * Trims string by max length
+ * @param input 
+ * @param maxLength 
+ * @returns string by max length 
+ */
+export function trimStringByMaxLength(input: string, maxLength: number): string {
+    return input.length > maxLength ? input.substring(0, maxLength - 3) + '...' : input;
+}
+
+/**
+ * Splits sticky words
+ * 예: TowerRecord => Tower,Record
+ * @param input 
+ * @param separator 
+ * @returns sticky words 
+ */
+export function splitStickyWords(input, separator): string {
+    const words: string[] = [];
+    const exp = /[A-Z][a-z]+/g;
+
+    let match = exp.exec(input);
+
+    while (match != null) {
+        words.push(match[0]);
+        match = exp.exec(input);
+    }
+
+    return words.join(separator);
+}
+
+/**
+ * Adds span added count
+ * @param count 
+ * @returns span added count 
+ */
+export function addSpanAddedCount(count: number): string {
+    // ov-td-click를 추가해야지 이중 팝업이 되질 않는다.
+    return `<span class="added-count ov-td-click">+${count}</span>`;
+}
+
+/**
+ * Gets items first name
+ * @param items 
+ * @returns  
+ */
+export function getItemsFirstName(items: any) {
+    let returnValue = '-';
+    if (items && items.length > 0) {
+        returnValue = items[0].name;
+        if (items.length > 1) {
+            returnValue += addSpanAddedCount(items.length - 1);
+        }
+    }
+    return returnValue;
+}
+
+/**
+ * Gets items first code
+ * @param items 
+ * @returns  
+ */
+export function getItemsFirstCode(items: any) {
+    let returnValue = '-';
+    if (items && items.length > 0) {
+        returnValue = items[0].code;
+        if (items.length > 1) {
+            returnValue += addSpanAddedCount(items.length - 1);
+        }
+    }
+    return returnValue;
+}
+
+/**
+ * To trim string
+ * @param input 
+ * @returns  
+ */
+export function toTrimString(input: any) {
+    let returnValue = '';
+    if (!testIsUndefined(input)) {
+        returnValue = input.toString().trim();
+    }
+    return returnValue;
+}
+
+/**
+ * Regex 패턴으로 검색 치환
+ * @param input 
+ * @param units 
+ * @returns 치환 결과값 
+ */
+export function replaceValue(input: string, units: SearchUnit[], index: number = null): string {
+    for (const unit of units) {
+        if (!testIsUndefined(unit.appliedIndex) && index !== unit.appliedIndex) {
+            continue;
+        }
+
+        if (unit.exclusive) {
+            const matches = input.match(unit.searchPattern);
+            if (matches && matches.length > 0) {
+                return matches[0];
+            }
+        }
+        else {
+            input = input.replace(unit.searchPattern, unit.replaceValue ? unit.replaceValue : '');
+        }
+    }
+    return input;
+}
+
+/**
+ * 주소 요소들을 한 문자열로 표현
+ * @param address 
+ * @returns address 
+ */
+export function showAddress(address: Address): string {
+    const values = [];
+
+    values.push(address.address1);
+
+    if (address.address2) {
+        values.push(address.address2);
+    }
+
+    if (address.city) {
+        values.push(address.city);
+    }
+
+    if (address.stateProvince) {
+        values.push(address.stateProvince);
+    }
+
+    if (address.postalCode) {
+        values.push(address.postalCode);
+    }
+
+    return values.join(' ');
+}
+
+/**
+ * Shows param message
+ * @param template 
+ * @param [firstValue] 
+ * @param [secondValue] 
+ * @returns param message 
+ */
+export function showParamMessage(template: string, firstValue: string = null, secondValue: string = null): string {
+    let message = null;
+    if (!testIsUndefined(firstValue)) {
+        message = String.Format(template, ` [${firstValue}]`);
+    }
+    else if (!testIsUndefined(secondValue)) {
+        message = String.Format(template, ` ${secondValue}`);
+    }
+    else {
+        message = String.Format(template, '');
+    }
+
+    return message;
 }

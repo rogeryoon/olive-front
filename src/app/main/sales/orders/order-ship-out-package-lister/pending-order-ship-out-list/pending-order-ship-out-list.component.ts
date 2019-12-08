@@ -1414,7 +1414,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   }
 
   /**
-   * 국가 그룹 CustomsRule을 만든다.
+   * 국가 CustomsRule을 만든다.
    * @param countryIds 
    * @returns country rules 
    */

@@ -13,13 +13,13 @@ import { AlertService } from '@quick/services/alert.service';
 
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { OliveUtilities } from 'app/core/classes/utilities';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OliveEditDialogComponent } from '../../dialogs/edit-dialog/edit-dialog.component';
 import { OliveChipInputComponent } from '../../entries/chip-input/chip-input.component';
 import { IIDName } from 'app/core/models/id-name';
 import { NameValue } from 'app/core/models/name-value';
 import { OliveBaseComponent } from '../../extends/base/base.component';
+import { splitStickyWords } from 'app/core/utils/string-helper';
 
 const Id = 'id';
 const Code = 'code';
@@ -192,8 +192,8 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
   protected createChip(item: any) { return item; }
 
   private initializeComponent() {
-    this.setting.dataTableId = OliveUtilities
-      .splitStickyWords(this.setting.itemType.name, '-')
+    this.setting.dataTableId = 
+      splitStickyWords(this.setting.itemType.name, '-')
       .toLowerCase() + '-table';
   }
 

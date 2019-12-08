@@ -67,7 +67,7 @@ export class OliveOrderShipOutPackageListerComponent extends OliveEntityFormComp
   setPendingOrderPackages(pendingOrderPackages: OrderShipOutPackage[], parentObject: OliveOnShare, refresh: boolean) {
     this.pendingOrderPackages = pendingOrderPackages;
     this.pendingOrderPackageList.startTable(this.pendingOrderPackages, parentObject, refresh);
-    this.pendingOrderPackageList.getMarketSellerContacts();
+    this.pendingOrderPackageList.setMarketSellerContacts();
   }
 
   setConfigs(configType: string, data: any) {
@@ -98,7 +98,7 @@ export class OliveOrderShipOutPackageListerComponent extends OliveEntityFormComp
     for (let i = pendingOrderPackages.length - 1; i >= 0; i--) {
       this.pendingOrderPackages.unshift(pendingOrderPackages[i]);
     }
-    this.pendingOrderPackageList.getMarketSellerContacts();
+    this.pendingOrderPackageList.setMarketSellerContacts();
   }
 
   onShipOutPackageCanceled() {
