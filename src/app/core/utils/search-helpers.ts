@@ -14,7 +14,7 @@ export function searchOption(extSearches: NameValue[] = null, orderColumnName: s
 
     // Default
     if (!extSearches) {
-        extSearches = [{ name: 'activated', value: true } as NameValue];
+        extSearches = [{ name: 'activated', value: true }];
     }
 
     if (extSearches && extSearches.length > 0) {

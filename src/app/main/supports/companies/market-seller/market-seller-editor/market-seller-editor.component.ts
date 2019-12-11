@@ -16,7 +16,7 @@ import { NameValue } from 'app/core/models/name-value';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveCompanyService } from 'app/main/supports/services/company.service';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
-import { searchOption } from 'app/core/utils/search-helpers';
+import { searchOption, activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
 import { make36Id } from 'app/core/utils/encode-helpers';
 
 @Component({
@@ -25,9 +25,6 @@ import { make36Id } from 'app/core/utils/encode-helpers';
   styleUrls: ['./market-seller-editor.component.scss']
 })
 export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
-  @ViewChild('marketFk')
-  lookupMarket: OliveLookupHostComponent;
-
   companies: Company[];
   markets: Market[];
 
@@ -86,21 +83,7 @@ export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
 
   initializeChildComponent() {
     this.getCompanies();
-
-    this.lookupMarket.setting = {
-      columnType: 'id',
-      itemTitle: this.translator.get(NavTranslates.Company.market),
-      dataService: this.marketService,
-      maxSelectItems: 1,
-      newComponent: OliveMarketManagerComponent,
-      itemType: Market,
-      managePermission: null,
-      translateTitleId: NavTranslates.Company.market
-    };
-  }
-
-  markCustomControlsTouched() {
-    this.lookupMarket.markAsTouched();
+    this.getMarkets();
   }
 
   private getCompanies() {
@@ -108,13 +91,20 @@ export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
 
     // 문맥 회사그룹의 서브 회사를 로드
     const option = searchOption([
-        { name: 'activated', value: true } as NameValue, 
-        { name: 'companyGroupId', value: companyGroupId }
+        { name: 'activated', value: true }, 
+        { name: 'companyGroupId', value: companyGroupId },
       ]);
 
     this.cacheService.getItems(this.companyService, OliveCacheService.cacheKeys.getItemsKey.country + companyGroupId, option)
       .then((items: Company[]) => {
         this.companies = items;
+      });
+  }
+
+  private getMarkets() {
+    this.cacheService.getItems(this.marketService, OliveCacheService.cacheKeys.getItemsKey.market + 'activated', activatedNameOrderedSearchOption())
+      .then((items: Market[]) => {
+        this.markets = items;
       });
   }
 }

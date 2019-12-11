@@ -336,7 +336,8 @@ export const locale = {
                 'splitOrder' : '주문 분할/복사',
                 'splitOrderCount' : '주문 분할/복사 갯수',
                 'activated' : '활동',
-                'isShipOutCountry': '출고 국가'
+                'isShipOutCountry': '출고 국가',
+                'market' : '판매처'
             }
         },
         'page': {

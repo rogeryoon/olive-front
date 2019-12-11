@@ -1,29 +1,35 @@
-﻿<form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
-        <mat-form-field appearance="outline" class="w-100-p">
+﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" autocomplete="off">
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <mat-form-field appearance="outline" fxFlex="50">
             <input matInput name="code" formControlName="code" required maxlength="100" class="to-uppercase">
             <mat-label>{{'common.word.code'|translate}}</mat-label>
             <mat-hint align="end">{{getControl('code').value?.length || 0}}/100</mat-hint>
             <mat-error *ngIf="hasEntryError('code')">{{errorMessage('code')}}</mat-error>
         </mat-form-field>
 
-        <olive-lookup-host #marketFk formControlName="marketFk"
-            [placeholder]="marketTitle | translate" [isEditMode]="true"></olive-lookup-host>
+        <mat-form-field appearance="outline" fxFlex="50">
+            <mat-label>{{'common.word.market'|translate}}</mat-label>
+            <mat-select name="market" formControlName="market" required>
+                <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
+                <mat-option *ngFor="let market of markets" [value]="market.id">{{market.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="hasEntryError('market')">{{errorMessage('market')}}</mat-error>
+        </mat-form-field>
     </div>
 
-    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
-        <mat-form-field appearance="outline" class="ml-4">
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <mat-form-field appearance="outline" fxFlex="100">
             <mat-label>{{'common.word.company'|translate}}</mat-label>
             <mat-select name="company" formControlName="company" required>
                 <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
                 <mat-option *ngFor="let company of companies" [value]="company.id">{{company.name}}</mat-option>
             </mat-select>
             <mat-error *ngIf="hasEntryError('company')">{{errorMessage('company')}}</mat-error>
-        </mat-form-field>
+        </mat-form-field>        
     </div>
 
-    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
-        <mat-form-field appearance="outline" class="w-100-p">
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <mat-form-field appearance="outline" fxFlex="100">
             <input matInput name="name" formControlName="name" required maxlength="200">
             <mat-label>{{'common.word.name'|translate}}</mat-label>
             <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
@@ -31,19 +37,19 @@
         </mat-form-field>
     </div>
 
-    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
-        <mat-form-field appearance="outline" class="w-100-p">
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <mat-form-field appearance="outline" fxFlex="100">
             <mat-label>{{'common.word.memo'|translate}}</mat-label>
             <textarea matInput name="memo" formControlName="memo" rows="2"></textarea>
         </mat-form-field>
     </div>
 
-    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
-        <div class="w-100-p">
+    <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
+        <div fxFlex="20">
             <mat-checkbox formControlName="activated">{{'common.word.activated' | translate}}</mat-checkbox>
         </div>
 
-        <div class="w-100-p">
+        <div fxFlex="80">
             <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
         </div>
     </div>

@@ -38,7 +38,7 @@ export class OliveQueryParameterService {
       (
         queryCompanyGroupId > 0 && 
         queryCompanyGroupId !== returnCompanyGroupID &&
-        this.authService.userHasPermission(Permission.manageOtherCompanies)
+        this.authService.userHasPermission(Permission.viewOtherCompanies)
       ) {
         returnCompanyGroupID = queryCompanyGroupId;
       }
