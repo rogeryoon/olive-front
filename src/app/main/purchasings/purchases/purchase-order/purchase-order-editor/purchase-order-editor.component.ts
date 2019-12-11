@@ -14,11 +14,12 @@ import { OliveSupplierManagerComponent } from 'app/main/supports/companies/suppl
 import { Supplier } from 'app/main/supports/models/supplier.model';
 import { OliveWarehouseService } from 'app/main/supports/services/warehouse.service';
 import { Warehouse } from 'app/main/supports/models/warehouse.model';
-import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/warehouse/warehouse-manager/warehouse-manager.component';
 import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator, requiredValidator } from 'app/core/validators/general-validators';
 import { isMoneyPattern, toTrimString } from 'app/core/utils/string-helper';
+import { activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
+import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
 
 @Component({
   selector: 'olive-purchase-order-editor',
@@ -29,26 +30,24 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   @ViewChild('supplier')
   lookupSupplier: OliveLookupHostComponent;
 
-  @ViewChild('warehouse')
-  lookupWarehouse: OliveLookupHostComponent;
+  warehouses: Warehouse[];
 
   @Output() currencyChanged = new EventEmitter();
   @Output() exchangeRateChanged = new EventEmitter();
 
   standCurrencyCode: string;
 
+  readonly wareHouseComboSelectedCacheKey = OliveCacheService.cacheKeys.userPreference.dropDownBox + 
+    OliveCacheService.cacheKeys.getItemKey.warehouse + this.queryParams.CompanyGroupId;
+
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private supplierService: OliveSupplierService, private warehouseService: OliveWarehouseService,
-    private cacheService: OliveCacheService
+    private cacheService: OliveCacheService, private queryParams: OliveQueryParameterService
   ) {
     super(
       formBuilder, translator
     );
-  }
-
-  get floatLabels(): string {
-    return true ? 'auto' : 'always';
   }
 
   get isMasterCurrency(): boolean {
@@ -62,6 +61,11 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   getEditedItem(): any {
     const formModel = this.oForm.value;
 
+    const selectedWarehouse = this.warehouses.find(item => item.id === formModel.warehouse);
+
+    // Item 저장시 마지막 선택한 창고를 저장
+    this.cacheService.setUserPreference(this.wareHouseComboSelectedCacheKey, selectedWarehouse)
+
     return this.itemWithIdNAudit({
       supplierOrderId: formModel.supplierOrderId,
       date: formModel.poDate,
@@ -74,7 +78,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       printOutCount: this.item.printOutCount,
       lastPrintOutUser: this.item.lastPrintOutUser,
       supplierId: formModel.supplierFk.id,
-      warehouseId: formModel.warehouseFk.id,
+      warehouseId: selectedWarehouse.id,
       currencyId: formModel.currency
     });
   }
@@ -86,7 +90,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       memo: '',
       currencyExchangeRate: ['', [numberValidator(2, false)]],
       supplierFk: null,
-      warehouseFk: null,
+      warehouse: ['', requiredValidator()],
       currency: ''
     });
   }
@@ -100,7 +104,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       memo: this.item.memo || '',
       currencyExchangeRate: this.item.currencyExchangeRate,
       supplierFk: this.item.supplierFk,
-      warehouseFk: this.item.warehouseFk,
+      warehouse: this.item.warehouseId,
       currency: currency.id
     });
 
@@ -120,6 +124,8 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     this.currencies = this.cacheService.currencies;
     this.standCurrencyCode = this.standCurrency.code;
 
+    this.getWarehouses();
+
     this.lookupSupplier.setting = {
       name: 'Supplier',
       columnType: 'code',
@@ -131,23 +137,10 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       managePermission: Permission.assignCompanyGroups,
       translateTitleId: NavTranslates.Company.supplier
     } as LookupListerSetting;
-
-    this.lookupWarehouse.setting = {
-      name: 'Warehouse',
-      columnType: 'code',
-      itemTitle: this.translator.get(NavTranslates.Company.warehouse),
-      dataService: this.warehouseService,
-      maxSelectItems: 1,
-      newComponent: OliveWarehouseManagerComponent,
-      itemType: Warehouse,
-      managePermission: Permission.assignCompanyGroups,
-      translateTitleId: NavTranslates.Company.warehouse
-    } as LookupListerSetting;
   }
 
   markCustomControlsTouched() {
     this.lookupSupplier.markAsTouched();
-    this.lookupWarehouse.markAsTouched();
   }
 
   get canAssignPurchaseOrder() {
@@ -163,5 +156,23 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     if (isMoneyPattern(value)) {
       this.exchangeRateChanged.emit(value);
     }
+  }
+
+  private getWarehouses() {
+    this.cacheService.getItems(this.warehouseService, OliveCacheService.cacheKeys.getItemsKey.warehouse + 'activated', activatedNameOrderedSearchOption())
+      .then((items: Warehouse[]) => {
+        this.warehouses = items;
+        this.setLastSelectedWarehouse();
+      });
+  }
+
+  private setLastSelectedWarehouse() {
+    // Cache Value Loading
+    this.cacheService.getUserPreference(this.wareHouseComboSelectedCacheKey)
+      .then(obj => {
+        if (obj && !this.item.warehouseId) {
+          this.oForm.patchValue({warehouse: obj.id})
+        }
+      });    
   }
 }

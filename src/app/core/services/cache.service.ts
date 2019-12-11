@@ -54,6 +54,7 @@ export class OliveCacheService {
     static userPreference = class {
       static warehouseCheckboxes = 'warehouseCheckboxes-';
       static lookupHost = 'lookupHost-';
+      static dropDownBox = 'dropDownBox-';
       static lastSelectedPaymentMethodId = 'lastSelectedPaymentMethodId';
     };
 
@@ -64,6 +65,10 @@ export class OliveCacheService {
     };
 
     static oliveConfigCacheKey = 'oliveConfig-';
+
+    static getItemKey = class name {
+      static warehouse = 'warehouse-';
+    }
 
     static getItemsKey = class {
       static carrier = 'carrier-';

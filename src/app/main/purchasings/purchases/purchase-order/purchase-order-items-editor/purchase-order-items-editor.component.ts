@@ -30,6 +30,7 @@ import { Currency } from 'app/main/supports/models/currency.model';
 import { numberValidator } from 'app/core/validators/general-validators';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { showParamMessage } from 'app/core/utils/string-helper';
+import { AlertService } from '@quick/services/alert.service';
 
 @Component({
   selector: 'olive-purchase-order-items-editor',
@@ -65,6 +66,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     private snackBar: MatSnackBar, private dialog: MatDialog,
     private messageHelperService: OliveMessageHelperService, private cacheService: OliveCacheService,
     private productVariantService: OliveProductVariantService, private purchaseOrderService: OlivePurchaseOrderService,
+    private alertService: AlertService
 
   ) {
     super(
@@ -140,6 +142,25 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   get paymentAmount(): number {
     return this.totalAmount + this.extraAmount;
   }
+
+  get noItemSelectedError(): boolean {
+    return this.dataSource.items.length === 0;
+  }
+
+  get showNoItemCreatedError(): boolean {
+    return this.noItemSelectedError && this.oForm.touched;
+  }
+
+  protected hasOtherError(): boolean {
+    if (this.noItemSelectedError) {
+      this.alertService.showMessageBox(
+        this.translator.get('common.title.errorConfirm'),
+        this.translator.get('common.message.noItemCreated')
+      );
+
+      return true;
+    }
+  }  
 
   onCurrencyChanged(id) {
     this.poCurrency = this.cacheService.currencies.find(c => c.id === id);

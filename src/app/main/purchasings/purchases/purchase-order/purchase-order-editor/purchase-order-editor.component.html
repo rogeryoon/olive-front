@@ -1,7 +1,7 @@
 ﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutGap="1em" autocomplete="off">
     <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
         <div flex>
-            <mat-form-field appearance="outline" fxFlex class="w-100-p">
+            <mat-form-field appearance="outline" fxFlex="100">
                 <mat-label>{{'common.word.date' | translate}}</mat-label>
                 <input matInput [matDatepicker]="dateCtrl" formControlName="poDate" readonly>
                 <mat-datepicker-toggle matSuffix [for]="dateCtrl"></mat-datepicker-toggle>
@@ -16,13 +16,18 @@
         </div>
 
         <div flex>
-            <olive-lookup-host #warehouse formControlName="warehouseFk" [cacheKey]="'warehouse'"
-                [placeholder]="'common.word.warehouse' | translate" [isEditMode]="canAssignPurchaseOrder">
-            </olive-lookup-host>
+            <mat-form-field appearance="outline" fxFlex="100">
+                <mat-label>{{'common.word.warehouse'|translate}}</mat-label>
+                <mat-select name="warehouse" formControlName="warehouse" required>
+                    <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
+                    <mat-option *ngFor="let warehouse of warehouses" [value]="warehouse.id">{{warehouse.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="hasEntryError('warehouse')">{{errorMessage('warehouse')}}</mat-error>
+            </mat-form-field>
         </div>
 
         <div flex>
-            <mat-form-field appearance="outline" class="w-100-p" [floatLabel]="floatLabels" fxFlex>
+            <mat-form-field appearance="outline" class="w-100-p" fxFlex>
                 <mat-label>{{'purchasing.purchaseOrder.supplierOrderNo' | translate}}</mat-label>
                 <input matInput name="supplierOrderId" formControlName="supplierOrderId" maxlength="100">
                 <mat-hint align="end">{{getControl('supplierOrderId').value?.length || 0}}/100</mat-hint>

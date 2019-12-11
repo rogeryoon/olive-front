@@ -132,6 +132,7 @@
     </ng-container>
 
   </mat-table>
+  <mat-error *ngIf="showNoItemCreatedError">{{'common.message.noItemCreated' | translate}}</mat-error>
 
   <div class="entry-max-width">
   <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em" class="justify-end">
