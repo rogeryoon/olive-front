@@ -31,6 +31,8 @@ import { numberValidator } from 'app/core/validators/general-validators';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { showParamMessage } from 'app/core/utils/string-helper';
 import { AlertService } from '@quick/services/alert.service';
+import { IdName } from 'app/core/models/id-name';
+import { convertToBase26 } from 'app/core/utils/encode-helpers';
 
 @Component({
   selector: 'olive-purchase-order-items-editor',
@@ -90,6 +92,14 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
 
   get otherCurrencyPriceRequired() {
     return this.dataSource.otherCurrencyPriceRequired;
+  }
+
+  get isLoading() {
+    return this.dataSource.isLoading;
+  }
+
+  getProducts(index: number): IdName[] {
+    return this.dataSource.products[index];
   }
 
   get freight() {
@@ -218,6 +228,31 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     });
   }
 
+  onProductSelected(event: any, index: number) {
+    const formGroup = this.getArrayFormGroup(index);
+
+    formGroup.patchValue({productVariantId: ''});
+
+    const foundItem = this.getProducts(index).find(item => item.name === event.option.value);
+
+    const dupStrings: string[] = [];
+    this.dataSource.items.forEach((dsItem: PurchaseOrderItem) => {
+      if (dsItem.productVariantId === foundItem.id) {
+        dupStrings.push(`${convertToBase26(foundItem.id)}: ${foundItem.name}`);
+        return;
+      }
+    });
+
+    if (foundItem && dupStrings.length === 0) {
+      formGroup.patchValue({productVariantId: convertToBase26(foundItem.id)});
+    }
+
+    if (dupStrings.length > 0) {
+      formGroup.patchValue({productName: ''});      
+      this.messageHelperService.showDuplicatedItems(dupStrings);
+    }
+  }  
+
   setParentItem(parentItem: any) {
     this.parentItem = parentItem;
   }  
@@ -297,7 +332,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
             if (!dupProductVariantIdCheckSet.has(pvItem.id)) {
               dupProductVariantIdCheckSet.add(pvItem.id);
               duplicatedIdStrings.push(
-                `${this.id36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
+                `${convertToBase26(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
             }
           });
       });
@@ -362,7 +397,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
             .forEach((sItem: PurchaseOrderItem) => {
               if (!dupPOItemIdCheckSet.has(sItem.id)) {
                 dupPOItemIdCheckSet.add(sItem.productVariantId);
-                duplicatedIdStrings.push(`${this.id36(sItem.id)}: ${sItem.name}`);
+                duplicatedIdStrings.push(`${convertToBase26(sItem.id)}: ${sItem.name}`);
               }
             });
         });

@@ -5,5 +5,5 @@ export class MarketItemMappingProductVariant extends OliveTrackingAttribute {
     quantity?: number;
     productVariantId?: number;
     productName?: string;
-    productVariantId36?: string;
+    productVariantId26?: string;
 }

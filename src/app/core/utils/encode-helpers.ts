@@ -51,7 +51,7 @@ export function convertBase36ToNumber(input: string): number {
  * @param num 
  * @returns to excel column name style id 
  */
-export function convertNumberToExcelColumnNameStyleId(num: number): string {
+export function convertToBase26(num: number): string {
     let alpha = '';
 
     num--;
@@ -63,11 +63,11 @@ export function convertNumberToExcelColumnNameStyleId(num: number): string {
 }
 
 /**
- * Converts excel column name style id to number
+ * Converts excel column name style id to number (A => 1, AA => 27)
  * @param val 
  * @returns excel column name style id to number 
  */
-export function convertExcelColumnNameStyleIdToNumber(val: string): number {
+export function convertBase26ToNumber(val: string): number {
     const base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     let result = 0;
   

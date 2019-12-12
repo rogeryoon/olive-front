@@ -33,7 +33,7 @@ import { OliveConstants } from 'app/core/classes/constants';
 import { OliveOrderShipOutHelperService } from 'app/main/sales/services/order-ship-out-helper.service';
 import { Icon } from 'app/core/models/icon';
 import { Country } from 'app/main/supports/models/country.model';
-import { convertNumberToExcelColumnNameStyleId } from 'app/core/utils/encode-helpers';
+import { convertToBase26 } from 'app/core/utils/encode-helpers';
 
 @Component({
   selector: 'olive-pending-order-ship-out-package-list',
@@ -277,7 +277,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
       return '?';
     }
 
-    return convertNumberToExcelColumnNameStyleId(foundIndex + 1);
+    return convertToBase26(foundIndex + 1);
   }
 
   /**
@@ -289,7 +289,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     const itemNames = new Map<string, number>();
     for (const order of box.orderShipOuts) {
       for (const item of order.orderShipOutDetails) {
-        const itemId = convertNumberToExcelColumnNameStyleId(item.productVariantShortId);
+        const itemId = convertToBase26(item.productVariantShortId);
         const itemNameKey = `${itemId}. ${item.name}`;
         itemNames.set(itemNameKey, 
           (itemNames.has(itemNameKey) ? itemNames.get(itemNameKey) : 0) + item.quantity);

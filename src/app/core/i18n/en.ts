@@ -235,7 +235,8 @@ export const locale = {
                 'symbol' : '심볼',
                 'decimalPoint' : '소숫점',
                 'outSourcing' : '협력사',
-                'private' : '비공개'
+                'private' : '비공개',
+                'remark' : '비고',
             },
             'word': {
                 'orderNumberShort':  '주문 #',

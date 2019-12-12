@@ -21,7 +21,7 @@ import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { IdName } from 'app/core/models/id-name';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { showParamMessage } from 'app/core/utils/string-helper';
-import { convertNumberToExcelColumnNameStyleId } from 'app/core/utils/encode-helpers';
+import { convertToBase26 } from 'app/core/utils/encode-helpers';
 
 @Component({
   selector: 'olive-market-item-mapping-product-variants-editor',
@@ -41,7 +41,7 @@ import { convertNumberToExcelColumnNameStyleId } from 'app/core/utils/encode-hel
   ]
 })
 export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
-  displayedColumns = ['productVariantId', 'productName', 'quantity', 'actions'];
+  displayedColumns = ['productVariantId26', 'productName', 'quantity', 'actions'];
   dataSource: 
   OliveMarketItemMappingProductVariantDataSource = 
   new OliveMarketItemMappingProductVariantDataSource(this.cacheService, this.productVariantService);
@@ -83,31 +83,31 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
   onProductSelected(event: any, index: number) {
     const formGroup = this.getArrayFormGroup(index);
 
-    formGroup.patchValue({productVariantId: ''});
+    formGroup.patchValue({productVariantId26: ''});
 
     const foundItem = this.getProducts(index).find(item => item.name === event.option.value);
 
-    const dupStrings: string[] = [];
-    this.dataSource.items.forEach((dsItem: MarketItemMappingProductVariant) => {
-      if (dsItem.productVariantId === foundItem.id) {
-        dupStrings.push(`${convertNumberToExcelColumnNameStyleId(foundItem.id)}: ${foundItem.name}`);
-        return;
-      }
-    });
+    const dupItem = this.dataSource.items
+      .find((x: MarketItemMappingProductVariant) => x.productVariantId === foundItem.id);
 
-    if (foundItem && dupStrings.length === 0) {
-      formGroup.patchValue({productVariantId: convertNumberToExcelColumnNameStyleId(foundItem.id)});
+    let dupString;      
+    if (dupItem) {
+      dupString = `${convertToBase26(foundItem.id)}: ${foundItem.name}`;
     }
 
-    if (dupStrings.length > 0) {
+    if (foundItem && !dupString) {
+      formGroup.patchValue({productVariantId26: convertToBase26(foundItem.id)});
+    }
+
+    if (dupString) {
       formGroup.patchValue({productName: ''});      
-      this.messageHelperService.showDuplicatedItems(dupStrings);
+      this.messageHelperService.showDuplicatedItems([dupString]);
     }
   }
 
   onProductNameValueEmpty(index: number) {
     const formGroup = this.getArrayFormGroup(index);
-    formGroup.patchValue({productVariantId: null});
+    formGroup.patchValue({productVariantId26: null});
   }
 
   get noItemSelectedError(): boolean {
@@ -166,7 +166,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
               if (!dupProductVariantIdCheckSet.has(pvItem.id)) {
                 dupProductVariantIdCheckSet.add(pvItem.id);
                 duplicatedIdStrings.push(
-                  `${convertNumberToExcelColumnNameStyleId(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
+                  `${convertToBase26(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
               }
             });
         });
@@ -217,7 +217,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
   }
 
   private deleteItem(item: any) {
-    if (item.Obj.productVariantId) {
+    if (item.Obj.productVariantId26) {
       this.snackBar.open(
         showParamMessage(this.translator.get('common.message.confirmDelete')),
         this.translator.get('common.button.delete'),

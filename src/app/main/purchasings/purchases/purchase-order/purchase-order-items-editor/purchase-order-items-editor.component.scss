@@ -1,6 +1,15 @@
 :host {
+    .is-loading ::ng-deep .mat-option-text {
+        display: flex;
+        justify-content: center;
+    }
+
     .right {
         text-align: right;
+    }
+
+    .center {
+        text-align: center;
     }
 
     .justify-end {

@@ -10,7 +10,7 @@ import { AlertService } from '@quick/services/alert.service';
 import { ExcelColumn } from '../models/excel-column';
 import { SearchUnit } from '../models/search-unit';
 import { replaceValue } from '../utils/string-helper';
-import { convertNumberToExcelColumnNameStyleId } from '../utils/encode-helpers';
+import { convertToBase26 } from '../utils/encode-helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -469,7 +469,7 @@ export class OliveDocumentService {
       const columnNames = [];
       let columnCount = 0;
       while (serialNonValueColumnCount < 10) {
-        const colIndex = convertNumberToExcelColumnNameStyleId(columnCount + 1);
+        const colIndex = convertToBase26(columnCount + 1);
         const value = sheet[colIndex + '1'] ? sheet[colIndex + '1'].v.toLowerCase().trim() : '';
         columnNames.push(value);
         columnCount++;
@@ -480,7 +480,7 @@ export class OliveDocumentService {
 
       // 컬럼이름을 A B C와 같은 알파벳 이름으로 변경
       for (let i = 0; i < columnNames.length; i++) {
-        const colIndex = convertNumberToExcelColumnNameStyleId(i + 1);
+        const colIndex = convertToBase26(i + 1);
         sheet[colIndex + '1'] = { t: 's' /* type: string */, v: colIndex /* value */ };
       }
 
