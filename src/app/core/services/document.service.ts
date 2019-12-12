@@ -10,6 +10,7 @@ import { AlertService } from '@quick/services/alert.service';
 import { ExcelColumn } from '../models/excel-column';
 import { SearchUnit } from '../models/search-unit';
 import { replaceValue } from '../utils/string-helper';
+import { convertNumberToExcelColumnNameStyleId } from '../utils/encode-helpers';
 
 @Injectable({
   providedIn: 'root'
@@ -418,16 +419,6 @@ export class OliveDocumentService {
     });
   }
 
-  public static numToAlpha(num: number): string {
-    let alpha = '';
-
-    for (; num >= 0; num = parseInt((num / 26).toString(), 10) - 1) {
-      alpha = String.fromCharCode(num % 26 + 0x41) + alpha;
-    }
-
-    return alpha;
-  }
-
   uploadExcel(event: any, tableId: string, renameToAlphaColumns: boolean): void {
     const tableIdExp = `#${tableId}`;
 
@@ -478,7 +469,7 @@ export class OliveDocumentService {
       const columnNames = [];
       let columnCount = 0;
       while (serialNonValueColumnCount < 10) {
-        const colIndex = OliveDocumentService.numToAlpha(columnCount);
+        const colIndex = convertNumberToExcelColumnNameStyleId(columnCount + 1);
         const value = sheet[colIndex + '1'] ? sheet[colIndex + '1'].v.toLowerCase().trim() : '';
         columnNames.push(value);
         columnCount++;
@@ -489,7 +480,7 @@ export class OliveDocumentService {
 
       // 컬럼이름을 A B C와 같은 알파벳 이름으로 변경
       for (let i = 0; i < columnNames.length; i++) {
-        const colIndex = OliveDocumentService.numToAlpha(i);
+        const colIndex = convertNumberToExcelColumnNameStyleId(i + 1);
         sheet[colIndex + '1'] = { t: 's' /* type: string */, v: colIndex /* value */ };
       }
 

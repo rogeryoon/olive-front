@@ -223,14 +223,24 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   }  
 
   createEmptyObject() {
-    return new PurchaseOrder();
+    return new PurchaseOrderItem();
+  }
+
+  private newItem(item: PurchaseOrderItem = null) {
+    if (!item) {
+      item = new PurchaseOrderItem();
+    }
+
+    this.dataSource.addNewItem(item);
+    this.dataSource.renderItems();
+    this.oForm.markAsDirty();
   }
 
   private deleteItem(item: any) {
     if (item.Obj.id || item.Obj.name || item.Obj.quantity || item.Obj.price || item.Obj.remark) {
       this.snackBar.open(
         showParamMessage(this.translator.get('common.message.confirmDelete')),
-        this.translator.get('common.button.delete'),
+        this.translator.get('common.buttons.delete'),
         { duration: 5000 }
       )
         .onAction().subscribe(() => {
@@ -431,6 +441,10 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
 
     if (obj) {
       this.dataSource.loadItems(obj);
+    }
+
+    if (!obj || obj.length === 0) {
+      this.newItem();      
     }
   }
   registerOnChange(fn: any): void {

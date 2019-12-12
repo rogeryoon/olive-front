@@ -45,6 +45,7 @@ import { OliveQueryParameterService } from 'app/core/services/query-parameter.se
 import { OliveOrderShipOutHelperService } from 'app/main/sales/services/order-ship-out-helper.service';
 import { Icon } from 'app/core/models/icon';
 import { OliveOrderTrackingExcelService } from 'app/main/sales/services/order-tracking-excel.service';
+import { convertNumberToExcelColumnNameStyleId } from 'app/core/utils/encode-helpers';
 
 class AllocatedQuantity {
   productVariantId: number;
@@ -505,7 +506,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   }
 
   showItem(item: OrderShipOutDetail): string {
-    return OliveDocumentService.numToAlpha(item.productVariantShortId - 1) + item.quantity;
+    return convertNumberToExcelColumnNameStyleId(item.productVariantShortId) + item.quantity;
   }
 
   getOrderQuantity(order: OrderShipOut): number {
@@ -652,7 +653,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
       // 라디오 선택창에 보낼 데이터 만들기
       let remark = '';
       for (const it of order.orderShipOutDetails) {
-        const itemId = OliveDocumentService.numToAlpha(it.productVariantShortId - 1);
+        const itemId = convertNumberToExcelColumnNameStyleId(it.productVariantShortId);
         if (subject === this.productCustomsWeightSelectedTrigger) {
           remark = it.kiloGramWeight ? this.numberFormat(it.kiloGramWeight, 2) : '?';
           if (it.extra && it.extra.customsWeight) {
@@ -728,7 +729,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     }
 
     // 상품 무게 수정창 오픈
-    const itemId = OliveDocumentService.numToAlpha(editItem.productVariantShortId - 1);
+    const itemId = convertNumberToExcelColumnNameStyleId(editItem.productVariantShortId);
     const setting = new OliveDialogSetting(
       OliveProductWeightEditorComponent,
       {
@@ -807,7 +808,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     }
 
     // 세관신고 상품가격 수정창 오픈
-    const itemId = OliveDocumentService.numToAlpha(editItem.productVariantShortId - 1);
+    const itemId = convertNumberToExcelColumnNameStyleId(editItem.productVariantShortId);
     const setting = new OliveDialogSetting(
       OliveProductCustomsPriceEditorComponent,
       {
@@ -893,7 +894,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
     const itemsNames: string[] = [];
 
     for (const item of order.orderShipOutDetails) {
-      const itemId = OliveDocumentService.numToAlpha(item.productVariantShortId - 1);
+      const itemId = convertNumberToExcelColumnNameStyleId(item.productVariantShortId);
       itemsNames.push(`${itemId}. ${item.name} (${item.quantity})`);
     }
 

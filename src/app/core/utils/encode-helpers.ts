@@ -1,11 +1,11 @@
 import { testIsUndefined } from './object-helpers';
 
 /**
- * Make 36 Type Radom ID;
+ * Make Base36 Radom ID
  * @param length 
  * @returns id 
  */
-export function make36Id(length: number): string {
+export function makeRandom36Id(length: number): string {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
@@ -45,3 +45,37 @@ export function convertBase36ToNumber(input: string): number {
     if (!isValid36Id(input)) { return 0; }
     return parseInt(input, 36);
 }
+
+/**
+ * Converts number to excel column name style id (1 => A, 27 => AA)
+ * @param num 
+ * @returns to excel column name style id 
+ */
+export function convertNumberToExcelColumnNameStyleId(num: number): string {
+    let alpha = '';
+
+    num--;
+    for (; num >= 0; num = parseInt((num / 26).toString(), 10) - 1) {
+      alpha = String.fromCharCode(num % 26 + 0x41) + alpha;
+    }
+
+    return alpha;
+}
+
+/**
+ * Converts excel column name style id to number
+ * @param val 
+ * @returns excel column name style id to number 
+ */
+export function convertExcelColumnNameStyleIdToNumber(val: string): number {
+    const base = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let result = 0;
+  
+    for (let i = 0, j = val.length - 1; i < val.length; i += 1, j -= 1) {
+      result += Math.pow(base.length, j) * (base.indexOf(val[i]) + 1);
+    }
+  
+    return result;
+}
+  
+

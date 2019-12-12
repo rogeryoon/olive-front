@@ -10,7 +10,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveMarketExcelInterfaceService } from '../../../services/market-excel-interface.service';
 import { requiredValidator } from 'app/core/validators/general-validators';
 import { activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
-import { make36Id } from 'app/core/utils/encode-helpers';
+import { makeRandom36Id } from 'app/core/utils/encode-helpers';
 
 @Component({
   selector: 'olive-market-editor',
@@ -60,7 +60,7 @@ export class OliveMarketEditorComponent extends OliveEntityFormComponent {
 
   resetForm() {
     this.oForm.reset({
-      code: this.item.code || make36Id(4),
+      code: this.item.code || makeRandom36Id(4),
       name: this.item.name || '',
       phoneNumber: this.item.phoneNumber || '',
       email: this.item.email || '',

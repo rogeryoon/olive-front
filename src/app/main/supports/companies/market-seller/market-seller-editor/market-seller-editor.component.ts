@@ -6,18 +6,15 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { MarketSeller } from '../../../models/market-seller.model';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
-import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
 import { OliveMarketService } from '../../../services/market.service';
-import { OliveMarketManagerComponent } from '../../market/market-manager/market-manager.component';
 import { Market } from '../../../models/market.model';
 import { requiredValidator } from 'app/core/validators/general-validators';
 import { Company } from 'app/main/supports/models/company.model';
-import { NameValue } from 'app/core/models/name-value';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveCompanyService } from 'app/main/supports/services/company.service';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
 import { searchOption, activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
-import { make36Id } from 'app/core/utils/encode-helpers';
+import { makeRandom36Id } from 'app/core/utils/encode-helpers';
 
 @Component({
   selector: 'olive-market-seller-editor',
@@ -68,7 +65,7 @@ export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
 
   resetForm() {
     this.oForm.reset({
-      code: this.item.code || make36Id(4),
+      code: this.item.code || makeRandom36Id(4),
       name: this.item.name || '',
       memo: this.item.memo || '',
       activated: this.boolValue(this.item.activated),

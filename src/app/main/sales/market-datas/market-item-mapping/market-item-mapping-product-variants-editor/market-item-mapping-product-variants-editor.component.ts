@@ -1,6 +1,6 @@
 import { Component, forwardRef } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, ValidationErrors, 
-  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, FormGroup } from '@angular/forms';
+  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator } from '@angular/forms';
 import { MatSnackBar, MatDialog } from '@angular/material';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -21,7 +21,7 @@ import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
 import { IdName } from 'app/core/models/id-name';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { showParamMessage } from 'app/core/utils/string-helper';
-import { convertToBase36 } from 'app/core/utils/encode-helpers';
+import { convertNumberToExcelColumnNameStyleId } from 'app/core/utils/encode-helpers';
 
 @Component({
   selector: 'olive-market-item-mapping-product-variants-editor',
@@ -41,7 +41,7 @@ import { convertToBase36 } from 'app/core/utils/encode-helpers';
   ]
 })
 export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
-  displayedColumns = ['productVariantId36', 'productName', 'quantity', 'actions'];
+  displayedColumns = ['productVariantId', 'productName', 'quantity', 'actions'];
   dataSource: 
   OliveMarketItemMappingProductVariantDataSource = 
   new OliveMarketItemMappingProductVariantDataSource(this.cacheService, this.productVariantService);
@@ -83,20 +83,20 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
   onProductSelected(event: any, index: number) {
     const formGroup = this.getArrayFormGroup(index);
 
-    formGroup.patchValue({productVariantId36: ''});
+    formGroup.patchValue({productVariantId: ''});
 
     const foundItem = this.getProducts(index).find(item => item.name === event.option.value);
 
     const dupStrings: string[] = [];
     this.dataSource.items.forEach((dsItem: MarketItemMappingProductVariant) => {
       if (dsItem.productVariantId === foundItem.id) {
-        dupStrings.push(`${this.id36(foundItem.id)}: ${foundItem.name}`);
+        dupStrings.push(`${convertNumberToExcelColumnNameStyleId(foundItem.id)}: ${foundItem.name}`);
         return;
       }
     });
 
     if (foundItem && dupStrings.length === 0) {
-      formGroup.patchValue({productVariantId36: convertToBase36(foundItem.id)});
+      formGroup.patchValue({productVariantId: convertNumberToExcelColumnNameStyleId(foundItem.id)});
     }
 
     if (dupStrings.length > 0) {
@@ -107,7 +107,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
 
   onProductNameValueEmpty(index: number) {
     const formGroup = this.getArrayFormGroup(index);
-    formGroup.patchValue({productVariantId36: null});
+    formGroup.patchValue({productVariantId: null});
   }
 
   get noItemSelectedError(): boolean {
@@ -166,7 +166,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
               if (!dupProductVariantIdCheckSet.has(pvItem.id)) {
                 dupProductVariantIdCheckSet.add(pvItem.id);
                 duplicatedIdStrings.push(
-                  `${this.id36(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
+                  `${convertNumberToExcelColumnNameStyleId(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
               }
             });
         });
@@ -217,7 +217,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
   }
 
   private deleteItem(item: any) {
-    if (item.Obj.productVariantId36) {
+    if (item.Obj.productVariantId) {
       this.snackBar.open(
         showParamMessage(this.translator.get('common.message.confirmDelete')),
         this.translator.get('common.button.delete'),

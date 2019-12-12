@@ -18,6 +18,7 @@ import { OliveSearchProductVariantComponent } from './search-product-variant/sea
 import { OliveProductVariantService } from '../../services/product-variant.service';
 import { ProductVariant } from '../../models/product-variant.model';
 import { OliveProductVariantManagerComponent } from './product-variant-manager/product-variant-manager.component';
+import { convertNumberToExcelColumnNameStyleId } from 'app/core/utils/encode-helpers';
 
 const Selected  = 'selected';
 const Id = 'id';
@@ -75,7 +76,7 @@ export class OliveProductVariantsComponent extends OliveEntityListComponent {
     const isSingleItem = item.productFk.name === '' && item.name.length > 0;
     switch (columnName) {
       case Id:
-        retValue = OliveDocumentService.numToAlpha(item.shortId - 1);
+        retValue = convertNumberToExcelColumnNameStyleId(item.shortId);
         break;
       case Code:
         retValue = item.code;

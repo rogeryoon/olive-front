@@ -8,7 +8,7 @@ import { numberValidator, requiredValidator } from 'app/core/validators/general-
 import { MarketItemMappingProductVariant } from '../../../models/market-item-mapping-product-variant.model';
 import { OliveProductVariantService } from 'app/main/productions/services/product-variant.service';
 import { IdName } from 'app/core/models/id-name';
-import { convertBase36ToNumber, convertToBase36 } from 'app/core/utils/encode-helpers';
+import { convertNumberToExcelColumnNameStyleId, convertExcelColumnNameStyleIdToNumber } from 'app/core/utils/encode-helpers';
 
 export class OliveMarketItemMappingProductVariantDataSource extends TableDataSource {
 
@@ -22,11 +22,11 @@ export class OliveMarketItemMappingProductVariantDataSource extends TableDataSou
     }
 
     createRowFormGroup(r: any): FormGroup {
-        r.Obj.productVariantId36 = convertToBase36(r.Obj.productVariantId);
-        const productVariantId36Control = new FormControl(r.Obj.productVariantId36, [requiredValidator()]);
-        productVariantId36Control.valueChanges.subscribe(val => { 
+        r.Obj.productVariantId = convertNumberToExcelColumnNameStyleId(r.Obj.productVariantId);
+        const productVariantIdControl = new FormControl(r.Obj.productVariantId, [requiredValidator()]);
+        productVariantIdControl.valueChanges.subscribe(val => { 
             if (val) {
-                r.Obj.productVariantId = convertBase36ToNumber(val);
+                r.Obj.productVariantId = convertExcelColumnNameStyleIdToNumber(val);
             }
             else {
                 r.Obj.productVariantId = null;
@@ -34,7 +34,7 @@ export class OliveMarketItemMappingProductVariantDataSource extends TableDataSou
         });
 
         const fg = new FormGroup({
-            productVariantId36: productVariantId36Control,
+            productVariantId: productVariantIdControl,
             productName: this.createNewFormControl(r, 'productName', [requiredValidator()]),
             quantity: this.createNewFormControl(r, 'quantity', [numberValidator(0, true, 1)])
         });

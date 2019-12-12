@@ -126,17 +126,10 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
       ],
       searchComponent: OliveSearchMarketExcelRowComponent,
       itemType: MarketExcelRow,
-      extraSearches: [{ name: 'master', value: this.excelId.toString() }] as NameValue[],
+      extraSearches: [{ name: 'marketExcelId', value: this.excelId }],
       disabledContextMenus: [ OliveConstants.contextMenu.newItem ],
       editComponent: OliveMarketExcelRowManagerComponent,
-      isEditDialogReadOnly: true,
-      // customContextMenus: [
-      //   {
-      //     id: 'linkProduct',
-      //     iconName: NavIcons.Sales.matchItems,
-      //     titleId: 'sales.marketExcelRows.linkProductMenu'
-      //   }
-      // ]
+      isEditDialogReadOnly: true
     };
   }
 

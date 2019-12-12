@@ -10,12 +10,12 @@
             [ngClass]="{'highlightrow': (currentRow) && row.ObjId == currentRow.ObjId}" (click)="currentRow=row;">
         </mat-row>
 
-        <ng-container matColumnDef="productVariantId36">
+        <ng-container matColumnDef="productVariantId">
             <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.id' | translate}}</mat-header-cell>
-            <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="hasArrayEntryError('productVariantId36',i) ? arrayErrorMessage('productVariantId36',i) : row.Obj['productName']?.name">
+            <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="hasArrayEntryError('productVariantId',i) ? arrayErrorMessage('productVariantId',i) : row.Obj['productName']?.name">
                 <mat-form-field fxFlex='95%'>
-                    <input name="inputProductVariantId36{{row.ObjId}}" matInput formControlName="productVariantId36" class="center" readonly="true">
-                    <mat-error *ngIf="hasArrayEntryError('productVariantId36',i)">{{'common.validate.error' | translate}}</mat-error>
+                    <input name="inputProductVariantId{{row.ObjId}}" matInput formControlName="productVariantId" class="center" readonly="true">
+                    <mat-error *ngIf="hasArrayEntryError('productVariantId',i)">{{'common.validate.error' | translate}}</mat-error>
                 </mat-form-field>
             </mat-cell>
             <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
