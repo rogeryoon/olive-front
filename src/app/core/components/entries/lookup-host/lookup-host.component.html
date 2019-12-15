@@ -1,10 +1,25 @@
-  <mat-form-field appearance="outline" class="w-100-p" [floatLabel]="floatLabels" fxFlex>
-    <mat-label>{{placeholder}}</mat-label>
-    <input matInput #lookupCtrl [formControl]="lookupName" [readonly]="true" [value]="getValue()" [type]="type" [id]="id"  
-    (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" (dblclick)="lookUp()"/>
-    <span matPrefix *ngIf="isEditMode"><mat-icon class="secondary-text link-cursor" (click)="lookUp()">zoom_in</mat-icon>&nbsp;&nbsp;</span>
-    <mat-error *ngIf="lookupName.hasError('required')">
-      {{'common.validate.required' | translate}}
-    </mat-error>
+  <mat-form-field appearance="outline" class="w-100-p" fxFlex>
+      <mat-label>{{placeholder}}</mat-label>
+      <input matInput #lookupCtrl [formControl]="lookupName" [readonly]="!isEditMode" type="text" [id]="id"
+          (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" [matAutocomplete]="auto"/>
+      <span matPrefix *ngIf="isEditMode" (click)="popUpLookUpDialog()">
+          <mat-icon class="secondary-text link-cursor">zoom_in</mat-icon>&nbsp;&nbsp;
+      </span>
+      <button mat-button *ngIf="lookupCtrl.value" matSuffix mat-icon-button aria-label="Clear" (click)="clear()">
+          <mat-icon>close</mat-icon>
+      </button>
+      <mat-error *ngIf="lookupName.hasError('selected') || lookupName.hasError('required')">
+          {{(lookupName.hasError('required') ? 'common.validate.required' : 'common.validate.selected') | translate}}
+      </mat-error>
   </mat-form-field>
-
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+      <mat-option *ngIf="isLoading" class="is-loading">
+          <mat-spinner diameter="50"></mat-spinner>
+      </mat-option>
+      <ng-container *ngIf="!isLoading">
+          <mat-option *ngFor="let item of searchedItems" [value]="item.name" [dir]="item.id">
+              {{ item.name }}
+          </mat-option>
+      </ng-container>
+  </mat-autocomplete>
+       

@@ -43,7 +43,7 @@ export class OliveOrderShipOutDetailDataSource extends TableDataSource {
 
         fg.get('productName').valueChanges
         .pipe(
-          debounceTime(300),
+          debounceTime(500),
           tap(() => this.isLoading = true),
           switchMap(value => this.productService.search(value)
           .pipe(

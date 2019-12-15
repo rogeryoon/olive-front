@@ -1,25 +1,76 @@
 import { NameValue } from '../models/name-value';
 
-export function activatedNameOrderedSearchOption() {
-    return searchOption();
+/**
+ * Creates default search option
+ * @returns  
+ */
+export function createDefaultSearchOption() {
+  return createSearchOption([{ name: 'activated', value: true }], 'name', 'asc');
 }
 
-export function searchOption(extSearches: NameValue[] = null, orderColumnName: string = 'name', sort: string = 'asc'): any {
-    const option =
-    {
-        columns: [{ data: orderColumnName }],
-        order: [{ column: 0, dir: sort }],
-        length: 0
-    };
+/**
+ * Creates search option
+ * @param extSearches 
+ * @param [orderColumnName] 
+ * @param [sort] 
+ * @returns search option 
+ */
+export function createSearchOption(extSearches: NameValue[], orderColumnName: string = null, sort: string = null): any {
+  const option: any = (orderColumnName && sort) ?
+    { columns: [{ data: orderColumnName }], order: [{ column: 0, dir: sort }], length: 0 } : {};
 
-    // Default
-    if (!extSearches) {
-        extSearches = [{ name: 'activated', value: true }];
-    }
+  if (extSearches && extSearches.length > 0) {
+    option.extSearch = extSearches;
+  }
 
-    if (extSearches && extSearches.length > 0) {
-        option['extSearch'] = extSearches;
-    }
-
-    return option;
+  return option;
 }
+
+/**
+ * Adds search option
+ * @param dtParameters 
+ * @param searchOption 
+ * @returns search option 
+ */
+export function addSearchOption(dtParameters: any, searchOption: any): any {
+  if (!dtParameters) {
+    dtParameters = {};
+  }
+
+  if (!searchOption) { return dtParameters; }
+
+  dtParameters.extSearch = searchOption.extSearch;
+
+  if (!dtParameters.columns && searchOption.columns) {
+    dtParameters.columns = searchOption.columns;
+  }
+
+  if (!dtParameters.order && searchOption.order) {
+    dtParameters.order = searchOption.order;
+  }
+
+  if (!dtParameters.length && searchOption.length) {
+    dtParameters.length = searchOption.length;
+  }
+
+  return dtParameters;
+}
+
+/**
+ * Creates keyword search option
+ * @param searchKeyword 
+ * @param searchOption 
+ * @param [dtParameters] 
+ * @returns keyword search option 
+ */
+export function createKeywordSearchOption(searchKeyword: string, searchOption: any, dtParameters: any = null): void {
+  dtParameters = addSearchOption(dtParameters, searchOption);
+
+  if (searchKeyword) {
+    dtParameters.search = { value: searchKeyword };
+  }
+
+  return dtParameters;
+}
+
+

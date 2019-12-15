@@ -66,9 +66,9 @@ export class OliveCacheService {
 
     static oliveConfigCacheKey = 'oliveConfig-';
 
-    static getItemKey = class name {
+    static getItemKey = class {
       static warehouse = 'warehouse-';
-    }
+    };
 
     static getItemsKey = class {
       static carrier = 'carrier-';
@@ -139,7 +139,7 @@ export class OliveCacheService {
   public invalidateCaches(keyPartial: string) {
     for (const key of Array.from(this.cache.keys())) {
       if (key.startsWith(keyPartial)) {
-        this.delete(keyPartial)
+        this.delete(keyPartial);
       }
     }
   }
@@ -259,11 +259,14 @@ export class OliveCacheService {
 
   /**
    * Sets user preference
+   * dataKey 또는 data가 null인 경우 실행 안함
    * @param dataKey 
    * @param data 
    * @returns void
    */
   async setUserPreference(dataKey: string, data: any): Promise<void> {
+    if (!dataKey || !data) { return; }
+
     let preferences: UserPreference[] = [];
 
     const cacheKey = OliveCacheService.cacheKeys.userPreferenceCacheKey;

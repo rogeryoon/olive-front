@@ -39,7 +39,8 @@ export class OlivePurchaseOrderEditorPageComponent extends OliveEditPageComponen
       managePermission: null,
       iconName: NavIcons.Purchase.entry,
       translateTitleId: NavTranslates.Purchase.entry,
-      itemListPath: 'purchases/list'
+      itemListPath: 'purchases/list',
+      noHeader: true
     };
 
     this.route.data.subscribe(({ item }) => {

@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { ReferHostSetting } from 'app/core/interfaces/lister-setting';
+import { ReferHostSetting } from 'app/core/interfaces/setting/refer-host-setting';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';

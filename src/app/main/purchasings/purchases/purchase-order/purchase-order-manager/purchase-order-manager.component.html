@@ -1,4 +1,4 @@
-﻿<form #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()">
+﻿<form class="" #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()">
     <div class="entry-max-width">
         <olive-purchase-order-editor #main [item]="item" (currencyChanged)="onCurrencyChanged($event)"
             (exchangeRateChanged)="onCurrencyExchangeRateChanged($event)"></olive-purchase-order-editor>

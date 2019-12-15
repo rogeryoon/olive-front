@@ -112,7 +112,7 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
 
       case Items:
         const items = [];
-        item.inWarehouseFk.inWarehouseItems.forEach(i => items.push({name: i.name}));
+        item.inWarehouseFk.inWarehouseItems.forEach(i => items.push({name: i.productName}));
         retValue = getItemsFirstName(items);
         break;
 

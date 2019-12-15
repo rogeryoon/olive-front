@@ -7,12 +7,12 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator, requiredValidator } from 'app/core/validators/general-validators';
 import { MarketItemMappingProductVariant } from '../../../models/market-item-mapping-product-variant.model';
 import { OliveProductVariantService } from 'app/main/productions/services/product-variant.service';
-import { IdName } from 'app/core/models/id-name';
 import { convertToBase26, convertBase26ToNumber } from 'app/core/utils/encode-helpers';
+import { ProductVariantPrice } from 'app/main/productions/models/product-variant-price.model';
 
 export class OliveMarketItemMappingProductVariantDataSource extends TableDataSource {
 
-    products: IdName[][] = [];
+    products: ProductVariantPrice[][] = [];
     isLoading = false;
 
     constructor(
@@ -43,7 +43,7 @@ export class OliveMarketItemMappingProductVariantDataSource extends TableDataSou
 
         fg.get('productName').valueChanges
         .pipe(
-          debounceTime(300),
+          debounceTime(500),
           tap(() => this.isLoading = true),
           switchMap(value => this.productService.search(value)
           .pipe(

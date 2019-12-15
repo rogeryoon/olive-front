@@ -11,7 +11,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { OlivePurchaseOrderPaymentDataSource } from './purchase-order-payment-data-source';
 import { PaymentMethod } from 'app/main/supports/models/payment-method.model';
 import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.model';
-import { activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
+import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
 import { showParamMessage } from 'app/core/utils/string-helper';
 
 @Component({
@@ -56,7 +56,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   }
 
   private getPaymentMethods() {
-    this.cacheService.getItems(this.paymentMethodService, OliveCacheService.cacheKeys.getItemsKey.paymentMethod + 'activated', activatedNameOrderedSearchOption())
+    this.cacheService.getItems(this.paymentMethodService, OliveCacheService.cacheKeys.getItemsKey.paymentMethod + 'activated', createDefaultSearchOption())
     .then((items: PaymentMethod[]) => {
       this.paymentMethods = items;
     });
@@ -169,9 +169,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   }
 
   onSelectionChange(event: any) {
-    if (event.value) {
-      this.cacheService.setUserPreference(this.cacheService.keyLastSelectedPaymentMethodId, event.value);
-    }
+    this.cacheService.setUserPreference(this.cacheService.keyLastSelectedPaymentMethodId, event.value);
     this._onChange(event.value);
   }
   onChange(event: any) {

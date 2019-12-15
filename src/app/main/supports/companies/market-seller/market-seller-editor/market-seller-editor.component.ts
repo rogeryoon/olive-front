@@ -13,7 +13,7 @@ import { Company } from 'app/main/supports/models/company.model';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveCompanyService } from 'app/main/supports/services/company.service';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
-import { searchOption, activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
+import { createSearchOption, createDefaultSearchOption } from 'app/core/utils/search-helpers';
 import { makeRandom36Id } from 'app/core/utils/encode-helpers';
 
 @Component({
@@ -87,10 +87,14 @@ export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
     const companyGroupId = this.queryParams.CompanyGroupId.toString();
 
     // 문맥 회사그룹의 서브 회사를 로드
-    const option = searchOption([
+    const option = createSearchOption(
+      [
         { name: 'activated', value: true }, 
-        { name: 'companyGroupId', value: companyGroupId },
-      ]);
+        { name: 'companyGroupId', value: companyGroupId }
+      ],
+      'name',
+      'asc'
+    );
 
     this.cacheService.getItems(this.companyService, OliveCacheService.cacheKeys.getItemsKey.country + companyGroupId, option)
       .then((items: Company[]) => {
@@ -99,7 +103,7 @@ export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
   }
 
   private getMarkets() {
-    this.cacheService.getItems(this.marketService, OliveCacheService.cacheKeys.getItemsKey.market + 'activated', activatedNameOrderedSearchOption())
+    this.cacheService.getItems(this.marketService, OliveCacheService.cacheKeys.getItemsKey.market + 'activated', createDefaultSearchOption())
       .then((items: Market[]) => {
         this.markets = items;
       });

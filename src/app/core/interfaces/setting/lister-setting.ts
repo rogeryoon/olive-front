@@ -1,8 +1,7 @@
 import { PermissionValues } from '@quick/models/permission.model';
-import { OliveDataService } from './data-service';
-import { NameValue } from '../models/name-value';
-import { OliveOnContextMenu } from './on-context-menu';
-import { OliveOnButton } from './on-buttons';
+import { NameValue } from '../../models/name-value';
+import { OliveOnContextMenu } from '../on-context-menu';
+import { OliveOnButton } from '../on-buttons';
 
 export interface IListerSetting {
     itemType: any;
@@ -67,69 +66,3 @@ export class ListerSetting implements IListerSetting {
     customContextMenus?: OliveOnContextMenu[];
 }
 
-export class LookupListerSetting implements IListerSetting {
-
-    dataTableId?: string;   
-
-    itemType: any;
-
-    columnType?: string;
-
-    disableSearchInput?: boolean;
-
-    trMouseCursor?: string;
-
-    customClick?: boolean;
-
-    extraSearches?: NameValue[];
-
-    itemTitle: string;
-
-    dataService: OliveDataService;
-
-    renderCallback?: any;
-
-    maxSelectItems?: number;
-
-    maxNameLength?: number;
-
-    currentItem?: any;
-
-    // For New Item Support - Start
-    newComponent?: any;
-
-    managePermission?: PermissionValues;
-
-    translateTitleId?: string;
-    // For New Item Support - End
-}
-
-export class DropDownSetting implements IListerSetting {
-    itemType: any;    
-    
-    extraSearches?: NameValue[];
-
-    required: boolean;
-
-    dataService?: OliveDataService;
-}
-
-export class ReferHostSetting implements IListerSetting {
-    itemType: any;
-
-    dataService: OliveDataService;
-
-    managerComponent: any;
-
-    managePermission?: PermissionValues;
-
-    translateTitleId?: string;
-
-    customTitleTemplate?: string;
-
-    customTitleCallback?: any;
-
-    customNameCallback?: any;
-
-    readonly: boolean;
-}

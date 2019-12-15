@@ -21,7 +21,7 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { OliveDocumentService } from 'app/core/services/document.service';
 import { NameValue } from 'app/core/models/name-value';
 import { OliveDataService } from 'app/core/interfaces/data-service';
-import { ListerSetting } from 'app/core/interfaces/lister-setting';
+import { ListerSetting } from 'app/core/interfaces/setting/lister-setting';
 import { OliveEditDialogComponent } from '../../dialogs/edit-dialog/edit-dialog.component';
 import { OliveBaseComponent } from '../../extends/base/base.component';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';

@@ -10,24 +10,24 @@
       (click)="currentRow=row;">
     </mat-row>
 
-    <ng-container matColumnDef="productVariantId">
+    <ng-container matColumnDef="productVariantId26">
       <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.id' | translate}}</mat-header-cell>
-      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="hasArrayEntryError('productVariantId',i) ? arrayErrorMessage('productVariantId',i) : row.Obj['productName']?.name">
+      <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="hasArrayEntryError('productVariantId26',i) ? arrayErrorMessage('productVariantId26',i) : row.Obj['productName']?.name">
         <mat-form-field fxFlex='95%'>
-            <input name="inputProductVariantId{{row.ObjId}}" matInput formControlName="productVariantId" class="center" readonly="true">
-            <mat-error *ngIf="hasArrayEntryError('productVariantId',i)">{{'common.validate.error' | translate}}</mat-error>
+            <input name="inputProductVariantId26{{row.ObjId}}" matInput formControlName="productVariantId26" class="center" readonly="true">
+            <mat-error *ngIf="hasArrayEntryError('productVariantId26',i)">{{'common.validate.error' | translate}}</mat-error>
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>
 
-    <ng-container matColumnDef="name">
+    <ng-container matColumnDef="productName">
       <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.itemsName' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
-          <input matInput name="inputName{{row.ObjId}}" formControlName="name" (change)="onChange($event)" (keyup)="onKeyup($event)"
-            (blur)="onBlur($event)" class="small-font olive-error" autocomplete="off">
-          <mat-error *ngIf="hasArrayEntryError('name',i)">{{arrayErrorMessage('name',i)}}</mat-error>
+          <input matInput name="inputProductName{{row.ObjId}}" formControlName="productName" (change)="onChange($event, i)" (keyup)="onKeyup($event)"
+            (blur)="onBlur($event)" class="small-font olive-error" autocomplete="off" [matAutocomplete]="auto">
+          <mat-error *ngIf="hasArrayEntryError('productName',i)">{{arrayErrorMessage('productName',i)}}</mat-error>
         </mat-form-field>
 
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onProductSelected($event, i)">
@@ -35,12 +35,26 @@
               <mat-spinner diameter="50"></mat-spinner>
           </mat-option>
           <ng-container *ngIf="!isLoading">
-              <mat-option *ngFor="let item of getProducts(i)" [value]="item.name" [dir]="item.id">{{ item.name }}
+              <mat-option *ngFor="let item of getProducts(i)" [value]="item.productName" [dir]="item.id">{{ item.productName }}
               </mat-option>
           </ng-container>
-      </mat-autocomplete>
+        </mat-autocomplete>
       </mat-cell>
-      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
+      <mat-footer-cell *matFooterCellDef class="justify-center">
+          <button [matMenuTriggerFor]="ctxmenu" mat-button color="primary" matTooltip="{{'common.button.add' | translate}}">
+              <mat-icon class="mat-button-icon">add</mat-icon>{{'common.button.add' | translate}}
+            </button>
+            <mat-menu #ctxmenu="matMenu">
+                <button mat-menu-item (click)="lookUpProductVariant()">
+                    <mat-icon>{{productVariantIcon}}</mat-icon>
+                    <span>{{'common.menu.productLookUp' | translate}}</span>
+                </button>
+                <button mat-menu-item (click)="lookupPurchaseOrder()">
+                    <mat-icon>{{purchaseOrderIcon}}</mat-icon>
+                    <span>{{'common.menu.purchaseOrderLookup' | translate}}</span>
+                </button>
+            </mat-menu>
+      </mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="quantity">
@@ -48,7 +62,7 @@
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('quantity',i)">
         <mat-form-field fxFlex='95%'>
           <input name="inputQuantity{{row.ObjId}}" class="right olive-error" matInput formControlName="quantity"
-            (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" (input)="updateCosts()" autocomplete="off" [readonly]="!canEditQuantity(row.Obj)">
+            (change)="onChange($event, i)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" (input)="updateCosts()" autocomplete="off" [readonly]="!canEditQuantity(row.Obj)">
           <mat-error *ngIf="hasArrayEntryError('quantity',i)">{{'common.validate.error' | translate}}</mat-error>
         </mat-form-field>
       </mat-cell>
@@ -59,7 +73,7 @@
       <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.price' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('price',i)">
         <mat-form-field fxFlex='95%'>
-          <input name="inputPrice{{row.ObjId}}" matInput class="right olive-error" formControlName="price" (change)="onChange($event)" (input)="updateCosts()"
+          <input name="inputPrice{{row.ObjId}}" matInput class="right olive-error" formControlName="price" (change)="onChange($event, i)" (input)="updateCosts()"
             (keyup)="onKeyup($event)" (blur)="onBlur($event)" autocomplete="off">
           <mat-error *ngIf="hasArrayEntryError('price',i)">{{'common.validate.error' | translate}}</mat-error>
         </mat-form-field>
@@ -79,7 +93,7 @@
       <mat-header-cell *matHeaderCellDef>{{'purchasing.purchaseOrderItems.discount' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('discount',i)">
         <mat-form-field fxFlex='95%'>
-          <input name="inputDiscount{{row.ObjId}}" matInput class="right olive-error" formControlName="discount" (change)="onChange($event)" (input)="updateCosts()"
+          <input name="inputDiscount{{row.ObjId}}" matInput class="right olive-error" formControlName="discount" (change)="onChange($event, i)" (input)="updateCosts()"
             (keyup)="onKeyup($event)" (blur)="onBlur($event)" autocomplete="off">
           <mat-error *ngIf="hasArrayEntryError('discount',i)">{{'common.validate.error' | translate}}</mat-error>
         </mat-form-field>
@@ -91,7 +105,7 @@
       <mat-header-cell *matHeaderCellDef>{{'purchasing.purchaseOrderItems.appliedCost' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('appliedCost',i)">
         <mat-form-field fxFlex='95%'>
-          <input name="inputAppliedCost{{row.ObjId}}" matInput class="right olive-error" formControlName="appliedCost" (change)="onChange($event)"
+          <input name="inputAppliedCost{{row.ObjId}}" matInput class="right olive-error" formControlName="appliedCost" (change)="onChange($event, i)"
             (keyup)="onKeyup($event)" (blur)="onBlur($event)" autocomplete="off">
           <mat-error *ngIf="hasArrayEntryError('appliedCost',i)">{{'common.validate.error' | translate}}</mat-error>
         </mat-form-field>
@@ -103,7 +117,7 @@
       <mat-header-cell [style.display]="otherCurrencyDisplay" *matHeaderCellDef [matTooltip]="poCurrency.name">{{'purchasing.purchaseOrderItems.otherCurrencyPrice' | translate}} {{poCurrency.code}}</mat-header-cell>
       <mat-cell [style.display]="otherCurrencyDisplay" *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('otherCurrencyPrice',i)">
         <mat-form-field fxFlex='95%'>
-          <input name="inputOtherCurrencyPrice{{row.ObjId}}" matInput class="right olive-error" formControlName="otherCurrencyPrice" (change)="onChange($event)" (input)="updateCosts()"
+          <input name="inputOtherCurrencyPrice{{row.ObjId}}" matInput class="right olive-error" formControlName="otherCurrencyPrice" (change)="onChange($event, i)" (input)="updateCosts()"
             (keyup)="onKeyup($event)" (blur)="onBlur($event)" autocomplete="off">
           <mat-error *ngIf="hasArrayEntryError('otherCurrencyPrice',i)">{{'common.validate.error' | translate}}</mat-error>
         </mat-form-field>
@@ -115,7 +129,7 @@
       <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.remark' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
-          <input name="inputRemark{{row.ObjId}}" matInput type="text" formControlName="remark" (change)="onChange($event)"
+          <input name="inputRemark{{row.ObjId}}" matInput type="text" formControlName="remark" (change)="onChange($event, i)"
             (keyup)="onKeyup($event)" (blur)="onBlur($event)" autocomplete="off">
         </mat-form-field>
       </mat-cell>
@@ -124,22 +138,16 @@
 
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef>
-        <button [matMenuTriggerFor]="ctxmenu" mat-button color="primary" matTooltip="{{'common.button.add' | translate}}">
-          <mat-icon class="mat-button-icon">add</mat-icon>{{'common.button.add' | translate}}
+        <button mat-button color="primary" matTooltip="{{'common.button.addRow' | translate}}" (click)="newItem()">
+            <mat-icon class="mat-button-icon">add</mat-icon>{{'common.button.addRow' | translate}}
         </button>
-        <mat-menu #ctxmenu="matMenu">
-            <button mat-menu-item (click)="lookUpProductVariant()">
-                <mat-icon>{{productVariantIcon}}</mat-icon>
-                <span>{{'common.menu.productLookUp' | translate}}</span>
-            </button>
-            <button mat-menu-item (click)="lookupPurchaseOrder()">
-                <mat-icon>{{purchaseOrderIcon}}</mat-icon>
-                <span>{{'common.menu.purchaseOrderLookup' | translate}}</span>
-            </button>
-        </mat-menu>        
       </mat-header-cell>
-      <mat-cell *matCellDef="let row" class="justify-center">
-        <button mat-icon-button matTooltip="{{'common.button.delete' | translate}}" (click)="deleteItem(row)" [disabled]="!canEditQuantity(row.Obj)">
+      <mat-cell *matCellDef="let row">
+        <button mat-icon-button matTooltip="{{'common.button.addRow' | translate}}" (click)="newItem()">
+            <mat-icon color="accent">playlist_add</mat-icon>
+        </button> 
+        <button mat-icon-button matTooltip="{{'common.button.delete' | translate}}" 
+          (click)="deleteItem(row)" [disabled]="!canEditQuantity(row.Obj)">
           <mat-icon [ngClass]="{'foreground-red': canEditQuantity(row.Obj), 'foreground-disabled': !canEditQuantity(row.Obj)}">delete</mat-icon>
         </button>
       </mat-cell>

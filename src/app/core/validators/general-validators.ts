@@ -1,5 +1,6 @@
 import { AbstractControl, ValidatorFn, FormGroup } from '@angular/forms';
 import { isNumber } from '../utils/string-helper';
+import { IdName } from '../models/id-name';
 
 /**
  * Trims input
@@ -188,6 +189,30 @@ export function equalValidator(controlName: string): ValidatorFn
     {
         const compareControl = control.parent ? control.parent.get(controlName) : null;
         const areEqual = compareControl && control.value === compareControl.value;
-        return areEqual ? null : { notEqual: true };
+        return areEqual ? null : { equal: true };
+    };
+}
+
+export function itemSelectedValidator(component: any, propertyName: string): ValidatorFn
+{
+    return (control: AbstractControl): { [key: string]: any } =>
+    {
+        const inputValue = trimInput(control).toLocaleLowerCase();
+
+        const items = component[propertyName] as IdName[];
+
+        if (inputValue.length === 0) {
+            return { required: true };
+        }
+
+        if (!items) {
+            return { selected: true };
+        }
+
+        if (items.every(x => x.name.toLocaleLowerCase() !== inputValue)) {
+            return { selected: true };
+        }
+
+        return null;
     };
 }

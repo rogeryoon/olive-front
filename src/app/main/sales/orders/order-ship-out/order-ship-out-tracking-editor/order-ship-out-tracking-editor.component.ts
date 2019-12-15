@@ -17,7 +17,7 @@ import { OliveCarrierTrackingNumberRangeService } from 'app/main/shippings/servi
 import { OliveOrderShipOutHelperService } from 'app/main/sales/services/order-ship-out-helper.service';
 import { ThrowStmt } from '@angular/compiler';
 import { AlertService, DialogType } from '@quick/services/alert.service';
-import { activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
+import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
 
 @Component({
   selector: 'olive-order-ship-out-tracking-editor',
@@ -131,7 +131,7 @@ export class OliveOrderShipOutTrackingEditorComponent extends OliveEntityFormCom
   }
 
   private getCarriers() {
-    this.cacheService.getItems(this.carrierService, OliveCacheService.cacheKeys.getItemsKey.carrier + 'activated', activatedNameOrderedSearchOption())
+    this.cacheService.getItems(this.carrierService, OliveCacheService.cacheKeys.getItemsKey.carrier + 'activated', createDefaultSearchOption())
     .then((items: Carrier[]) => {
       this.carriers = items;
     });    

@@ -11,15 +11,15 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 
 import { AlertService } from '@quick/services/alert.service';
 
-import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OliveEditDialogComponent } from '../../dialogs/edit-dialog/edit-dialog.component';
 import { OliveChipInputComponent } from '../../entries/chip-input/chip-input.component';
 import { IIDName } from 'app/core/models/id-name';
-import { NameValue } from 'app/core/models/name-value';
 import { OliveBaseComponent } from '../../extends/base/base.component';
 import { splitStickyWords } from 'app/core/utils/string-helper';
+import { addSearchOption } from 'app/core/utils/search-helpers';
 
 const Id = 'id';
 const Code = 'code';
@@ -126,10 +126,7 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
       ajax: (dataTablesParameters: any, callback) => {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-
-        dataTablesParameters['extsearch'] = this.getExtraSearch();
-
-        this.setting.dataService.getItems(dataTablesParameters)
+        this.setting.dataService.getItems(addSearchOption(dataTablesParameters, this.setting.searchOption))
           .subscribe(response => {
             this.alertService.stopLoadingMessage();
             this.loadingIndicator = false;
@@ -185,10 +182,6 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     }
   }
 
-  protected getExtraSearch(): NameValue[] { 
-    if (!this.setting.extraSearches) { return []; }
-    return this.setting.extraSearches; 
-  }
   protected createChip(item: any) { return item; }
 
   private initializeComponent() {

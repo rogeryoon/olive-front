@@ -37,7 +37,7 @@
                         <mat-spinner diameter="50"></mat-spinner>
                     </mat-option>
                     <ng-container *ngIf="!isLoading">
-                        <mat-option *ngFor="let item of getProducts(i)" [value]="item.name" [dir]="item.id">{{ item.name }}
+                        <mat-option *ngFor="let item of getProducts(i)" [value]="item.productName" [dir]="item.id">{{ item.productName }}
                         </mat-option>
                     </ng-container>
                 </mat-autocomplete>
@@ -67,7 +67,10 @@
                     <mat-icon class="mat-button-icon">add</mat-icon>{{'common.button.addRow' | translate}}
                 </button>
             </mat-header-cell>
-            <mat-cell *matCellDef="let row" class="justify-center">
+            <mat-cell *matCellDef="let row">
+                <button mat-icon-button matTooltip="{{'common.button.addRow' | translate}}" (click)="newItem()">
+                    <mat-icon color="accent">playlist_add</mat-icon>
+                </button>                
                 <button mat-icon-button matTooltip="{{'common.button.delete' | translate}}" (click)="deleteItem(row)">
                     <mat-icon color="warn">delete</mat-icon>
                 </button>

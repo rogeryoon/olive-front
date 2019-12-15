@@ -11,6 +11,7 @@ import { OliveStandCarrierService } from '../../../services/stand-carrier.servic
 import { StandCarrier } from '../../../models/stand-carrier.model';
 import { NameValue } from 'app/core/models/name-value';
 import { requiredValidator } from 'app/core/validators/general-validators';
+import { createSearchOption } from 'app/core/utils/search-helpers';
 
 @Component({
   selector: 'olive-carrier-editor',
@@ -77,9 +78,7 @@ export class OliveCarrierEditorComponent extends OliveEntityFormComponent {
       maxSelectItems: 1,
       itemType: StandCarrier,
       translateTitleId: NavTranslates.Company.list,
-      extraSearches: [
-        { name: 'Activated', value: 'true' }
-      ] as NameValue[]
+      searchOption: createSearchOption([{ name: 'Activated', value: 'true' }] as NameValue[])
     };    
   }
 

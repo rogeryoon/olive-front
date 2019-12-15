@@ -10,7 +10,7 @@ import { MarketSeller } from 'app/main/supports/models/market-seller.model';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveMarketSellerService } from 'app/main/supports/services/market-seller.service';
 import { requiredValidator } from 'app/core/validators/general-validators';
-import { activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
+import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
 
 @Component({
   selector: 'olive-market-excel-import-dialog',
@@ -61,7 +61,7 @@ export class OliveMarketExcelImportDialogComponent extends OliveImportFileDialog
   }
 
   private getMarketSellers() {
-    this.cacheService.getItems(this.marketSellerService, OliveCacheService.cacheKeys.getItemsKey.marketSeller+'activated', activatedNameOrderedSearchOption())
+    this.cacheService.getItems(this.marketSellerService, OliveCacheService.cacheKeys.getItemsKey.marketSeller+'activated', createDefaultSearchOption())
     .then((items: MarketSeller[]) => {
       this.sellers = items;
     });

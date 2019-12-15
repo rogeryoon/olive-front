@@ -6,13 +6,13 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator, requiredValidator } from 'app/core/validators/general-validators';
 import { Currency } from 'app/main/supports/models/currency.model';
 import { convertToBase26, convertBase26ToNumber } from 'app/core/utils/encode-helpers';
-import { IdName } from 'app/core/models/id-name';
 import { debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
 import { OliveProductVariantService } from 'app/main/productions/services/product-variant.service';
+import { ProductVariantPrice } from 'app/main/productions/models/product-variant-price.model';
 
 export class OlivePurchaseOrderItemDataSource extends TableDataSource {
 
-    products: IdName[][] = [];
+    products: ProductVariantPrice[][] = [];
     isLoading = false;
 
     poCurrency: Currency = null;
@@ -36,9 +36,9 @@ export class OlivePurchaseOrderItemDataSource extends TableDataSource {
     }
 
     createRowFormGroup(r: any): FormGroup {
-        r.Obj.productVariantId = convertToBase26(r.Obj.productVariantId);
-        const productVariantIdControl = new FormControl(r.Obj.productVariantId, [requiredValidator()]);
-        productVariantIdControl.valueChanges.subscribe(val => { 
+        r.Obj.productVariantId26 = convertToBase26(r.Obj.productVariantId);
+        const productVariantId26Control = new FormControl(r.Obj.productVariantId26, [requiredValidator()]);
+        productVariantId26Control.valueChanges.subscribe(val => { 
             if (val) {
                 r.Obj.productVariantId = convertBase26ToNumber(val);
             }
@@ -48,8 +48,8 @@ export class OlivePurchaseOrderItemDataSource extends TableDataSource {
         });
 
         const fg = new FormGroup({
-            productVariantId: productVariantIdControl,
-            name: this.createNewFormControl(r, 'name', [requiredValidator()]),
+            productVariantId26: productVariantId26Control,
+            productName: this.createNewFormControl(r, 'productName', [requiredValidator()]),
             quantity: this.createNewFormControl(r, 'quantity', [numberValidator(0, true, 1)]),
             price: this.createNewFormControl(r, 'price', [numberValidator(this.standCurrency.decimalPoint, true)]),
             discount: this.createNewFormControl(r, 'discount', [numberValidator(this.standCurrency.decimalPoint, true)]),
@@ -61,9 +61,9 @@ export class OlivePurchaseOrderItemDataSource extends TableDataSource {
 
         this.products.push([]);
 
-        fg.get('name').valueChanges
+        fg.get('productName').valueChanges
         .pipe(
-          debounceTime(300),
+          debounceTime(500),
           tap(() => this.isLoading = true),
           switchMap(value => this.productService.search(value)
           .pipe(

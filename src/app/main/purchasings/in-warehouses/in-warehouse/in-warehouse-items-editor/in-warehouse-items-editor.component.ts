@@ -12,7 +12,7 @@ import { AlertService } from '@quick/services/alert.service';
 
 import { OliveInWarehouseItemDataSource } from './in-warehouse-item-data-source';
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
-import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { NameValue } from 'app/core/models/name-value';
 import { InWarehouseItem } from '../../../models/in-warehouse-item.model';
@@ -25,6 +25,7 @@ import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { isNumberPattern, showParamMessage } from 'app/core/utils/string-helper';
+import { createSearchOption } from 'app/core/utils/search-helpers';
 
 @Component({
   selector: 'olive-in-warehouse-items-editor',
@@ -207,12 +208,13 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
           managePermission: Permission.manageProductsPermission,
           translateTitleId: NavTranslates.Purchase.list,
           maxNameLength: 10,
-          extraSearches: [
+          searchOption:
+          createSearchOption([
             this.isVoidMode ? 
             { name: 'Cancelable', value: 'true' } :
             { name: 'InWarehousePending', value: 'true' },
             { name: 'Warehouse', value: this.warehouse.id }
-          ] as NameValue[]
+            ] as NameValue[]) 
         } as LookupListerSetting
       });
 
@@ -240,7 +242,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
                 if (!dupPOItemIdCheckSet.has(sItem.id)) {
                   dupPOItemIdCheckSet.add(sItem.id);
                   duplicatedIdStrings.push(
-                    `${this.id36(sItem.id)}: ${sItem.name}`.trim());
+                    `${this.id36(sItem.id)}: ${sItem.productName}`.trim());
                 }
               });
           });
@@ -280,7 +282,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
                 purchaseOrderItemId: sItem.id,
 
-                name: sItem.name,
+                productName: sItem.productName,
                 originalBalance: quantity,
                 price: sItem.price,
                 productVariantId: sItem.productVariantId,

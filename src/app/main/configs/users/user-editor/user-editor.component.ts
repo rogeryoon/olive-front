@@ -18,7 +18,7 @@ import { OliveCompanyGroupService } from 'app/main/supports/services/company-gro
 import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { OliveBaseComponent } from 'app/core/components/extends/base/base.component';
-import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
 import { CompanyGroup } from 'app/main/supports/models/company-group.model';
 import { requiredValidator, equalValidator } from 'app/core/validators/general-validators';
 

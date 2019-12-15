@@ -25,11 +25,12 @@ import { OlivePreviewPurchaseOrderComponent } from '../preview-purchase-order/pr
 import { OlivePreviewDialogComponent } from 'app/core/components/dialogs/preview-dialog/preview-dialog.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveInWarehouseStatusComponent } from '../../../in-warehouses/in-warehouse/in-warehouse-status/in-warehouse-status.component';
-import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
 import { NameValue } from 'app/core/models/name-value';
 import { OliveInWarehouseItemService } from '../../../services/in-warehouse-items.service';
 import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.model';
 import { getItemsFirstName, addSpanAddedCount, getItemsFirstCode } from 'app/core/utils/string-helper';
+import { createSearchOption } from 'app/core/utils/search-helpers';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -396,7 +397,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
           itemTitle: this.translator.get(NavTranslates.InWarehouse.status),
           itemType: InWarehouseItem,
           dataService: this.inWarehouseItemService,
-          extraSearches: [{ name: 'status', value: item.id }] as NameValue[]
+          searchOption: createSearchOption([{ name: 'status', value: item.id }] as NameValue[])
         } as LookupListerSetting
       });
   }

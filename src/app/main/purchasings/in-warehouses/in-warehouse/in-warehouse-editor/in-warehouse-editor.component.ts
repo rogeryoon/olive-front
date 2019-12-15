@@ -11,7 +11,7 @@ import { OliveWarehouseService } from 'app/main/supports/services/warehouse.serv
 import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/warehouse/warehouse-manager/warehouse-manager.component';
 import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { Permission } from '@quick/models/permission.model';
-import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
 
 @Component({
   selector: 'olive-in-warehouse-editor',
@@ -98,6 +98,6 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
   }
 
   lookUp() {
-    this.lookupWarehouse.lookUp();
+    this.lookupWarehouse.popUpLookUpDialog();
   }
 }

@@ -9,7 +9,7 @@ import { MarketExcelInterface } from '../../../models/market-excel-interface';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveMarketExcelInterfaceService } from '../../../services/market-excel-interface.service';
 import { requiredValidator } from 'app/core/validators/general-validators';
-import { activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
+import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
 import { makeRandom36Id } from 'app/core/utils/encode-helpers';
 
 @Component({
@@ -70,7 +70,7 @@ export class OliveMarketEditorComponent extends OliveEntityFormComponent {
       marketExcelInterface: this.item.marketExcelInterfaceFk ? this.item.marketExcelInterfaceFk.id : null
     });
 
-    this.cacheService.getItems(this.marketExcelInterfaceService, OliveCacheService.cacheKeys.getItemsKey.marketExcelInterface + 'activated', activatedNameOrderedSearchOption())
+    this.cacheService.getItems(this.marketExcelInterfaceService, OliveCacheService.cacheKeys.getItemsKey.marketExcelInterface + 'activated', createDefaultSearchOption())
     .then((items: MarketExcelInterface[]) => {
       this.marketExcelInterfaces = items.filter(e => e.activated);
       this.oForm.patchValue({marketExcelInterface: this.item.marketExcelInterfaceFk ? this.item.marketExcelInterfaceFk.id : null});

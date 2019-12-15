@@ -14,11 +14,11 @@ import { OliveSupplierManagerComponent } from 'app/main/supports/companies/suppl
 import { Supplier } from 'app/main/supports/models/supplier.model';
 import { OliveWarehouseService } from 'app/main/supports/services/warehouse.service';
 import { Warehouse } from 'app/main/supports/models/warehouse.model';
-import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator, requiredValidator } from 'app/core/validators/general-validators';
 import { isMoneyPattern, toTrimString } from 'app/core/utils/string-helper';
-import { activatedNameOrderedSearchOption } from 'app/core/utils/search-helpers';
+import { createDefaultSearchOption, createSearchOption } from 'app/core/utils/search-helpers';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
 
 @Component({
@@ -64,7 +64,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     const selectedWarehouse = this.warehouses.find(item => item.id === formModel.warehouse);
 
     // Item 저장시 마지막 선택한 창고를 저장
-    this.cacheService.setUserPreference(this.wareHouseComboSelectedCacheKey, selectedWarehouse)
+    this.cacheService.setUserPreference(this.wareHouseComboSelectedCacheKey, selectedWarehouse);
 
     return this.itemWithIdNAudit({
       supplierOrderId: formModel.supplierOrderId,
@@ -135,7 +135,8 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       newComponent: OliveSupplierManagerComponent,
       itemType: Supplier,
       managePermission: Permission.assignCompanyGroups,
-      translateTitleId: NavTranslates.Company.supplier
+      translateTitleId: NavTranslates.Company.supplier,
+      searchOption: createDefaultSearchOption()
     } as LookupListerSetting;
   }
 
@@ -159,7 +160,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   }
 
   private getWarehouses() {
-    this.cacheService.getItems(this.warehouseService, OliveCacheService.cacheKeys.getItemsKey.warehouse + 'activated', activatedNameOrderedSearchOption())
+    this.cacheService.getItems(this.warehouseService, OliveCacheService.cacheKeys.getItemsKey.warehouse + 'activated', createDefaultSearchOption())
       .then((items: Warehouse[]) => {
         this.warehouses = items;
         this.setLastSelectedWarehouse();
@@ -171,7 +172,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     this.cacheService.getUserPreference(this.wareHouseComboSelectedCacheKey)
       .then(obj => {
         if (obj && !this.item.warehouseId) {
-          this.oForm.patchValue({warehouse: obj.id})
+          this.oForm.patchValue({warehouse: obj.id});
         }
       });    
   }

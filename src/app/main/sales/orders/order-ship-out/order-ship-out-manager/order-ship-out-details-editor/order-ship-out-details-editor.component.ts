@@ -15,7 +15,7 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveProductVariantService } from 'app/main/productions/services/product-variant.service';
 import { OliveProductVariantManagerComponent } from 'app/main/productions/products/product-variant/product-variant-manager/product-variant-manager.component';
 import { ProductVariant } from 'app/main/productions/models/product-variant.model';
-import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
 import { IdName } from 'app/core/models/id-name';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { OliveOrderShipOutDetailDataSource } from './order-ship-out-detail-data-source';

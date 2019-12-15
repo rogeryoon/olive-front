@@ -10,7 +10,7 @@ import { OliveWarehouseService } from 'app/main/supports/services/warehouse.serv
 import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/warehouse/warehouse-manager/warehouse-manager.component';
 import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { Permission } from '@quick/models/permission.model';
-import { LookupListerSetting, ReferHostSetting } from 'app/core/interfaces/lister-setting';
+import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
 import { OliveReferHostComponent } from 'app/core/components/entries/refer-host/refer-host.component';
 import { OlivePurchaseOrderService } from '../../../services/purchase-order.service';
 import { VoidPurchaseOrder } from '../../../models/void-purchase-order.model';
@@ -18,6 +18,7 @@ import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { OlivePurchaseOrderManagerComponent } from '../../purchase-order/purchase-order-manager/purchase-order-manager.component';
 import { dateCode } from 'app/core/utils/date-helper';
 import { showParamMessage } from 'app/core/utils/string-helper';
+import { ReferHostSetting } from 'app/core/interfaces/setting/refer-host-setting';
 
 @Component({
   selector: 'olive-void-purchase-order-editor',
@@ -141,6 +142,6 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
   }
 
   lookUp() {
-    this.lookupWarehouse.lookUp();
+    this.lookupWarehouse.popUpLookUpDialog();
   }
 }

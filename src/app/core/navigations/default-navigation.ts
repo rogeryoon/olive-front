@@ -263,7 +263,7 @@ export const defaultNavigation: FuseNavigation[] = [
                     },
                     {
                         id: 'companySupplier',
-                        title: '공급처',
+                        title: '공급자',
                         type: 'item',                        
                         translate: NavTranslates.Company.supplier,
                         icon: NavIcons.Company.supplier,

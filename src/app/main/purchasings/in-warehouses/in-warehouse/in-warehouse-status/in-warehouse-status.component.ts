@@ -11,7 +11,7 @@ import { AlertService } from '@quick/services/alert.service';
 import { OliveLookupDialogComponent } from 'app/core/components/dialogs/lookup-dialog/lookup-dialog.component';
 
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
 import { InWarehouseItem } from '../../../models/in-warehouse-item.model';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OliveInWarehouseService } from '../../../services/in-warehouse.service';
@@ -63,7 +63,7 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
           break;
 
         case ItemName:
-          retValue = item.name;
+          retValue = item.productName;
           break;
 
         case Quantity:

@@ -87,7 +87,7 @@
         <mat-error *ngIf="confirmPassword.hasError('required')">
           {{'configs.userEditor.ConfirmationPasswordRequired' | translate}}
         </mat-error>
-        <mat-error *ngIf="!confirmPassword.hasError('required') && confirmPassword.hasError('notEqual')">
+        <mat-error *ngIf="!confirmPassword.hasError('required') && confirmPassword.hasError('equal')">
           Test
           {{'configs.userEditor.PasswordMismatch' | translate}}
         </mat-error>

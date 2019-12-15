@@ -17,11 +17,11 @@ import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveProductVariantService } from 'app/main/productions/services/product-variant.service';
 import { OliveProductVariantManagerComponent } from 'app/main/productions/products/product-variant/product-variant-manager/product-variant-manager.component';
 import { ProductVariant } from 'app/main/productions/models/product-variant.model';
-import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
-import { IdName } from 'app/core/models/id-name';
+import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { showParamMessage } from 'app/core/utils/string-helper';
 import { convertToBase26 } from 'app/core/utils/encode-helpers';
+import { ProductVariantPrice } from 'app/main/productions/models/product-variant-price.model';
 
 @Component({
   selector: 'olive-market-item-mapping-product-variants-editor',
@@ -70,7 +70,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
     return this.dataSource.isLoading;
   }
 
-  getProducts(index: number): IdName[] {
+  getProducts(index: number): ProductVariantPrice[] {
     return this.dataSource.products[index];
   }
 
@@ -85,18 +85,18 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
 
     formGroup.patchValue({productVariantId26: ''});
 
-    const foundItem = this.getProducts(index).find(item => item.name === event.option.value);
+    const selectedItem = this.getProducts(index).find(item => item.productName === event.option.value);
 
     const dupItem = this.dataSource.items
-      .find((x: MarketItemMappingProductVariant) => x.productVariantId === foundItem.id);
+      .find((x: MarketItemMappingProductVariant) => x.productVariantId === selectedItem.id);
 
     let dupString;      
     if (dupItem) {
-      dupString = `${convertToBase26(foundItem.id)}: ${foundItem.name}`;
+      dupString = `${convertToBase26(selectedItem.id)}: ${selectedItem.productName}`;
     }
 
-    if (foundItem && !dupString) {
-      formGroup.patchValue({productVariantId26: convertToBase26(foundItem.id)});
+    if (selectedItem && !dupString) {
+      formGroup.patchValue({productVariantId26: convertToBase26(selectedItem.id)});
     }
 
     if (dupString) {

@@ -11,7 +11,7 @@ import { AlertService } from '@quick/services/alert.service';
 import { OliveLookupDialogComponent } from 'app/core/components/dialogs/lookup-dialog/lookup-dialog.component';
 
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { LookupListerSetting } from 'app/core/interfaces/lister-setting';
+import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
 import { ProductVariant } from '../../../models/product-variant.model';
 import { IIDName } from 'app/core/models/id-name';
 
