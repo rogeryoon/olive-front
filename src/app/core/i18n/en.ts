@@ -240,6 +240,7 @@ export const locale = {
                 'remark' : '비고',
             },
             'word': {
+                'search' : '검색',
                 'orderNumberShort':  '주문 #',
                 'keyword': '키워드',
                 'branch': '지점',

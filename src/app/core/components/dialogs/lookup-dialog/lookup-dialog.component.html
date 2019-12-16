@@ -1,43 +1,57 @@
 <h1 mat-dialog-title>
-  <mat-icon>check_circle</mat-icon> {{dialogTitle}}<small>{{selectedItemRemark}}</small>
+    <mat-icon>check_circle</mat-icon> {{dialogTitle}}<small>{{selectedItemRemark}}</small>
 </h1>
 <div mat-dialog-content>
-  <table id="{{setting.dataTableId}}" datatable [dtOptions]="dtOptions" class="row-border hover olive-datatable">
-    <thead>
-      <tr>
-        <th *ngIf="checkBoxEnable" class="nosort" style="width:30px;">{{'common.tableHeader.select' | translate}}</th>
-        <th *ngFor="let column of dataColumns" [ngStyle]="{'text-width':renderStyle(column.width)}">{{column.name}}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of items" (click)="clickItem(item, $event)" [ngStyle]="{'cursor': trMouseCursor}">
-        <td *ngIf="checkBoxEnable">
-          <input class="select" name="select" type="checkbox" [(ngModel)]="item.selected" (change)="saveToSelectedItems(item)" style="text-align:center">
-        </td>
-        <td class="no-cursor" *ngFor="let column of dataColumns" [ngStyle]="{'text-align':renderStyle(column.align)}" [ngClass]="{'foreground-blue' : setting.currentItem && item.id === setting.currentItem.id }">
-            <span [innerHTML]="renderItem(item, column.data)"></span>
-        </td>
-      </tr>
-      <tr *ngIf="items?.length == 0">
-        <td [attr.colspan]="tableColumns.length" class="no-data-available">{{'common.message.noRecordsFound' | translate}}</td>
-      </tr>
-    </tbody>
-  </table>
+    <div *ngIf="!setting.disableSearchInput" style="float: right;">
+        <input #filter [formControl]="keywordFilter" type="search" class="search" placeholder="{{'common.word.search' | translate}}" autocomplete="off">
+    </div>
+    <table id="{{setting.dataTableId}}" datatable [dtOptions]="dtOptions" class="row-border hover olive-datatable">
+        <thead>
+            <tr>
+                <th *ngIf="checkBoxEnable" class="nosort" style="width:30px;">
+                    {{'common.tableHeader.select' | translate}}</th>
+                <th *ngFor="let column of dataColumns" [ngStyle]="{'text-width':renderStyle(column.width)}">
+                    {{column.name}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of items" (click)="clickItem(item, $event)" [ngStyle]="{'cursor': trMouseCursor}">
+                <td *ngIf="checkBoxEnable">
+                    <input class="select" name="select" type="checkbox" [(ngModel)]="item.selected"
+                        (change)="saveSelectedItems(item)" style="text-align:center">
+                </td>
+                <td class="no-cursor" *ngFor="let column of dataColumns"
+                    [ngStyle]="{'text-align':renderStyle(column.align)}"
+                    [ngClass]="{'foreground-blue' : setting.currentItem && item.id === setting.currentItem.id }">
+                    <span [innerHTML]="renderItem(item, column.data)"></span>
+                </td>
+            </tr>
+            <tr *ngIf="items?.length == 0">
+                <td [attr.colspan]="tableColumns.length" class="no-data-available">
+                    {{'common.message.noRecordsFound' | translate}}</td>
+            </tr>
+        </tbody>
+    </table>
 
-  <div class="mt-20" *ngIf="setting.maxSelectItems>1">
-  <form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-    <olive-chip-input #chips formControlName="chips" [placeholder]="'common.word.selectedItems' | translate" [readonly]="true" 
-      [maxNameLength]="setting.maxNameLength" [showId]="true" (chipRemoved)="chipRemoved($event)"></olive-chip-input>
-  </form>
-  </div>
+    <div class="mt-20" *ngIf="setting.maxSelectItems>1">
+        <form [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
+            <olive-chip-input #chips formControlName="chips" [placeholder]="'common.word.selectedItems' | translate"
+                [readonly]="true" [maxNameLength]="setting.maxNameLength" [showId]="true"
+                (chipRemoved)="onChipRemoved($event)"></olive-chip-input>
+        </form>
+    </div>
 </div>
 <div mat-dialog-actions>
-  <button *ngIf="checkBoxEnable" mat-raised-button (click)="select()" color="primary" [disabled]="!itemsSelected">
-    <mat-icon>check_circle</mat-icon> {{'common.button.select' | translate}}</button>
-  <button *ngIf="setting.newComponent" mat-raised-button (click)="newItem()">
-      <mat-icon>add_box</mat-icon> {{'common.button.new' | translate}}</button>
-  <button *ngIf="setting.maxSelectItems > 0" mat-raised-button (click)="cancel()">
-    <mat-icon>close</mat-icon> {{'common.button.cancel' | translate}}</button>
-  <button *ngIf="isNull(setting.maxSelectItems) || setting.maxSelectItems == 0" mat-raised-button (click)="cancel()">
-    <mat-icon>check</mat-icon> {{'common.button.ok' | translate}}</button>    
+    <button *ngIf="checkBoxEnable" mat-raised-button (click)="selectItems()" color="primary" [disabled]="!itemsSelected">
+        <mat-icon>check_circle</mat-icon> {{'common.button.select' | translate}}
+    </button>
+    <button *ngIf="setting.newComponent" mat-raised-button (click)="newItem()">
+        <mat-icon>add_box</mat-icon> {{'common.button.new' | translate}}
+    </button>
+    <button *ngIf="setting.maxSelectItems > 0" mat-raised-button (click)="cancel()">
+        <mat-icon>close</mat-icon> {{'common.button.cancel' | translate}}
+    </button>
+    <button *ngIf="isNull(setting.maxSelectItems) || setting.maxSelectItems == 0" mat-raised-button (click)="cancel()">
+        <mat-icon>check</mat-icon> {{'common.button.ok' | translate}}
+    </button>
 </div>

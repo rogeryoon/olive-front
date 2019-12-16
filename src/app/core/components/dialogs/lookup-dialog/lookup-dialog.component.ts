@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { DataTableDirective } from 'angular-datatables';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
-
-import { DeviceDetectorService } from 'ngx-device-detector';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { String } from 'typescript-string-operations';
 
@@ -41,11 +40,10 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
   items: any;
 
   loadingIndicator: boolean;
-  searchKeyword = '';
 
   selectedItems: any = [];
 
-  oForm: FormGroup;
+  keywordFilter: FormControl;
 
   codeColumns: any = [
     { data: Code, name: 'Code', width: '50px', align: 'center' },
@@ -60,24 +58,28 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
   tableColumns: any;
 
   constructor(
-    protected dialog: MatDialog,
-    protected formBuilder: FormBuilder,
+    protected dialog: MatDialog, protected formBuilder: FormBuilder,
+    protected alertService: AlertService, protected messageHelper: OliveMessageHelperService,
     public dialogRef: MatDialogRef<OliveLookupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public setting: LookupListerSetting,
-    translator: FuseTranslationLoaderService,
-    protected alertService: AlertService,
-    protected messageHelper: OliveMessageHelperService,
-    protected deviceService: DeviceDetectorService
+    translator: FuseTranslationLoaderService
   ) {
     super(translator);
     this.initializeComponent();
   }
 
+  /**
+   * on init
+   */
   ngOnInit() {
+    this.initKeywordFilter();
     this.initTable();
     this.initChip();
   }
 
+  /**
+   * Gets dialog title
+   */
   get dialogTitle(): string {
     let title = '';
 
@@ -90,10 +92,13 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     else {
       title = this.translator.get('common.title.chooseItems');
     }
-    
+
     return title;
   }
 
+  /**
+   * Gets selected item remark
+   */
   get selectedItemRemark(): string {
     let remark = '';
 
@@ -104,12 +109,56 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     return remark;
   }
 
+  /**
+   * Gets check box enable
+   */
+  get checkBoxEnable() {
+    return this.setting.maxSelectItems > 1;
+  }
+
+  /**
+   * Gets items selected
+   */
+  get itemsSelected() {
+    return this.checkBoxEnable && this.selectedItems.length > 0;
+  }
+
+  /**
+   * Gets tr mouse cursor
+   */
+  get trMouseCursor(): string {
+    return this.setting.trMouseCursor ? this.setting.trMouseCursor : '';
+  }
+
+  /**
+   * Gets data columns
+   */
+  get dataColumns() {
+    if (this.tableColumns === null) { return null; }
+    return this.tableColumns.filter(c => c.data !== 'selected');
+  }
+
+  /**
+   * Initializes component
+   */
+  private initializeComponent() {
+    this.setting.dataTableId =
+      splitStickyWords(this.setting.itemType.name, '-')
+        .toLowerCase() + '-table';
+  }
+
+  /**
+   * Inits chip
+   */
   initChip() {
     this.oForm = this.formBuilder.group({
       chips: null
     });
   }
 
+  /**
+   * Inits table
+   */
   initTable() {
     this.setTableColumns();
 
@@ -148,58 +197,56 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
             });
       },
       columns: this.tableColumns,
-      dom: this.setting.disableSearchInput ? 'tip' : 'ftip',
+      dom: 'tip',
       columnDefs: [
         { targets: 'nosort', orderable: false }
       ],
       order: [[this.checkBoxEnable ? 1 : 0, 'desc']]
     };
 
-    const filterInputId = `#${this.setting.dataTableId}_filter input`;
-
     $('.olive-datatable').css('min-width', '700px'); // .css('width', '100%');
-
-    if (this.setting.disableSearchInput) {
-      setTimeout(() => {
-        $(filterInputId).unbind();
-  
-        const params = {
-          deviceService: this.deviceService,
-          dataTableId: this.setting.dataTableId
-        };
-  
-        $(filterInputId).bind('keyup', params, this.onSearch);
-        $(filterInputId).bind('blur', params, this.onSearch);
-      }, 100);
-    }
   }
 
-  onSearch(event: any) {
-    const param = event.data;
-    if ((param.deviceService.isDesktop() && event.key === 'Enter') ||
-      param.deviceService.isMobile() || event.type === 'blur') {
-      $('#' + param.dataTableId).DataTable().search(event.target.value).draw();
-    }
+  /**
+   * Inits keyword filter
+   */
+  initKeywordFilter() {
+    this.keywordFilter = new FormControl(null, null);
+
+    this.keywordFilter.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe((value: string) => {
+        $('#' + this.setting.dataTableId).DataTable().search(value).draw();
+      });
   }
 
+  /**
+   * Creates chip
+   * @param item 
+   * @returns  
+   */
   protected createChip(item: any) { return item; }
 
-  private initializeComponent() {
-    this.setting.dataTableId = 
-      splitStickyWords(this.setting.itemType.name, '-')
-      .toLowerCase() + '-table';
-  }
-
-  chipRemoved(chip: IIDName) {
+  /**
+   * Determines whether chip removed on
+   * @param chip 
+   */
+  onChipRemoved(chip: IIDName) {
     const found = this.items.find(i => i.id === chip.id);
 
     if (found) {
       found.selected = false;
     }
 
-    this.removeItemOnSelectedItems(chip, false);    
+    this.removeItemOnSelectedItems(chip, false);
   }
 
+  /**
+   * Sets items selected
+   */
   private setItemsSelected() {
     this.items.forEach(item => {
       this.selectedItems.forEach(sItem => {
@@ -210,24 +257,23 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     });
   }
 
-  get checkBoxEnable() {
-    return this.setting.maxSelectItems > 1;
-  }
-
-  get itemsSelected() {
-    return this.checkBoxEnable && this.selectedItems.length > 0;
-  }
-
-  get trMouseCursor(): string {
-    return this.setting.trMouseCursor ? this.setting.trMouseCursor : '';
-  }
-
+  /**
+   * Gets custom table columns
+   * @returns custom table columns 
+   */
   protected getCustomTableColumns(): any {
     return null;
   }
 
-  protected onCustomClick(item?: any) {}
+  /**
+   * Determines whether custom click on
+   * @param [item] 
+   */
+  protected onCustomClick(item?: any) { }
 
+  /**
+   * Sets table columns
+   */
   private setTableColumns() {
     switch (this.setting.columnType) {
       case Code:
@@ -244,10 +290,19 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     }
   }
 
-  select(): void {
+  /**
+   * Selects items
+   */
+  selectItems(): void {
     this.dialogRef.close(this.selectedItems);
   }
 
+  /**
+   * Clicks item
+   * @param [item] 
+   * @param [event] 
+   * @returns  
+   */
   clickItem(item?: any, event?: any) {
     if (event && event.srcElement.getAttribute('type') === 'checkbox' || this.setting.maxSelectItems === 0) { return; }
 
@@ -256,17 +311,25 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     }
     else {
       item.selected = !item.selected;
-      this.saveToSelectedItems(item);
+      this.saveSelectedItems(item);
       this.closeDialogMaxItemsIsOneItem();
     }
   }
 
+  /**
+   * Closes dialog max items is one item
+   */
   private closeDialogMaxItemsIsOneItem() {
     if (this.setting.maxSelectItems === 1) {
       this.dialogRef.close(this.selectedItems);
     }
   }
 
+  /**
+   * Removes item on selected items
+   * @param item 
+   * @param chipRemove 
+   */
   private removeItemOnSelectedItems(item: any, chipRemove: boolean) {
     for (let i = 0; i < this.selectedItems.length; i++) {
       if (this.selectedItems[i].id === item.id) {
@@ -279,7 +342,11 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     }
   }
 
-  private saveToSelectedItems(item: any) {
+  /**
+   * Saves selected items
+   * @param item 
+   */
+  private saveSelectedItems(item: any) {
     if (item.selected) {
       const notExists = this.selectedItems.every(function (checkItem: any) {
         return checkItem.id !== item.id;
@@ -298,10 +365,16 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     }
   }
 
+  /**
+   * Cancels olive lookup dialog component
+   */
   cancel(): void {
     this.dialogRef.close(null);
   }
 
+  /**
+   * Add new item
+   */
   newItem(): void {
     const setting = new OliveDialogSetting(
       this.setting.newComponent,
@@ -329,6 +402,12 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     });
   }
 
+  /**
+   * Renders item
+   * @param item 
+   * @param columnName 
+   * @returns item 
+   */
   renderItem(item: any, columnName: string): string {
     if (this.setting.renderCallback) {
       return this.setting.renderCallback(item, columnName);
@@ -352,12 +431,12 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     }
   }
 
+  /**
+   * Renders style
+   * @param styleString 
+   * @returns  
+   */
   renderStyle(styleString: any) {
     return this.isNull(styleString) ? '' : styleString;
-  }
-
-  get dataColumns() {
-    if (this.tableColumns === null) { return null; }
-    return this.tableColumns.filter(c => c.data !== 'selected');
   }
 }
