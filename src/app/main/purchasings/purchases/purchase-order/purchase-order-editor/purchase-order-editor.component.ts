@@ -100,7 +100,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
 
     this.oForm.reset({
       supplierOrderId: this.item.supplierOrderId || '',
-      poDate: this.item.date || '',
+      poDate: this.item.date || new Date(),
       memo: this.item.memo || '',
       currencyExchangeRate: this.item.currencyExchangeRate,
       supplierFk: this.item.supplierFk,
