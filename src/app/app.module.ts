@@ -20,7 +20,6 @@ import { AppComponent } from 'app/app.component';
 import { LayoutModule } from 'app/layout/layout.module';
 import { Error404Component } from './main/pages/errors/404/error-404.component';
 import { OliveAppConfigService } from './core/services/AppConfig.service';
-import { DeviceDetectorModule } from 'ngx-device-detector';
 import { AuthService } from '@quick/services/auth.service';
 import { AuthGuard } from '@quick/services/auth-guard.service';
 import { ConfigurationService } from '@quick/services/configuration.service';
@@ -106,7 +105,6 @@ const appInitializerFn = (appConfig: OliveAppConfigService) => {
 
         RouterModule.forRoot(appRoutes),
         TranslateModule.forRoot(),
-        DeviceDetectorModule.forRoot(),
 
         // Material moment date module
         MatMomentDateModule,

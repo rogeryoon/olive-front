@@ -4,8 +4,6 @@ import { Subject } from 'rxjs';
 import { String } from 'typescript-string-operations';
 import * as _ from 'lodash';
 
-import { DeviceDetectorService } from 'ngx-device-detector';
-
 import { DataTableDirective } from 'angular-datatables';
 
 import { fuseAnimations } from '@fuse/animations';
@@ -28,6 +26,8 @@ import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveBackEndErrors } from 'app/core/classes/back-end-errors';
 import { trimStringByMaxLength, splitStickyWords } from 'app/core/utils/string-helper';
+import { FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'olive-entity-list',
@@ -48,18 +48,14 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
 
   loadingIndicator: boolean;
   selectedAll: any;
-  savedFilterValue = '';
-  searchKeyword = '';
+
+  keywordFilter: FormControl;
 
   _setting: ListerSetting;
 
-  constructor(translator: FuseTranslationLoaderService,
-    protected deviceService: DeviceDetectorService,
-    protected alertService: AlertService,
-    protected accountService: AccountService,
-    protected messageHelper: OliveMessageHelperService,
-    protected documentService: OliveDocumentService,
-    protected dialog: MatDialog,
+  constructor(translator: FuseTranslationLoaderService, protected alertService: AlertService, 
+    protected accountService: AccountService, protected messageHelper: OliveMessageHelperService, 
+    protected documentService: OliveDocumentService, protected dialog: MatDialog, 
     protected dataService: OliveDataService) {
     super(translator);
   }
@@ -131,23 +127,10 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   private initializeComponent() {
   }
 
-  onSearch(event: any) {
-    if (
-      this.savedFilterValue !== event.target.value &&
-      (
-        (this.deviceService.isDesktop() && event.key === 'Enter') ||
-        this.deviceService.isMobile() ||
-        event.type === 'blur'
-      )
-    ) {
-      this.dataTable().search(event.target.value).draw();
-      this.savedFilterValue = event.target.value;
-    }
-  }
-
   ngOnInit() {
     this.initializeComponent();
     this.initializeChildComponent();
+    this.initKeywordFilter();
     this.initializeDataTable();
   }
 
@@ -178,6 +161,22 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
     $(document).ready(function () {
       $('.olive-datatable').css('width', '100%');
     });
+  }
+
+  /**
+   * Inits keyword filter
+   */
+  initKeywordFilter() {
+    this.keywordFilter = new FormControl(null, null);
+
+    this.keywordFilter.valueChanges
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe((value: string) => {
+        $('#' + this.setting.dataTableId).DataTable().search(value).draw();
+      });
   }
 
   itemsLoader(getItemsService: any, callback): void {
@@ -358,8 +357,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
         data: dialog
       });
 
-    this.searchKeyword = '';
-    this.savedFilterValue = '';
+    this.keywordFilter.setValue('');
 
     dialogRef.afterClosed().subscribe(searches => {
       if (searches != null) {

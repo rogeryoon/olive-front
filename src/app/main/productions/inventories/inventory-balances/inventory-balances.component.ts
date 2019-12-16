@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { fuseAnimations } from '@fuse/animations';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -37,17 +36,16 @@ export class OliveInventoryBalancesComponent extends OliveEntityListComponent {
   warehouseColumns: any[] = [];
 
   constructor(
-    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
-    alertService: AlertService, accountService: AccountService,
-    messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
-    dialog: MatDialog, dataService: OliveInventoryService,
-    private cacheService: OliveCacheService
+    translator: FuseTranslationLoaderService, alertService: AlertService, 
+    accountService: AccountService, messageHelper: OliveMessageHelperService, 
+    documentService: OliveDocumentService, dialog: MatDialog, 
+    dataService: OliveInventoryService, private cacheService: OliveCacheService
   ) {
     super(
-      translator, deviceService,
-      alertService, accountService,
-      messageHelper, documentService,
-      dialog, dataService
+      translator, alertService, 
+      accountService, messageHelper, 
+      documentService, dialog, 
+      dataService
     );
 
     this.standCurrency = this.cacheService.standCurrency;    

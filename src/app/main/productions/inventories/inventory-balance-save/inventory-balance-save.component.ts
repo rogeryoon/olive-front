@@ -1,8 +1,5 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material';
 import { Subject } from 'rxjs';
-
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { DataTableDirective } from 'angular-datatables';
 
@@ -41,7 +38,6 @@ export class OliveInventoryBalanceSaveComponent implements AfterViewInit, OnDest
   inventoryTableId = 'inventories-table';
   constructor(
     private translator: FuseTranslationLoaderService,
-    private deviceService: DeviceDetectorService,
     private alertService: AlertService,
     private accountService: AccountService,
     private messageHelper: OliveMessageHelperService,
@@ -56,12 +52,7 @@ export class OliveInventoryBalanceSaveComponent implements AfterViewInit, OnDest
 
   onSearch(event: any) {
     if (
-      this.savedFilterValue !== event.target.value &&
-      (
-        (this.deviceService.isDesktop() && event.key === 'Enter') ||
-        this.deviceService.isMobile() ||
-        event.type === 'blur'
-      )
+      this.savedFilterValue !== event.target.value
     ) {
       const table = $('#inventories-table').DataTable();
       table.search(event.target.value).draw();

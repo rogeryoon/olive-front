@@ -1,6 +1,5 @@
 ﻿import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { fuseAnimations } from '@fuse/animations';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -20,7 +19,7 @@ import { ProductVariant } from '../../models/product-variant.model';
 import { OliveProductVariantManagerComponent } from './product-variant-manager/product-variant-manager.component';
 import { convertToBase26 } from 'app/core/utils/encode-helpers';
 
-const Selected  = 'selected';
+const Selected = 'selected';
 const Id = 'id';
 const Code = 'code';
 const Name = 'name';
@@ -36,17 +35,17 @@ const CreatedUtc = 'createdUtc';
 })
 export class OliveProductVariantsComponent extends OliveEntityListComponent {
   constructor(
-    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
-    alertService: AlertService, accountService: AccountService,
-    messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
-    dialog: MatDialog, dataService: OliveProductVariantService
+    translator: FuseTranslationLoaderService, alertService: AlertService,
+    accountService: AccountService, messageHelper: OliveMessageHelperService,
+    documentService: OliveDocumentService, dialog: MatDialog,
+    dataService: OliveProductVariantService
   ) {
-      super(
-        translator, deviceService,
-        alertService, accountService,
-        messageHelper, documentService, 
-        dialog, dataService
-      );
+    super(
+      translator, alertService,
+      accountService, messageHelper,
+      documentService, dialog,
+      dataService
+    );
   }
 
   initializeChildComponent() {

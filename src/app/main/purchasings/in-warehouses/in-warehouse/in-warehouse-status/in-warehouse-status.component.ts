@@ -2,8 +2,6 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { DeviceDetectorService } from 'ngx-device-detector';
-
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { AlertService } from '@quick/services/alert.service';
@@ -17,7 +15,6 @@ import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OliveInWarehouseService } from '../../../services/in-warehouse.service';
 import { OliveInWarehouseManagerComponent } from '../in-warehouse-manager/in-warehouse-manager.component';
 import { InWarehouse } from '../../../models/in-warehouse.model';
-import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OliveEditDialogComponent } from 'app/core/components/dialogs/edit-dialog/edit-dialog.component';
 
@@ -37,17 +34,16 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
 
   constructor(
     dialog: MatDialog, formBuilder: FormBuilder, 
+    alertService: AlertService, messageHelper: OliveMessageHelperService,
     dialogRef: MatDialogRef<OliveInWarehouseStatusComponent>,     
     @Inject(MAT_DIALOG_DATA) setting: LookupListerSetting,
-    translator: FuseTranslationLoaderService, alertService: AlertService,
-    messageHelper: OliveMessageHelperService, deviceService: DeviceDetectorService,
-    private oliveInWarehouseService: OliveInWarehouseService
+    translator: FuseTranslationLoaderService, private oliveInWarehouseService: OliveInWarehouseService
   ) { 
     super(
       dialog, formBuilder,
+      alertService, messageHelper,
       dialogRef, setting,
-      translator, alertService,
-      messageHelper, deviceService
+      translator
     );
   }
 

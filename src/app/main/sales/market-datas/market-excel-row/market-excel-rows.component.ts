@@ -2,7 +2,6 @@
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { DeviceDetectorService } from 'ngx-device-detector';
 import { String } from 'typescript-string-operations';
 
 import { fuseAnimations } from '@fuse/animations';
@@ -20,7 +19,6 @@ import { OliveDocumentService } from 'app/core/services/document.service';
 import { OliveSearchMarketExcelRowComponent } from './search-market-excel-row/search-market-excel-row.component';
 import { OliveMarketExcelRowService } from '../../services/market-excel-row.service';
 import { MarketExcelRow } from '../../models/market-excel-row.model';
-import { NameValue } from 'app/core/models/name-value';
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveMarketExcelRowManagerComponent } from './market-excel-row-manager/market-excel-row-manager.component';
 import { OliveTaskCountDialogComponent } from 'app/core/components/dialogs/task-count-dialog/task-count-dialog.component';
@@ -52,17 +50,17 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
   excelRowsStatus: MarketExcelRowsStatus;
 
   constructor(
-    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
-    alertService: AlertService, accountService: AccountService,
-    messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
-    dialog: MatDialog, dataService: OliveMarketExcelRowService,
-    private route: ActivatedRoute, private router: Router
+    translator: FuseTranslationLoaderService, alertService: AlertService, 
+    accountService: AccountService, messageHelper: OliveMessageHelperService, 
+    documentService: OliveDocumentService, dialog: MatDialog, 
+    dataService: OliveMarketExcelRowService, private route: ActivatedRoute, 
+    private router: Router
   ) {
     super(
-      translator, deviceService,
-      alertService, accountService,
-      messageHelper, documentService,
-      dialog, dataService
+      translator, alertService, 
+      accountService, messageHelper, 
+      documentService, dialog, 
+      dataService
     );
 
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;    

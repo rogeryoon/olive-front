@@ -1,6 +1,5 @@
 ﻿import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { fuseAnimations } from '@fuse/animations';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -38,16 +37,16 @@ const CreatedUtc = 'createdUtc';
 })
 export class OliveProductsComponent extends OliveEntityListComponent {
   constructor(
-    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
-    alertService: AlertService, accountService: AccountService,
-    messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
-    dialog: MatDialog, dataService: OliveProductService
+    translator: FuseTranslationLoaderService, alertService: AlertService, 
+    accountService: AccountService, messageHelper: OliveMessageHelperService, 
+    documentService: OliveDocumentService, dialog: MatDialog, 
+    dataService: OliveProductService
   ) {
     super(
-      translator, deviceService,
-      alertService, accountService,
-      messageHelper, documentService,
-      dialog, dataService
+      translator, alertService, 
+      accountService, messageHelper, 
+      documentService, dialog, 
+      dataService
     );
   }
 

@@ -1,6 +1,5 @@
 ﻿import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { fuseAnimations } from '@fuse/animations';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -53,18 +52,17 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
   purchaseService: OlivePurchaseOrderService;
 
   constructor(
-    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
-    alertService: AlertService, accountService: AccountService,
-    messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
-    dialog: MatDialog, dataService: OlivePurchaseOrderService,
-    private miscService: OlivePurchasingMiscService, private cacheService: OliveCacheService,
-    private inWarehouseItemService: OliveInWarehouseItemService
+    translator: FuseTranslationLoaderService, alertService: AlertService, 
+    accountService: AccountService, messageHelper: OliveMessageHelperService, 
+    documentService: OliveDocumentService, dialog: MatDialog, 
+    dataService: OlivePurchaseOrderService, private miscService: OlivePurchasingMiscService, 
+    private cacheService: OliveCacheService, private inWarehouseItemService: OliveInWarehouseItemService
   ) {
     super(
-      translator, deviceService,
-      alertService, accountService,
-      messageHelper, documentService,
-      dialog, dataService
+      translator, alertService, 
+      accountService, messageHelper, 
+      documentService, dialog, 
+      dataService
     );
 
     this.purchaseService = dataService;

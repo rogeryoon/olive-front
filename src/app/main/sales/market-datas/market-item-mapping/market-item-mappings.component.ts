@@ -1,7 +1,6 @@
 ﻿import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
-import { DeviceDetectorService } from 'ngx-device-detector';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { fuseAnimations } from '@fuse/animations';
@@ -40,18 +39,18 @@ export class OliveMarketItemMappingsComponent extends OliveEntityListComponent {
   sub: Subscription;
 
   constructor(
-    translator: FuseTranslationLoaderService, deviceService: DeviceDetectorService,
-    alertService: AlertService, accountService: AccountService,
-    messageHelper: OliveMessageHelperService, documentService: OliveDocumentService,
-    dialog: MatDialog, dataService: OliveMarketItemMappingService,
-    private route: ActivatedRoute, private router: Router
+    translator: FuseTranslationLoaderService, alertService: AlertService, 
+    accountService: AccountService, messageHelper: OliveMessageHelperService, 
+    documentService: OliveDocumentService, dialog: MatDialog, 
+    dataService: OliveMarketItemMappingService, private route: ActivatedRoute, 
+    private router: Router
   ) {
-      super(
-        translator, deviceService,
-        alertService, accountService,
-        messageHelper, documentService, 
-        dialog, dataService
-      );
+    super(
+      translator, alertService, 
+      accountService, messageHelper, 
+      documentService, dialog, 
+      dataService
+    );
   }
 
   get isExcelMasterIdPage(): boolean {

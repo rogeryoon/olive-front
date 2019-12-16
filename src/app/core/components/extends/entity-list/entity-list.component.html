@@ -30,8 +30,7 @@
                         <span (click)="openSearchDialog()" matTooltip="Advanced Search">
                             <mat-icon>search</mat-icon>
                         </span>
-                        <input type="search" id="search" matInput #filter placeholder="Search"
-                            (keyup)="onSearch($event)" (blur)="onSearch($event)" autocomplete="off">
+                        <input type="search" [formControl]="keywordFilter" matInput #filter placeholder="{{'common.word.search' | translate}}" autocomplete="off">
                     </div>
 
                 </div>

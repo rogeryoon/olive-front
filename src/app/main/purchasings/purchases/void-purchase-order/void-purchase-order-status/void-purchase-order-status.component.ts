@@ -2,8 +2,6 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { DeviceDetectorService } from 'ngx-device-detector';
-
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { AlertService } from '@quick/services/alert.service';
@@ -36,17 +34,16 @@ export class OliveVoidPurchaseOrderStatusComponent extends OliveLookupDialogComp
 
   constructor(
     dialog: MatDialog, formBuilder: FormBuilder, 
+    alertService: AlertService, messageHelper: OliveMessageHelperService,
     dialogRef: MatDialogRef<OliveVoidPurchaseOrderStatusComponent>,     
     @Inject(MAT_DIALOG_DATA) setting: LookupListerSetting,
-    translator: FuseTranslationLoaderService, alertService: AlertService,
-    messageHelper: OliveMessageHelperService, deviceService: DeviceDetectorService,
-    private oliveInWarehouseService: OliveInWarehouseService
+    translator: FuseTranslationLoaderService, private oliveInWarehouseService: OliveInWarehouseService
   ) { 
     super(
       dialog, formBuilder,
+      alertService, messageHelper,
       dialogRef, setting,
-      translator, alertService,
-      messageHelper, deviceService
+      translator
     );
   }
 
