@@ -136,7 +136,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         break;
 
       case ItemsName:
-        retValue = getItemsFirstName(item.purchaseOrderItems);
+        retValue = getItemsFirstName(item.purchaseOrderItems, 'productName');
         break;
 
       case Warehouse:

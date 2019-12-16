@@ -174,10 +174,10 @@ export function addSpanAddedCount(count: number): string {
  * @param items 
  * @returns  
  */
-export function getItemsFirstName(items: any) {
+export function getItemsFirstName(items: any, propertyName: string = 'name') {
     let returnValue = '-';
     if (items && items.length > 0) {
-        returnValue = items[0].name;
+        returnValue = items[0][propertyName];
         if (items.length > 1) {
             returnValue += addSpanAddedCount(items.length - 1);
         }

@@ -51,7 +51,7 @@ export class OlivePurchaseOrderLookupDialogComponent extends OliveLookupDialogCo
           break;
 
         case Name:
-          retValue = getItemsFirstName(item.purchaseOrderItems);
+          retValue = getItemsFirstName(item.purchaseOrderItems, 'productName');
           break;
 
         case PODate:
@@ -73,7 +73,7 @@ export class OlivePurchaseOrderLookupDialogComponent extends OliveLookupDialogCo
   createChip(item: PurchaseOrder) {
     return {
       id: item.id, 
-      name: getItemsFirstName(item.purchaseOrderItems) 
+      name: getItemsFirstName(item.purchaseOrderItems, 'productName') 
     } as IIDName;
   }
 }
