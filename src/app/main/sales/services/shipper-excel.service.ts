@@ -79,7 +79,7 @@ export class OliveShipperExcelService {
           else {
             items.push({
               productVariantId: item.productVariantId,
-              name: item.name,
+              name: item.productName,
               quantity: item.quantity,
               customsPrice: customsPrice,
               kiloGramWeight:  customsWeight,

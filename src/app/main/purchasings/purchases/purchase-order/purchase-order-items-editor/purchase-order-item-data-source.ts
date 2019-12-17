@@ -1,4 +1,5 @@
 import { FormGroup, FormControl } from '@angular/forms';
+import { debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
 
 import { TableDataSource } from 'app/core/classes/table-data-source';
 import { PurchaseOrderItem } from '../../../models/purchase-order-item.model';
@@ -6,7 +7,6 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator, requiredValidator } from 'app/core/validators/general-validators';
 import { Currency } from 'app/main/supports/models/currency.model';
 import { convertToBase26, convertBase26ToNumber } from 'app/core/utils/encode-helpers';
-import { debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
 import { OliveProductVariantService } from 'app/main/productions/services/product-variant.service';
 import { ProductVariantPrice } from 'app/main/productions/models/product-variant-price.model';
 
@@ -80,5 +80,9 @@ export class OlivePurchaseOrderItemDataSource extends TableDataSource {
 
     public createNewItem(): any {
         return new PurchaseOrderItem();
+    }
+
+    onReInitialize() {
+        this.products = [];
     }
 }

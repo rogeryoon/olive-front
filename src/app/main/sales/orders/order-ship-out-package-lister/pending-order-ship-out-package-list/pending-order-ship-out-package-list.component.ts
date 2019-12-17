@@ -290,7 +290,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
     for (const order of box.orderShipOuts) {
       for (const item of order.orderShipOutDetails) {
         const itemId = convertToBase26(item.productVariantShortId);
-        const itemNameKey = `${itemId}. ${item.name}`;
+        const itemNameKey = `${itemId}. ${item.productName}`;
         itemNames.set(itemNameKey, 
           (itemNames.has(itemNameKey) ? itemNames.get(itemNameKey) : 0) + item.quantity);
       }
@@ -485,7 +485,7 @@ export class OlivePendingOrderShipOutPackageListComponent extends OliveEntityFor
         box.orderShipOuts.some(order => 
           order.orderFk.marketSellerFk.code && order.orderFk.marketSellerFk.code.toLowerCase().includes(keyword) ||
           order.orderFk.marketOrderNumber && order.orderFk.marketOrderNumber.toLowerCase().includes(keyword) ||
-          order.orderShipOutDetails.some(x => x.name && x.name.toLowerCase().includes(keyword))
+          order.orderShipOutDetails.some(x => x.productName && x.productName.toLowerCase().includes(keyword))
         ));
     }
 

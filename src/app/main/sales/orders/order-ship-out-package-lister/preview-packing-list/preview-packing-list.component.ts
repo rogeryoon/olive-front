@@ -61,7 +61,7 @@ export class OlivePreviewPackingListComponent extends OliveBaseComponent impleme
           items.push({
             productVariantId: item.productVariantId,
             productGroupId: item.productId,
-            name: item.name,
+            name: item.productName,
             quantity: item.quantity
           } as PackingItem);
         }

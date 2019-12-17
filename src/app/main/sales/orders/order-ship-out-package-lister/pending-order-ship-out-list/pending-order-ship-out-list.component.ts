@@ -270,7 +270,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         order.orderFk.marketOrderNumber && order.orderFk.marketOrderNumber.toLowerCase().includes(keyword) ||
         order.deliveryTagFk.consigneeName && order.deliveryTagFk.consigneeName.toLowerCase().includes(keyword) ||
         order.trackingNumber && order.trackingNumber.toLowerCase().includes(keyword) ||
-        order.orderShipOutDetails.find(x => x.name && x.name.toLowerCase().includes(keyword)));
+        order.orderShipOutDetails.find(x => x.productName && x.productName.toLowerCase().includes(keyword)));
     }
 
     // 합배송건
@@ -673,7 +673,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
           }
         }
 
-        params.push({ id: it.productVariantId, name: `${itemId}. [${remark}]-${it.name}` });
+        params.push({ id: it.productVariantId, name: `${itemId}. [${remark}]-${it.productName}` });
       }
 
       const dialogRef = this.dialog.open(
@@ -738,7 +738,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         customTitle: `${itemId}. ${order.orderFk.marketSellerFk.code} - ${order.orderFk.marketOrdererName} (${this.getOrderCount(order)})`,
         hideDelete: true,
         extraParameter: {
-          productName: editItem.name,
+          productName: editItem.productName,
           overrideWeight: editItem.extra && editItem.extra.customsWeight || null,
           overrideWeightTypeCode: editItem.extra && editItem.extra.customsWeightTypeCode || null,
         }
@@ -817,7 +817,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
         customTitle: `${itemId}. [${this.translator.get('common.word.productCustomsPrice')}] ${order.orderFk.marketSellerFk.code} - 
         ${order.orderFk.marketOrdererName} (${this.getOrderCount(order)})`,
         hideDelete: true,
-        extraParameter: { productName: editItem.name, overrideCustomsPrice: editItem.extra && editItem.extra.customsPrice || null }
+        extraParameter: { productName: editItem.productName, overrideCustomsPrice: editItem.extra && editItem.extra.customsPrice || null }
       } as OliveOnEdit
     );
 
@@ -895,7 +895,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
     for (const item of order.orderShipOutDetails) {
       const itemId = convertToBase26(item.productVariantShortId);
-      itemsNames.push(`${itemId}. ${item.name} (${item.quantity})`);
+      itemsNames.push(`${itemId}. ${item.productName} (${item.quantity})`);
     }
 
     return itemsNames.join(' , ');
@@ -1351,7 +1351,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
 
       for (const item of order.orderShipOutDetails) {
         if (!hsCodeEntryProducts.has(item.productId) && !item.hsCode) {
-          hsCodeEntryProducts.set(item.productId, { id: item.productId, name: item.name });
+          hsCodeEntryProducts.set(item.productId, { id: item.productId, name: item.productName });
         }
       }
     }
@@ -1498,7 +1498,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
             item.productId,
             {
               id: item.productId,
-              name: item.name,
+              name: item.productName,
               customsTypeCode: item.customsTypeCode,
               customsRules: customsRules
             });

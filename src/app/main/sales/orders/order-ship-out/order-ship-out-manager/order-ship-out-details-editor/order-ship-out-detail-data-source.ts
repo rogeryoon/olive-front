@@ -6,13 +6,13 @@ import { TableDataSource } from 'app/core/classes/table-data-source';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator, requiredValidator } from 'app/core/validators/general-validators';
 import { OliveProductVariantService } from 'app/main/productions/services/product-variant.service';
-import { IdName } from 'app/core/models/id-name';
 import { OrderShipOutDetail } from 'app/main/sales/models/order-ship-out-detail.model';
-import { convertBase36ToNumber, convertToBase36 } from 'app/core/utils/encode-helpers';
+import { convertToBase26, convertBase26ToNumber } from 'app/core/utils/encode-helpers';
+import { ProductVariantPrice } from 'app/main/productions/models/product-variant-price.model';
 
 export class OliveOrderShipOutDetailDataSource extends TableDataSource {
 
-    products: IdName[][] = [];
+    products: ProductVariantPrice[][] = [];
     isLoading = false;
 
     constructor(
@@ -22,11 +22,11 @@ export class OliveOrderShipOutDetailDataSource extends TableDataSource {
     }
 
     createRowFormGroup(r: any): FormGroup {
-        r.Obj.productVariantId36 = convertToBase36(r.Obj.productVariantId);
-        const productVariantId36Control = new FormControl(r.Obj.productVariantId36, [requiredValidator()]);
-        productVariantId36Control.valueChanges.subscribe(val => { 
+        r.Obj.productVariantId26 = convertToBase26(r.Obj.productVariantId);
+        const productVariantId26Control = new FormControl(r.Obj.productVariantId26, [requiredValidator()]);
+        productVariantId26Control.valueChanges.subscribe(val => { 
             if (val) {
-                r.Obj.productVariantId = convertBase36ToNumber(val);
+                r.Obj.productVariantId = convertBase26ToNumber(val);
             }
             else {
                 r.Obj.productVariantId = null;
@@ -34,8 +34,8 @@ export class OliveOrderShipOutDetailDataSource extends TableDataSource {
         });
 
         const fg = new FormGroup({
-            productVariantId36: productVariantId36Control,
-            productName: this.createNewFormControl(r, 'name', [requiredValidator()]),
+            productVariantId26: productVariantId26Control,
+            productName: this.createNewFormControl(r, 'productName', [requiredValidator()]),
             quantity: this.createNewFormControl(r, 'quantity', [numberValidator(0, true, 1)])
         });
 

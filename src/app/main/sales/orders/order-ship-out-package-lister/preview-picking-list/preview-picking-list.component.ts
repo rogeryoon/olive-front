@@ -68,7 +68,7 @@ export class OlivePreviewPickingListComponent extends OliveBaseComponent impleme
               {
                 productVariantId: item.productVariantId,
                 productGroupId: item.productId,
-                name: item.name,
+                name: item.productName,
                 quantity: 0
               } as PickingItem);
           }
