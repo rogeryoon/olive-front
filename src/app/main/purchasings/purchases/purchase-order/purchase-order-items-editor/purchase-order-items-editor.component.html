@@ -26,7 +26,7 @@
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <input matInput name="inputProductName{{row.ObjId}}" formControlName="productName" (change)="onChange($event, i)" (keyup)="onKeyup($event)"
-            (blur)="onBlur($event)" class="small-font olive-error" autocomplete="off" [matAutocomplete]="auto">
+            (blur)="onBlur($event)" class="olive-error" autocomplete="off" [matAutocomplete]="auto">
           <mat-error *ngIf="hasArrayEntryError('productName',i)">{{arrayErrorMessage('productName',i)}}</mat-error>
         </mat-form-field>
 

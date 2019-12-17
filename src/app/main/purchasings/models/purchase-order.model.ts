@@ -9,6 +9,7 @@ export class PurchaseOrder extends OliveTrackingAttribute {
     id?: number;
     supplierOrderId?: string;
     date?: any;
+    shortId?: any;
     memo?: string;
     totalAmount?: number;
     addedDiscountAmount?: number;

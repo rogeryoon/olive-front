@@ -249,7 +249,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
         productVariantId26: convertToBase26(selectedItem.id),
         productName: selectedItem.productName,
         price: selectedItem.price,
-        discount: 0,
+        discount: '0', // 숫자로 바꾸지 말것 - Validation 문제 발생
         appliedCost: selectedItem.price
       });
     }

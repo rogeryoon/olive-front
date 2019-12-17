@@ -109,3 +109,12 @@ export function dateCode(date: any, id: number = 0): string {
         return convertToBase36(id) + '-' + get6DigitDate(date);
     }
 }
+
+/**
+ * 로컬시간 0시로 변경 (예: 2019/12/13 23:44:35 => 2019/12/13 00:00:00)
+ * @param date 
+ * @returns date of night date 
+ */
+export function midnightDate(date: Date): Date {
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+}

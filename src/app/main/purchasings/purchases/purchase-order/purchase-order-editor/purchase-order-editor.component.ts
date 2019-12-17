@@ -18,8 +18,9 @@ import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-s
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { numberValidator, requiredValidator } from 'app/core/validators/general-validators';
 import { isMoneyPattern, toTrimString } from 'app/core/utils/string-helper';
-import { createDefaultSearchOption, createSearchOption } from 'app/core/utils/search-helpers';
+import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
+import { midnightDate } from 'app/core/utils/date-helper';
 
 @Component({
   selector: 'olive-purchase-order-editor',
@@ -68,7 +69,8 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
 
     return this.itemWithIdNAudit({
       supplierOrderId: formModel.supplierOrderId,
-      date: formModel.poDate,
+      date: midnightDate(formModel.poDate),
+      shortId: this.item.shortId,
       memo: formModel.memo,
       addedDiscountAmount: formModel.addedDiscountAmount,
       freightAmount: formModel.freightAmount,
@@ -80,7 +82,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
       supplierId: formModel.supplierFk.id,
       warehouseId: selectedWarehouse.id,
       currencyId: formModel.currency
-    });
+    } as PurchaseOrder);
   }
 
   buildForm() {

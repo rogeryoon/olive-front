@@ -112,7 +112,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: PurchaseOrder): string {
     if (item) {
-      return `${this.translator.get('navi.purchase.group')} ID : ${this.dateCode(item.date, item.id)}`;
+      return `${this.translator.get('navi.purchase.group')} ID : ${this.dateCode(item.date)}-${item.shortId}`;
     }
     else {
       return this.translator.get(NavTranslates.Purchase.entry);
@@ -128,7 +128,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = this.dateCode(item.date, item.id);
+        retValue = `${this.dateCode(item.date)}-${item.shortId}`;
         break;
 
       case SupplierName:

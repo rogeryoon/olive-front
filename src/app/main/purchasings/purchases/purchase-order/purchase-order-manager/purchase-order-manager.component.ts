@@ -69,6 +69,7 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
     return this.itemWithIdNAudit({
       supplierOrderId: purchaseOrder.supplierOrderId,
       date: purchaseOrder.date,
+      shortId: purchaseOrder.shortId,
       memo: purchaseOrder.memo,
       totalAmount: this.purchaseOrderItems.totalAmount,
       addedDiscountAmount: itemsEditor.addedDiscountAmount,
