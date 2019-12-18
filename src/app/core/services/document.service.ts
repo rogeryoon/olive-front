@@ -338,6 +338,7 @@ export class OliveDocumentService {
     printerWindow.document.write('</head><body>');
     printerWindow.document.write($(`#${bodyId}`).html());
     printerWindow.document.write('</body></html>');
+    printerWindow.document.close();
 
     setTimeout(() => {
       printerWindow.print();      

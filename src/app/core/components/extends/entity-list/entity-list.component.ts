@@ -393,9 +393,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
 
   onPrint() {
     this.checkAllIfNoItemsSelected();
-    setTimeout(() => {
-      this.documentService.printTable(this.title, this.setting.dataTableId);
-    });
+    this.documentService.printTable(this.title, this.setting.dataTableId);
   }
 
   onUploaded(model: any) {

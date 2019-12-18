@@ -142,9 +142,7 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
   }
 
   onPrint() {
-    setTimeout(() => {
-      this.documentService.printPage(`Purchase Order ${this.dateCode(this.order.date, this.order.id)}`, 'olivestyle', 'olive-container');
-    });
+    this.documentService.printPage(`Purchase Order ${this.dateCode(this.order.date, this.order.id)}`, 'olivestyle', 'olive-container');
   }
   
   onExcel() {
