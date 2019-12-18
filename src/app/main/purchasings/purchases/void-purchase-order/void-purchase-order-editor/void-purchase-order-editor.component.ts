@@ -16,9 +16,9 @@ import { OlivePurchaseOrderService } from '../../../services/purchase-order.serv
 import { VoidPurchaseOrder } from '../../../models/void-purchase-order.model';
 import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { OlivePurchaseOrderManagerComponent } from '../../purchase-order/purchase-order-manager/purchase-order-manager.component';
-import { dateCode } from 'app/core/utils/date-helper';
 import { showParamMessage } from 'app/core/utils/string-helper';
 import { ReferHostSetting } from 'app/core/interfaces/setting/refer-host-setting';
+import { purchaseOrderId } from 'app/core/utils/olive-helpers';
 
 @Component({
   selector: 'olive-void-purchase-order-editor',
@@ -121,11 +121,11 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
   }
 
   customName(order: PurchaseOrder): string {
-    return dateCode(order.date, order.id);
+    return purchaseOrderId(order);
   }
 
   customTitle(order: PurchaseOrder, template: string): string {
-    return showParamMessage(template, dateCode(order.date, order.id));
+    return showParamMessage(template, purchaseOrderId(order));
   }
 
   markCustomControlsTouched() {

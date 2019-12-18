@@ -17,7 +17,7 @@ import { OliveSearchPaymentMethodComponent } from './search-payment-method/searc
 import { OlivePaymentMethodService } from '../../services/payment-method.service';
 import { PaymentMethod } from '../../models/payment-method.model';
 import { OlivePaymentMethodManagerComponent } from './payment-method-manager/payment-method-manager.component';
-import { checkIcon } from 'app/core/utils/helpers';
+import { checkIcon } from 'app/core/utils/olive-helpers';
 
 const Selected  = 'selected';
 const Id = 'id';

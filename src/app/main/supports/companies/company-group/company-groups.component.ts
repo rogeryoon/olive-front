@@ -18,7 +18,7 @@ import { OliveSearchCompanyGroupComponent } from './search-company-group/search-
 import { OliveCompanyGroupService } from '../../services/company-group.service';
 import { CompanyGroup } from '../../models/company-group.model';
 import { OliveCompanyGroupManagerComponent } from './company-group-manager/company-group-manager.component';
-import { checkIcon } from 'app/core/utils/helpers';
+import { checkIcon } from 'app/core/utils/olive-helpers';
 
 const Selected  = 'selected';
 const Id = 'id';

@@ -17,7 +17,7 @@ import { OliveSearchSupplierComponent } from './search-supplier/search-supplier.
 import { OliveSupplierService } from '../../services/supplier.service';
 import { Supplier } from '../../models/supplier.model';
 import { OliveSupplierManagerComponent } from './supplier-manager/supplier-manager.component';
-import { checkIcon } from 'app/core/utils/helpers';
+import { checkIcon } from 'app/core/utils/olive-helpers';
 import { webSiteHostName, webSiteUrl } from 'app/core/utils/string-helper';
 
 const Selected = 'selected';

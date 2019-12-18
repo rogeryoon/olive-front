@@ -18,7 +18,7 @@ import { OliveMarketExcelService } from '../../services/market-excel.service';
 import { MarketExcel } from '../../models/market-excel.model';
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveMarketExcelImportDialogComponent } from './market-excel-import-dialog/market-excel-import-dialog.component';
-import { checkIcon } from 'app/core/utils/helpers';
+import { checkIcon } from 'app/core/utils/olive-helpers';
 
 const Selected  = 'selected';
 const Id = 'id';

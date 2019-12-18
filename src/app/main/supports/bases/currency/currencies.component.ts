@@ -17,7 +17,7 @@ import { OliveSearchCurrencyComponent } from './search-currency/search-currency.
 import { OliveCurrencyService } from '../../services/currency.service';
 import { Currency } from '../../models/currency.model';
 import { OliveCurrencyManagerComponent } from './currency-manager/currency-manager.component';
-import { checkIcon } from 'app/core/utils/helpers';
+import { checkIcon } from 'app/core/utils/olive-helpers';
 
 const Selected  = 'selected';
 const Id = 'id';

@@ -25,7 +25,7 @@ import { OliveTaskCountDialogComponent } from 'app/core/components/dialogs/task-
 import { OliveTaskCountSetting } from 'app/core/interfaces/dialog-setting/task-count-setting';
 import { MarketExcelRowsStatus } from '../../models/market-excel-rows-status.model';
 import { MarketExcel } from '../../models/market-excel.model';
-import { checkIcon } from 'app/core/utils/helpers';
+import { checkIcon } from 'app/core/utils/olive-helpers';
 import { convertBase36ToNumber } from 'app/core/utils/encode-helpers';
 
 const Selected = 'selected';

@@ -17,7 +17,7 @@ import { OliveSearchWarehouseComponent } from './search-warehouse/search-warehou
 import { OliveWarehouseService } from '../../services/warehouse.service';
 import { Warehouse } from '../../models/warehouse.model';
 import { OliveWarehouseManagerComponent } from './warehouse-manager/warehouse-manager.component';
-import { checkIcon } from 'app/core/utils/helpers';
+import { checkIcon } from 'app/core/utils/olive-helpers';
 
 const Selected = 'selected';
 const Id = 'id';

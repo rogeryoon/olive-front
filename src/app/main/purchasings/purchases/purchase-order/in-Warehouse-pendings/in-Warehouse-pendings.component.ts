@@ -19,6 +19,7 @@ import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/purchase-order-manager.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { NameValue } from 'app/core/models/name-value';
+import { purchaseOrderId } from 'app/core/utils/olive-helpers';
 
 @Component({
   selector: 'olive-in-warehouse-pendings',
@@ -74,6 +75,10 @@ export class OliveInWarehousePendingComponent extends OliveEntityListComponent {
     return item.tagCode === 'M';
   }
 
+  purchaseOrderId(item: PurchaseOrder): string {
+    return purchaseOrderId(item);
+  }
+
   // Table에 표시하기 위해 Sub에 있는 Items를 Empty PurchaseOrder를 만들어 올린다.
   convertModel(model: PurchaseOrder[]) {
     for (let i = 0; i < model.length; i++) {
@@ -103,7 +108,7 @@ export class OliveInWarehousePendingComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: PurchaseOrder) {
     if (item) {
-      return `${this.translator.get('navi.purchase.group')} ID : ${this.dateCode(item.date, item.id)}`;
+      return `${this.translator.get('navi.purchase.group')} ID : ${purchaseOrderId(item)}`;
     }
     else {
       return this.translator.get(NavTranslates.Purchase.entry);

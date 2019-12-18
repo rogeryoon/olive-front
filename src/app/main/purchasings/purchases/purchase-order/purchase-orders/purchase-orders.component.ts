@@ -30,6 +30,7 @@ import { OliveInWarehouseItemService } from '../../../services/in-warehouse-item
 import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.model';
 import { getItemsFirstName, addSpanAddedCount, getItemsFirstCode } from 'app/core/utils/string-helper';
 import { createSearchOption } from 'app/core/utils/search-helpers';
+import { purchaseOrderId } from 'app/core/utils/olive-helpers';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -128,7 +129,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = `${this.dateCode(item.date)}-${item.shortId}`;
+        retValue = purchaseOrderId(item);
         break;
 
       case SupplierName:

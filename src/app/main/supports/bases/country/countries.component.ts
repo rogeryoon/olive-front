@@ -17,7 +17,7 @@ import { OliveSearchCountryComponent } from './search-country/search-country.com
 import { OliveCountryService } from '../../services/country.service';
 import { Country } from '../../models/country.model';
 import { OliveCountryManagerComponent } from './country-manager/country-manager.component';
-import { checkIcon } from 'app/core/utils/helpers';
+import { checkIcon } from 'app/core/utils/olive-helpers';
 
 const Selected  = 'selected';
 const Id = 'id';

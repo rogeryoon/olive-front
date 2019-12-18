@@ -18,7 +18,7 @@ import { OliveSearchBranchComponent } from './search-branch/search-branch.compon
 import { OliveBranchService } from '../../services/branch.service';
 import { Branch } from '../../models/branch.model';
 import { OliveBranchManagerComponent } from './branch-manager/branch-manager.component';
-import { checkIcon } from 'app/core/utils/helpers';
+import { checkIcon } from 'app/core/utils/olive-helpers';
 
 const Selected  = 'selected';
 const Id = 'id';

@@ -17,7 +17,7 @@ import { OliveCarrierService } from '../../services/carrier.service';
 import { Carrier } from '../../models/carrier.model';
 import { OliveCarrierManagerComponent } from './carrier-manager/carrier-manager.component';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
-import { checkIcon } from 'app/core/utils/helpers';
+import { checkIcon } from 'app/core/utils/olive-helpers';
 import { webSiteHostName, webSiteUrl } from 'app/core/utils/string-helper';
 
 const Selected  = 'selected';

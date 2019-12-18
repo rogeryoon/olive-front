@@ -10,6 +10,7 @@ import { OliveCompanyService } from 'app/main/supports/services/company.service'
 import { OliveDocumentService } from 'app/core/services/document.service';
 import { Branch } from 'app/main/supports/models/branch.model';
 import { OliveBranchService } from 'app/main/supports/services/branch.service';
+import { purchaseOrderId } from 'app/core/utils/olive-helpers';
 
 @Component({
   selector: 'olive-preview-purchase-order',
@@ -85,7 +86,7 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
   }
 
   get purchaseOrderId(): string {
-    return `${this.dateCode(this.order.date)}-${this.order.shortId}`;
+    return purchaseOrderId(this.order);
   }
 
   get grandTotal(): number {
@@ -142,13 +143,13 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
   }
 
   onPrint() {
-    this.documentService.printPage(`Purchase Order ${this.dateCode(this.order.date, this.order.id)}`, 'olivestyle', 'olive-container');
+    this.documentService.printPage(`Purchase Order ${this.purchaseOrderId}`, 'olivestyle', 'olive-container');
   }
   
   onExcel() {
     const summaries = [];
 
-    summaries.push(`PO # : ${this.dateCode(this.order.date, this.order.id)}`);
+    summaries.push(`PO # : ${this.purchaseOrderId}`);
     summaries.push(`Date : ${this.date(this.order.date)}`);
 
     const vfk = this.order.supplierFk;

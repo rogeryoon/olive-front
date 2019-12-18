@@ -17,7 +17,7 @@ import { OliveSearchMarketComponent } from './search-market/search-market.compon
 import { OliveMarketService } from '../../services/market.service';
 import { Market } from '../../models/market.model';
 import { OliveMarketManagerComponent } from './market-manager/market-manager.component';
-import { checkIcon } from 'app/core/utils/helpers';
+import { checkIcon } from 'app/core/utils/olive-helpers';
 import { webSiteUrl } from 'app/core/utils/string-helper';
 
 const Selected  = 'selected';

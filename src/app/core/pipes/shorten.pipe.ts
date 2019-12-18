@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { isString } from '../utils/helpers';
+import { isString } from '../utils/object-helpers';
 
 @Pipe({
   name: 'shorten'

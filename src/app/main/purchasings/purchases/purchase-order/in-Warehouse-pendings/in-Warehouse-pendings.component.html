@@ -85,7 +85,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let item of items" (click)="editItem(item, $event)" class="print" [ngClass]="{'row-accent': isMaster(item)}">
-                                    <td *ngIf="isMaster(item)">{{dateCode(item.date,item.id)}}</td>
+                                    <td *ngIf="isMaster(item)">{{purchaseOrderId(item)}}</td>
                                     <td *ngIf="isMaster(item)">{{item.warehouseFk.code}}</td>
                                     <td *ngIf="isMaster(item)">{{item.supplierFk.name}}</td>
                                     <td *ngIf="isMaster(item)" colspan="4"><span class="text-truncate">{{item.memo}}</span></td>

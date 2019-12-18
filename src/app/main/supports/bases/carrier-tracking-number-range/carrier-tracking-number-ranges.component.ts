@@ -17,7 +17,7 @@ import { OliveSearchCarrierTrackingNumberRangeComponent } from './search-carrier
 import { OliveCarrierTrackingNumberRangeManagerComponent } from './carrier-tracking-number-range-manager/carrier-tracking-number-range-manager.component';
 import { OliveCarrierTrackingNumberRangeService } from '../../../shippings/services/carrier-tracking-number-range.service';
 import { CarrierTrackingNumberRange } from '../../../shippings/models/carrier-tracking-number-range.model';
-import { checkIcon } from 'app/core/utils/helpers';
+import { checkIcon } from 'app/core/utils/olive-helpers';
 
 const Selected  = 'selected';
 const Id = 'id';

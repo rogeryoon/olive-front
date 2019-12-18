@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { OliveOnSearch } from 'app/core/interfaces/on-search';
-import { filterNotNullNameValues } from 'app/core/utils/helpers';
+import { filterNotNullNameValues } from 'app/core/utils/object-helpers';
 
 @Component({
   selector: 'olive-search-in-warehouse',
