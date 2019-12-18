@@ -95,6 +95,10 @@ export class OliveConstants {
         static customsTotalMaxPriceIcon = 'monetization_on';
         static customsAddUpCustomsTaxingIcon = 'control_point_duplicate';
     };
+
+    static cacheSubKey = class {
+        static activated = 'activated';
+    }
 }
 
 

@@ -15,6 +15,7 @@ import { OliveCompanyService } from 'app/main/supports/services/company.service'
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
 import { createSearchOption, createDefaultSearchOption } from 'app/core/utils/search-helpers';
 import { makeRandom36Id } from 'app/core/utils/encode-helpers';
+import { addActivatedCacheKey } from 'app/core/utils/olive-helpers';
 
 @Component({
   selector: 'olive-market-seller-editor',
@@ -103,7 +104,7 @@ export class OliveMarketSellerEditorComponent extends OliveEntityFormComponent {
   }
 
   private getMarkets() {
-    this.cacheService.getItems(this.marketService, OliveCacheService.cacheKeys.getItemsKey.market + 'activated', createDefaultSearchOption())
+    this.cacheService.getItems(this.marketService, addActivatedCacheKey(OliveCacheService.cacheKeys.getItemsKey.market), createDefaultSearchOption())
       .then((items: Market[]) => {
         this.markets = items;
       });

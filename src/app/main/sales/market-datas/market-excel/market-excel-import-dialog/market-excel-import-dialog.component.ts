@@ -11,6 +11,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveMarketSellerService } from 'app/main/supports/services/market-seller.service';
 import { requiredValidator } from 'app/core/validators/general-validators';
 import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
+import { addActivatedCacheKey } from 'app/core/utils/olive-helpers';
 
 @Component({
   selector: 'olive-market-excel-import-dialog',
@@ -61,7 +62,7 @@ export class OliveMarketExcelImportDialogComponent extends OliveImportFileDialog
   }
 
   private getMarketSellers() {
-    this.cacheService.getItems(this.marketSellerService, OliveCacheService.cacheKeys.getItemsKey.marketSeller+'activated', createDefaultSearchOption())
+    this.cacheService.getItems(this.marketSellerService, addActivatedCacheKey(OliveCacheService.cacheKeys.getItemsKey.marketSeller), createDefaultSearchOption())
     .then((items: MarketSeller[]) => {
       this.sellers = items;
     });

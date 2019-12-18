@@ -11,6 +11,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { requiredValidator } from 'app/core/validators/general-validators';
 import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
+import { addActivatedCacheKey } from 'app/core/utils/olive-helpers';
 
 @Component({
   selector: 'olive-address-editor',
@@ -76,7 +77,7 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
   }
 
   private getCountries() {
-    this.cacheService.getItems(this.countryService, OliveCacheService.cacheKeys.getItemsKey.country+'activated', createDefaultSearchOption())
+    this.cacheService.getItems(this.countryService, addActivatedCacheKey(OliveCacheService.cacheKeys.getItemsKey.country), createDefaultSearchOption())
     .then((items: Country[]) => {
       this.countries = items;
     });

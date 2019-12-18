@@ -12,6 +12,20 @@ export function checkIcon(condition: boolean): string {
     return condition ? OliveConstants.iconStatus.checked : OliveConstants.iconStatus.unchecked;
 }
 
+/**
+ * Purchases order id
+ * @param item 
+ * @returns order id 
+ */
 export function purchaseOrderId(item: PurchaseOrder): string {
     return `${dateCode(item.date)}-${item.shortId}`;
+}
+
+/**
+ * Adds activated cache key
+ * @param key 
+ * @returns activated cache key 
+ */
+export function addActivatedCacheKey(key: string): string {
+    return key + OliveConstants.cacheSubKey + '-';
 }

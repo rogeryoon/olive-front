@@ -21,6 +21,7 @@ import { isMoneyPattern, toTrimString } from 'app/core/utils/string-helper';
 import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
 import { midnightDate } from 'app/core/utils/date-helper';
+import { addActivatedCacheKey } from 'app/core/utils/olive-helpers';
 
 @Component({
   selector: 'olive-purchase-order-editor',
@@ -162,7 +163,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   }
 
   private getWarehouses() {
-    this.cacheService.getItems(this.warehouseService, OliveCacheService.cacheKeys.getItemsKey.warehouse + 'activated', createDefaultSearchOption())
+    this.cacheService.getItems(this.warehouseService, addActivatedCacheKey(OliveCacheService.cacheKeys.getItemsKey.warehouse), createDefaultSearchOption())
       .then((items: Warehouse[]) => {
         this.warehouses = items;
         this.setLastSelectedWarehouse();

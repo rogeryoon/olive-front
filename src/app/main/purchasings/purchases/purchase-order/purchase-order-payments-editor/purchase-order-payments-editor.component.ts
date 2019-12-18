@@ -13,6 +13,7 @@ import { PaymentMethod } from 'app/main/supports/models/payment-method.model';
 import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.model';
 import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
 import { showParamMessage } from 'app/core/utils/string-helper';
+import { addActivatedCacheKey } from 'app/core/utils/olive-helpers';
 
 @Component({
   selector: 'olive-purchase-order-payments-editor',
@@ -56,7 +57,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   }
 
   private getPaymentMethods() {
-    this.cacheService.getItems(this.paymentMethodService, OliveCacheService.cacheKeys.getItemsKey.paymentMethod + 'activated', createDefaultSearchOption())
+    this.cacheService.getItems(this.paymentMethodService, addActivatedCacheKey(OliveCacheService.cacheKeys.getItemsKey.paymentMethod), createDefaultSearchOption())
     .then((items: PaymentMethod[]) => {
       this.paymentMethods = items;
     });
