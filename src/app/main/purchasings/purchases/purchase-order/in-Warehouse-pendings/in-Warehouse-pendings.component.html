@@ -31,8 +31,7 @@
                         <span (click)="openSearchDialog()" matTooltip="Advanced Search">
                             <mat-icon>search</mat-icon>
                         </span>
-                        <input type="search" id="search" matInput #filter placeholder="Search" (keyup)="onSearch($event)"
-                            (blur)="onSearch($event)" autocomplete="off">
+                        <input type="search" [formControl]="keywordFilter" matInput #filter placeholder="{{'common.word.search' | translate}}" autocomplete="off">
                     </div>
 
                 </div>
@@ -75,7 +74,8 @@
                                     <th>{{'purchasing.inWarehousePendingHeader.finishLink' | translate}}</th>
                                 </tr>
                                 <tr>
-                                    <th colspan="3">{{'purchasing.inWarehousePendingHeader.itemName' | translate}}</th>
+                                    <th>{{'purchasing.inWarehousePendingHeader.itemId' | translate}}</th>
+                                    <th colspan="2">{{'purchasing.inWarehousePendingHeader.itemName' | translate}}</th>
                                     <th style="width:50px;">{{'purchasing.inWarehousePendingHeader.quantity' | translate}}</th>
                                     <th style="width:50px;">{{'purchasing.inWarehousePendingHeader.balance' | translate}}</th>
                                     <th style="width:50px;">{{'purchasing.inWarehousePendingHeader.price' | translate}}</th>
@@ -91,7 +91,8 @@
                                     <td *ngIf="isMaster(item)" colspan="4"><span class="text-truncate">{{item.memo}}</span></td>
                                     <td *ngIf="isMaster(item)">종결</td>
 
-                                    <td *ngIf="!isMaster(item)" colspan="3" class="text-left">{{item.tagPurchaseOrderItem.name}}</td>
+                                    <td *ngIf="!isMaster(item)">{{productVariantId(item.tagPurchaseOrderItem)}}</td>
+                                    <td *ngIf="!isMaster(item)" colspan="2" class="text-left">{{item.tagPurchaseOrderItem.productName}}</td>
                                     <td *ngIf="!isMaster(item)" class="text-right">{{commaNumber(item.tagPurchaseOrderItem.quantity)}}</td>
                                     <td *ngIf="!isMaster(item)" class="text-right">{{commaNumber(item.tagPurchaseOrderItem.balance)}}</td>
                                     <td *ngIf="!isMaster(item)" class="text-right">{{numberFormat(item.tagPurchaseOrderItem.price, standCurrency.decimalPoint)}}</td>

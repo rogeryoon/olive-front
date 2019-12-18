@@ -660,6 +660,7 @@ export const locale = {
                 'supplier': '공급자',
                 'memo': '메모',
                 'finishLink' : '종결',
+                'itemId' : 'ID',
                 'itemName': '품명',
                 'quantity': '수량',
                 'balance': '잔량',

@@ -1,5 +1,6 @@
 import { OliveConstants } from '../classes/constants';
 import { PurchaseOrder } from 'app/main/purchasings/models/purchase-order.model';
+import { dateCode } from './date-helper';
 
 
 /**
@@ -12,5 +13,5 @@ export function checkIcon(condition: boolean): string {
 }
 
 export function purchaseOrderId(item: PurchaseOrder): string {
-    return `${this.dateCode(item.date)}-${item.shortId}`;
+    return `${dateCode(item.date)}-${item.shortId}`;
 }

@@ -20,6 +20,8 @@ import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/pu
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { NameValue } from 'app/core/models/name-value';
 import { purchaseOrderId } from 'app/core/utils/olive-helpers';
+import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
+import { convertToBase26 } from 'app/core/utils/encode-helpers';
 
 @Component({
   selector: 'olive-in-warehouse-pendings',
@@ -71,12 +73,16 @@ export class OliveInWarehousePendingComponent extends OliveEntityListComponent {
     };
   }
 
-  isMaster(item: PurchaseOrder): boolean {
-    return item.tagCode === 'M';
+  isMaster(order: PurchaseOrder): boolean {
+    return order.tagCode === 'M';
   }
 
-  purchaseOrderId(item: PurchaseOrder): string {
-    return purchaseOrderId(item);
+  purchaseOrderId(order: PurchaseOrder): string {
+    return purchaseOrderId(order);
+  }
+
+  productVariantId(item: PurchaseOrderItem): string {
+    return convertToBase26(item.productVariantId);
   }
 
   // Table에 표시하기 위해 Sub에 있는 Items를 Empty PurchaseOrder를 만들어 올린다.
