@@ -9,7 +9,7 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { numberFormat } from 'app/core/utils/number-helper';
 import { getShortDate, getMomentDate, dateCode } from 'app/core/utils/date-helper';
 import { showAddress } from 'app/core/utils/string-helper';
-import { convertToBase36 } from 'app/core/utils/encode-helpers';
+import { convertToBase36, convertToBase26 } from 'app/core/utils/encode-helpers';
 import { testIsUndefined } from 'app/core/utils/object-helpers';
 
 @Component({
@@ -57,6 +57,10 @@ export class OliveBaseComponent implements OnInit {
 
   id36(input: number): string {
     return convertToBase36(input);
+  }
+
+  id26(input: number): string {
+    return convertToBase26(input);
   }
 
   date(input: any): string {

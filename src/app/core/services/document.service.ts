@@ -200,7 +200,7 @@ export class OliveDocumentService {
     }
   }
 
-  exportHtmlTableToExcel(fileName: string, tableId: string, selectable = true, 
+  exportHtmlTableToExcel(fileName: string, tableId: string, selectable = true,
     summaries: string[] = [], replaces: SearchUnit[] = []): void {
     if (selectable && this.noItemsSelected) { console.error('No Items Selected'); return; }
 
@@ -339,23 +339,16 @@ export class OliveDocumentService {
     printerWindow.document.write($(`#${bodyId}`).html());
     printerWindow.document.write('</body></html>');
 
-    printerWindow.print();
-    printerWindow.close();
+    setTimeout(() => {
+      printerWindow.print();      
+      printerWindow.close();
+    });
   }
 
   printTable(documentTitle: string, tableId: string, selectable = true): void {
     if (selectable && this.noItemsSelected) { console.error('No Items Selected'); return; }
 
     const pWindow = window.open('');
-
-    // pWindow.document.onreadystatechange = function () {
-    //   if (this.readyState === 'complete') {
-    //     this.onreadystatechange = function () { };
-    //     pWindow.focus();
-    //     pWindow.print();
-    //     pWindow.close();
-    //   }
-    // }
 
     pWindow.document.write(`<html><head><title>${documentTitle}</title>`);
     pWindow.document.write(this.stylesheet);

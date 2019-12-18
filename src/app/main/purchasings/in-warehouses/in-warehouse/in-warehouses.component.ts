@@ -110,7 +110,7 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
       case Items:
         const items = [];
         item.inWarehouseItems.forEach(i => items.push({name: i.productName}));
-        retValue = getItemsFirstName(items);
+        retValue = getItemsFirstName(items, 'productName');
         break;
 
       case Quantity:

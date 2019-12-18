@@ -3,6 +3,7 @@ import { Resolve } from '@angular/router';
 
 import { OliveWarehouseService } from 'app/main/supports/services/warehouse.service';
 import { OliveCacheService } from 'app/core/services/cache.service';
+import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
 
 @Injectable({
     providedIn: 'root'
@@ -18,7 +19,7 @@ export class OliveOrderShipOutPackageListerPageResolver implements Resolve<any> 
     resolve() {
         return this.cacheService.getItems(
             this.warehouseService,
-            OliveCacheService.cacheKeys.getItemsKey.warehouse);
+            OliveCacheService.cacheKeys.getItemsKey.warehouse + 'activated', createDefaultSearchOption());
     }
 }
 

@@ -182,14 +182,19 @@
     }
 
     #fromto {
-        height: 160px
+        width: 100%;
+        height: 140px;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
 
     #fromto>#from,
     #fromto>#to {
         width: 45%;
         min-height: 90px;
-        margin-top: 30px;
+        
         font-size: 85%;
         padding: 1.5%;
         line-height: 120%;
@@ -197,23 +202,17 @@
     }
 
     #fromto>#from {
-        float: left;
-        width: 45%;
         background: #efefef;
-        margin-top: 30px;
-        font-size: 85%;
-        padding: 1.5%
     }
+
+    /* #fromto>#to {
+    } */
 
     #from>div,
     #to>div {
         padding-bottom: 5px;
         text-transform: uppercase;
         font-weight: 400;
-    }
-
-    #fromto>#to {
-        float: right;
     }
 
     #items {
@@ -351,7 +350,7 @@
         </div>
         <div id="reference">
             <h3><strong>Purchase Order</strong></h3>
-            <h4>PO # : {{this.dateCode(order.date, order.id)}}</h4>
+            <h4>PO # : {{purchaseOrderId}}</h4>
             <p>Date : {{date(order.date)}}</p>
         </div>
     </div>
@@ -385,8 +384,8 @@
             </thead>
             <tbody>
                 <tr *ngFor="let item of order.purchaseOrderItems" class="print">
-                    <td class="print -ex-type-id">{{id36(item.id)}}</td>
-                    <td class="print -ex-type-text">{{item.name}}</td>
+                    <td class="print -ex-type-id">{{id26(item.productVariantId)}}</td>
+                    <td class="print -ex-type-text">{{item.productName}}</td>
                     <td class="print -ex-type-number">{{commaNumber(item.quantity)}}</td>
                     <td class="print -ex-type-number">{{numberFormat(item.price, digits)}}</td>
                     <td class="print -ex-type-number">{{numberFormat(item.discount*-1, digits, '0')}}</td>

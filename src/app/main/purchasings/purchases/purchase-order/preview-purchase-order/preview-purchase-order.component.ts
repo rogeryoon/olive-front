@@ -44,17 +44,17 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
 
   loadCompany() {
     this.cacheService.getItem(this.companyService, 'company', this.order.warehouseFk.companyId)
-    .then(item => {
-      this.renderCompanyHtml(item);  
-    });  
+      .then(item => {
+        this.renderCompanyHtml(item);
+      });
 
     this.cacheService.getItems(this.branchService, OliveCacheService.cacheKeys.getItemsKey.branch)
-    .then(items => {
-      const branch = items.find(b => b.id === this.order.warehouseFk.companyMasterBranchId);
-      if (branch) {
-        this.renderWarehouseHtml(branch);  
-      }
-    });  
+      .then(items => {
+        const branch = items.find(b => b.id === this.order.warehouseFk.companyMasterBranchId);
+        if (branch) {
+          this.renderWarehouseHtml(branch);
+        }
+      });
   }
 
   renderCompanyHtml(company: any) {
@@ -82,6 +82,10 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
     });
 
     return value;
+  }
+
+  get purchaseOrderId(): string {
+    return `${this.dateCode(this.order.date)}-${this.order.shortId}`;
   }
 
   get grandTotal(): number {
@@ -114,7 +118,7 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
       values.push(fk.phoneNumber);
     }
 
-    return values.join('<br>');
+    return values.join('<br/><br/>');
   }
 
   renderWarehouseHtml(branch: Branch) {
@@ -125,8 +129,6 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
     values.push(`<strong>${fk.name} [${fk.code}]</strong>`);
 
     if (fk.companyMasterBranchId) {
-      // const branch = this.cacheService.branches.find(b => b.id === fk.companyMasterBranchId);
-
       if (branch.addressFk) {
         values.push(this.address(branch.addressFk));
       }
@@ -136,16 +138,15 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
       }
     }
 
-    this.warehouseHtml = values.join('<br>');
+    this.warehouseHtml = values.join('<br/><br/>');
   }
 
   onPrint() {
-    this.documentService.printPage(
-      `Purchase Order ${this.dateCode(this.order.date, this.order.id)}`, 
-      'olivestyle', 'olive-container'
-    );
+    setTimeout(() => {
+      this.documentService.printPage(`Purchase Order ${this.dateCode(this.order.date, this.order.id)}`, 'olivestyle', 'olive-container');
+    });
   }
-
+  
   onExcel() {
     const summaries = [];
 

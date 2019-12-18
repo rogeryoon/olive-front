@@ -123,7 +123,7 @@ export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
         retValue = item.orderFk.marketOrdererName;
         break;
       case ProductName:
-        retValue = getItemsFirstName(item.orderShipOutDetails);
+        retValue = getItemsFirstName(item.orderShipOutDetails, 'productName');
         break;
       case Quantity:
         retValue = this.getOrderCount(item);
