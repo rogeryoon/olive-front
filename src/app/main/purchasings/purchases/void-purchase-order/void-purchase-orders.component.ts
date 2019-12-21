@@ -19,7 +19,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { InWarehouse } from '../../models/in-warehouse.model';
 import { VoidPurchaseOrder } from '../../models/void-purchase-order.model';
 import { OliveVoidPurchaseOrderService } from '../../services/void-purchase-order.service';
-import { getItemsFirstName } from 'app/core/utils/string-helper';
+import { getItemsName } from 'app/core/utils/string-helper';
 
 const Selected  = 'selected';
 const Id = 'id';
@@ -105,13 +105,13 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
         item.inWarehouseFk.inWarehouseItems.forEach(i => sets.add(i.supplierName));
         const suppliers = [];
         sets.forEach(s => suppliers.push({name: s}));
-        retValue = getItemsFirstName(suppliers);
+        retValue = getItemsName(suppliers);
         break;
 
       case Items:
         const items = [];
         item.inWarehouseFk.inWarehouseItems.forEach(i => items.push({name: i.productName}));
-        retValue = getItemsFirstName(items);
+        retValue = getItemsName(items);
         break;
 
       case Quantity:

@@ -160,45 +160,35 @@ export function splitStickyWords(input, separator): string {
 }
 
 /**
- * Adds span added count
+ * Adds count tooltip
  * @param count 
- * @returns span added count 
+ * @param [tooltip] 
+ * @returns count tooltip 
  */
-export function addSpanAddedCount(count: number): string {
+export function addCountTooltip(count: number, tooltip: string = null): string {
+    const tooltipAttribute = tooltip ? ` title="${tooltip.replace('"', '\'')}"` : '';
     // ov-td-click를 추가해야지 이중 팝업이 되질 않는다.
-    return `<span class="added-count ov-td-click">+${count}</span>`;
+    return `<span class="added-count ov-td-click"${tooltipAttribute}>+${count}</span>`;
 }
 
 /**
- * Gets items first name
+ * Gets items name
  * @param items 
  * @returns  
  */
-export function getItemsFirstName(items: any, propertyName: string = 'name') {
-    let returnValue = '-';
-    if (items && items.length > 0) {
-        returnValue = items[0][propertyName];
-        if (items.length > 1) {
-            returnValue += addSpanAddedCount(items.length - 1);
-        }
-    }
-    return returnValue;
-}
+export function getItemsName(items: any[], propertyName: string = 'name'): string {
+    let itemsName = '-';
 
-/**
- * Gets items first code
- * @param items 
- * @returns  
- */
-export function getItemsFirstCode(items: any) {
-    let returnValue = '-';
     if (items && items.length > 0) {
-        returnValue = items[0].code;
+        itemsName = items[0][propertyName];
+
         if (items.length > 1) {
-            returnValue += addSpanAddedCount(items.length - 1);
+            console.log(items.map(x => x[propertyName]));
+            itemsName += addCountTooltip(items.length, items.filter(x => x.id !== items[0].id).map(x => x[propertyName]).join());
         }
     }
-    return returnValue;
+
+    return itemsName;
 }
 
 /**

@@ -12,11 +12,11 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
 import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { IIDName } from 'app/core/models/id-name';
-import { getItemsFirstName } from 'app/core/utils/string-helper';
+import { getItemsName } from 'app/core/utils/string-helper';
+import { purchaseOrderId } from 'app/core/utils/olive-helpers';
 
 const Id = 'id';
 const Name = 'name';
-const PODate = 'date';
 
 @Component({
   selector: 'olive-purchase-order-lookup-dialog',
@@ -47,15 +47,11 @@ export class OlivePurchaseOrderLookupDialogComponent extends OliveLookupDialogCo
       let retValue = '';
       switch (columnName) {
         case Id:
-          retValue = this.id36(item.id);
+          retValue = purchaseOrderId(item);
           break;
 
         case Name:
-          retValue = getItemsFirstName(item.purchaseOrderItems, 'productName');
-          break;
-
-        case PODate:
-          retValue = this.date(item.date);
+          retValue = getItemsName(item.purchaseOrderItems, 'productName');
           break;
       }
       return retValue;
@@ -64,16 +60,15 @@ export class OlivePurchaseOrderLookupDialogComponent extends OliveLookupDialogCo
 
   getCustomTableColumns(): any {
     return [
-      { data: Id, name: 'ID', width: '50px', align: 'center' },
-      { data: Name, orderable: false, name: 'Name', align: 'justify' },
-      { data: PODate, orderable: false, name: 'Date', width: '90px', align: 'center' }
+      { data: Id, name: 'ID', width: '80px', align: 'center' },
+      { data: Name, orderable: false, name: 'Name', align: 'justify' }
     ];
   }
 
   createChip(item: PurchaseOrder) {
     return {
       id: item.id, 
-      name: getItemsFirstName(item.purchaseOrderItems, 'productName') 
+      name: getItemsName(item.purchaseOrderItems, 'productName') 
     } as IIDName;
   }
 }

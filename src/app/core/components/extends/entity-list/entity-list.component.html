@@ -104,7 +104,7 @@
                                         <mat-icon *ngIf="icon(item, column.data)"
                                             [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}">{{iconName(item,
                                             column.data)}}</mat-icon>
-                                        <span [innerHTML]="renderItem(item, column.data)"
+                                        <span [innerHTML]="renderItem(item, column.data) | sanitizeHtml"
                                             [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}"></span>
                                     </td>
                                 </tr>

@@ -28,7 +28,7 @@ import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-s
 import { NameValue } from 'app/core/models/name-value';
 import { OliveInWarehouseItemService } from '../../../services/in-warehouse-items.service';
 import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.model';
-import { getItemsFirstName, addSpanAddedCount, getItemsFirstCode } from 'app/core/utils/string-helper';
+import { getItemsName, addCountTooltip } from 'app/core/utils/string-helper';
 import { createSearchOption } from 'app/core/utils/search-helpers';
 import { purchaseOrderId } from 'app/core/utils/olive-helpers';
 
@@ -137,7 +137,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         break;
 
       case ItemsName:
-        retValue = getItemsFirstName(item.purchaseOrderItems, 'productName');
+        retValue = getItemsName(item.purchaseOrderItems, 'productName');
         break;
 
       case Warehouse:
@@ -149,11 +149,11 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         break;
 
       case PaymentsName:
-        retValue = getItemsFirstCode(item.purchaseOrderPayments);
+        retValue = getItemsName(item.purchaseOrderPayments, 'code');
         break;
 
       case PrintLink:
-        retValue = item.printOutCount > 1 ? addSpanAddedCount(item.printOutCount - 1) : '';
+        retValue = item.printOutCount > 1 ? addCountTooltip(item.printOutCount - 1) : '';
         break;
     }
 

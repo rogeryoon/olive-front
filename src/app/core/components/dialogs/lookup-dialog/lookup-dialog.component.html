@@ -23,7 +23,7 @@
                 <td class="no-cursor" *ngFor="let column of dataColumns"
                     [ngStyle]="{'text-align':renderStyle(column.align)}"
                     [ngClass]="{'foreground-blue' : setting.currentItem && item.id === setting.currentItem.id }">
-                    <span [innerHTML]="renderItem(item, column.data)"></span>
+                    <span [innerHTML]="renderItem(item, column.data) | sanitizeHtml"></span>
                 </td>
             </tr>
             <tr *ngIf="items?.length == 0">
