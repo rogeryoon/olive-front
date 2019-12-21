@@ -20,7 +20,6 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { OliveOrderShipOutDetailDataSource } from './order-ship-out-detail-data-source';
 import { OrderShipOutDetail } from 'app/main/sales/models/order-ship-out-detail.model';
 import { showParamMessage } from 'app/core/utils/string-helper';
-import { convertToBase26 } from 'app/core/utils/encode-helpers';
 import { ProductVariantPrice } from 'app/main/productions/models/product-variant-price.model';
 
 @Component({
@@ -102,13 +101,13 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
     const dupStrings: string[] = [];
     this.dataSource.items.forEach((dsItem: OrderShipOutDetail) => {
       if (dsItem.productVariantId === foundItem.id) {
-        dupStrings.push(`${convertToBase26(foundItem.id)}: ${foundItem.productName}`);
+        dupStrings.push(`${this.id26(foundItem.id)}: ${foundItem.productName}`);
         return;
       }
     });
 
     if (foundItem && dupStrings.length === 0) {
-      formGroup.patchValue({productVariantId26: convertToBase26(foundItem.id)});
+      formGroup.patchValue({productVariantId26: this.id26(foundItem.id)});
     }
 
     if (dupStrings.length > 0) {
@@ -178,7 +177,7 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
               if (!dupProductVariantIdCheckSet.has(pvItem.id)) {
                 dupProductVariantIdCheckSet.add(pvItem.id);
                 duplicatedIdStrings.push(
-                  `${convertToBase26(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
+                  `${this.id26(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
               }
             });
         });

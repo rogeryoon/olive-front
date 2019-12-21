@@ -81,6 +81,6 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
   }
 
   onRequiredWarehouse() {
-    this.inWarehouseEditor.lookUp();
+    this.inWarehouseEditor.popUpLookUpDialog();
   }
 }

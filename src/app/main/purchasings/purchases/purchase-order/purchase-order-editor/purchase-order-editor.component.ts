@@ -39,7 +39,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
 
   standCurrencyCode: string;
 
-  readonly wareHouseComboSelectedCacheKey = OliveCacheService.cacheKeys.userPreference.dropDownBox + 
+  readonly warehouseComboSelectedCacheKey = OliveCacheService.cacheKeys.userPreference.dropDownBox + 
     OliveCacheService.cacheKeys.getItemKey.warehouse + this.queryParams.CompanyGroupId;
 
   constructor(
@@ -66,7 +66,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     const selectedWarehouse = this.warehouses.find(item => item.id === formModel.warehouse);
 
     // Item 저장시 마지막 선택한 창고를 저장
-    this.cacheService.setUserPreference(this.wareHouseComboSelectedCacheKey, selectedWarehouse);
+    this.cacheService.setUserPreference(this.warehouseComboSelectedCacheKey, selectedWarehouse);
 
     return this.itemWithIdNAudit({
       supplierOrderId: formModel.supplierOrderId,
@@ -116,6 +116,8 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     if (!this.isNewItem) {
       this.onCurrencyExchangeRateChanged(this.item.currencyExchangeRate);
     }
+
+    this.getWarehouses();
   }
 
   createEmptyObject() {
@@ -126,8 +128,6 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
     this.standCurrency = this.cacheService.standCurrency;
     this.currencies = this.cacheService.currencies;
     this.standCurrencyCode = this.standCurrency.code;
-
-    this.getWarehouses();
 
     this.lookupSupplier.setting = {
       name: 'Supplier',
@@ -172,7 +172,7 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
 
   private setLastSelectedWarehouse() {
     // Cache Value Loading
-    this.cacheService.getUserPreference(this.wareHouseComboSelectedCacheKey)
+    this.cacheService.getUserPreference(this.warehouseComboSelectedCacheKey)
       .then(obj => {
         if (obj && !this.item.warehouseId) {
           this.oForm.patchValue({warehouse: obj.id});

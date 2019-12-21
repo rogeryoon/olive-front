@@ -31,7 +31,6 @@ import { numberValidator } from 'app/core/validators/general-validators';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { showParamMessage } from 'app/core/utils/string-helper';
 import { AlertService } from '@quick/services/alert.service';
-import { convertToBase26 } from 'app/core/utils/encode-helpers';
 import { ProductVariantPrice } from 'app/main/productions/models/product-variant-price.model';
 import { createSearchOption } from 'app/core/utils/search-helpers';
 
@@ -241,12 +240,12 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
 
     let dupString;
     if (dupItem) {
-      dupString = `${convertToBase26(selectedItem.id)}: ${selectedItem.productName}`;
+      dupString = `${this.id26(selectedItem.id)}: ${selectedItem.productName}`;
     }
 
     if (selectedItem && !dupString) {
       formGroup.patchValue({ 
-        productVariantId26: convertToBase26(selectedItem.id),
+        productVariantId26: this.id26(selectedItem.id),
         productName: selectedItem.productName,
         price: selectedItem.price,
         discount: '0', // 숫자로 바꾸지 말것 - Validation 문제 발생
@@ -347,7 +346,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
             if (!dupProductVariantIdCheckSet.has(pvItem.id)) {
               dupProductVariantIdCheckSet.add(pvItem.id);
               duplicatedIdStrings.push(
-                `${convertToBase26(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
+                `${this.id26(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
             }
           });
       });
@@ -412,7 +411,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
             .forEach((sItem: PurchaseOrderItem) => {
               if (!dupPOItemIdCheckSet.has(sItem.id)) {
                 dupPOItemIdCheckSet.add(sItem.productVariantId);
-                duplicatedIdStrings.push(`${convertToBase26(sItem.id)}: ${sItem.productName}`);
+                duplicatedIdStrings.push(`${this.id26(sItem.id)}: ${sItem.productName}`);
               }
             });
         });

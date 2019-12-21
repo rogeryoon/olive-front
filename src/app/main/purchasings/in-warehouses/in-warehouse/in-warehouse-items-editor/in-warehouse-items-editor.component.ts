@@ -1,8 +1,6 @@
 import { Component, forwardRef, Output, EventEmitter, Input } from '@angular/core';
-import {
-  FormBuilder, FormControl, ValidationErrors,
-  NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor,
-  Validator } from '@angular/forms';
+import { FormBuilder, FormControl, ValidationErrors, NG_VALUE_ACCESSOR, 
+  NG_VALIDATORS, ControlValueAccessor, Validator } from '@angular/forms';
 import { MatSnackBar, MatDialog } from '@angular/material';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -45,7 +43,7 @@ import { createSearchOption } from 'app/core/utils/search-helpers';
   ]
 })
 export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
-  displayedColumns = ['productVariantId', 'name', 'balance', 'price', 'quantityDue', 'quantity', 'remark', 'actions'];
+  displayedColumns = ['productVariantId26', 'name', 'balance', 'price', 'quantityDue', 'quantity', 'remark', 'actions'];
   dataSource: OliveInWarehouseItemDataSource = new OliveInWarehouseItemDataSource(this.cacheService);
 
   warehouse: Warehouse;
@@ -242,7 +240,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
                 if (!dupPOItemIdCheckSet.has(sItem.id)) {
                   dupPOItemIdCheckSet.add(sItem.id);
                   duplicatedIdStrings.push(
-                    `${this.id36(sItem.id)}: ${sItem.productName}`.trim());
+                    `${this.id26(sItem.id)}: ${sItem.productName}`.trim());
                 }
               });
           });

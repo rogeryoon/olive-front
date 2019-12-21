@@ -6,12 +6,13 @@ import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { InWarehouse } from '../../../models/in-warehouse.model';
 import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
-import { NavTranslates } from 'app/core/navigations/nav-translates';
 import { OliveWarehouseService } from 'app/main/supports/services/warehouse.service';
-import { OliveWarehouseManagerComponent } from 'app/main/supports/companies/warehouse/warehouse-manager/warehouse-manager.component';
 import { Warehouse } from 'app/main/supports/models/warehouse.model';
-import { Permission } from '@quick/models/permission.model';
-import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
+import { OliveCacheService } from 'app/core/services/cache.service';
+import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
+import { requiredValidator } from 'app/core/validators/general-validators';
+import { addActivatedCacheKey } from 'app/core/utils/olive-helpers';
+import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
 
 @Component({
   selector: 'olive-in-warehouse-editor',
@@ -26,28 +27,39 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
 
   @Output() warehouseChanged = new EventEmitter();
 
+  warehouses: Warehouse[];
+
+  readonly warehouseComboSelectedCacheKey = OliveCacheService.cacheKeys.userPreference.dropDownBox + 
+    OliveCacheService.cacheKeys.getItemKey.warehouse + this.queryParams.CompanyGroupId;
+
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
-    private warehouseService: OliveWarehouseService
+    private warehouseService: OliveWarehouseService, private cacheService: OliveCacheService,
+    private queryParams: OliveQueryParameterService
   ) {
     super(
       formBuilder, translator
     );
   }
 
-  getEditedItem(): any {
+  getEditedItem(): InWarehouse {
     const formModel = this.oForm.value;
+
+    const selectedWarehouse = this.warehouses.find(item => item.id === formModel.warehouse);
+
+    // Item 저장시 마지막 선택한 창고를 저장
+    this.cacheService.setUserPreference(this.warehouseComboSelectedCacheKey, selectedWarehouse);
 
     return this.itemWithIdNAudit({
       memo: formModel.memo,
-      warehouseId: formModel.warehouseFk.id
-    });
+      warehouseId: selectedWarehouse.id
+    } as InWarehouse);
   }
 
   buildForm() {
     this.oForm = this.formBuilder.group({
       memo: '',
-      warehouseFk: null,
+      warehouse: ['', requiredValidator()],
     });
   }
 
@@ -58,12 +70,14 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
 
     this.oForm.reset({
       memo: this.item.memo || '',
-      warehouseFk: this.item.warehouseFk
+      warehouse: this.item.warehouseId
     });
 
     if (this.item.warehouseFk) {
       this.warehouseChanged.emit({item: this.item.warehouseFk, loading: true});
     }
+
+    this.getWarehouses();
   }
 
   createEmptyObject() {
@@ -71,33 +85,43 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
   }
 
   initializeChildComponent() {
-    this.lookupWarehouse.setting = {
-      name: 'Warehouse',
-      columnType: 'code',
-      itemTitle: this.translator.get(NavTranslates.Company.warehouse),
-      dataService: this.warehouseService,
-      maxSelectItems: 1,
-      newComponent: OliveWarehouseManagerComponent,
-      itemType: Warehouse,
-      managePermission: Permission.assignCompanyGroups,
-      translateTitleId: NavTranslates.Company.warehouse
-    } as LookupListerSetting;
   }
 
   markCustomControlsTouched() {
     this.lookupWarehouse.markAsTouched();
   }
 
-  onWarehouseChanged(input: any) {
+  onWarehouseChanged(warehouseId: number) {
+    const warehouse = this.warehouses.find(item => item.id === warehouseId);
+
     if (!this.disableWarehouseChangedEvent) {
-      this.warehouseChanged.emit({item: input, loading: false});
+      this.warehouseChanged.emit({item: warehouse, loading: false});
     }
     else {
       this.disableWarehouseChangedEvent = false;
     }
   }
 
-  lookUp() {
+  popUpLookUpDialog() {
     this.lookupWarehouse.popUpLookUpDialog();
+  }
+
+  private getWarehouses() {
+    this.cacheService.getItems(this.warehouseService, addActivatedCacheKey(OliveCacheService.cacheKeys.getItemsKey.warehouse), createDefaultSearchOption())
+      .then((items: Warehouse[]) => {
+        this.warehouses = items;
+        this.setLastSelectedWarehouse();
+      });
+  }
+
+  private setLastSelectedWarehouse() {
+    // Cache Value Loading
+    this.cacheService.getUserPreference(this.warehouseComboSelectedCacheKey)
+      .then(obj => {
+        if (obj && !this.item.warehouseId) {
+          this.oForm.patchValue({warehouse: obj.id});
+          this.onWarehouseChanged(obj.id);
+        }
+      });    
   }
 }

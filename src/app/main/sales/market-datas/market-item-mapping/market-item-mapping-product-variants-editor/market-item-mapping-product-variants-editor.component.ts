@@ -20,7 +20,6 @@ import { ProductVariant } from 'app/main/productions/models/product-variant.mode
 import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { showParamMessage } from 'app/core/utils/string-helper';
-import { convertToBase26 } from 'app/core/utils/encode-helpers';
 import { ProductVariantPrice } from 'app/main/productions/models/product-variant-price.model';
 
 @Component({
@@ -92,11 +91,11 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
 
     let dupString;      
     if (dupItem) {
-      dupString = `${convertToBase26(selectedItem.id)}: ${selectedItem.productName}`;
+      dupString = `${this.id26(selectedItem.id)}: ${selectedItem.productName}`;
     }
 
     if (selectedItem && !dupString) {
-      formGroup.patchValue({productVariantId26: convertToBase26(selectedItem.id)});
+      formGroup.patchValue({productVariantId26: this.id26(selectedItem.id)});
     }
 
     if (dupString) {
@@ -166,7 +165,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
               if (!dupProductVariantIdCheckSet.has(pvItem.id)) {
                 dupProductVariantIdCheckSet.add(pvItem.id);
                 duplicatedIdStrings.push(
-                  `${convertToBase26(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
+                  `${this.id26(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
               }
             });
         });
