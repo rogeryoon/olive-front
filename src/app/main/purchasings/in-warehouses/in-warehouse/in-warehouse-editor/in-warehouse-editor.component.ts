@@ -1,11 +1,10 @@
-﻿import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
+﻿import { Component, Output, EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { InWarehouse } from '../../../models/in-warehouse.model';
-import { OliveLookupHostComponent } from 'app/core/components/entries/lookup-host/lookup-host.component';
 import { OliveWarehouseService } from 'app/main/supports/services/warehouse.service';
 import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { OliveCacheService } from 'app/core/services/cache.service';
@@ -20,9 +19,6 @@ import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
   styleUrls: ['./in-warehouse-editor.component.scss']
 })
 export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
-  @ViewChild('warehouse')
-  lookupWarehouse: OliveLookupHostComponent;
-
   disableWarehouseChangedEvent = false;
 
   @Output() warehouseChanged = new EventEmitter();
@@ -84,13 +80,6 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
     return new InWarehouse();
   }
 
-  initializeChildComponent() {
-  }
-
-  markCustomControlsTouched() {
-    this.lookupWarehouse.markAsTouched();
-  }
-
   onWarehouseChanged(warehouseId: number) {
     const warehouse = this.warehouses.find(item => item.id === warehouseId);
 
@@ -100,10 +89,6 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
     else {
       this.disableWarehouseChangedEvent = false;
     }
-  }
-
-  popUpLookUpDialog() {
-    this.lookupWarehouse.popUpLookUpDialog();
   }
 
   private getWarehouses() {
