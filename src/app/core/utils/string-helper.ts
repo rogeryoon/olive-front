@@ -176,15 +176,20 @@ export function addCountTooltip(count: number, tooltip: string = null): string {
  * @param items 
  * @returns  
  */
-export function getItemsName(items: any[], propertyName: string = 'name'): string {
+export function getItemsName(items: any[], propertyName: string = 'name', numberPropertyName: string = null): string {
     let itemsName = '-';
 
     if (items && items.length > 0) {
-        itemsName = items[0][propertyName];
+        const itemName = items[0][propertyName];
+        itemsName = numberPropertyName ? `${itemName}(${items[0][numberPropertyName]})` : itemName;
 
         if (items.length > 1) {
-            console.log(items.map(x => x[propertyName]));
-            itemsName += addCountTooltip(items.length, items.filter(x => x.id !== items[0].id).map(x => x[propertyName]).join());
+            itemsName += addCountTooltip(
+                items.length, 
+                items.filter(x => x.id !== items[0].id)
+                    .map(x => numberPropertyName ? `${x[propertyName]}(${x[numberPropertyName]})` : x[propertyName])
+                    .join()
+            );
         }
     }
 

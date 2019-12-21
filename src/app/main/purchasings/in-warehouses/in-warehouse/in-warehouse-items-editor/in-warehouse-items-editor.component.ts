@@ -199,7 +199,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
         data: {
           name: 'PurchaseOrder',
           columnType: 'custom',
-          itemTitle: this.translator.get(NavTranslates.Purchase.list),
+          itemTitle: `${this.warehouse.name} - ${this.translator.get(NavTranslates.Purchase.list)}`,
           dataService: this.purchaseOrderService,
           maxSelectItems: 10,
           itemType: PurchaseOrder,
@@ -212,7 +212,10 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
             { name: 'Cancelable', value: 'true' } :
             { name: 'InWarehousePending', value: 'true' },
             { name: 'Warehouse', value: this.warehouse.id }
-            ] as NameValue[]) 
+            ] as NameValue[]),
+          searchPlaceHolderName: this.translator.get('purchasing.inWarehouseItems.searchPlaceHolderName'),
+          // 잔여수량 표시 
+          extra: 'balance'
         } as LookupListerSetting
       });
 

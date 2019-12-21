@@ -3,7 +3,7 @@
 </h1>
 <div mat-dialog-content>
     <div *ngIf="!setting.disableSearchInput" style="float: right;">
-        <input #filter [formControl]="keywordFilter" type="search" class="search" placeholder="{{'common.word.search' | translate}}" autocomplete="off">
+        <input #filter [formControl]="keywordFilter" type="search" class="search" [placeholder]="searchPlaceHolderName" autocomplete="off">
     </div>
     <table id="{{setting.dataTableId}}" datatable [dtOptions]="dtOptions" class="row-border hover olive-datatable">
         <thead>

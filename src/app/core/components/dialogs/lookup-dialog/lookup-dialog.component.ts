@@ -123,6 +123,10 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     return this.checkBoxEnable && this.selectedItems.length > 0;
   }
 
+  get searchPlaceHolderName() {
+    return this.setting.searchPlaceHolderName ? this.setting.searchPlaceHolderName : this.translator.get('common.word.search');
+  }
+
   /**
    * Gets tr mouse cursor
    */

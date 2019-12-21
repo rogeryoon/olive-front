@@ -51,7 +51,7 @@ export class OlivePurchaseOrderLookupDialogComponent extends OliveLookupDialogCo
           break;
 
         case Name:
-          retValue = getItemsName(item.purchaseOrderItems, 'productName');
+          retValue = getItemsName(item.purchaseOrderItems, 'productName', this.setting.extra);
           break;
       }
       return retValue;

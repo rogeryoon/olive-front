@@ -19,6 +19,8 @@ export class LookupListerSetting implements IListerSetting {
 
     searchOption?: any;
 
+    searchPlaceHolderName?: string;
+
     itemTitle: string;
 
     dataService: OliveDataService;
@@ -38,4 +40,6 @@ export class LookupListerSetting implements IListerSetting {
 
     translateTitleId?: string;
     // For New Item Support - End
+
+    extra?: any;
 }
