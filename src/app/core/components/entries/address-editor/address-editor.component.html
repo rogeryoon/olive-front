@@ -39,7 +39,7 @@
         <mat-form-field appearance="outline" class="ml-4">
             <mat-label>{{'common.word.country'|translate}}</mat-label>
             <mat-select name="country" formControlName="country" required>
-                <mat-option *ngIf="countries.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
+                <mat-option *ngIf="countries && countries.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
                 <mat-option *ngFor="let country of countries" [value]="country.id">{{country.name}}</mat-option>
             </mat-select>
             <mat-error *ngIf="hasEntryError('country')">{{errorMessage('country')}}</mat-error>

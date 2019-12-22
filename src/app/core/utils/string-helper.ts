@@ -166,7 +166,7 @@ export function splitStickyWords(input, separator): string {
  * @returns count tooltip 
  */
 export function addCountTooltip(count: number, tooltip: string = null): string {
-    const tooltipAttribute = tooltip ? ` title="${tooltip.replace('"', '\'')}"` : '';
+    const tooltipAttribute = tooltip ? ` title="${tooltip.replace(/["']/gi, '')}"` : '';
     // ov-td-click를 추가해야지 이중 팝업이 되질 않는다.
     return `<span class="added-count ov-td-click"${tooltipAttribute}>+${count}</span>`;
 }
@@ -184,11 +184,12 @@ export function getItemsName(items: any[], propertyName: string = 'name', number
         itemsName = numberPropertyName ? `${itemName}(${items[0][numberPropertyName]})` : itemName;
 
         if (items.length > 1) {
+            let index = 0;
             itemsName += addCountTooltip(
-                items.length, 
-                items.filter(x => x.id !== items[0].id)
+                items.length - 1, 
+                items.filter(x => ++index > 1)
                     .map(x => numberPropertyName ? `${x[propertyName]}(${x[numberPropertyName]})` : x[propertyName])
-                    .join()
+                    .join('\r\n')
             );
         }
     }

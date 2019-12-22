@@ -19,7 +19,7 @@
             <mat-form-field appearance="outline" fxFlex="100">
                 <mat-label>{{'common.word.warehouse'|translate}}</mat-label>
                 <mat-select name="warehouse" formControlName="warehouse" required>
-                    <mat-option *ngIf="warehouses.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
+                    <mat-option *ngIf="warehouses && warehouses.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
                     <mat-option *ngFor="let warehouse of warehouses" [value]="warehouse.id">{{warehouse.name}}</mat-option>
                 </mat-select>
                 <mat-error *ngIf="hasEntryError('warehouse')">{{errorMessage('warehouse')}}</mat-error>
