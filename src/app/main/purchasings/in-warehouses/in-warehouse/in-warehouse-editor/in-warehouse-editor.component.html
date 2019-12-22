@@ -4,7 +4,7 @@
             <div flex style="width: 200px">
                 <mat-form-field appearance="outline" fxFlex="100">
                     <mat-label>{{'common.word.warehouse'|translate}}</mat-label>
-                    <mat-select name="warehouse" formControlName="warehouse" required (valueChange)="onWarehouseChanged($event)">
+                    <mat-select name="warehouse" formControlName="warehouse" required (valueChange)="onWarehouseChanged($event)" [disabled]="!isNewItem">
                         <mat-option *ngIf="warehouses && warehouses.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
                         <mat-option *ngFor="let warehouse of warehouses" [value]="warehouse.id">{{warehouse.name}}
                         </mat-option>

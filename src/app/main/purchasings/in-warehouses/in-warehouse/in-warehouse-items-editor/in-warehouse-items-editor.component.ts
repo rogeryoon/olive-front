@@ -43,7 +43,7 @@ import { createSearchOption } from 'app/core/utils/search-helpers';
   ]
 })
 export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
-  displayedColumns = ['productVariantId26', 'name', 'balance', 'price', 'quantityDue', 'quantity', 'remark', 'actions'];
+  displayedColumns = ['productVariantId26', 'productName', 'balance', 'price', 'quantityDue', 'quantity', 'remark', 'actions'];
   dataSource: OliveInWarehouseItemDataSource = new OliveInWarehouseItemDataSource(this.cacheService);
 
   warehouse: Warehouse;
