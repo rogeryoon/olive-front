@@ -5,7 +5,7 @@
             <mat-form-field appearance="outline" class="w-300">
                 <mat-label>{{'common.word.marketSeller' | translate}}</mat-label>
                 <mat-select name="seller" formControlName="seller" (valueChange)="onValueChange($event)" required>
-                    <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
+                    <mat-option *ngIf="sellers.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
                     <mat-option *ngFor="let seller of sellers" [value]="seller.id">{{seller.name}}</mat-option>
                 </mat-select>
                 <mat-error *ngIf="hasEntryError('seller')">{{errorMessage('seller')}}</mat-error>

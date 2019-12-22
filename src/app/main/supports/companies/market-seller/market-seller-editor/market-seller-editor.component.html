@@ -10,7 +10,7 @@
         <mat-form-field appearance="outline" fxFlex="50">
             <mat-label>{{'common.word.market'|translate}}</mat-label>
             <mat-select name="market" formControlName="market" required>
-                <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
+                <mat-option *ngIf="markets.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
                 <mat-option *ngFor="let market of markets" [value]="market.id">{{market.name}}</mat-option>
             </mat-select>
             <mat-error *ngIf="hasEntryError('market')">{{errorMessage('market')}}</mat-error>
@@ -21,7 +21,7 @@
         <mat-form-field appearance="outline" fxFlex="100">
             <mat-label>{{'common.word.company'|translate}}</mat-label>
             <mat-select name="company" formControlName="company" required>
-                <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
+                <mat-option *ngIf="companies.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
                 <mat-option *ngFor="let company of companies" [value]="company.id">{{company.name}}</mat-option>
             </mat-select>
             <mat-error *ngIf="hasEntryError('company')">{{errorMessage('company')}}</mat-error>

@@ -85,7 +85,7 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: VoidPurchaseOrder) {
     if (item) {
-      return `${this.translator.get('common.word.purchaseReturnOrCancel')} ID : ${this.dateCode(item.createdUtc, item.id)}`;
+      return 'TEST'; // `${this.translator.get('common.word.purchaseReturnOrCancel')} ID : ${this.dateCode(item.createdUtc, item.id)}`;
     }
     else {
       return this.translator.get(NavTranslates.Purchase.cancelEntry);
@@ -97,7 +97,7 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = this.dateCode(item.createdUtc, item.id);
+        retValue = 'TEST'; // this.dateCode(item.createdUtc, item.id);
         break;
 
       case Suppliers:

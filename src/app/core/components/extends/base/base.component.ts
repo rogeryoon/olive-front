@@ -71,9 +71,9 @@ export class OliveBaseComponent implements OnInit {
     return getMomentDate(input);
   }  
 
-  dateCode(date: any, id: number = 0): string {
-    return dateCode(date, id);
-  }  
+  // dateCode(date: any, id: number = 0): string {
+  //   return dateCode(date, id);
+  // }  
 
   boolValue(value?: boolean): boolean {
     return value == null ? true : value;

@@ -15,7 +15,7 @@
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <mat-select name="paymentMethodId" formControlName="paymentMethodId" required (selectionChange)="onSelectionChange($event)" (blur)="onBlur($event)">
-            <mat-option value="">{{'common.message.chooseOption' | translate}}</mat-option>
+            <mat-option *ngIf="paymentMethods.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
             <mat-option *ngFor="let method of paymentMethods" [value]="method.id">{{method.name}}</mat-option>
           </mat-select>
           <mat-error *ngIf="hasArrayEntryError('paymentMethodId',i)">{{arrayErrorMessage('paymentMethodId',i)}}</mat-error>

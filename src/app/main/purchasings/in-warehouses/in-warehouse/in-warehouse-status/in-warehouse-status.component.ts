@@ -17,6 +17,7 @@ import { OliveInWarehouseManagerComponent } from '../in-warehouse-manager/in-war
 import { InWarehouse } from '../../../models/in-warehouse.model';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OliveEditDialogComponent } from 'app/core/components/dialogs/edit-dialog/edit-dialog.component';
+import { createdDateShortId } from 'app/core/utils/olive-helpers';
 
 const ProductVariantId = 'id';
 const ItemName = 'name';
@@ -71,7 +72,7 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
           break;
 
         case InWarehouseId:
-          retValue = this.dateCode(item.createdUtc, item.inWarehouseId);
+          retValue = createdDateShortId(item);
           break;        
       }
       return retValue;
@@ -127,7 +128,7 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
         item: item,
         itemType: InWarehouse,
         managePermission: null,
-        customTitle: `${this.translator.get('navi.inWarehouse.group')} ID : ${this.dateCode(item.createdUtc, item.id)}`,
+        customTitle: `${this.translator.get('navi.inWarehouse.group')} ID : ${createdDateShortId(item)}`,
         readOnly : true
       } as OliveOnEdit
     );

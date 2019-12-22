@@ -19,6 +19,7 @@ import { InWarehouse } from '../../models/in-warehouse.model';
 import { OliveInWarehouseManagerComponent } from './in-warehouse-manager/in-warehouse-manager.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { getItemsName } from 'app/core/utils/string-helper';
+import { createdDateShortId } from 'app/core/utils/olive-helpers';
 
 const Selected  = 'selected';
 const Id = 'id';
@@ -84,7 +85,7 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: InWarehouse) {
     if (item) {
-      return `${this.translator.get('navi.inWarehouse.group')} ID : ${this.dateCode(item.createdUtc, item.shortId)}`;
+      return `${this.translator.get('navi.inWarehouse.group')} ID : ${createdDateShortId(item)}`;
     }
     else {
       return this.translator.get(NavTranslates.InWarehouse.entry);
@@ -96,7 +97,7 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = this.dateCode(item.createdUtc, item.shortId);
+        retValue = createdDateShortId(item);
         break;
 
       case Suppliers:

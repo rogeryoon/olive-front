@@ -71,7 +71,7 @@ export class OliveVoidPurchaseOrderStatusComponent extends OliveLookupDialogComp
           break;
 
         case InWarehouseId:
-          retValue = this.dateCode(item.createdUtc, item.inWarehouseId);
+          // retValue = this.dateCode(item.createdUtc, item.inWarehouseId);
           break;        
       }
       return retValue;
@@ -127,7 +127,7 @@ export class OliveVoidPurchaseOrderStatusComponent extends OliveLookupDialogComp
         item: item,
         itemType: InWarehouse,
         managePermission: null,
-        customTitle: `${this.translator.get('navi.inWarehouse.group')} ID : ${this.dateCode(item.createdUtc, item.id)}`,
+        customTitle: 'TEST', // `${this.translator.get('navi.inWarehouse.group')} ID : ${this.dateCode(item.createdUtc, item.id)}`,
         readOnly : true
       } as OliveOnEdit
     );

@@ -18,7 +18,7 @@
         <mat-form-field appearance="outline" class="w-100-p">
             <mat-label>{{'support.marketEditor.marketExcelInterface' | translate}}</mat-label>
             <mat-select name="marketExcelInterface" formControlName="marketExcelInterface">
-                <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
+                <mat-option *ngIf="marketExcelInterfaces.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
                 <mat-option *ngFor="let item of marketExcelInterfaces" [value]="item.id">{{item.name}}</mat-option>
             </mat-select>
         </mat-form-field>

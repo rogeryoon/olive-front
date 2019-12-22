@@ -1,7 +1,7 @@
   <mat-form-field appearance="outline" class="w-100-p">
     <mat-label>{{placeholder}}</mat-label>
     <mat-select #dropDownCtrl [formControl]="dropDown">
-      <mat-option>{{'common.message.chooseOption' | translate}}</mat-option>
+      <mat-option *ngIf="items.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
       <mat-option *ngFor="let item of items" [value]="item.id">
         {{item.name}}
       </mat-option>
