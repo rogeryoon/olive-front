@@ -81,6 +81,9 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
   }
 
   onRequiredWarehouse() {
-    this.inWarehouseEditor.popUpLookUpDialog();
+    this.alertService.showMessageBox(
+      this.translator.get('common.title.errorConfirm'),
+      this.translator.get('purchasing.inWarehouseManager.noWarehouseSelected')
+    );
   }
 }

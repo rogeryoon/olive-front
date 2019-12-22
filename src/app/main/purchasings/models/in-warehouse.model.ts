@@ -4,6 +4,7 @@ import { Warehouse } from 'app/main/supports/models/warehouse.model';
 
 export class InWarehouse extends OliveTrackingAttribute {
     id?: number;
+    shortId?: number;
     itemCount?: number;
     memo: string;
     warehouseId: number;

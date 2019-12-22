@@ -627,10 +627,11 @@ export const locale = {
             },
             'inWarehouseManager': {
                 'saveConfirmTitle' : '입고 확인',
-                'saveConfirmMessage' : '정말 입고 내용을 저장하시겠습니까?'
+                'saveConfirmMessage' : '정말 입고 내용을 저장하시겠습니까?',
+                'noWarehouseSelected' : '창고를 먼저 선택하십시오.'
             },
             'inWarehouseItems': {
-                'id' : '품목',
+                'id' : '상품 ID',
                 'supplier': '공급자',
                 'name' : '품명',
                 'quantity': '검수량',

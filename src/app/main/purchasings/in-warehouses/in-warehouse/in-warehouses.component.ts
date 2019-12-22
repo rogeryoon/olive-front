@@ -84,7 +84,7 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: InWarehouse) {
     if (item) {
-      return `${this.translator.get('navi.inWarehouse.group')} ID : ${this.dateCode(item.createdUtc, item.id)}`;
+      return `${this.translator.get('navi.inWarehouse.group')} ID : ${this.dateCode(item.createdUtc, item.shortId)}`;
     }
     else {
       return this.translator.get(NavTranslates.InWarehouse.entry);
@@ -96,7 +96,7 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = this.dateCode(item.createdUtc, item.id);
+        retValue = this.dateCode(item.createdUtc, item.shortId);
         break;
 
       case Suppliers:
