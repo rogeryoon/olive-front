@@ -26,8 +26,8 @@ export function purchaseOrderId(item: PurchaseOrder): string {
  * @param item 
  * @returns date id 
  */
-export function createdDateShortId(item: any): string {
-    return `${get6DigitDate(item.createdUtc)}-${item.shortId}`;
+export function createdDateShortId(item: any, datePropertyName = 'createdUtc', shortIdPropertyName = 'shortId'): string {
+    return `${get6DigitDate(item[datePropertyName])}-${item[shortIdPropertyName]}`;
 }
 
 /**

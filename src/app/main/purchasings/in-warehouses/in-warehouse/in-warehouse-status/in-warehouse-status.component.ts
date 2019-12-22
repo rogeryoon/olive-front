@@ -56,7 +56,7 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
       let retValue = '';
       switch (columnName) {
         case ProductVariantId:
-          retValue = this.id36(item.id);
+          retValue = this.id26(item.productShortId);
           break;
 
         case ItemName:
@@ -72,7 +72,7 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
           break;
 
         case InWarehouseId:
-          retValue = createdDateShortId(item);
+          retValue = createdDateShortId(item, 'inWarehouseCreatedDate', 'inWarehouseShortId');
           break;        
       }
       return retValue;
