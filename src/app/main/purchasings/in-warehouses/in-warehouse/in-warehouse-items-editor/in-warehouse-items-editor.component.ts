@@ -78,6 +78,10 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     return this.dataSource.items;
   }
 
+  get canAddOrDeleteItems(): boolean {
+    return !this.isVoidMode || this.getEditedItem().length === 0;
+  }
+
   getPurchaseOrderId(item: InWarehouseItem): string {
     return purchaseOrderId(item, 'purchaseOrderDate', 'purchaseOrderShortId');
   }
@@ -206,7 +210,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
           columnType: 'custom',
           itemTitle: `${this.warehouse.name} - ${this.translator.get(NavTranslates.Purchase.list)}`,
           dataService: this.purchaseOrderService,
-          maxSelectItems: 10,
+          maxSelectItems: this.isVoidMode ? 1 : 10,
           itemType: PurchaseOrder,
           managePermission: Permission.manageProductsPermission,
           translateTitleId: NavTranslates.Purchase.list,
