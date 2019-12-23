@@ -17,8 +17,8 @@ export function checkIcon(condition: boolean): string {
  * @param item 
  * @returns order id 
  */
-export function purchaseOrderId(item: PurchaseOrder): string {
-    return `${get6DigitDate(item.date)}-${item.shortId}`;
+export function purchaseOrderId(item: PurchaseOrder, datePropertyName = 'date', shortIdPropertyName = 'shortId'): string {
+    return `${get6DigitDate(item[datePropertyName])}-${item[shortIdPropertyName]}`;
 }
 
 /**

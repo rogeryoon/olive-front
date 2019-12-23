@@ -631,7 +631,8 @@ export const locale = {
                 'noWarehouseSelected' : '창고를 먼저 선택하십시오.'
             },
             'inWarehouseItems': {
-                'id' : '상품 ID',
+                'purchaseOrderId' : '발주 ID',
+                'productVariantId' : '품목 ID',
                 'supplier': '공급자',
                 'name' : '품명',
                 'quantity': '검수량',

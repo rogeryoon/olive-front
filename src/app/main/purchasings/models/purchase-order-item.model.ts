@@ -11,6 +11,7 @@ export class PurchaseOrderItem extends OliveTrackingAttribute {
     otherCurrencyPrice?: number;
     remarks: string;
     productVariantId?: number;
+    productVariantShortId?: number;
     productName: string;
 
     tagProcessed?: boolean;

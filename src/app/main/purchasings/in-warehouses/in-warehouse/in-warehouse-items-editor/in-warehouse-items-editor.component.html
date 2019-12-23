@@ -10,8 +10,14 @@
       (click)="currentRow=row;">
     </mat-row>
 
+    <ng-container matColumnDef="purchaseOrderId26">
+      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.purchaseOrderId' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="justify-center">{{getPurchaseOrderId(row.Obj)}}</mat-cell>
+      <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
+    </ng-container>    
+
     <ng-container matColumnDef="productVariantId26">
-      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.id' | translate}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.productVariantId' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row" class="justify-center">{{id26(row.Obj.productVariantId)}}</mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>

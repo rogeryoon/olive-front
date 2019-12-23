@@ -231,7 +231,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   onProductSelected(event: any, index: number) {
     const formGroup = this.getArrayFormGroup(index);
 
-    formGroup.patchValue({ productVariantId26: '' });
+    formGroup.patchValue({ productVariantId26: '', hiddenProductVariantId: '' });
 
     const selectedItem = this.getProducts(index).find(item => item.productName === event.option.value);
 
@@ -240,12 +240,13 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
 
     let dupString;
     if (dupItem) {
-      dupString = `${this.id26(selectedItem.id)}: ${selectedItem.productName}`;
+      dupString = `${this.id26(selectedItem.shortId)}: ${selectedItem.productName}`;
     }
 
     if (selectedItem && !dupString) {
       formGroup.patchValue({ 
-        productVariantId26: this.id26(selectedItem.id),
+        productVariantId26: this.id26(selectedItem.shortId),
+        hiddenProductVariantId: selectedItem.id,
         productName: selectedItem.productName,
         price: selectedItem.price,
         discount: '0', // 숫자로 바꾸지 말것 - Validation 문제 발생
@@ -346,7 +347,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
             if (!dupProductVariantIdCheckSet.has(pvItem.id)) {
               dupProductVariantIdCheckSet.add(pvItem.id);
               duplicatedIdStrings.push(
-                `${this.id26(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
+                `${this.id26(pvItem.shortId)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
             }
           });
       });
@@ -361,6 +362,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
             discount: 0,
             appliedCost: pvItem.standPrice,
             productVariantId: pvItem.id,
+            productVariantShortId: pvItem.shortId,
             productName: `${pvItem.productFk.name} ${pvItem.name}`.trim()
           } as PurchaseOrderItem);
           needToRender = true;
@@ -411,7 +413,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
             .forEach((sItem: PurchaseOrderItem) => {
               if (!dupPOItemIdCheckSet.has(sItem.id)) {
                 dupPOItemIdCheckSet.add(sItem.productVariantId);
-                duplicatedIdStrings.push(`${this.id26(sItem.id)}: ${sItem.productName}`);
+                duplicatedIdStrings.push(`${this.id26(sItem.productVariantShortId)}: ${sItem.productName}`);
               }
             });
         });
@@ -429,6 +431,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
                 discount: 0,
                 appliedCost: sItem.price,
                 productVariantId: sItem.productVariantId,
+                productVariantShortId: sItem.productVariantShortId,
                 productName: sItem.productName
               } as PurchaseOrderItem);
               needToRender = true;

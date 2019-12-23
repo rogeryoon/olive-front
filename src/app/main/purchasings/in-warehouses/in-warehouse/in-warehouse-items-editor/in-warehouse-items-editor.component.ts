@@ -24,6 +24,7 @@ import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-it
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { isNumberPattern, showParamMessage } from 'app/core/utils/string-helper';
 import { createSearchOption } from 'app/core/utils/search-helpers';
+import { purchaseOrderId } from 'app/core/utils/olive-helpers';
 
 @Component({
   selector: 'olive-in-warehouse-items-editor',
@@ -43,7 +44,7 @@ import { createSearchOption } from 'app/core/utils/search-helpers';
   ]
 })
 export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
-  displayedColumns = ['productVariantId26', 'productName', 'balance', 'price', 'quantityDue', 'quantity', 'remark', 'actions'];
+  displayedColumns = ['purchaseOrderId26', 'productVariantId26', 'productName', 'balance', 'price', 'quantityDue', 'quantity', 'remark', 'actions'];
   dataSource: OliveInWarehouseItemDataSource = new OliveInWarehouseItemDataSource(this.cacheService);
 
   warehouse: Warehouse;
@@ -75,6 +76,10 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
   getEditedItem(): InWarehouseItem[] {
     return this.dataSource.items;
+  }
+
+  getPurchaseOrderId(item: InWarehouseItem): string {
+    return purchaseOrderId(item, 'purchaseOrderDate', 'purchaseOrderShortId');
   }
 
   buildForm() {

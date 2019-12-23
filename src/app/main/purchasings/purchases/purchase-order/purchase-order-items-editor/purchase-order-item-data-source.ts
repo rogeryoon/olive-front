@@ -36,19 +36,20 @@ export class OlivePurchaseOrderItemDataSource extends TableDataSource {
     }
 
     createRowFormGroup(r: any): FormGroup {
-        r.Obj.productVariantId26 = convertToBase26(r.Obj.productVariantId);
+        r.Obj.productVariantId26 = convertToBase26(r.Obj.productVariantShortId);
         const productVariantId26Control = new FormControl(r.Obj.productVariantId26, [requiredValidator()]);
         productVariantId26Control.valueChanges.subscribe(val => { 
             if (val) {
-                r.Obj.productVariantId = convertBase26ToNumber(val);
+                r.Obj.productVariantShortId = convertBase26ToNumber(val);
             }
             else {
-                r.Obj.productVariantId = null;
+                r.Obj.productVariantShortId = null;
             }
         });
 
         const fg = new FormGroup({
             productVariantId26: productVariantId26Control,
+            hiddenProductVariantId: this.createNewFormControl(r, 'productVariantId', []),
             productName: this.createNewFormControl(r, 'productName', [requiredValidator()]),
             quantity: this.createNewFormControl(r, 'quantity', [numberValidator(0, true, 1)]),
             price: this.createNewFormControl(r, 'price', [numberValidator(this.standCurrency.decimalPoint, true)]),
