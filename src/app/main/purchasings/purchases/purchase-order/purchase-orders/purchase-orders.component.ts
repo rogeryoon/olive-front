@@ -113,7 +113,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: PurchaseOrder): string {
     if (item) {
-      return `${this.translator.get('navi.purchase.group')} ID : ${purchaseOrderId(item.date)}`;
+      return `${this.translator.get('navi.purchase.group')} ID : ${purchaseOrderId(item)}`;
     }
     else {
       return this.translator.get(NavTranslates.Purchase.entry);
