@@ -7,7 +7,7 @@ import { Address } from 'app/core/models/address.model';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { numberFormat } from 'app/core/utils/number-helper';
-import { getShortDate, getMomentDate, dateCode } from 'app/core/utils/date-helper';
+import { getShortDate, getMomentDate } from 'app/core/utils/date-helper';
 import { showAddress } from 'app/core/utils/string-helper';
 import { convertToBase36, convertToBase26 } from 'app/core/utils/encode-helpers';
 import { testIsUndefined } from 'app/core/utils/object-helpers';

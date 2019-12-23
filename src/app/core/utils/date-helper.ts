@@ -1,7 +1,6 @@
 import * as moment from 'moment';
 
 import { UserName } from '../models/user-name';
-import { convertToBase36 } from './encode-helpers';
 
 /**
  *  Date을 표준 포맷 (예:2013-02-13 13:15:15) 문자열로 변환
@@ -93,21 +92,6 @@ export function showEventDateAndName(date: any, userName: UserName): string {
     }
 
     return value;
-}
-
-/**
- * Base36 + Dates code
- * @param date 
- * @param [id] 
- * @returns code 
- */
-export function dateCode(date: any, id: number = 0): string {
-    if (id === 0) {
-        return get6DigitDate(date);
-    }
-    else {
-        return convertToBase36(id) + '-' + get6DigitDate(date);
-    }
 }
 
 /**

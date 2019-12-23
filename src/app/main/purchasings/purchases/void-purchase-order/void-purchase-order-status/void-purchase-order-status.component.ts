@@ -17,6 +17,7 @@ import { OliveEditDialogComponent } from 'app/core/components/dialogs/edit-dialo
 import { InWarehouse } from 'app/main/purchasings/models/in-warehouse.model';
 import { OliveInWarehouseService } from 'app/main/purchasings/services/in-warehouse.service';
 import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.model';
+import { createdDateShortId } from 'app/core/utils/olive-helpers';
 
 const ProductVariantId = 'id';
 const ItemName = 'name';
@@ -127,7 +128,7 @@ export class OliveVoidPurchaseOrderStatusComponent extends OliveLookupDialogComp
         item: item,
         itemType: InWarehouse,
         managePermission: null,
-        customTitle: 'TEST', // `${this.translator.get('navi.inWarehouse.group')} ID : ${this.dateCode(item.createdUtc, item.id)}`,
+        customTitle: `${this.translator.get('navi.inWarehouse.group')} ID : ${createdDateShortId(item)}`,
         readOnly : true
       } as OliveOnEdit
     );

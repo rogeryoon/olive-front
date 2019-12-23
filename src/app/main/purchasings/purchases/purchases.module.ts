@@ -30,8 +30,7 @@ const routes = [
   {
     path: 'list',
     component: OlivePurchaseOrdersComponent,
-    canActivate: [AuthGuard],
-    data: {'someData': 'test'}
+    canActivate: [AuthGuard]
   },
   {
     path: 'pending',

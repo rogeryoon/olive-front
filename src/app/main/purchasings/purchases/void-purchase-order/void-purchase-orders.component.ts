@@ -20,6 +20,7 @@ import { InWarehouse } from '../../models/in-warehouse.model';
 import { VoidPurchaseOrder } from '../../models/void-purchase-order.model';
 import { OliveVoidPurchaseOrderService } from '../../services/void-purchase-order.service';
 import { getItemsName } from 'app/core/utils/string-helper';
+import { createdDateShortId } from 'app/core/utils/olive-helpers';
 
 const Selected  = 'selected';
 const Id = 'id';
@@ -85,7 +86,7 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: VoidPurchaseOrder) {
     if (item) {
-      return 'TEST'; // `${this.translator.get('common.word.purchaseReturnOrCancel')} ID : ${this.dateCode(item.createdUtc, item.id)}`;
+      return `${this.translator.get('common.word.purchaseReturnOrCancel')} ID : ${createdDateShortId(item.inWarehouseFk)}`;
     }
     else {
       return this.translator.get(NavTranslates.Purchase.cancelEntry);
@@ -97,7 +98,7 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = 'TEST'; // this.dateCode(item.createdUtc, item.id);
+        retValue = createdDateShortId(item.inWarehouseFk);
         break;
 
       case Suppliers:
