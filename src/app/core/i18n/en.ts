@@ -12,27 +12,41 @@ export const locale = {
                 'itemChanged': '상품변경'
             },
             'message' : {
-                'noRecordsFound' : '해당 데이터가 존재하지 않습니다.', // 'No matching records found',
+                // 'No matching records found',
+                'noRecordsFound' : '해당 데이터가 존재하지 않습니다.', 
                 'savingChanges' : 'Saving changes...',
-                'newItemCreated': '"{0}"(이)가 저장되었습니다.', // '"{0}" was created successfully'
-                'newItemCreatedGeneral': '데이터가 저장되었습니다.', // 'The item was created successfully',
+                // '"{0}" was created successfully'
+                'newItemCreated': '"{0}"(이)가 저장되었습니다.', 
+                // 'The item was created successfully',
+                'newItemCreatedGeneral': '데이터가 저장되었습니다.', 
                 'uploadSaved': '업로드 데이터 저장을 완료하였습니다.',
-                'deleted' : '"{0}"(이)가 삭제되었습니다.', // '"{0}" was deleted successfully'
-                'deletedGeneral' : '데이터가 삭제되었습니다.', // 'The item was deleted successfully'
-                'updated' : '"{0}"(이)가 저장되었습니다.', // '"{0}" was saved successfully'
-                'updatedGeneral' : '데이터가 저장되었습니다.', // 'The item was saved successfully'
-                'saveError' : 'The below errors occurred whilst saving your changes:',
+                // '"{0}" was deleted successfully'
+                'deleted' : '"{0}"(이)가 삭제되었습니다.', 
+                // 'The item was deleted successfully'
+                'deletedGeneral' : '데이터가 삭제되었습니다.', 
+                // '"{0}" was saved successfully'
+                'updated' : '"{0}"(이)가 저장되었습니다.', 
+                // 'The item was saved successfully'
+                'updatedGeneral' : '데이터가 저장되었습니다.', 
+                // The below errors occurred while saving your changes:
+                'saveError' : '요청한 처리를 진행중에 오류가 발생하였습니다.', 
                 'notSupportHtml5' : 'Sorry! Your browser does not support HTML5.',
                 'invalidSelectedFiles' : '선택한 파일이 없습니다.',
                 'clickFileButton' : '파일열기 버튼을 눌러 업로드 파일을 선택해 주십시오.',
                 'selectImportFile' : '원하는 파일을 선택하여 주십시오.',
                 'confirmDelete' : '정말 삭제하겠습니까{0}?',
-                'errorDeleting' : 'The below errors occurred while deleting the item:',
-                'deleting' : 'Deleting...',
-                'errorLoading' : 'Unable to retrieve data from the server.\r\n Please contact your system administrator',
-                'sessionExpired' : 'The session expired. please login to continue.',
-                'reLogin' : 'Your Session has expired. Please log in again',
-                'renewSession' : 'Your Session has expired. Please log in again to renew your session',
+                // The below errors occurred while deleting the item:
+                'errorDeleting' : '요청 데이터를 삭제하는 도중 오류가 발생하였습니다.', 
+                // Deleting...
+                'deleting' : '삭제중...',
+                // Unable to retrieve data from the server.\r\n Please contact your system administrator
+                'errorLoading' : '서버 데이터 로딩이 불가능합니다.\r\n 시스템 관리자에게 문의하십시오.', 
+                // The session expired. please login to continue.
+                'sessionExpired' : '로그인 세션이 만기되었습니다. 계속하려면 로그인 하십시오.',
+                // Your Session has expired. Please log in again
+                'reLogin' : '로그인 세션이 만기되었습니다. 다시 로그인 하십시오.',
+                // 'Your Session has expired. Please log in again to renew your session'
+                'renewSession' : '로그인 세션이 만기되었습니다. 다시 로그인 하십시오.',
                 'duplicated' : '아래건(들)이 이미 존재하여 추가되지 않았습니다.\r\n{0}',
                 'requestFinished': '요청한 작업을 완료하였습니다.',
                 'noItemCreated' : '1개 이상의 항목을 등록하십시오.',
