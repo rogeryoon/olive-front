@@ -640,7 +640,8 @@ export const locale = {
                 'balance': '입고 잔량',
                 'remark' : '비고',
                 'price' : '단가',
-                'searchPlaceHolderName' : '미입고 상품 검색'
+                'searchPlaceHolderName' : '미입고 상품 검색',
+                'voidSearchPlaceHolderName' : '입고 상품 검색'
             },
             'inWarehousesHeader': {
                 'id': 'ID',

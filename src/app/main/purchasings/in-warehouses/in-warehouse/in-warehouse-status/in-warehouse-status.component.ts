@@ -56,7 +56,7 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
       let retValue = '';
       switch (columnName) {
         case ProductVariantId:
-          retValue = this.id26(item.productShortId);
+          retValue = this.id26(item.productVariantShortId);
           break;
 
         case ItemName:

@@ -18,7 +18,10 @@ import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { OlivePurchaseOrderManagerComponent } from '../../purchase-order/purchase-order-manager/purchase-order-manager.component';
 import { showParamMessage } from 'app/core/utils/string-helper';
 import { ReferHostSetting } from 'app/core/interfaces/setting/refer-host-setting';
-import { purchaseOrderId } from 'app/core/utils/olive-helpers';
+import { purchaseOrderId, addActivatedCacheKey } from 'app/core/utils/olive-helpers';
+import { OliveCacheService } from 'app/core/services/cache.service';
+import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
+import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
 
 @Component({
   selector: 'olive-void-purchase-order-editor',
@@ -26,9 +29,6 @@ import { purchaseOrderId } from 'app/core/utils/olive-helpers';
   styleUrls: ['./void-purchase-order-editor.component.scss']
 })
 export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormComponent {
-  @ViewChild('warehouse')
-  lookupWarehouse: OliveLookupHostComponent;
-
   @ViewChild('purchaseOrder') 
   referPurchaseOrder: OliveReferHostComponent;
 
@@ -36,26 +36,34 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
 
   @Output() warehouseChanged = new EventEmitter();
 
+  warehouses: Warehouse[];
+
+  readonly warehouseComboSelectedCacheKey = OliveCacheService.cacheKeys.userPreference.dropDownBox + 
+    OliveCacheService.cacheKeys.getItemKey.warehouse + this.queryParams.CompanyGroupId;
+
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
-    private warehouseService: OliveWarehouseService, private purchaseOrderService: OlivePurchaseOrderService
+    private warehouseService: OliveWarehouseService, private purchaseOrderService: OlivePurchaseOrderService,
+    private cacheService: OliveCacheService, private queryParams: OliveQueryParameterService
   ) {
     super(
       formBuilder, translator
     );
   }
 
-  get warehouseId() {
-    return this.getControl('purchaseOrderFk').value.warehouseId;
-  }
-
   getEditedItem(): VoidPurchaseOrder {
     const formModel = this.oForm.value;
+
+    const selectedWarehouse = this.warehouses.find(item => item.id === formModel.warehouse);
+
+    // Item 저장시 마지막 선택한 창고를 저장
+    this.cacheService.setUserPreference(this.warehouseComboSelectedCacheKey, selectedWarehouse);
+
 
     return this.itemWithIdNAudit({
       inWarehouseFk: {
         memo : formModel.memo,
-        warehouseId : this.warehouseId
+        warehouseId : selectedWarehouse.id
       },
       purchaseOrderFk: this.item.purchaseOrderFk,
       returnTrackings: this.item.returnTrackings
@@ -64,7 +72,7 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      warehouseFk: null,
+      warehouse: null,
       purchaseOrderFk: null,
       supplierName: '',
       memo: '',
@@ -72,22 +80,24 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
   }
 
   resetForm() {
-    const row = this.item as VoidPurchaseOrder;
+    const item = this.item as VoidPurchaseOrder;
 
-    if (row.inWarehouseFk && !this.isNull(row.inWarehouseFk.warehouseFk)) {
+    if (item.inWarehouseFk && !this.isNull(item.inWarehouseFk.warehouseFk)) {
       this.disableWarehouseChangedEvent = true;
     }
 
     this.oForm.reset({
-      warehouseFk: row.inWarehouseFk && row.inWarehouseFk.warehouseFk ? row.inWarehouseFk.warehouseFk : null,
-      purchaseOrderFk: row.purchaseOrderFk,
-      supplierName: row.purchaseOrderFk && row.purchaseOrderFk.supplierFk && row.purchaseOrderFk.supplierFk.name ? row.purchaseOrderFk.supplierFk : '',
-      memo: row.inWarehouseFk ? row.inWarehouseFk.memo : ''
+      warehouse: item.inWarehouseFk && item.inWarehouseFk.id ? item.inWarehouseFk.id : '',
+      purchaseOrderFk: item.purchaseOrderFk,
+      supplierName: item.purchaseOrderFk && item.purchaseOrderFk.supplierFk && item.purchaseOrderFk.supplierFk.name ? item.purchaseOrderFk.supplierFk : '',
+      memo: item.inWarehouseFk ? item.inWarehouseFk.memo : ''
     });
 
     if (this.item.warehouseFk) {
       this.warehouseChanged.emit({item: this.item.warehouseFk, loading: true});
     }
+
+    this.getWarehouses();
   }
 
   createEmptyObject() {
@@ -95,18 +105,6 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
   }
 
   initializeChildComponent() {
-    this.lookupWarehouse.setting = {
-      name: 'Warehouse',
-      columnType: 'code',
-      itemTitle: this.translator.get(NavTranslates.Company.warehouse),
-      dataService: this.warehouseService,
-      maxSelectItems: 1,
-      newComponent: OliveWarehouseManagerComponent,
-      itemType: Warehouse,
-      managePermission: Permission.assignCompanyGroups,
-      translateTitleId: NavTranslates.Company.warehouse
-    } as LookupListerSetting;
-
     this.referPurchaseOrder.setting = {
       itemType: PurchaseOrder,
       dataService: this.purchaseOrderService,
@@ -128,20 +126,33 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
     return showParamMessage(template, purchaseOrderId(order));
   }
 
-  markCustomControlsTouched() {
-    this.lookupWarehouse.markAsTouched();
-  }
+  onWarehouseChanged(warehouseId: number) {
+    const warehouse = this.warehouses.find(item => item.id === warehouseId);
 
-  onWarehouseChanged(input: any) {
     if (!this.disableWarehouseChangedEvent) {
-      this.warehouseChanged.emit({item: input, loading: false});
+      this.warehouseChanged.emit({item: warehouse, loading: false});
     }
     else {
       this.disableWarehouseChangedEvent = false;
     }
   }
 
-  lookUp() {
-    this.lookupWarehouse.popUpLookUpDialog();
+  private getWarehouses() {
+    this.cacheService.getItems(this.warehouseService, addActivatedCacheKey(OliveCacheService.cacheKeys.getItemsKey.warehouse), createDefaultSearchOption())
+      .then((items: Warehouse[]) => {
+        this.warehouses = items;
+        this.setLastSelectedWarehouse();
+      });
+  }
+
+  private setLastSelectedWarehouse() {
+    // Cache Value Loading
+    this.cacheService.getUserPreference(this.warehouseComboSelectedCacheKey)
+      .then(obj => {
+        if (obj && !this.item.warehouseId) {
+          this.oForm.patchValue({warehouse: obj.id});
+          this.onWarehouseChanged(obj.id);
+        }
+      });    
   }
 }

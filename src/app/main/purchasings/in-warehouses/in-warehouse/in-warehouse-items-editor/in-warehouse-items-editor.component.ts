@@ -218,9 +218,12 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
             { name: 'InWarehousePending', value: 'true' },
             { name: 'Warehouse', value: this.warehouse.id }
             ] as NameValue[]),
-          searchPlaceHolderName: this.translator.get('purchasing.inWarehouseItems.searchPlaceHolderName'),
+          searchPlaceHolderName: 
+            this.isVoidMode ? 
+            this.translator.get('purchasing.inWarehouseItems.voidSearchPlaceHolderName') :
+            this.translator.get('purchasing.inWarehouseItems.searchPlaceHolderName'),
           // 잔여수량 표시 
-          extra: 'balance'
+          extra: this.isVoidMode ? 'quantity - balance + cancelQuantity' : 'balance'
         } as LookupListerSetting
       });
 

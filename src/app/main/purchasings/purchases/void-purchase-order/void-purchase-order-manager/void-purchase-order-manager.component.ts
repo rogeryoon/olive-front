@@ -135,7 +135,10 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
   }
 
   onRequiredWarehouse() {
-    this.voidPurchaseOrderEditor.lookUp();
+    this.alertService.showMessageBox(
+      this.translator.get('common.title.errorConfirm'),
+      this.translator.get('purchasing.inWarehouseManager.noWarehouseSelected')
+    );
   }
 
   onInWarehouseItemAdded(order: PurchaseOrder) {

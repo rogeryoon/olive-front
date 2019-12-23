@@ -2,7 +2,7 @@ import { String } from 'typescript-string-operations';
 
 import { SearchUnit } from '../models/search-unit';
 import { Address } from '../models/address.model';
-import { testIsUndefined } from './object-helpers';
+import { testIsUndefined, calculateObjectProperties } from './object-helpers';
 
 /**
  * 입력 문자열이 필요 소숫점 자릿수를 가지고 있는지 확인
@@ -176,19 +176,19 @@ export function addCountTooltip(count: number, tooltip: string = null): string {
  * @param items 
  * @returns  
  */
-export function getItemsName(items: any[], propertyName: string = 'name', numberPropertyName: string = null): string {
+export function getItemsName(items: any[], propertyName: string = 'name', numberPropertyNameExpression: string = null): string {
     let itemsName = '-';
 
     if (items && items.length > 0) {
         const itemName = items[0][propertyName];
-        itemsName = numberPropertyName ? `${itemName}(${items[0][numberPropertyName]})` : itemName;
+        itemsName = numberPropertyNameExpression ? `${itemName}(${calculateObjectProperties(items[0], numberPropertyNameExpression)})` : itemName;
 
         if (items.length > 1) {
             let index = 0;
             itemsName += addCountTooltip(
                 items.length - 1, 
                 items.filter(x => ++index > 1)
-                    .map(x => numberPropertyName ? `${x[propertyName]}(${x[numberPropertyName]})` : x[propertyName])
+                    .map(x => numberPropertyNameExpression ? `${x[propertyName]}(${calculateObjectProperties(x, numberPropertyNameExpression)})` : x[propertyName])
                     .join('\r\n')
             );
         }
