@@ -82,7 +82,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
   onProductSelected(event: any, index: number) {
     const formGroup = this.getArrayFormGroup(index);
 
-    formGroup.patchValue({productVariantId26: ''});
+    formGroup.patchValue({productVariantId26: '', hiddenProductVariantId: '' });
 
     const selectedItem = this.getProducts(index).find(item => item.productName === event.option.value);
 
@@ -91,11 +91,15 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
 
     let dupString;      
     if (dupItem) {
-      dupString = `${this.id26(selectedItem.id)}: ${selectedItem.productName}`;
+      dupString = `${this.id26(selectedItem.shortId)}: ${selectedItem.productName}`;
     }
 
     if (selectedItem && !dupString) {
-      formGroup.patchValue({productVariantId26: this.id26(selectedItem.id)});
+      formGroup.patchValue({
+        productVariantId26: this.id26(selectedItem.shortId),
+        hiddenProductVariantId: selectedItem.id,
+        productName: selectedItem.productName
+      });
     }
 
     if (dupString) {
@@ -106,7 +110,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
 
   onProductNameValueEmpty(index: number) {
     const formGroup = this.getArrayFormGroup(index);
-    formGroup.patchValue({productVariantId26: null});
+    formGroup.patchValue({productVariantId26: null, hiddenProductVariantId: null});
   }
 
   get noItemSelectedError(): boolean {
@@ -165,7 +169,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
               if (!dupProductVariantIdCheckSet.has(pvItem.id)) {
                 dupProductVariantIdCheckSet.add(pvItem.id);
                 duplicatedIdStrings.push(
-                  `${this.id26(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
+                  `${this.id26(pvItem.shortId)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
               }
             });
         });
@@ -178,6 +182,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
             this.dataSource.addNewItem({
               quantity: 1,
               productVariantId: pvItem.id,
+              productVariantShortId: pvItem.shortId,
               productName: `${pvItem.productFk.name} ${pvItem.name}`.trim()
             } as MarketItemMappingProductVariant);
             needToRender = true;

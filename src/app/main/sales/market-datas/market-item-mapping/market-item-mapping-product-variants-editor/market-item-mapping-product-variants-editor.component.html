@@ -17,6 +17,7 @@
                     <input name="inputProductVariantId26{{row.ObjId}}" matInput formControlName="productVariantId26" class="center" readonly="true">
                     <mat-error *ngIf="hasArrayEntryError('productVariantId26',i)">{{'common.validate.error' | translate}}</mat-error>
                 </mat-form-field>
+                <input type="hidden" name="hiddenProductVariantId{{row.ObjId}}" formControlName="hiddenProductVariantId">
             </mat-cell>
             <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
         </ng-container>

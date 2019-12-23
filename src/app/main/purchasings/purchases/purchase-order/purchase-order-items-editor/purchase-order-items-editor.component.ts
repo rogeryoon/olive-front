@@ -262,7 +262,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
 
   onProductNameValueEmpty(index: number) {
     const formGroup = this.getArrayFormGroup(index);
-    formGroup.patchValue({productVariantId26: null});
+    formGroup.patchValue({productVariantId26: null, hiddenProductVariantId: null});
   }
 
   setParentItem(parentItem: any) {

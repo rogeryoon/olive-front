@@ -94,20 +94,24 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
   onProductSelected(event: any, index: number) {
     const formGroup = this.getArrayFormGroup(index);
 
-    formGroup.patchValue({productVariantId26: ''});
+    formGroup.patchValue({ productVariantId26: '', hiddenProductVariantId: '' });
 
-    const foundItem = this.getProducts(index).find(item => item.productName === event.option.value);
+    const selectedItem = this.getProducts(index).find(item => item.productName === event.option.value);
 
     const dupStrings: string[] = [];
     this.dataSource.items.forEach((dsItem: OrderShipOutDetail) => {
-      if (dsItem.productVariantId === foundItem.id) {
-        dupStrings.push(`${this.id26(foundItem.id)}: ${foundItem.productName}`);
+      if (dsItem.productVariantId === selectedItem.id) {
+        dupStrings.push(`${this.id26(selectedItem.shortId)}: ${selectedItem.productName}`);
         return;
       }
     });
 
-    if (foundItem && dupStrings.length === 0) {
-      formGroup.patchValue({productVariantId26: this.id26(foundItem.id)});
+    if (selectedItem && dupStrings.length === 0) {
+      formGroup.patchValue({
+        productVariantId26: this.id26(selectedItem.shortId),
+        hiddenProductVariantId: selectedItem.id,
+        productName: selectedItem.productName
+      });
     }
 
     if (dupStrings.length > 0) {
@@ -118,7 +122,7 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
 
   onProductNameValueEmpty(index: number) {
     const formGroup = this.getArrayFormGroup(index);
-    formGroup.patchValue({productVariantId26: null});
+    formGroup.patchValue({productVariantId26: null, hiddenProductVariantId: null});
   }
 
   get noItemSelectedError(): boolean {
@@ -177,7 +181,7 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
               if (!dupProductVariantIdCheckSet.has(pvItem.id)) {
                 dupProductVariantIdCheckSet.add(pvItem.id);
                 duplicatedIdStrings.push(
-                  `${this.id26(pvItem.id)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
+                  `${this.id26(pvItem.shortId)}: ${pvItem.productFk.name} ${pvItem.name}`.trim());
               }
             });
         });
@@ -190,6 +194,7 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
             this.dataSource.addNewItem({
               quantity: 1,
               productVariantId: pvItem.id,
+              productVariantShortId: pvItem.shortId,
               productName: `${pvItem.productFk.name} ${pvItem.name}`.trim()
             } as OrderShipOutDetail);
             needToRender = true;
