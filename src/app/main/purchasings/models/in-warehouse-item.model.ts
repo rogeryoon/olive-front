@@ -10,7 +10,7 @@ export class InWarehouseItem extends OliveTrackingAttribute {
     inWarehouseCreatedDate?: any;
 
     productVariantId?: number;    
-    productShortId?: number;
+    productVariantShortId?: number;
     productName?: string;    
 
     originalBalance?: number;

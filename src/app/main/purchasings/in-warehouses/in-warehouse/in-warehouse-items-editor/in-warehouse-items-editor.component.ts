@@ -287,11 +287,13 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
                 balance: 0,
 
                 purchaseOrderItemId: sItem.id,
+                purchaseOrderShortId: pItem.shortId,
 
                 productName: sItem.productName,
                 originalBalance: quantity,
                 price: sItem.price,
                 productVariantId: sItem.productVariantId,
+                productVariantShortId: sItem.productVariantShortId,
                 supplierName: pItem.supplierFk.name
               } as InWarehouseItem);
               needToRender = true;
