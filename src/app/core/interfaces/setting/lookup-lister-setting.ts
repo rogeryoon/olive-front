@@ -41,5 +41,7 @@ export class LookupListerSetting implements IListerSetting {
     translateTitleId?: string;
     // For New Item Support - End
 
-    extra?: any;
+    extra1?: any;
+
+    extra2?: any;
 }

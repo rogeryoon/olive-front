@@ -77,7 +77,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       columns: [
         // 1
         { data: Selected },
-        // 2ㄴ
+        // 2
         { data: Id, thName: this.translator.get('common.tableHeader.purchaseOrderId'), 
           tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
@@ -137,7 +137,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         break;
 
       case ItemsName:
-        retValue = getItemsName(item.purchaseOrderItems, 'productName');
+        retValue = getItemsName(item.purchaseOrderItems, 'productName', 'quantity');
         break;
 
       case Warehouse:

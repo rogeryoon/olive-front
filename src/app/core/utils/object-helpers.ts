@@ -201,8 +201,12 @@ export function calculateObjectProperties(item: any, input: string) {
   
     input = _replaceItemPropertiesToNumber(item, input);  
   
-    // 연산자가 없을 경우 값만 반환
-    if (!input.match(/[\*\+\-\%\^\/]/)) {
+    if (
+      // 맨앞 부호만 달린 수식인 경우: 예) -10, +5 또는
+      input.match(/^[\+\-]\d+$/) || 
+      // 연산자가 없을 경우 값만 반환
+      !input.match(/[\*\+\-\%\^\/]/)
+    ) {
       return input;
     }
     
@@ -210,7 +214,7 @@ export function calculateObjectProperties(item: any, input: string) {
     for (let i = 0, n = f.ooo.length; i < n; i++) {
   
       // Regular Expression to look for operators between floating numbers or integers
-      const re = new RegExp('(\\d+\\.?\\d*)([\\' + f.ooo[i].join('\\') + '])(\\d+\\.?\\d*)');
+      const re = new RegExp('([\\-\\+]?\\d+\\.?\\d*)([\\' + f.ooo[i].join('\\') + '])([\\-\\+]?\\d+\\.?\\d*)');
       re.lastIndex = 0; // take precautions and reset re starting pos
   
       // Loop while there is still calculation for level of precedence

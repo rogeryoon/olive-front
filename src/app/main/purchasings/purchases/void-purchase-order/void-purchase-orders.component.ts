@@ -112,7 +112,7 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
       case Items:
         const items = [];
         item.inWarehouseFk.inWarehouseItems.forEach(i => items.push({name: i.productName}));
-        retValue = getItemsName(items);
+        retValue = getItemsName(item.inWarehouseFk.inWarehouseItems, 'productName', 'quantity');
         break;
 
       case Quantity:
@@ -132,14 +132,10 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
   }
 
   getTotalAmount(item: InWarehouse): string {
-    let totalItemDue = 0;
-    item.inWarehouseItems.forEach(unit => totalItemDue += unit.price * unit.quantity);
-    return this.cacheService.showMoney(totalItemDue);
+    return this.cacheService.showMoney(Math.abs(item.inWarehouseItems.map(x => x.price * x.quantity).reduce((a, b) => a + (b || 0), 0)));
   }
 
   getTotalQuantity(item: InWarehouse): string {
-    let totalQuantity = 0;
-    item.inWarehouseItems.forEach(unit => totalQuantity += unit.quantity);
-    return this.commaNumber(totalQuantity);
+    return this.commaNumber(Math.abs(item.inWarehouseItems.map(x => x.quantity).reduce((a, b) => a + (b || 0), 0)));
   }  
 }

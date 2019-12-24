@@ -181,14 +181,14 @@ export function getItemsName(items: any[], propertyName: string = 'name', number
 
     if (items && items.length > 0) {
         const itemName = items[0][propertyName];
-        itemsName = numberPropertyNameExpression ? `${itemName}(${calculateObjectProperties(items[0], numberPropertyNameExpression)})` : itemName;
+        itemsName = numberPropertyNameExpression ? `${itemName}(${Math.abs(calculateObjectProperties(items[0], numberPropertyNameExpression))})` : itemName;
 
         if (items.length > 1) {
             let index = 0;
             itemsName += addCountTooltip(
                 items.length - 1, 
                 items.filter(x => ++index > 1)
-                    .map(x => numberPropertyNameExpression ? `${x[propertyName]}(${calculateObjectProperties(x, numberPropertyNameExpression)})` : x[propertyName])
+                    .map(x => numberPropertyNameExpression ? `${x[propertyName]}(${Math.abs(calculateObjectProperties(x, numberPropertyNameExpression))})` : x[propertyName])
                     .join('\r\n')
             );
         }

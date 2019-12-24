@@ -227,7 +227,9 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
             this.translator.get('purchasing.inWarehouseItems.voidSearchPlaceHolderName') :
             this.translator.get('purchasing.inWarehouseItems.searchPlaceHolderName'),
           // 잔여수량 표시 
-          extra: this.isVoidMode ? 'quantity - balance + cancelQuantity' : 'balance'
+          extra1: this.isVoidMode ? 'quantity - balance + cancelQuantity' : 'balance',
+          // 반품/취소 ?
+          extra2: this.isVoidMode
         } as LookupListerSetting
       });
 
