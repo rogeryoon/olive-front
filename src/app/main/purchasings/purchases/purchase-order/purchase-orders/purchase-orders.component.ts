@@ -78,7 +78,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         // 1
         { data: Selected },
         // 2ㄴ
-        { data: Id, thName: this.translator.get('common.tableHeader.id'), 
+        { data: Id, thName: this.translator.get('common.tableHeader.purchaseOrderId'), 
           tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
         { data: SupplierName, orderable: false, thName: this.translator.get('common.tableHeader.supplier'), 

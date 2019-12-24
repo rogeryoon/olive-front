@@ -70,7 +70,7 @@ export class OliveInventoryWarehousesComponent extends OliveEntityListComponent 
         // 1
         { data: Selected },
         // 2
-        { data: Id, orderable: true, thName: this.translator.get('common.word.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
+        { data: Id, orderable: true, thName: this.translator.get('common.tableHeader.productVariantId'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
         { data: ProductName, orderable: false, thName: this.translator.get('common.word.productName'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
@@ -119,7 +119,7 @@ export class OliveInventoryWarehousesComponent extends OliveEntityListComponent 
     const isSingleItem = item.productName === '' && item.variantName.length > 0;
     switch (columnName) {
       case Id:
-        retValue = this.id36(item.id);
+        retValue = this.id26(item.shortId);
         break;
       case ProductName:
         retValue = isSingleItem ? item.variantName : item.productName;

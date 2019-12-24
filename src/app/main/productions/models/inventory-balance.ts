@@ -1,6 +1,6 @@
 export class InventoryBalance {
-    // Variant Id
-    id: number; 
+    id: number;
+    shortId: number; 
     productId: number;
     productName: string;
     productCode: string;

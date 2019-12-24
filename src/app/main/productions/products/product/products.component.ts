@@ -59,7 +59,7 @@ export class OliveProductsComponent extends OliveEntityListComponent {
         // 1
         { data: Selected },
         // 2
-        { data: Id, thName: this.translator.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
+        { data: Id, thName: this.translator.get('common.tableHeader.productId'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
         { data: Name, thName: this.translator.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         // 4

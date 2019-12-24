@@ -60,7 +60,7 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
         // 1
         { data: Selected },
         // 2
-        { data: Id, thName: this.translator.get('purchasing.inWarehousesHeader.id'), 
+        { data: Id, thName: this.translator.get('purchasing.inWarehousesHeader.voidPurchaseOrderId'), 
           tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3
         { data: Suppliers, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.suppliers'), 

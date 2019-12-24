@@ -46,13 +46,13 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
   keywordFilter: FormControl;
 
   codeColumns: any = [
-    { data: Code, name: 'Code', width: '50px', align: 'center' },
-    { data: Name, name: 'Name', orderable: false, align: 'justify' }
+    { data: Code, name: this.translator.get('common.tableHeader.code'), width: '50px', align: 'center' },
+    { data: Name, name: this.translator.get('common.tableHeader.name'), orderable: false, align: 'justify' }
   ];
 
   idColumns: any = [
-    { data: Id, name: 'ID', width: '50px', align: 'center' },
-    { data: Name, name: 'Name', orderable: false, align: 'justify' }
+    { data: Id, name: this.translator.get('common.tableHeader.id'), width: '50px', align: 'center' },
+    { data: Name, name: this.translator.get('common.tableHeader.name'), orderable: false, align: 'justify' }
   ];
 
   tableColumns: any;

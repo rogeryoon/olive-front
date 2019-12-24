@@ -11,7 +11,7 @@
     </mat-row>
 
     <ng-container matColumnDef="productVariantId26">
-      <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.id' | translate}}</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>{{'common.tableHeader.productVariantId' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="hasArrayEntryError('productVariantId26',i) ? arrayErrorMessage('productVariantId26',i) : row.Obj['productName']?.name">
         <mat-form-field fxFlex='95%'>
             <input name="inputProductVariantId26{{row.ObjId}}" matInput formControlName="productVariantId26" class="center" readonly="true">

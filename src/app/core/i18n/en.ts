@@ -108,7 +108,8 @@ export const locale = {
                 'errorOccurred' : '오류 안내',
                 'importDialog' : '파일 업로드',
                 'deleteError' : '삭제 오류', // 'Delete Error',
-                'loadError' : 'Load Error',
+                // 'Load Error'
+                'loadError' : '데이터 로드 오류',
                 'advancedSearch' : 'Advanced Search',
                 'sessionExpired' : 'Session Expired',
                 'confirm' : '확인',
@@ -189,6 +190,9 @@ export const locale = {
             },
             'tableHeader': {
                 'id' : 'ID',
+                'productId' : '그룹 ID',
+                'productVariantId' : '품목 ID',
+                'purchaseOrderId' : '발주 ID',
                 'code' : '코드',
                 'supplier' : '공급자',
                 'itemsName' : '품명',
@@ -658,7 +662,8 @@ export const locale = {
                 'voidSearchPlaceHolderName' : '입고 상품 검색'
             },
             'inWarehousesHeader': {
-                'id': 'ID',
+                'inWarehouseId': '입고 ID',
+                'voidPurchaseOrderId': '반품 ID',
                 'suppliers': '공급자',
                 'items': '품명',
                 'quantity': '수량',
@@ -678,7 +683,7 @@ export const locale = {
                 'supplier': '공급자',
                 'memo': '메모',
                 'finishLink' : '종결',
-                'itemId' : 'ID',
+                'itemId' : '품목 ID',
                 'itemName': '품명',
                 'quantity': '수량',
                 'balance': '잔량',
