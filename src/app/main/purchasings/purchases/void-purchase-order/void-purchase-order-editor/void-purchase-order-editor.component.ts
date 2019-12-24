@@ -72,7 +72,7 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      warehouse: null,
+      warehouse: [{value: '', disabled: !this.isNewItem}],
       purchaseOrderFk: null,
       supplierName: '',
       memo: '',
@@ -89,7 +89,7 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
     this.oForm.reset({
       warehouse: item.inWarehouseFk && item.inWarehouseFk.id ? item.inWarehouseFk.id : '',
       purchaseOrderFk: item.purchaseOrderFk,
-      supplierName: item.purchaseOrderFk && item.purchaseOrderFk.supplierFk && item.purchaseOrderFk.supplierFk.name ? item.purchaseOrderFk.supplierFk : '',
+      supplierName: item.purchaseOrderFk && item.purchaseOrderFk.supplierFk && item.purchaseOrderFk.supplierFk.name ? item.purchaseOrderFk.supplierFk.name : '',
       memo: item.inWarehouseFk ? item.inWarehouseFk.memo : ''
     });
 

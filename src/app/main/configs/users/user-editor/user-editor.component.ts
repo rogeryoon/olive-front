@@ -154,7 +154,7 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
         newPassword: ['', [requiredValidator(), Validators.pattern(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}/)]],
         confirmPassword: ['', [requiredValidator(), equalValidator('newPassword')]],
       }),
-      roles: '',
+      roles: [{value: '', disabled: !this.isEditMode || !this.canAssignRoles}],
       fullName: '',
       phoneNumber: '',
       isEnabled: ''

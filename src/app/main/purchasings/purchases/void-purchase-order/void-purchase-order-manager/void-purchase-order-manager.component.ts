@@ -63,7 +63,7 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     const inWarehouseItems = _.cloneDeep(this.inWarehouseItemsEditor.getEditedItem());
     const purchaseOrderPayments = _.cloneDeep(this.purchaseOrderPaymentsEditor.items);
 
-    // 저장전에 Minus값으로 전환한다.
+    // 저장전에 Minus값으로 다시 복구한다.
     inWarehouseItems.forEach(item => {
       item.quantity = item.quantity * -1;
     });
@@ -102,10 +102,21 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     }
   }
 
+  /**
+   * 입고 아이템 음수 수량을 양수로 변경
+   * @returns InWarehouseItems
+   */
   changeInWarehouseItemsSignWhenLoading(): InWarehouseItem[] {
-    if (!this.item.inWarehouseItems) { return null; }
+    const order = this.item as VoidPurchaseOrder;
 
-    const items = this.item.inWarehouseItems as InWarehouseItem[];
+    if 
+    (
+      !order.inWarehouseFk || 
+      !order.inWarehouseFk.inWarehouseItems || 
+      order.inWarehouseFk.inWarehouseItems.length === 0
+    ) { return null; }
+
+    const items = order.inWarehouseFk.inWarehouseItems;
 
     items.forEach(item => {
       item.quantity = item.quantity * -1;
@@ -114,10 +125,21 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     return items;
   }
 
+  /**
+   * 결제 아이템 음수 금액을 양수로 변경
+   * @returns PurchaseOrderPayments
+   */
   changePaymentsSignWhenLoading(): PurchaseOrderPayment[] {
-    if (!this.item.purchaseOrderFk || !this.item.purchaseOrderFk.purchaseOrderPayments) { return null; }
+    const order = this.item as VoidPurchaseOrder;
 
-    const items = this.item.purchaseOrderFk.purchaseOrderPayments as PurchaseOrderPayment[];
+    if 
+    (
+      !order.purchaseOrderFk || 
+      !order.purchaseOrderFk.purchaseOrderPayments ||
+      order.purchaseOrderFk.purchaseOrderPayments.length === 0
+    ) { return null; }
+
+    const items = order.purchaseOrderFk.purchaseOrderPayments;
 
     items.forEach(item => {
       item.amount = item.amount * -1;

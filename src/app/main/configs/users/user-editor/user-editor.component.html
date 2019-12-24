@@ -101,7 +101,7 @@
 
     <mat-form-field appearance="outline" fxFlex.gt-sm="0 1 calc(50% - 0.5em)">
       <mat-label>{{'configs.userEditor.Roles' | translate}}</mat-label>
-      <mat-select formControlName="roles" multiple [disabled]="!isEditMode || !canAssignRoles">
+      <mat-select formControlName="roles" multiple>
         <mat-option *ngFor="let role of assignableRoles" [value]="role.name">
           <span matTooltip="{{role.description}}">{{role.name}}</span>
         </mat-option>

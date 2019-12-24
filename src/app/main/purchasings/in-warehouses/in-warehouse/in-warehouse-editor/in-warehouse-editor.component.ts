@@ -47,15 +47,15 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
     this.cacheService.setUserPreference(this.warehouseComboSelectedCacheKey, selectedWarehouse);
 
     return this.itemWithIdNAudit({
-      memo: formModel.memo,
-      warehouseId: selectedWarehouse.id
+      warehouseId: selectedWarehouse.id,
+      memo: formModel.memo
     } as InWarehouse);
   }
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      memo: '',
-      warehouse: ['', requiredValidator()],
+      warehouse: [{value: '', disabled: !this.isNewItem}, requiredValidator()],
+      memo: ''
     });
   }
 
@@ -65,8 +65,8 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
     }
 
     this.oForm.reset({
-      memo: this.item.memo || '',
-      warehouse: this.item.warehouseId
+      warehouse: this.item.warehouseId,
+      memo: this.item.memo || ''
     });
 
     if (this.item.warehouseFk) {
