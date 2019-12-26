@@ -79,9 +79,10 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     return this.itemWithIdNAudit({
       closedDate: this.item.closedDate,
       confirmedDate: this.item.confirmedDate,
+      voidTypeCode: voidPurchaseOrder.voidTypeCode,
       purchaseOrderFk: voidPurchaseOrder.purchaseOrderFk,
       inWarehouseFk: voidPurchaseOrder.inWarehouseFk
-    });
+    } as VoidPurchaseOrder);
   }
 
   buildForm() {

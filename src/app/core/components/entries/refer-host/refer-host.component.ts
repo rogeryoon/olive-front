@@ -146,8 +146,6 @@ export class OliveReferHostComponent implements ControlValueAccessor, OnInit, Va
   writeValue(obj: any): void {
     this.value = obj;
 
-    console.log('TEST', obj);
-
     if (obj) {
       this.lookupName.setValue(obj.name);
     }
