@@ -14,6 +14,16 @@ export class OliveConstants {
         { code: 'C', name: 'Centimeter', symbol: 'Cm' }
     ];
 
+    static voidPurchaseOrderTypes = [
+        { code: 'R', name: 'Return' },
+        { code: 'C', name: 'Cancel' }
+    ];
+
+    static voidPurchaseOrderTypeCode = class {
+        static Return = 'R';
+        static Cancel = 'C';
+    };
+
     static unitConversionRate = class {
         static centimeterToInchVolume = 0.06102374409;
         static poundToKilo = 0.45359237;

@@ -94,6 +94,10 @@ export class OliveBaseComponent implements OnInit {
     return this.oForm.get(name);
   }
 
+  get touched(): boolean {
+    return this.oForm.touched;
+  }
+
   get oFArray(): FormArray {
     return <FormArray>this.getControl('formArray');
   }

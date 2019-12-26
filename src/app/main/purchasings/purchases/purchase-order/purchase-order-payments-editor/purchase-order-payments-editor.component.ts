@@ -103,6 +103,10 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     }
   }
 
+  clearAll() {
+    this.dataSource.deleteAll();
+  }
+
   private newItem(payment: PurchaseOrderPayment = null) {
     this.dataSource.addNewItem(payment);
     this.dataSource.renderItems();

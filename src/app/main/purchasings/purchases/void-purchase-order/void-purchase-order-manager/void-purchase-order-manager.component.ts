@@ -150,6 +150,7 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
 
   onWarehouseChanged(event: any) {
     this.inWarehouseItemsEditor.setWarehouse(event);
+    this.purchaseOrderPaymentsEditor.clearAll();
 
     if (!event.loading) {
       this.setOrderData(null);
@@ -159,7 +160,7 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
   onRequiredWarehouse() {
     this.alertService.showMessageBox(
       this.translator.get('common.title.errorConfirm'),
-      this.translator.get('purchasing.inWarehouseManager.noWarehouseSelected')
+      this.translator.get('purchasing.inWarehouseManager.mustSelectWarehouseAndVoidPurchaseOrderType')
     );
   }
 
@@ -168,9 +169,13 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
   }
 
   setOrderData(order: PurchaseOrder) {
-    this.voidPurchaseOrderEditor.setControlValue('purchaseOrderFk', order);
-    this.voidPurchaseOrderEditor.setControlValue('supplierName', order ? order.supplierFk.name : null);
     this.voidPurchaseOrderEditor.item.purchaseOrderFk = order;
+    this.voidPurchaseOrderEditor.oForm.patchValue({
+      purchaseOrderFk: order,
+      supplierName: order ? order.supplierFk.name : null,
+      memo: ''
+    });
+    
     this.oForm.patchValue({purchaseOrderPayments : order ? this.calculateByPaymentMethod(order) : null});
   }
 

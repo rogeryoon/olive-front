@@ -51,6 +51,7 @@ export const locale = {
                 'requestFinished': '요청한 작업을 완료하였습니다.',
                 'noItemCreated' : '1개 이상의 항목을 등록하십시오.',
                 'balanceIsMinus' : '잔량이 음수인 값이 있습니다.',
+                'allZeroQuantityError' : '모든 수량이 0입니다.',
                 'validationError' : '입력 오류가 있습니다. 기입항목(들)을 확인하십시오.',
                 'chooseOption' : '선택', // 'Choose an option',
                 'emptyFile' : '내용이 없는 빈 파일입니다.',
@@ -358,7 +359,16 @@ export const locale = {
                 'splitOrderCount' : '주문 분할/복사 갯수',
                 'activated' : '활동',
                 'isShipOutCountry': '출고 국가',
-                'market' : '판매처'
+                'market' : '판매처',
+                'voidPurchaseOrderType' : '타입'
+            }
+        },
+        'code': {
+            'voidPurchaseOrderTypeCode': {
+                // Return
+                'R' : '반품(입고후)',
+                // Cancel
+                'C' : '취소(입고전)'
             }
         },
         'page': {
@@ -646,7 +656,8 @@ export const locale = {
             'inWarehouseManager': {
                 'saveConfirmTitle' : '입고 확인',
                 'saveConfirmMessage' : '정말 입고 내용을 저장하시겠습니까?',
-                'noWarehouseSelected' : '창고를 먼저 선택하십시오.'
+                'noWarehouseSelected' : '창고를 먼저 선택하십시오.',
+                'mustSelectWarehouseAndVoidPurchaseOrderType' : '창고와 발주취소 타입을 모두 먼저 선택하십시오.'
             },
             'inWarehouseItems': {
                 'purchaseOrderId' : '발주 ID',
@@ -659,7 +670,7 @@ export const locale = {
                 'remark' : '비고',
                 'price' : '단가',
                 'searchPlaceHolderName' : '미입고 상품 검색',
-                'voidSearchPlaceHolderName' : '입고 상품 검색'
+                'returnSearchPlaceHolderName' : '입고 상품 검색'
             },
             'inWarehousesHeader': {
                 'inWarehouseId': '입고 ID',

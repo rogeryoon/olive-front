@@ -51,12 +51,12 @@ export class OlivePurchaseOrderLookupDialogComponent extends OliveLookupDialogCo
           break;
 
         case Name:
-          const isVoidMode = this.setting.extra2;
+          const isReturnMode = this.setting.extra2;
           retValue = getItemsName(
-            isVoidMode ?
-            // 반품/취소 모드 
-            item.purchaseOrderItems.filter(x => x.quantity - x.balance + x.cancelQuantity > 0) :
-            // 입고 모드
+            isReturnMode ?
+            // 반품 모드 
+            item.purchaseOrderItems.filter(x => x.quantity - x.balance - x.voidQuantity > 0) :
+            // 입고 또는 취소
             item.purchaseOrderItems.filter(x => x.balance > 0), 
             'productName', 
             this.setting.extra1

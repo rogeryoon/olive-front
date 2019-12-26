@@ -25,6 +25,7 @@ import { OliveMessageHelperService } from 'app/core/services/message-helper.serv
 import { isNumberPattern, showParamMessage } from 'app/core/utils/string-helper';
 import { createSearchOption } from 'app/core/utils/search-helpers';
 import { purchaseOrderId } from 'app/core/utils/olive-helpers';
+import { OliveConstants } from 'app/core/classes/constants';
 
 @Component({
   selector: 'olive-in-warehouse-items-editor',
@@ -48,6 +49,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   dataSource: OliveInWarehouseItemDataSource = new OliveInWarehouseItemDataSource(this.cacheService);
 
   warehouse: Warehouse;
+  voidTypeCode: '';
   value: InWarehouseItem[] = null;
 
   @Input() isVoidMode = false;
@@ -75,11 +77,11 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   }
 
   getEditedItem(): InWarehouseItem[] {
-    return this.dataSource.items;
+    return this.dataSource.items.filter(x => x.quantity > 0);
   }
 
   get canAddOrDeleteItems(): boolean {
-    return !this.isVoidMode || this.getEditedItem().length === 0;
+    return true;
   }
 
   getPurchaseOrderId(item: InWarehouseItem): string {
@@ -101,6 +103,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
   setWarehouse(event: any) {
     this.warehouse = event.item;
+    this.voidTypeCode = event.voidTypeCode;
 
     if (event.loading) {
       return;
@@ -193,9 +196,35 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     return due;
   }
 
+  get searchOption(): NameValue[] {
+    let option: NameValue[];
+    if (this.isVoidMode) {
+      option = [{ name: 'VoidPurchaseOrderTypeCode', value: this.voidTypeCode }];
+    }
+    else {
+      option = 
+      [
+        { name: 'InWarehousePending', value: 'true' }
+      ];
+    }
+
+    option.push({ name: 'Warehouse', value: this.warehouse.id });
+
+    return option;
+  }
+
+  get isReturnMode(): boolean {
+    return this.isVoidMode && this.voidTypeCode === OliveConstants.voidPurchaseOrderTypeCode.Return;
+  }
+
   lookupPurchaseOrder() {
-    // 창고가 선택되지 않았다면 창고 먼저 선택한다.
-    if (this.isNull(this.warehouse)) {
+    if 
+    (
+      // 입고모드면서 창고가 선택되지 않았다면 창고 먼저 선택한다.
+      (!this.isVoidMode && this.isNull(this.warehouse)) ||
+      // 취소모드면서 창고 또는 취소코드가 없을 경우
+      (this.isVoidMode && (this.isNull(this.warehouse) || this.voidTypeCode.length === 0))
+    ) {
       this.requiredWarehouse.emit();
       return;
     }
@@ -216,20 +245,15 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
           translateTitleId: NavTranslates.Purchase.list,
           maxNameLength: 10,
           searchOption:
-          createSearchOption([
-            this.isVoidMode ? 
-            { name: 'Cancelable', value: 'true' } :
-            { name: 'InWarehousePending', value: 'true' },
-            { name: 'Warehouse', value: this.warehouse.id }
-            ] as NameValue[]),
+          createSearchOption(this.searchOption),
           searchPlaceHolderName: 
-            this.isVoidMode ? 
-            this.translator.get('purchasing.inWarehouseItems.voidSearchPlaceHolderName') :
+            this.isReturnMode ? 
+            this.translator.get('purchasing.inWarehouseItems.returnSearchPlaceHolderName') :
             this.translator.get('purchasing.inWarehouseItems.searchPlaceHolderName'),
           // 잔여수량 표시 
-          extra1: this.isVoidMode ? 'quantity - balance + cancelQuantity' : 'balance',
-          // 반품/취소 ?
-          extra2: this.isVoidMode
+          extra1: this.isReturnMode ? 'quantity - balance - voidQuantity' : 'balance',
+          // 반품/취소시 취소 타입 코드 설정
+          extra2: this.isReturnMode
         } as LookupListerSetting
       });
 
@@ -243,6 +267,10 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
       // 발주서 하나만 선택가능, 이후 추가 버튼을 눌러도 다른 발주서를 로딩 못하게 막음 (VoidMode)
       if (this.dataSource.items.length > 0) {
         onePurchaseOrderId = ((this.dataSource.items[0]) as InWarehouseItem).id;
+      }
+
+      if (this.isVoidMode) {
+        this.clearAllItemsDataSource();
       }
 
       this.dataSource.items.forEach((dsItem: InWarehouseItem) => {
@@ -272,16 +300,16 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
           pItem.purchaseOrderItems
             .filter((sItem: PurchaseOrderItem) => 
               (
-                ( !this.isVoidMode && sItem.balance > 0 ) ||
-                ( this.isVoidMode && sItem.quantity - sItem.balance + sItem.cancelQuantity > 0)
+                ( !this.isReturnMode && sItem.balance > 0 ) ||
+                ( this.isReturnMode && sItem.quantity - sItem.balance - sItem.voidQuantity > 0)
               ) && 
               !dupPOItemIdCheckSet.has(sItem.id)
             )
             .forEach((sItem: PurchaseOrderItem) => {
               let quantity = 0;
 
-              if (this.isVoidMode) {
-                quantity = sItem.quantity - sItem.balance + sItem.cancelQuantity;
+              if (this.isReturnMode) {
+                quantity = sItem.quantity - sItem.balance - sItem.voidQuantity;
               }
               else {
                 quantity = sItem.balance;
@@ -329,7 +357,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     }
   }
 
-  get noItemSelectedError(): boolean {
+  get noItemCreatedError(): boolean {
     return this.dataSource.items.length === 0;
   }
 
@@ -337,8 +365,12 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     return this.dataSource.items.some((item: InWarehouseItem) => item.balance < 0);
   }
 
+  get allZeroQuantityError(): boolean {
+    return this.dataSource.items.length > 0 && this.dataSource.items.every((item: InWarehouseItem) => Number(item.quantity) === 0);
+  }
+
   protected hasOtherError(): boolean {
-    if (this.noItemSelectedError) {
+    if (this.noItemCreatedError) {
       this.alertService.showMessageBox(
         this.translator.get('common.title.errorConfirm'),
         this.translator.get('common.message.noItemCreated')
@@ -355,14 +387,15 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
       return true;
     }
-  }
 
-  get showNoItemCreatedError(): boolean {
-    return this.noItemSelectedError && this.oForm.touched;
-  }
+    if (this.allZeroQuantityError) {
+      this.alertService.showMessageBox(
+        this.translator.get('common.title.errorConfirm'),
+        this.translator.get('common.message.allZeroQuantityError')
+      );
 
-  get showBalanceIsMinusError(): boolean {
-    return this.balanceIsMinusError && this.oForm.touched;
+      return true;
+    }
   }
 
   private _onChange = (_: any) => { };

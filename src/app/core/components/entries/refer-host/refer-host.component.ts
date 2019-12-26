@@ -117,6 +117,7 @@ export class OliveReferHostComponent implements ControlValueAccessor, OnInit, Va
 
   getValue(): string {
     let returnValue = '';
+
     if (this.value) {
       if (this.setting.customNameCallback) {
         return this.setting.customNameCallback(this.value);
@@ -144,6 +145,8 @@ export class OliveReferHostComponent implements ControlValueAccessor, OnInit, Va
 
   writeValue(obj: any): void {
     this.value = obj;
+
+    console.log('TEST', obj);
 
     if (obj) {
       this.lookupName.setValue(obj.name);

@@ -153,16 +153,12 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     return this.totalAmount + this.extraAmount;
   }
 
-  get noItemSelectedError(): boolean {
+  get noItemCreatedError(): boolean {
     return this.dataSource.items.length === 0;
   }
 
-  get showNoItemCreatedError(): boolean {
-    return this.noItemSelectedError && this.oForm.touched;
-  }
-
   protected hasOtherError(): boolean {
-    if (this.noItemSelectedError) {
+    if (this.noItemCreatedError) {
       this.alertService.showMessageBox(
         this.translator.get('common.title.errorConfirm'),
         this.translator.get('common.message.noItemCreated')

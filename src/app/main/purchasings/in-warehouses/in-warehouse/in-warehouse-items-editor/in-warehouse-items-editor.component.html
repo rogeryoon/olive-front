@@ -90,6 +90,7 @@
     </ng-container>
 
   </mat-table>
-  <mat-error *ngIf="showNoItemCreatedError">{{'common.message.noItemCreated' | translate}}</mat-error>
-  <mat-error *ngIf="showBalanceIsMinusError">{{'common.message.balanceIsMinus' | translate}}</mat-error>
+  <mat-error *ngIf="noItemCreatedError && touched">{{'common.message.noItemCreated' | translate}}</mat-error>
+  <mat-error *ngIf="balanceIsMinusError && touched">{{'common.message.balanceIsMinus' | translate}}</mat-error>
+  <mat-error *ngIf="allZeroQuantityError && touched">{{'common.message.allZeroQuantityError' | translate}}</mat-error>
 </form>

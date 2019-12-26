@@ -18,7 +18,7 @@ export class OliveInWarehouseItemDataSource extends TableDataSource {
 
     createRowFormGroup(r: any): FormGroup {
         const f = new FormGroup({
-            quantity: this.createNewFormControl(r, 'quantity', [numberValidator(0, true, 1)]),
+            quantity: this.createNewFormControl(r, 'quantity', [numberValidator(0, true, 0)]),
             remark: this.createNewFormControl(r, 'remark', [])
         });
         return f;

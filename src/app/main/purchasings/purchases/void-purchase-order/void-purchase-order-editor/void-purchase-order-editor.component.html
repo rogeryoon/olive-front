@@ -1,10 +1,10 @@
 ﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutGap="1em" autocomplete="off">
     <div class="entry-max-width">
         <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
-            <div flex style="width: 200px">
+            <div fxFlex>
                 <mat-form-field appearance="outline" fxFlex="100">
                     <mat-label>{{'common.word.warehouse'|translate}}</mat-label>
-                    <mat-select name="warehouse" formControlName="warehouse" required (valueChange)="onWarehouseChanged($event)">
+                    <mat-select name="warehouse" formControlName="warehouse" required (valueChange)="onWarehouseChanged($event, true)">
                         <mat-option *ngIf="warehouses && warehouses.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
                         <mat-option *ngFor="let warehouse of warehouses" [value]="warehouse.id">{{warehouse.name}}
                         </mat-option>
@@ -13,25 +13,37 @@
                 </mat-form-field>
             </div>
 
-            <div flex style="width: 200px">
+            <div fxFlex>
+                <mat-form-field appearance="outline" fxFlex="100">
+                    <mat-label>{{'common.word.voidPurchaseOrderType'|translate}}</mat-label>
+                    <mat-select name="voidPurchaseOrderType" formControlName="voidPurchaseOrderType" required (valueChange)="onWarehouseChanged($event, false)">
+                        <mat-option *ngIf="voidPurchaseOrderTypes && voidPurchaseOrderTypes.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
+                        <mat-option *ngFor="let voidPurchaseOrderType of voidPurchaseOrderTypes" [value]="voidPurchaseOrderType.code">{{voidPurchaseOrderType.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="hasEntryError('voidPurchaseOrderType')">{{errorMessage('voidPurchaseOrderType')}}</mat-error>
+                </mat-form-field>
+            </div> 
+
+            <div fxFlex>
                 <olive-refer-host #purchaseOrder formControlName="purchaseOrderFk" [placeholder]="'common.word.purchase' | translate" [isEditMode]="true"></olive-refer-host>
             </div>
 
-            <div flex style="width: 200px">
+            <div fxFlex>
                 <mat-form-field appearance="outline" class="w-100-p" fxFlex>
                     <mat-label>{{'common.word.supplier' | translate}}</mat-label>
                     <input matInput name="supplierName" readonly="true" formControlName="supplierName">
                 </mat-form-field>
             </div>
 
-            <div flex>
+            <div fxFlex>
                 <mat-form-field appearance="outline" fxFlex class="w-100-p">
                     <mat-label>{{'common.word.memo' | translate}}</mat-label>
                     <textarea matInput name="memo" formControlName="memo" rows="1"></textarea>
                 </mat-form-field>
             </div>
 
-            <div flex *ngIf="!isNewItem" style="width: 300px">
+            <div fxFlex *ngIf="!isNewItem">
                 <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)">
                 </olive-entity-date>
             </div>

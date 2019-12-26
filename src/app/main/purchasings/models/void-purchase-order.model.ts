@@ -5,6 +5,7 @@ import { PurchaseOrder } from './purchase-order.model';
 
 export class VoidPurchaseOrder extends OliveTrackingAttribute {
     id?: number;
+    voidTypeCode?: string;
     closedDate?: any;
     confirmedDate?: any;
 
