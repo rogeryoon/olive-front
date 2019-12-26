@@ -676,6 +676,7 @@ export const locale = {
                 'inWarehouseId': '입고 ID',
                 'voidPurchaseOrderId': '반품 ID',
                 'suppliers': '공급자',
+                'voidType' : '타입',
                 'items': '품명',
                 'quantity': '수량',
                 'totalAmount': '총액',

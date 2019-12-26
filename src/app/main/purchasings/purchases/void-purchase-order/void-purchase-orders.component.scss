@@ -4,43 +4,46 @@
             width: 20px;
         }
 
-        th:nth-child(2) {
-            width: 100px;
+        th.id {
+            width: 80px;
         }
 
-        th:nth-child(3) {
-            width: 100px;
+        th.void-type {
+            width: 80px;
         }
 
-        th:nth-child(5) {
+        th.warehouse {
             width: 60px;
         }
 
-        th:nth-child(6) {
+        th.supplier {
             width: 80px;
         }
 
-        th:nth-child(7) {
-            width: 80px;
+        th.quantity {
+            width: 40px;
         }
 
-        td:nth-child(1),
-        td:nth-child(2),
-        td:nth-child(3) {
+        th.total-amount
+        {
+            width: 60px;
+        }
+
+        td.id,
+        td.void-type,
+        td.warehouse,
+        td.supplier
+        {
             text-align: center;
         }
 
-        td:nth-child(4) {
+        td.item {
             text-align: justify;
         }
 
-        td:nth-child(5), 
-        td:nth-child(6) {
+        td.quantity, 
+        td.total-amount {
             text-align: right;
-        }
-
-        td:nth-child(7) {
-            text-align: center;
         }
     }
 }

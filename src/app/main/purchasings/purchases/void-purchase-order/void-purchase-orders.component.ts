@@ -24,6 +24,7 @@ import { createdDateShortId } from 'app/core/utils/olive-helpers';
 
 const Selected  = 'selected';
 const Id = 'id';
+const VoidType = 'voidType';
 const Suppliers = 'suppliers';
 const Items = 'items';
 const Quantity = 'quantity';
@@ -57,26 +58,28 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Purchase.cancel,
       managePermission: null,
       columns: [
-        // 1
         { data: Selected },
-        // 2
+
         { data: Id, thName: this.translator.get('purchasing.inWarehousesHeader.voidPurchaseOrderId'), 
-          tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
-        // 3
-        { data: Suppliers, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.suppliers'), 
-          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
-        // 4
-        { data: Items, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.items'), 
-          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
-        // 5
-        { data: Quantity, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.quantity'), 
-          tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
-        // 6
-        { data: TotalAmount, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.totalAmount'), 
-          tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
-        // 7
+          tdClass: 'print -ex-type-id id', thClass: 'print -ex-type-id id' },
+
+        { data: VoidType, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.voidType'), 
+          tdClass: 'print left -ex-type-text void-type', thClass: 'print -ex-type-text void-type' },          
+
         { data: Warehouse, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.warehouse'), 
-          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },        
+          tdClass: 'print left -ex-type-text warehouse', thClass: 'print -ex-type-text warehouse' },
+
+        { data: Suppliers, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.suppliers'), 
+          tdClass: 'print left -ex-type-text supplier', thClass: 'print -ex-type-text supplier' },
+
+        { data: Items, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.items'), 
+          tdClass: 'print left -ex-type-text item', thClass: 'print -ex-type-text item' },
+
+        { data: Quantity, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.quantity'), 
+          tdClass: 'print right -ex-type-number quantity', thClass: 'print -ex-type-number quantity' },
+
+        { data: TotalAmount, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.totalAmount'), 
+          tdClass: 'print right -ex-type-number total-amount', thClass: 'print -ex-type-number total-amount' },
       ],
       editComponent: OliveVoidPurchaseOrderManagerComponent,
       searchComponent: OliveSearchVoidPurchaseOrderComponent,
@@ -126,6 +129,10 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
       case Warehouse:
         retValue = item.inWarehouseFk.warehouseFk.code;
         break;
+
+      case VoidType:
+        retValue = this.translator.get('code.voidPurchaseOrderTypeCode.' + item.voidTypeCode);
+        break;        
     }
 
     return retValue;
