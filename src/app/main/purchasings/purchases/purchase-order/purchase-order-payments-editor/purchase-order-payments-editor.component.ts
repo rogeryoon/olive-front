@@ -41,6 +41,8 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
 
   @Input() isVoidMode = false;
 
+  
+
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private snackBar: MatSnackBar, private cacheService: OliveCacheService, 

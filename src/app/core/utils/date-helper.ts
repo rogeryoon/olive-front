@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 
 import { UserName } from '../models/user-name';
+import { isString } from 'util';
 
 /**
  *  Date을 표준 포맷 (예:2013-02-13 13:15:15) 문자열로 변환
@@ -99,6 +100,15 @@ export function showEventDateAndName(date: any, userName: UserName): string {
  * @param date 
  * @returns date of night date 
  */
-export function midnightDate(date: Date): Date {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+export function midnightDate(date: any): Date {
+    let returnDate: Date;
+
+    if (isString(date)) {
+        returnDate = new Date(date);
+    }
+    else {
+        returnDate = date;
+    }
+
+    return new Date(Date.UTC(returnDate.getFullYear(), returnDate.getMonth(), returnDate.getDate()));
 }
