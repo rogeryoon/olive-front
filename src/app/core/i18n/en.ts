@@ -620,7 +620,7 @@ export const locale = {
             },
             'orderShipOutSplitterManager' : {
                 'saveConfirmMessage' : '정말 주문 분할/복사를 저장하시겠습니까?',
-                'saveUnmatchedConfirmMessage' : '원래 등록된 상품 갯수와 저장하려는 상품 총갯수가 일치 하지 않습니다. 그래도 주문 분할/복사를 진행할까요?'
+                'saveUnmatchedConfirmQuantityMessage' : '원래 등록된 상품 갯수와 저장하려는 상품 총갯수가 일치 하지 않습니다. 그래도 주문 분할/복사를 진행할까요?'
             }
         },
         'purchasing' : {
@@ -628,7 +628,7 @@ export const locale = {
                 'supplierOrderNo' : '공급자 주문 #',
                 'currency' : '화폐',
                 'currencyRate' : '환율',
-                'saveUnmatchedConfirmMessage' : '발주서 전체 금액 합계와 실결제 총금액이 일치하지 않습니다.\n그래도 저장하겠습니까?'
+                'saveUnmatchedAmountConfirmMessage' : '발주서 전체 금액 합계와 실결제 총금액이 일치하지 않습니다.\n그래도 저장하겠습니까?'
             },
             'purchaseOrders': {
                 'noItem' : '발주서 상품등록을 하지 않아서 입고 및 종결처리를 할 수 없습니다.',
@@ -673,8 +673,9 @@ export const locale = {
                 'balance': '취소 잔량',
             },
             'voidPurchaseOrderManager': {
-                'saveConfirmTitle' : '반품 / 취소 확인',
-                'saveConfirmMessage' : '정말 반품/취소 환불내용을 저장하시겠습니까?'
+                'saveConfirmTitle' : '반품/취소 확인',
+                'saveConfirmMessage' : '정말 반품/취소 환불내용을 저장하시겠습니까?',
+                'saveUnmatchedAmountConfirmMessage' : '반품 아이템 금액 합계와 반품 결제 총금액이 일치하지 않습니다.\n그래도 저장하겠습니까?'
             },
             'inWarehouseManager': {
                 'saveConfirmTitle' : '입고 확인',

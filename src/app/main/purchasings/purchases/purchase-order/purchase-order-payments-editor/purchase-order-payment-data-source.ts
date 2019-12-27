@@ -12,7 +12,7 @@ export class OlivePurchaseOrderPaymentDataSource extends TableDataSource {
     createRowFormGroup(r: any): FormGroup {
         const f = new FormGroup({
             paymentMethodId: this.createNewFormControl(r, 'paymentMethodId', [requiredValidator()]),
-            amount: this.createNewFormControl(r, 'amount', [numberValidator(this.standCurrency.decimalPoint, true)]),
+            amount: this.createNewFormControl(r, 'amount', [numberValidator(this.standCurrency.decimalPoint, true, 0)]),
             remarkId: this.createNewFormControl(r, 'remarkId', [])
         });
         return f;

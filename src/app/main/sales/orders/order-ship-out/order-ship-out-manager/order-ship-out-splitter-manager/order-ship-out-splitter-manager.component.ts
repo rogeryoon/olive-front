@@ -131,7 +131,7 @@ export class OliveOrderShipOutSplitterManagerComponent extends OliveEntityEditCo
       this.saveConfirmMessage = this.translator.get('sales.orderShipOutSplitterManager.saveConfirmMessage');
     }
     else {
-      this.saveConfirmMessage = this.translator.get('sales.orderShipOutSplitterManager.saveUnmatchedConfirmMessage');      
+      this.saveConfirmMessage = this.translator.get('sales.orderShipOutSplitterManager.saveUnmatchedConfirmQuantityMessage');      
     }
 
     super.popUpConfirmSaveDialog();    

@@ -92,7 +92,7 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
       supplierId: purchaseOrder.supplierId,
       warehouseId: purchaseOrder.warehouseId,
       currencyId: purchaseOrder.currencyId,
-      purchaseOrderPayments: this.purchaseOrderPayments.items,
+      purchaseOrderPayments: this.purchaseOrderPayments.items.filter(x => x.amount > 0),
       purchaseOrderItems: itemsEditor.items
     });
   }
@@ -125,7 +125,7 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
 
     // 금액이 맞지 않는 오류가 있을 경우 최종 확인
     if (!saveWithOutConfirm) {
-      this.saveConfirmMessage = this.translator.get('purchasing.purchaseOrder.saveUnmatchedConfirmMessage');
+      this.saveConfirmMessage = this.translator.get('purchasing.purchaseOrder.saveUnmatchedAmountConfirmMessage');
     }
 
     super.popUpConfirmSaveDialog(saveWithOutConfirm);    

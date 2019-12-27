@@ -49,7 +49,6 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     );
 
     this.saveConfirmTitle = translator.get('purchasing.voidPurchaseOrderManager.saveConfirmTitle');
-    this.saveConfirmMessage = translator.get('purchasing.voidPurchaseOrderManager.saveConfirmMessage');
   }
 
   registerSubControl() {
@@ -58,23 +57,33 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     this.subControls.push(this.purchaseOrderPaymentsEditor);
   }
 
-  getEditedItem(): VoidPurchaseOrder {
-    const voidPurchaseOrder = this.voidPurchaseOrderEditor.getEditedItem();
+  get inWarehouseItems(): InWarehouseItem[] {
     const inWarehouseItems = _.cloneDeep(this.inWarehouseItemsEditor.getEditedItem());
-    const purchaseOrderPayments = _.cloneDeep(this.purchaseOrderPaymentsEditor.items);
 
     // 저장전에 Minus값으로 다시 복구한다.
     inWarehouseItems.forEach(item => {
       item.quantity = item.quantity * -1;
     });
+    
+    return inWarehouseItems;
+  }
+
+  get purchaseOrderPayments(): PurchaseOrderPayment[] {
+    const purchaseOrderPayments = _.cloneDeep(this.purchaseOrderPaymentsEditor.items).filter(x => x.amount > 0);
 
     purchaseOrderPayments.forEach(payment => {
       payment.amount = payment.amount * -1;
-    });
+    });    
+
+    return purchaseOrderPayments;
+  }
+
+  getEditedItem(): VoidPurchaseOrder {
+    const voidPurchaseOrder = this.voidPurchaseOrderEditor.getEditedItem();
     
     voidPurchaseOrder.inWarehouseFk.itemCount = this.inWarehouseItemsEditor.totalQuantity * -1;
-    voidPurchaseOrder.inWarehouseFk.inWarehouseItems = inWarehouseItems;
-    voidPurchaseOrder.purchaseOrderFk.purchaseOrderPayments = purchaseOrderPayments;
+    voidPurchaseOrder.inWarehouseFk.inWarehouseItems = this.inWarehouseItems;
+    voidPurchaseOrder.purchaseOrderFk.purchaseOrderPayments = this.purchaseOrderPayments;
 
     return this.itemWithIdNAudit({
       closedDate: this.item.closedDate,
@@ -216,5 +225,20 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     });
 
     return finalPayments;
+  }
+
+  popUpConfirmSaveDialog() {
+    const totalPaymentAmount = this.purchaseOrderPayments.map(y => Number(y.amount)).reduce((a, b) => a + (b || 0), 0);
+    const totalItemAmount = this.inWarehouseItems.map(y => Number(y.quantity) * Number(y.price)).reduce((a, b) => a + (b || 0), 0);
+
+    if (totalPaymentAmount === totalItemAmount) {
+      this.saveConfirmMessage = this.translator.get('purchasing.voidPurchaseOrderManager.saveConfirmMessage');
+    }
+    // 금액이 맞지 않는 오류가 있을 경우
+    else {
+      this.saveConfirmMessage = this.translator.get('purchasing.purchaseOrder.saveUnmatchedAmountConfirmMessage');      
+    }
+
+    super.popUpConfirmSaveDialog();    
   }
 }
