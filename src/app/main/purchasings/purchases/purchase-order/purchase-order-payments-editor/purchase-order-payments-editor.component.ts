@@ -65,7 +65,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     });
   }
 
-  get items(): any {
+  get items(): PurchaseOrderPayment[] {
     return this.dataSource.items;
   }
 

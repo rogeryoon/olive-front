@@ -42,6 +42,8 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
       snackBar, formBuilder, 
       dataService
     );
+
+    this.saveConfirmTitle = translator.get('common.title.saveErrorConfirmTitle');
   }
 
   registerSubControl() {
@@ -62,6 +64,13 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
     this.purchaseOrderPayments.onTotalItemEntryAmountChanged(amount);
   }
 
+  get totalDueAmount(): number {
+    const itemsEditor = this.purchaseOrderItems.getEditedItem();
+
+    return Number(this.purchaseOrderItems.totalAmount) + Number(itemsEditor.freightAmount) + 
+    Number(itemsEditor.taxAmount) - Number(itemsEditor.addedDiscountAmount);
+  }
+
   getEditedItem(): any {
     const purchaseOrder = this.purchaseOrderEditor.getEditedItem();
     const itemsEditor = this.purchaseOrderItems.getEditedItem();
@@ -75,9 +84,7 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
       addedDiscountAmount: itemsEditor.addedDiscountAmount,
       freightAmount: itemsEditor.freightAmount,
       taxAmount: itemsEditor.taxAmount,
-      totalDueAmount: (
-        this.purchaseOrderItems.totalAmount + purchaseOrder.freightAmount 
-        + purchaseOrder.taxAmount - purchaseOrder.addedDiscountAmount),
+      totalDueAmount: this.totalDueAmount,
       currencyExchangeRate: purchaseOrder.currencyExchangeRate,
       closedDate: purchaseOrder.closedDate,
       printOutCount: purchaseOrder.printOutCount,
@@ -109,5 +116,18 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
     }
 
     this.purchaseOrderItems.setParentItem(this.item);
+  }
+
+  popUpConfirmSaveDialog() {
+    const totalPaymentAmount = this.purchaseOrderPayments.items.filter(x => x.amount > 0).map(y => Number(y.amount)).reduce((a, b) => a + (b || 0), 0);
+
+    const saveWithOutConfirm = totalPaymentAmount === this.totalDueAmount;
+
+    // 금액이 맞지 않는 오류가 있을 경우 최종 확인
+    if (!saveWithOutConfirm) {
+      this.saveConfirmMessage = this.translator.get('purchasing.purchaseOrder.saveUnmatchedConfirmMessage');
+    }
+
+    super.popUpConfirmSaveDialog(saveWithOutConfirm);    
   }
 }

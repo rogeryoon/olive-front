@@ -12,6 +12,7 @@ export const locale = {
                 'itemChanged': '상품변경'
             },
             'message' : {
+                'saveConfirmMessage' : '정말 저장하겠습니까?',
                 // 'Attempting login...'
                 'attemptingLogin' : '로그인중...',
                 // 'No matching records found',
@@ -151,7 +152,8 @@ export const locale = {
                 'chooseItem': '아래 목록중 하나를 선택하세요.',
                 'chooseItems': '해당하는 모든 아이템 선택하세요.',
                 'currentItem': '-기존 선택:{0}',
-                'saveConfirmTitle' : '최종 저장 확인'
+                'saveConfirmTitle' : '최종 저장 확인',
+                'saveErrorConfirmTitle' : '저장 확인 - 오류 발견'
             },
             'button': {
                 'save' : '저장',
@@ -625,7 +627,8 @@ export const locale = {
             'purchaseOrder' : {
                 'supplierOrderNo' : '공급자 주문 #',
                 'currency' : '화폐',
-                'currencyRate' : '환율'
+                'currencyRate' : '환율',
+                'saveUnmatchedConfirmMessage' : '발주서 전체 금액 합계와 실결제 총금액이 일치하지 않습니다.\n그래도 저장하겠습니까?'
             },
             'purchaseOrders': {
                 'noItem' : '발주서 상품등록을 하지 않아서 입고 및 종결처리를 할 수 없습니다.',

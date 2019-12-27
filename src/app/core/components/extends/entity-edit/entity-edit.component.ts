@@ -209,7 +209,12 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   /**
    * Pops up confirm save dialog
    */
-  popUpConfirmSaveDialog() {
+  popUpConfirmSaveDialog(saveWithOutConfirm = false) {
+    if (saveWithOutConfirm) {
+      this.saveData();
+      return;
+    }
+
     this.alertService.showDialog(
       this.saveConfirmTitle,
       this.saveConfirmMessage,
