@@ -73,7 +73,7 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
     let amount = 0;
 
     this.dataSource.items.forEach(item => {
-      if (!isNaN(item.amount) && item.amount > 0) {
+      if (!isNaN(item.amount)) {
         amount += +item.amount;
       }
     });
@@ -154,6 +154,11 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
   private _onTouched = () => {};
 
   writeValue(obj: any): void {
+    // 반품/취소 결제건은 제외한다
+    if (obj) {
+      obj = obj.filter(x => x.amount > 0);
+    }
+    
     this.value = obj;
 
     if (obj) {

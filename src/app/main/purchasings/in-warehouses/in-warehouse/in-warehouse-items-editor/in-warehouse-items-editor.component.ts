@@ -337,6 +337,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
             });
         });
 
+      // For Void Transaction 참조 이벤트
       this.inWarehouseItemAdded.emit(firstAddedPurchaseOrder);
 
       if (needToRender) {

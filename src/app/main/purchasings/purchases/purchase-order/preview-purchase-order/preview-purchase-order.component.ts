@@ -97,7 +97,7 @@ export class OlivePreviewPurchaseOrderComponent extends OliveBaseComponent imple
   get paymentSummary(): string {
     const values = [];
 
-    this.order.purchaseOrderPayments.forEach(payment => {
+    this.order.purchaseOrderPayments.filter(x => x.amount > 0).forEach(payment => {
       values.push(`${payment.code}: ${this.numberFormat(payment.amount, this.digits)}`);
     });
 

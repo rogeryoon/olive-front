@@ -19,6 +19,8 @@ import { OlivePurchaseOrderPaymentsEditorComponent } from '../../purchase-order/
 import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.model';
 import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.model';
 import { OliveVoidPurchaseOrderService } from '../../../services/void-purchase-order.service';
+import { OlivePurchaseOrderPaymentService } from 'app/main/purchasings/services/purchase-order-payment.service';
+import { applyPrecision } from 'app/core/utils/number-helper';
 
 @Component({
   selector: 'olive-void-purchase-order-manager',
@@ -39,7 +41,7 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
-    dataService: OliveVoidPurchaseOrderService
+    dataService: OliveVoidPurchaseOrderService, private purchaseOrderPaymentService: OlivePurchaseOrderPaymentService
   ) {
     super(
       translator, alertService,
@@ -71,6 +73,7 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
   get purchaseOrderPayments(): PurchaseOrderPayment[] {
     const purchaseOrderPayments = _.cloneDeep(this.purchaseOrderPaymentsEditor.items).filter(x => x.amount > 0);
 
+    // 저장전에 Minus값으로 다시 복구한다.
     purchaseOrderPayments.forEach(payment => {
       payment.amount = payment.amount * -1;
     });    
@@ -78,9 +81,18 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     return purchaseOrderPayments;
   }
 
+  get totalPaymentAmount(): number {
+    return this.purchaseOrderPayments.map(y => Number(y.amount)).reduce((a, b) => a + (b || 0), 0);
+  }
+
+  get totalItemsAmount(): number {
+    return this.inWarehouseItems.map(y => Number(y.quantity) * Number(y.price)).reduce((a, b) => a + (b || 0), 0);
+  }
+
   getEditedItem(): VoidPurchaseOrder {
     const voidPurchaseOrder = this.voidPurchaseOrderEditor.getEditedItem();
     
+    // 저장전에 Minus값으로 다시 복구한다.
     voidPurchaseOrder.inWarehouseFk.itemCount = this.inWarehouseItemsEditor.totalQuantity * -1;
     voidPurchaseOrder.inWarehouseFk.inWarehouseItems = this.inWarehouseItems;
     voidPurchaseOrder.purchaseOrderFk.purchaseOrderPayments = this.purchaseOrderPayments;
@@ -189,8 +201,13 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     this.oForm.patchValue({purchaseOrderPayments : order ? this.calculateByPaymentMethod(order) : null});
   }
 
-  // 결제수단 별로 결제와 환불을 계산해서 결제수단별로 정리해서 반환
-  // 합산값이 0이하 인경우 환불가능한 금액이 없으므로 삭제한다.
+  /**
+   * Calculates by payment method
+   * 결제수단 별로 결제와 환불을 계산해서 결제수단별로 정리해서 반환
+   * 합산값이 0이하 인경우 환불가능한 금액이 없으므로 삭제한다.
+   * @param order 
+   * @returns by payment method 
+   */
   calculateByPaymentMethod(order: PurchaseOrder): PurchaseOrderPayment[] {
     const payments = _.cloneDeep(order.purchaseOrderPayments);
 
@@ -217,21 +234,29 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     payments.forEach(payment => {
       if (!keysForUniqueOrPlusValueCheck.has(payment.paymentMethodId)) {
         payment.id = null;
-        payment.amount = balanceByPaymentMethod.get(payment.paymentMethodId);
+        payment.amount = applyPrecision(balanceByPaymentMethod.get(payment.paymentMethodId), 2);
         payment.remarkId = null;
         finalPayments.push(payment);
         keysForUniqueOrPlusValueCheck.add(payment.paymentMethodId);
       }
     });
 
+    // 결제수단이 1개일 경우 아이템 합 금액을 설정 (입력 편의)
+    if (finalPayments.length === 1) {
+      const payment = finalPayments[0];
+
+      const totalItemsAmount = Math.abs(this.totalItemsAmount)
+
+      if (payment.amount >= totalItemsAmount) {
+        payment.amount = totalItemsAmount;
+      }
+    }
+
     return finalPayments;
   }
 
   popUpConfirmSaveDialog() {
-    const totalPaymentAmount = this.purchaseOrderPayments.map(y => Number(y.amount)).reduce((a, b) => a + (b || 0), 0);
-    const totalItemAmount = this.inWarehouseItems.map(y => Number(y.quantity) * Number(y.price)).reduce((a, b) => a + (b || 0), 0);
-
-    if (totalPaymentAmount === totalItemAmount) {
+    if (this.totalPaymentAmount === this.totalItemsAmount) {
       this.saveConfirmMessage = this.translator.get('purchasing.voidPurchaseOrderManager.saveConfirmMessage');
     }
     // 금액이 맞지 않는 오류가 있을 경우
