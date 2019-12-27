@@ -648,7 +648,7 @@ export const locale = {
             'purchaseOrderPayments': {
                 'paymentMethodId' : '결제',
                 'amount' : '금액',
-                'remarkId': '승인번호'
+                'remarkId': '비고'
             },
             'previewPurchaseOrder': {
                 'freight' : 'freight',
