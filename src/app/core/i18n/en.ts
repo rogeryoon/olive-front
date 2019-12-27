@@ -12,6 +12,8 @@ export const locale = {
                 'itemChanged': '상품변경'
             },
             'message' : {
+                // 'Attempting login...'
+                'attemptingLogin' : '로그인중...',
                 // 'No matching records found',
                 'noRecordsFound' : '해당 데이터가 존재하지 않습니다.', 
                 'savingChanges' : 'Saving changes...',
@@ -47,6 +49,10 @@ export const locale = {
                 'reLogin' : '로그인 세션이 만기되었습니다. 다시 로그인 하십시오.',
                 // 'Your Session has expired. Please log in again to renew your session'
                 'renewSession' : '로그인 세션이 만기되었습니다. 다시 로그인 하십시오.',
+                // 'Invalid username or password'
+                'invalidUserNamePassword': '아이디 또는 암호가 틀립니다.',
+                // 'This account has been disabled'
+                'accountDisabled' : '사용정지중인 계정입니다.',
                 'duplicated' : '아래건(들)이 이미 존재하여 추가되지 않았습니다.\r\n{0}',
                 'requestFinished': '요청한 작업을 완료하였습니다.',
                 'noItemCreated' : '1개 이상의 항목을 등록하십시오.',
@@ -71,7 +77,15 @@ export const locale = {
                 'addUpCustomsTaxingStatus' : '합산과세({0})',
                 'oneItemMaxQuantityStatus' : '{0}-제품별 갯수 {1}개 초과({2})',
                 'totalMaxPriceStatus' :  '{0} ${1} 초과({2})',
-                'copyAllToEmptyCell' : '해당값을 모든 공란 셀에 복사합니다.'
+                'copyAllToEmptyCell' : '해당값을 모든 공란 셀에 복사합니다.',
+                // 'An error occurred, please try again later.\nError: '
+                'errorOccurredAt' : '작업도중 오류가 발생하였습니다.\n오류:',
+                // 'Welcome {0}!',
+                'welcomeTemplate' : '{0}님, 환영합니다.',
+                // `Session for ${user.userName} restored!`
+                'sessionRestoredTemplate' : '세션 복원 [{0}]',
+                // 'Please try your last operation again'
+                'tryLastOperation' : '마지막 작업을 다시 진행하십시오.'
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
@@ -101,6 +115,11 @@ export const locale = {
                 'selected' : '정확한 값을 선택/입력하지 않았습니다.'
             },
             'title' : {
+                // 'Session Restored'
+                'sessionRestored' : '세션 복원',
+                // Unable to login
+                'unableLogin' : '로그인 불가능',
+                'login' : '로그인',
                 'addNewItem' : '{{title}} 등록',
                 'editItem' : '{{name}}',
                 'itemDetails' : '{{name}}',
@@ -373,7 +392,8 @@ export const locale = {
         },
         'page': {
             'title': {
-                'login': 'LOGIN TO YOUR ACCOUNT'
+                // 'LOGIN TO YOUR ACCOUNT'
+                'login': '로그인'
             }
         },
         // 메뉴 카테고리로 구분

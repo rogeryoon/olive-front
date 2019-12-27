@@ -1,6 +1,9 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
+import { String } from 'typescript-string-operations';
+
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { FuseConfigService } from '@fuse/services/config.service';
 
 import { AlertService, MessageSeverity } from '@quick/services/alert.service';
@@ -28,7 +31,8 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
 
   constructor(
     private alertService: AlertService, private authService: AuthService,
-    private fuseConfig: FuseConfigService, private formBuilder: FormBuilder
+    private fuseConfig: FuseConfigService, private formBuilder: FormBuilder,
+    private translator: FuseTranslationLoaderService
   ) {
     this.fuseConfig.setConfig({
       layout: {
@@ -113,7 +117,7 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
 
   login() {
     this.isLoading = true;
-    this.alertService.startLoadingMessage('', 'Attempting login...');
+    this.alertService.startLoadingMessage('', this.translator.get('common.message.attemptingLogin'));
 
     this.authService.login(this.getUserLogin())
       .subscribe(
@@ -132,11 +136,11 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
       const errorMessage = Utilities.findHttpResponseMessage('error_description', error) || Utilities.findHttpResponseMessage('error', error);
 
       if (errorMessage) {
-        this.alertService.showStickyMessage('Unable to login', this.mapLoginErrorMessage(errorMessage), MessageSeverity.error, error);
+        this.alertService.showStickyMessage(this.translator.get('common.title.unableLogin'), this.mapLoginErrorMessage(errorMessage), MessageSeverity.error, error);
       }
       else {
         this.alertService.showStickyMessage(
-          'Unable to login', 'An error occurred, please try again later.\nError: ' +
+          this.translator.get('common.title.unableLogin'), this.translator.get('common.message.errorOccurredAt') +
           error.statusText || error.status, MessageSeverity.error, error
         );
       }
@@ -154,12 +158,17 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
       this.reset();
 
       if (!this.isModal) {
-        this.alertService.showMessage('Login', `Welcome ${user.userName}!`, MessageSeverity.success);
+        this.alertService.showMessage(this.translator.get('common.title.login'), 
+          String.Format(this.translator.get('common.message.welcomeTemplate'), user.userName), 
+          MessageSeverity.success);
       }
       else {
-        this.alertService.showMessage('Login', `Session for ${user.userName} restored!`, MessageSeverity.success);
+        this.alertService.showMessage(this.translator.get('common.title.login'), 
+          String.Format(this.translator.get('common.message.sessionRestoredTemplate'), user.userName), 
+          MessageSeverity.success);
         setTimeout(() => {
-          this.alertService.showStickyMessage('Session Restored', 'Please try your last operation again', MessageSeverity.default);
+          this.alertService.showStickyMessage(this.translator.get('common.title.sessionRestored'), 
+            this.translator.get('common.message.tryLastOperation'), MessageSeverity.default);
         }, 500);
 
         this.closeModal();
@@ -170,11 +179,11 @@ export class OliveLoginControlComponent implements OnInit, OnDestroy {
   mapLoginErrorMessage(error: string) {
 
     if (error === 'invalid_username_or_password') {
-      return 'Invalid username or password';
+      return this.translator.get('common.message.invalidUserNamePassword');
     }
 
     if (error === 'invalid_grant') {
-      return 'This account has been disabled';
+      return this.translator.get('common.message.accountDisabled');
     }
 
     return error;
