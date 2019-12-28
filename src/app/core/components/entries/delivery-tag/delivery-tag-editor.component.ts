@@ -22,7 +22,7 @@ export class OliveDeliveryTagEditorComponent extends OliveEntityFormComponent {
   }
 
   getEditedItem(): DeliveryTag {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     return this.itemWithIdNAudit({
       buyerCellPhoneNumber: formModel.buyerCellPhoneNumber,

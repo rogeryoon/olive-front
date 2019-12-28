@@ -32,7 +32,7 @@ export class OliveProductEditorComponent extends OliveEntityFormComponent {
   }
 
   getEditedItem(): any {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     return this.itemWithIdNAudit({
       code: formModel.code,

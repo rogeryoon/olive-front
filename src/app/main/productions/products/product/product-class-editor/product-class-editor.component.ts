@@ -29,7 +29,7 @@ export class OliveProductClassEditorComponent extends OliveEntityFormComponent {
   }
 
   getEditedItem(): any {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
     
     return {
       brands: this.brands.value,

@@ -27,7 +27,7 @@ export class OliveOrderShipOutEditorComponent extends OliveEntityFormComponent {
   }
 
   getEditedOrder(): Order {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
     const order = ((this.item) as OrderShipOut).orderFk;
     order.memo = formModel.memo;
     return order;

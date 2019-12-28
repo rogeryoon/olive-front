@@ -278,7 +278,7 @@ export class OliveUserEditorComponent extends OliveBaseComponent implements OnCh
   }
 
   private getEditedUser(): UserEdit {
-    const formModel = this.userProfileForm.value;
+    const formModel = this.userProfileForm.getRawValue();
 
     return {
       id: this.user.id,

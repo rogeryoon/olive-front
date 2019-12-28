@@ -38,7 +38,7 @@ export class OliveProductWeightEditorComponent extends OliveEntityEditComponent 
   }
 
   getEditedItem(): ProductWeight {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     return {
       productVariantId: this.item.productVariantId,
@@ -133,7 +133,7 @@ export class OliveProductWeightEditorComponent extends OliveEntityEditComponent 
   }
 
   notifyItemSaved(kiloWeight: number) {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     const overrideWeight = formModel.productOverrideWeight.toString().trim() as string;
 

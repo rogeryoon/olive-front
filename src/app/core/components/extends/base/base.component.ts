@@ -29,6 +29,10 @@ export class OliveBaseComponent implements OnInit {
   ngOnInit() {
   }
 
+  get oFormValue() {
+    return this.oForm.getRawValue();
+  }
+
   //#region Utilities
 
   /**

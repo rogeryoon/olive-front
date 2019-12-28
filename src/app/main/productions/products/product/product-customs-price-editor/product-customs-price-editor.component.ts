@@ -35,7 +35,7 @@ export class OliveProductCustomsPriceEditorComponent extends OliveEntityEditComp
   }
 
   getEditedItem(): ProductCustomsPrice {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     return {
       productVariantId: this.item.productVariantId,
@@ -100,7 +100,7 @@ export class OliveProductCustomsPriceEditorComponent extends OliveEntityEditComp
   }
 
   notifyItemSaved(customsPrice: number) {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     const overrideCustomsPrice = formModel.productOverrideCustomsPrice.toString().trim() as string;
 

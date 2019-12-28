@@ -39,7 +39,7 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
   }
 
   getEditedItem(): InWarehouse {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     const selectedWarehouse = this.warehouses.find(item => item.id === formModel.warehouse);
 

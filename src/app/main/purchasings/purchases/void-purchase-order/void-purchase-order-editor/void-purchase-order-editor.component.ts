@@ -52,7 +52,7 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
   }
 
   getEditedItem(): VoidPurchaseOrder {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     const selectedWarehouse = this.warehouses.find(item => item.id === formModel.warehouse);
 
@@ -137,7 +137,7 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
   }
 
   onWarehouseChanged(value: any, eventFromWarehouseDropDown: boolean) {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     if (!this.disableWarehouseChangedEvent) {
       let selectedWarehouse: Warehouse;

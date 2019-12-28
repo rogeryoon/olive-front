@@ -34,7 +34,7 @@ export class OliveAddressEditorComponent extends OliveEntityFormComponent {
   }
 
   getEditedItem(): Address {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     return this.itemWithIdNAudit({
       address1: formModel.address1,

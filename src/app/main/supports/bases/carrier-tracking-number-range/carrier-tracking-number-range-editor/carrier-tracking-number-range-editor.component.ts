@@ -80,7 +80,7 @@ export class OliveCarrierTrackingNumberRangeEditorComponent extends OliveEntityF
   }
 
   getEditedItem(): CarrierTrackingNumberRange {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     return this.itemWithIdNAudit({
       name: formModel.name,

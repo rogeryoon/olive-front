@@ -20,7 +20,7 @@ export class OliveCompanyGroupEditorComponent extends OliveEntityFormComponent {
   }
 
   getEditedItem(): any {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
     return this.itemWithIdNAudit({
       name: formModel.name,
       memo: formModel.memo,

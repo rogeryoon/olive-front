@@ -195,7 +195,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   }
 
   getEditedItem(): any {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     return {
       addedDiscountAmount: formModel.addedDiscountAmount,

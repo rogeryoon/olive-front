@@ -24,7 +24,7 @@ export class OliveCompanyGroupSettingEditorComponent extends OliveEntityFormComp
   }
 
   getEditedItem(): any {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     return this.itemWithIdNAudit({
       purchasingEnabled: formModel.purchasingEnabled,

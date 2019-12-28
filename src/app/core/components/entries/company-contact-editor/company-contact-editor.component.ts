@@ -48,7 +48,7 @@ export class OliveCompanyContactEditorComponent extends OliveEntityEditComponent
    * @returns edited item 
    */
   getEditedItem(): CompanyContact {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     return {
       id: this.selectedContactId,

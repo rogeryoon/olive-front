@@ -48,7 +48,7 @@ export class OliveOrderShipOutTrackingEditorComponent extends OliveEntityFormCom
   }
 
   getEditedItem(): CarrierTrackingEntry {
-    const formModel = this.oForm.value;
+    const formModel = this.oFormValue;
 
     const carrier = this.carriers.find(item => item.id === formModel.carrier);
 
