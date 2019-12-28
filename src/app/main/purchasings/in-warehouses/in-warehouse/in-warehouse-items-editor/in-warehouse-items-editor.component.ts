@@ -56,6 +56,9 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
   @Output() requiredWarehouse = new EventEmitter();
   @Output() inWarehouseItemAdded = new EventEmitter();
+  @Output() totalItemAmountChanged = new EventEmitter();
+
+  savedItemsAmount: number;
 
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
@@ -158,6 +161,8 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     if (this.dataSource.items.length === 0) {
       this.oFArray.removeAt(0);
     }
+
+    this.updateTotalDue();
   }
 
   get totalQuantity(): number {
@@ -345,6 +350,8 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
         this.oForm.markAsDirty();
       }
 
+      this.updateTotalDue();
+
       this.messageHelperService.showDuplicatedItems(duplicatedIdStrings);
     });
   }
@@ -355,6 +362,15 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     if (isNumberPattern(quantityValue)) {
       const item = this.dataSource.items[index];
       item.balance = item.originalBalance - this.getNumber(quantityValue);
+    }
+
+    this.updateTotalDue();
+  }
+
+  updateTotalDue() {
+    const totalQuantityDue = this.totalQuantityDue;
+    if (this.savedItemsAmount !== totalQuantityDue) {
+      this.totalItemAmountChanged.emit(totalQuantityDue);
     }
   }
 

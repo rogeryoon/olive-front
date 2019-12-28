@@ -190,6 +190,10 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     this.setOrderData(order);
   }
 
+  onTotalItemAmountChanged(itemAmount: number) {
+    this.purchaseOrderPaymentsEditor.onTotalItemEntryAmountChanged(itemAmount);
+  }
+
   setOrderData(order: PurchaseOrder) {
     this.voidPurchaseOrderEditor.item.purchaseOrderFk = order;
     this.voidPurchaseOrderEditor.oForm.patchValue({
@@ -245,7 +249,7 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     if (finalPayments.length === 1) {
       const payment = finalPayments[0];
 
-      const totalItemsAmount = Math.abs(this.totalItemsAmount)
+      const totalItemsAmount = Math.abs(this.totalItemsAmount);
 
       if (payment.amount >= totalItemsAmount) {
         payment.amount = totalItemsAmount;
