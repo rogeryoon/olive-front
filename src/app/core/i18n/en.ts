@@ -12,12 +12,15 @@ export const locale = {
                 'itemChanged': '상품변경'
             },
             'message' : {
+                // 'Loading...'
+                'loading' : '로딩중...',
                 'saveConfirmMessage' : '정말 저장하겠습니까?',
                 // 'Attempting login...'
                 'attemptingLogin' : '로그인중...',
                 // 'No matching records found',
                 'noRecordsFound' : '해당 데이터가 존재하지 않습니다.', 
-                'savingChanges' : 'Saving changes...',
+                // 'Saving changes...'
+                'savingChanges' : '저장중...',
                 // '"{0}" was created successfully'
                 'newItemCreated': '"{0}"(이)가 저장되었습니다.', 
                 // 'The item was created successfully',

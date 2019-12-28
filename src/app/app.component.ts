@@ -5,6 +5,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { String } from 'typescript-string-operations';
+
 import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
@@ -202,7 +204,10 @@ export class AppComponent implements OnInit, OnDestroy
         setTimeout(() => {
             if (this.isUserLoggedIn) {
                 this.alertService.resetStickyMessage();
-                this.alertService.showMessage('Login', `Welcome back ${this.userName}!`, MessageSeverity.default);
+                this.alertService.showMessage(
+                    this._fuseTranslationLoaderService.get('common.title.login'), 
+                    String.Format(this._fuseTranslationLoaderService.get('common.message.welcomeTemplate'), this.userName), 
+                    MessageSeverity.default);
             }
         }, 2000);
 

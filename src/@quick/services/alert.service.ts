@@ -137,7 +137,7 @@ export class AlertService {
         }
     }
 
-    startLoadingMessage(message = 'Loading...', caption = '') {
+    startLoadingMessage(message = this.translator.get('common.message.loading'), caption = '') {
         this._isLoading = true;
         clearTimeout(this.loadingMessageId);
 
