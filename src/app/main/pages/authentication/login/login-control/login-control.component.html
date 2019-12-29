@@ -1,37 +1,29 @@
 <form name="loginForm" [formGroup]="loginForm" novalidate>
 
   <mat-form-field appearance="outline">
-      <mat-label>UserName</mat-label>
+      <mat-label>{{'common.word.userName' | translate}}</mat-label>
       <input matInput formControlName="userName">
       <mat-error *ngIf="loginFormErrors.userName.required">
-          Username is required
-      </mat-error>
-      <mat-error *ngIf="loginFormErrors.userName.required">
-          Please enter a valid username
+          {{'common.message.userNameIsRequired' | translate}}
       </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
-      <mat-label>Password</mat-label>
+      <mat-label>{{'common.word.password' | translate}}</mat-label>
       <input matInput type="password" formControlName="password">
       <mat-error *ngIf="loginFormErrors.password.required">
-          Password is required
+        {{'common.message.passwordIsRequired' | translate}}
       </mat-error>
   </mat-form-field>
 
   <div class="remember-forgot-password" fxLayout="row" fxLayout.xs="column"
        fxLayoutAlign="space-between center">
-      <mat-checkbox class="remember-me" aria-label="Remember Me" formControlName="rememberMe">
-          Remember Me
+      <mat-checkbox class="remember-me" aria-label="{{'common.message.rememberMe' | translate}}" formControlName="rememberMe">
+        {{'common.message.rememberMe' | translate}}
       </mat-checkbox>
 
       <a class="forgot-password" [routerLink]="'/pages/auth/forgot-password'">
-          Forgot Password?
+        {{'common.message.forgotPassword' | translate}}
       </a>
   </div>
-
-  <!-- <button mat-raised-button color="accent" class="submit-button" aria-label="LOG IN"
-      [disabled]="loginForm.invalid || isLoading" (click)="login()">
-      LOGIN
-  </button> -->
 </form>

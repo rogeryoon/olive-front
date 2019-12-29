@@ -12,6 +12,10 @@ export const locale = {
                 'itemChanged': '상품변경'
             },
             'message' : {
+                // Remember Me
+                'rememberMe' : '계정 저장',
+                // Forgot Password
+                'forgotPassword' : '암호 분실',
                 // 'Loading...'
                 'loading' : '로딩중...',
                 'saveConfirmMessage' : '정말 저장하겠습니까?',
@@ -89,7 +93,11 @@ export const locale = {
                 // `Session for ${user.userName} restored!`
                 'sessionRestoredTemplate' : '세션 복원 [{0}]',
                 // 'Please try your last operation again'
-                'tryLastOperation' : '마지막 작업을 다시 진행하십시오.'
+                'tryLastOperation' : '마지막 작업을 다시 진행하십시오.',
+                // Username is required
+                'userNameIsRequired' : '아이디를 입력하십시오.',
+                // Password is required
+                'passwordIsRequired' : '암호를 입력하십시오.',                
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
@@ -134,8 +142,10 @@ export const locale = {
                 'deleteError' : '삭제 오류', // 'Delete Error',
                 // 'Load Error'
                 'loadError' : '데이터 로드 오류',
-                'advancedSearch' : 'Advanced Search',
-                'sessionExpired' : 'Session Expired',
+                // 'Advanced Search'
+                'advancedSearch' : '자세히 검색',
+                // 'Session Expired'
+                'sessionExpired' : '세션이 만기되었습니다.',
                 'confirm' : '확인',
                 'errorConfirm' : '오류 알림',
                 'duplicated' : '중복 오류 알림',
@@ -283,6 +293,8 @@ export const locale = {
                 'remark' : '비고',
             },
             'word': {
+                'userName' : '아이디',
+                'password' : '암호',
                 'search' : '검색',
                 'orderNumberShort':  '주문 #',
                 'keyword': '키워드',
@@ -519,7 +531,7 @@ export const locale = {
                 'Delete': 'Delete User',
                 'EditUser': 'Edit User "{{name}}"',
                 'CompanyGroup': 'Company Group',
-                'UserName': 'User Name',
+                'UserName': '아이디',
                 'FullName': 'Full Name',
                 'Email': 'Email',
                 'Roles': 'Roles',
@@ -527,8 +539,9 @@ export const locale = {
             },
             'userEditor': {
                 'JobTitle': 'Job Title',
-                'UserName': 'User Name',
-                'UserNameRequired': 'User name is required (minimum of 2 and maximum of 200 characters)',
+                'UserName': '아이디',
+                // 'User name is required (minimum of 2 and maximum of 200 characters)'
+                'UserNameRequired': '최소2자~최대 200자 아이디를 입력하십시오.',
                 'CompanyGroupName': '고객사 그룹 선택',
                 'CompanyGroupNameRequired': '오른쪽 돋보기를 클릭하여 고객사 그룹을 선택하세요.',
                 'Password': 'Password',
