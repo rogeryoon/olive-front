@@ -333,7 +333,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
                 productName: sItem.productName,
                 originalBalance: quantity,
-                price: sItem.price,
+                price: sItem.appliedCost,
                 productVariantId: sItem.productVariantId,
                 productVariantShortId: sItem.productVariantShortId,
                 supplierName: pItem.supplierFk.name
