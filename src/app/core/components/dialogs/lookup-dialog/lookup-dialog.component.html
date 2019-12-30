@@ -10,7 +10,7 @@
             <tr>
                 <th *ngIf="checkBoxEnable" class="nosort" style="width:30px;">
                     {{'common.tableHeader.select' | translate}}</th>
-                <th *ngFor="let column of dataColumns" [ngStyle]="{'text-width':renderStyle(column.width)}">
+                <th *ngFor="let column of dataColumns" [ngStyle]="{'text-width':renderStyle(column.width)}" [class]="renderTHClass(column.thClass)">
                     {{column.name}}</th>
             </tr>
         </thead>
@@ -22,7 +22,8 @@
                 </td>
                 <td class="no-cursor" *ngFor="let column of dataColumns"
                     [ngStyle]="{'text-align':renderStyle(column.align)}"
-                    [ngClass]="{'foreground-blue' : setting.currentItem && item.id === setting.currentItem.id }">
+                    [ngClass]="{'foreground-blue' : setting.currentItem && item.id === setting.currentItem.id }"
+                    [class]="renderTDClass(column.tdClass)">
                     <span [innerHTML]="renderItem(item, column.data) | sanitizeHtml"></span>
                 </td>
             </tr>

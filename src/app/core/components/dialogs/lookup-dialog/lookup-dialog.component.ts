@@ -205,7 +205,7 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
       columnDefs: [
         { targets: 'nosort', orderable: false }
       ],
-      order: [[this.checkBoxEnable ? 1 : 0, 'desc']]
+      order: this.getTableOrders()
     };
 
     $('.olive-datatable').css('min-width', '700px'); // .css('width', '100%');
@@ -267,6 +267,14 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
    */
   protected getCustomTableColumns(): any {
     return null;
+  }
+
+  /**
+   * Gets table orders
+   * @returns table orders 
+   */
+  protected getTableOrders(): any[][] {
+    return [[this.checkBoxEnable ? 1 : 0, 'desc']];
   }
 
   /**
@@ -442,5 +450,23 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
    */
   renderStyle(styleString: any) {
     return this.isNull(styleString) ? '' : styleString;
+  }
+
+  /**
+   * Renders TD class
+   * @param classString 
+   * @returns  
+   */
+  renderTDClass(classString: any) {
+    return this.isNull(classString) ? '' : classString;
+  }
+
+  /**
+   * Renders TH class
+   * @param classString 
+   * @returns  
+   */
+  renderTHClass(classString: any) {
+    return this.isNull(classString) ? '' : classString;
   }
 }

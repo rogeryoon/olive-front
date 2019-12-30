@@ -1,8 +1,6 @@
 import { Component, OnInit, Inject, OnDestroy, ComponentFactoryResolver, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OliveSearchDialogComponent } from '../search-dialog/search-dialog.component';
 import { OlivePlaceHolderDirective } from 'app/core/directives/place-holder.directive';

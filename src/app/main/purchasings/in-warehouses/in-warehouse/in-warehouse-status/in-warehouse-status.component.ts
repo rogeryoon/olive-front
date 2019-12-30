@@ -81,21 +81,17 @@ export class OliveInWarehouseStatusComponent extends OliveLookupDialogComponent 
 
   getCustomTableColumns(): any {
     return [
-      // 1
-      { data: ProductVariantId, orderable: true, 
-          name: this.translator.get('purchasing.inWarehouseStatusHeader.productVariantId')},
-      // 2
-      { data: ItemName, orderable: false, 
-          name: this.translator.get('purchasing.inWarehouseStatusHeader.itemName')},
-      // 3
-      { data: Quantity, orderable: true, 
-          name: this.translator.get('purchasing.inWarehouseStatusHeader.quantity')},
-      // 4
-      { data: Balance, orderable: true, 
-          name: this.translator.get('purchasing.inWarehouseStatusHeader.balance')},
-      // 5
-      { data: InWarehouseId, orderable: false, 
+      { data: InWarehouseId, orderable: true, tdClass: 'in-warehouse-id', thClass: 'in-warehouse-id', 
           name: this.translator.get('purchasing.inWarehouseStatusHeader.inWarehouseId')},
+
+      { data: ItemName, orderable: false, tdClass: 'item-name', thClass: 'item-name',
+          name: this.translator.get('purchasing.inWarehouseStatusHeader.itemName')},
+
+      { data: Quantity, orderable: true, tdClass: 'quantity', thClass: 'quantity',
+          name: this.translator.get('purchasing.inWarehouseStatusHeader.quantity')},
+
+      { data: Balance, orderable: true, tdClass: 'balance', thClass: 'balance',
+          name: this.translator.get('purchasing.inWarehouseStatusHeader.balance')},
     ];
   }
 
