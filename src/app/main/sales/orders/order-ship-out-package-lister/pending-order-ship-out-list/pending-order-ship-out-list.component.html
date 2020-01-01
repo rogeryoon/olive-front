@@ -98,7 +98,7 @@
                 <input *ngIf="!hasShipOutProblems(order)" name="select" type="checkbox"
                     [(ngModel)]="order.choices[index]" (change)="checkIfAllSelected()"
                     (click)="checkSameCombinedShippingGroup(order)"
-                    [attr.disabled]="hasShipOutProblems(order) ? true : null">
+                    [disableControl]="hasShipOutProblems(order)">
             </td>
 
             <td class="seller zoom-in print -ex-type-text" (click)="popUpOrderEntry(order)">
@@ -112,7 +112,7 @@
             <td class="inventory print -ex-type-text" (click)="switchInventory(order)"
                 [ngClass]="{'foreground-red': isShortOrderQuantity(order), 'pointer': switchIconVisible(order)}">
                 <span *ngFor="let item of order.orderShipOutDetails"
-                    matTooltip="{{item.name}}">{{isShortOrderQuantity(order) ? '-' : ''}}{{showItem(item)}}&nbsp;</span>
+                    matTooltip="{{item.productName}}">{{isShortOrderQuantity(order) ? '-' : ''}}{{showItem(item)}}&nbsp;</span>
                 <mat-icon *ngIf="switchIconVisible(order)" class="small-icon"
                     matTooltip="{{getInventorySwitchTooltip(order)}}">
                     {{getInventorySwitchIconName(order)}}</mat-icon>

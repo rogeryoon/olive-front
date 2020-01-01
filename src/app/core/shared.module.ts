@@ -28,11 +28,11 @@ import { OliveViewDialogComponent } from './components/dialogs/view-dialog/view-
 import { OliveTabLabelComponent } from './components/entries/tab-label/tab-label.component';
 import { OliveDropDownListComponent } from './components/entries/drop-down-list/drop-down-list.component';
 import { OliveReferHostComponent } from './components/entries/refer-host/refer-host.component';
-import { OliveFloatheadDirective } from './directives/floathead.directive';
 import { OliveTaskCountDialogComponent } from './components/dialogs/task-count-dialog/task-count-dialog.component';
 import { OliveDeliveryTagEditorComponent } from './components/entries/delivery-tag/delivery-tag-editor.component';
 import { OliveSelectOneDialogComponent } from './components/dialogs/select-one-dialog/select-one-dialog.component';
 import { OliveCompanyContactEditorComponent } from './components/entries/company-contact-editor/company-contact-editor.component';
+import { DisableControlDirective } from './directives/disable-control.directive';
 
 @NgModule({
   imports: [
@@ -80,7 +80,7 @@ import { OliveCompanyContactEditorComponent } from './components/entries/company
     OliveCompanyContactEditorComponent,
 
     OlivePlaceHolderDirective,
-    OliveFloatheadDirective
+    DisableControlDirective
   ],
   declarations: [
     OliveBaseComponent,
@@ -111,7 +111,7 @@ import { OliveCompanyContactEditorComponent } from './components/entries/company
     OliveCompanyContactEditorComponent,
 
     OlivePlaceHolderDirective,
-    OliveFloatheadDirective
+    DisableControlDirective
   ],
   providers: [],
   entryComponents: [

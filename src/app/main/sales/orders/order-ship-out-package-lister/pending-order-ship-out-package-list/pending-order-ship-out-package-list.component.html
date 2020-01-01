@@ -97,8 +97,7 @@
     <tbody *ngIf="allWarehousePackages?.length > 0">
         <tr *ngFor="let package of allWarehousePackages; let i = index">
             <td class="checkbox">
-                <input name="select" type="checkbox" [(ngModel)]="package.selected" (change)="checkIfAllSelected();"
-                    [attr.disabled]="false ? true : null">
+                <input name="select" type="checkbox" [(ngModel)]="package.selected" (change)="checkIfAllSelected();">
             </td>
             <td class="seller pointer print -ex-type-text" (click)="editCompanyContact(package)">
                 {{showSeller(package)}}-<span class="font-weight-900"

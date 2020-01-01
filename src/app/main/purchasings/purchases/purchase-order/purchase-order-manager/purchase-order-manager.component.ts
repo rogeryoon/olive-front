@@ -117,9 +117,27 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
         purchaseOrderPayments: this.item.purchaseOrderPayments,
         purchaseOrderItems: this.item.purchaseOrderItems
       });
+
+      this.setWarehouseDropDownLocked();    
     }
 
     this.purchaseOrderItems.setParentItem(this.item);
+  }
+
+  /**
+   * Sets warehouse drop down locked
+   * 발주 작성 수량과 현재 남은 잔량이 일치하지 않는건이 있을경우
+   * 종속되는 입고 / 취소건이 있기때문에 창고는 더이상 변경할수 없다.
+   */
+  setWarehouseDropDownLocked()
+  {
+    if (this.isNewItem) {
+      return;
+    }
+
+    const items = this.item.purchaseOrderItems as PurchaseOrderItem[];
+
+    this.purchaseOrderEditor.warehouseLocked = items.some(x => x.quantity !== x.balance);
   }
 
   popUpConfirmSaveDialog() {
@@ -149,9 +167,9 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
         const minimumQuantity = Number(values[2]);
 
         const items = this.purchaseOrderItems.getEditedItem().items as PurchaseOrderItem[];
-        const itemName = items.find(x => x.id === purchaseOrderItemId);
+        const itemName = items.find(x => x.id === purchaseOrderItemId).productName;
 
-        errorMessage = String.Format(this.translator.get('purchasing.purchaseOrder.notMinimumQuantity'), minimumQuantity, itemName) 
+        errorMessage = String.Format(this.translator.get('purchasing.purchaseOrder.notMinimumQuantity'), minimumQuantity, itemName); 
       }
 
       this.alertService.showMessageBox(this.translator.get('common.title.saveError'), errorMessage);

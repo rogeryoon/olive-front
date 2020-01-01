@@ -39,6 +39,8 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
 
   standCurrencyCode: string;
 
+  warehouseLocked = false;
+
   readonly warehouseComboSelectedCacheKey = OliveCacheService.cacheKeys.userPreference.dropDownBox + 
     OliveCacheService.cacheKeys.getItemKey.warehouse + this.queryParams.CompanyGroupId;
 

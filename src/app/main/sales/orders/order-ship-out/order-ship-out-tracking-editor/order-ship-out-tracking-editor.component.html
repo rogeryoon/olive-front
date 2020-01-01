@@ -4,7 +4,7 @@
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
         <mat-form-field appearance="outline" fxFlex="{{hasOldTrackingNumber ? 25 : 33}}">
             <mat-label>{{'common.word.carrier'|translate}}</mat-label>
-            <mat-select name="carrier" formControlName="carrier" [attr.disabled]="readonly">
+            <mat-select name="carrier" formControlName="carrier" [disableControl]="readonly">
                 <mat-option *ngIf="carriers && carriers.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
                 <mat-option *ngFor="let carrier of carriers" [value]="carrier.id">{{carrier.name}}</mat-option>
             </mat-select>
@@ -19,7 +19,7 @@
         </mat-form-field>        
 
         <div fxFlex="{{hasOldTrackingNumber ? 25 : 33}}" class="pb-16">
-            <button mat-raised-button (click)="buttonIssueTrackingNumber()" [attr.disabled]="readonly || issued"><mat-icon>autorenew</mat-icon> {{(hasTrackingNumber ? 'common.button.reIssueTrackingNumber' : 'common.button.issueTrackingNumber') | translate}}</button>
+            <button mat-raised-button (click)="buttonIssueTrackingNumber()" [disableControl]="readonly || issued"><mat-icon>autorenew</mat-icon> {{(hasTrackingNumber ? 'common.button.reIssueTrackingNumber' : 'common.button.issueTrackingNumber') | translate}}</button>
         </div>
 
         <mat-form-field appearance="outline" *ngIf="hasOldTrackingNumber" fxFlex="25">

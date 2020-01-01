@@ -160,28 +160,28 @@
 
   <div class="entry-max-width">
   <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em" class="justify-end">
-    <div flex style="width: 120px">
+    <div flex style="width: 150px">
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>{{'common.word.freight' | translate}}</mat-label>
         <input matInput name="freightAmount" formControlName="freightAmount" required class="right" (input)="updateCosts()" autocomplete="off">
         <mat-error *ngIf="hasEntryError('freightAmount')">{{errorMessage('freightAmount')}}</mat-error>
       </mat-form-field>
     </div>
-    <div flex style="width: 120px">
+    <div flex style="width: 150px">
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>{{'purchasing.purchaseOrderItems.addedDiscount' | translate}}</mat-label>
         <input matInput name="addedDiscountAmount" formControlName="addedDiscountAmount" required class="right" (input)="updateCosts()" autocomplete="off">
         <mat-error *ngIf="hasEntryError('addedDiscountAmount')">{{errorMessage('addedDiscountAmount')}}</mat-error>
       </mat-form-field>
     </div>
-    <div flex style="width: 120px">
+    <div flex style="width: 150px">
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>{{'common.word.tax' | translate}}</mat-label>
         <input matInput name="taxAmount" formControlName="taxAmount" required class="right" (input)="updateCosts()" autocomplete="off">
         <mat-error *ngIf="hasEntryError('taxAmount')">{{errorMessage('taxAmount')}}</mat-error>
       </mat-form-field>
     </div>
-    <div flex *ngIf="extraAmount != 0" style="width: 120px">
+    <div flex *ngIf="extraAmount != 0" style="width: 150px">
       <mat-form-field appearance="outline" class="w-100-p">
         <mat-label>{{'purchasing.purchaseOrderItems.finalAmount' | translate}}</mat-label>
         <input matInput readonly="true" class="right" [value]="numberFormat(paymentAmount, standCurrency.decimalPoint)" autocomplete="off">
