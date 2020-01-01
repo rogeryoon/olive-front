@@ -303,10 +303,6 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     this.updateCosts();
   }
 
-  canEditQuantity(item: PurchaseOrderItem): boolean {
-    return this.isNull(item) || this.isNull(item.id) || isNaN(item.quantity) || item.balance >= item.quantity;
-  }
-
   /**
    * Looks up product variant
    */

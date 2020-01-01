@@ -2,6 +2,8 @@
 import { FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 
+import { String } from 'typescript-string-operations';
+
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { AlertService } from '@quick/services/alert.service';
@@ -13,6 +15,8 @@ import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edi
 import { OlivePurchaseOrderEditorComponent } from '../purchase-order-editor/purchase-order-editor.component';
 import { OlivePurchaseOrderPaymentsEditorComponent } from '../purchase-order-payments-editor/purchase-order-payments-editor.component';
 import { OlivePurchaseOrderItemsEditorComponent } from '../purchase-order-items-editor/purchase-order-items-editor.component';
+import { OliveBackEndErrors, OliveBackEndErrorMessages } from 'app/core/classes/back-end-errors';
+import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
 
 @Component({
   selector: 'olive-purchase-order-manager',
@@ -129,5 +133,33 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
     }
 
     super.popUpConfirmSaveDialog(saveWithOutConfirm);    
+  }
+
+  onSaveFail(error: any) {
+    this.alertService.stopLoadingMessage();
+
+    // 서버쪽 Validation Error 검출시
+    // 이경우 User에게 알리고 다시 재입력하게 한다.
+    if (error.error && error.error.errorCode === OliveBackEndErrors.ServerValidationError) {
+      let errorMessage = this.translator.get('common.validate.serverValidationGeneralMessage');
+
+      const values = error.error.errorMessage.split(',');
+      if (values[0] === OliveBackEndErrorMessages.NotMinimumQuantity) {
+        const purchaseOrderItemId = Number(values[1]);
+        const minimumQuantity = Number(values[2]);
+
+        const items = this.purchaseOrderItems.getEditedItem().items as PurchaseOrderItem[];
+        const itemName = items.find(x => x.id === purchaseOrderItemId);
+
+        errorMessage = String.Format(this.translator.get('purchasing.purchaseOrder.notMinimumQuantity'), minimumQuantity, itemName) 
+      }
+
+      this.alertService.showMessageBox(this.translator.get('common.title.saveError'), errorMessage);
+    }
+    else {
+      this.messageHelper.showStickySaveFailed(error, false);
+    }
+
+    this.isSaving = false;
   }
 }

@@ -63,7 +63,7 @@
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('quantity',i)">
         <mat-form-field fxFlex='95%'>
           <input name="inputQuantity{{row.ObjId}}" class="right olive-error" matInput formControlName="quantity"
-            (change)="onChange($event, i)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" (input)="updateCosts()" autocomplete="off" [readonly]="!canEditQuantity(row.Obj)">
+            (change)="onChange($event, i)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" (input)="updateCosts()" autocomplete="off">
           <mat-error *ngIf="hasArrayEntryError('quantity',i)">{{'common.validate.error' | translate}}</mat-error>
         </mat-form-field>
       </mat-cell>
@@ -148,8 +148,8 @@
             <mat-icon color="accent">playlist_add</mat-icon>
         </button> 
         <button mat-icon-button matTooltip="{{'common.button.delete' | translate}}" 
-          (click)="deleteItem(row)" [disabled]="!canEditQuantity(row.Obj)">
-          <mat-icon [ngClass]="{'foreground-red': canEditQuantity(row.Obj), 'foreground-disabled': !canEditQuantity(row.Obj)}">delete</mat-icon>
+          (click)="deleteItem(row)">
+          <mat-icon class="foreground-red">delete</mat-icon>
         </button>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>

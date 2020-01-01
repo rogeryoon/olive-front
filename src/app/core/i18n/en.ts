@@ -124,7 +124,8 @@ export const locale = {
                 'wrongTrackingNumber' : '올바른 송장번호 형식이 아닙니다.',
                 'duplicatedCarrierTrackingNumberExists': '입력한 송장번호 범위가 다른 데이터 송장번호와 중첩되어 저장할수 없습니다. 확인하고 다시 입력하세요.',
                 'trackingNumberInvalid': '입력한 송장번호가 다른 주문에 사용하고 있거나 자동발급 송장번호를 임의 수동지정하였습니다. 확인하고 다시 입력하세요.',
-                'selected' : '정확한 값을 선택/입력하지 않았습니다.'
+                'selected' : '정확한 값을 선택/입력하지 않았습니다.',
+                'serverValidationGeneralMessage': '서버쪽에서 사용자 입력 검사 결과 요청하신 작업을 저장할 수 없는 오류를 발견하였습니다.\n 관리자에게 문의하세요.'
             },
             'title' : {
                 // 'Session Restored'
@@ -644,7 +645,8 @@ export const locale = {
                 'supplierOrderNo' : '공급자 주문 #',
                 'currency' : '화폐',
                 'currencyRate' : '환율',
-                'saveUnmatchedAmountConfirmMessage' : '발주서 전체 금액 합계와 실결제 총금액이 일치하지 않습니다.\n그래도 저장하겠습니까?'
+                'saveUnmatchedAmountConfirmMessage' : '발주서 전체 금액 합계와 실결제 총금액이 일치하지 않습니다.\n그래도 저장하겠습니까?',
+                'notMinimumQuantity' : '입고/반품이 이미 진행되어서 최소 수정가능 수량은 {0}개입니다. 품명 : {1}'
             },
             'purchaseOrders': {
                 'noItem' : '발주서 상품등록을 하지 않아서 입고 및 종결처리를 할 수 없습니다.',

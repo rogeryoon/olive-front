@@ -9,3 +9,7 @@ export class OliveBackEndErrors {
 
     static DataShortageError = 'DATA-SHORTAGE-ERROR';
 }
+
+export class OliveBackEndErrorMessages {
+    static NotMinimumQuantity = 'NOT-MIN-QUANTITY';
+}
