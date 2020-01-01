@@ -31,6 +31,7 @@ import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.m
 import { getItemsName, addCountTooltip } from 'app/core/utils/string-helper';
 import { createSearchOption } from 'app/core/utils/search-helpers';
 import { purchaseOrderId } from 'app/core/utils/olive-helpers';
+import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -39,7 +40,7 @@ const ItemsName = 'itemsName';
 const Warehouse = 'warehouse';
 const TotalAmount = 'totalAmount';
 const PaymentsName = 'paymentsName';
-const InWarehouseStatusLink = 'statusLink';
+const InWarehouseStatus = 'statusLink';
 const FinishLink = 'finishLink';
 const PrintLink = 'printLink';
 
@@ -79,31 +80,31 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         { data: Selected },
         // 2
         { data: Id, thName: this.translator.get('common.tableHeader.purchaseOrderId'), 
-          tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
+          tdClass: 'print -ex-type-id id', thClass: 'print -ex-type-id id' },
         // 3
         { data: SupplierName, orderable: false, thName: this.translator.get('common.tableHeader.supplier'), 
-          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+          tdClass: 'print left -ex-type-text supplier', thClass: 'print -ex-type-text supplier' },
         // 4
         { data: ItemsName, orderable: false, thName: this.translator.get('common.tableHeader.itemsName'), 
-          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+          tdClass: 'print left -ex-type-text items-name', thClass: 'print -ex-type-text items-name' },
         // 5
         { data: Warehouse, orderable: false, thName: this.translator.get('common.tableHeader.warehouse'), 
-          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },        
+          tdClass: 'print left -ex-type-text warehouse', thClass: 'print -ex-type-text warehouse' },        
         // 6
         { data: TotalAmount, thName: this.translator.get('purchasing.purchaseOrdersHeader.totalAmount'), 
-          tdClass: 'print right -ex-type-number', thClass: 'print -ex-type-number' },
+          tdClass: 'print right -ex-type-number total-amount', thClass: 'print -ex-type-number total-amount' },
         // 7
         { data: PaymentsName, orderable: false, thName: this.translator.get('purchasing.purchaseOrdersHeader.paymentsName'), 
-          tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
+          tdClass: 'print left -ex-type-text payments-name', thClass: 'print -ex-type-text payments-name' },
         // 8
-        { data: InWarehouseStatusLink, orderable: false, thName: this.translator.get('purchasing.purchaseOrdersHeader.inWarehouseStatusLink'), 
-          tdClass: 'left -ex-type-text', thClass: '-ex-type-text' },
+        { data: InWarehouseStatus, orderable: false, thName: this.translator.get('purchasing.purchaseOrdersHeader.inWarehouseStatus'), 
+          tdClass: 'left -ex-type-text in-warehouse-status', thClass: '-ex-type-text in-warehouse-status' },
         // 9
         { data: FinishLink, orderable: false, thName: this.translator.get('purchasing.purchaseOrdersHeader.finishLink'), 
-          tdClass: 'left -ex-type-text foreground-blue', thClass: '-ex-type-text' },
+          tdClass: 'left -ex-type-text foreground-blue finish-link', thClass: '-ex-type-text finish-link' },
         // 10
         { data: PrintLink, orderable: false, thName: this.translator.get('purchasing.purchaseOrdersHeader.printLink'), 
-          tdClass: 'left -ex-type-text foreground-blue', thClass: '-ex-type-text' }
+          tdClass: 'left -ex-type-text foreground-blue print-link', thClass: '-ex-type-text print-link' }
       ],
       editComponent: OlivePurchaseOrderManagerComponent,
       searchComponent: OliveSearchPurchaseOrderComponent,
@@ -152,12 +153,29 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         retValue = getItemsName(item.purchaseOrderPayments, 'code');
         break;
 
+      case InWarehouseStatus:
+        retValue = this.getInWarehouseStatus(item.purchaseOrderItems);
+        break;
+
       case PrintLink:
         retValue = item.printOutCount > 1 ? addCountTooltip(item.printOutCount - 1) : '';
         break;
     }
 
     return retValue;
+  }
+
+  /**
+   * Gets in warehouse status
+   * 예) 12/64, 1/10
+   * @param items 
+   * @returns in warehouse status 
+   */
+  getInWarehouseStatus(items: PurchaseOrderItem[]): string {
+    const totalQuantity = items.map(x => x.quantity).reduce((a, b) => a + (b || 0), 0);
+    const totalInWarehouseQuantity = items.map(x => x.quantity - x.balance).reduce((a, b) => a + (b || 0), 0);
+
+    return `${this.commaNumber(totalInWarehouseQuantity)}/${this.commaNumber(totalQuantity)}`;
   }
 
   getTotalAmount(item: PurchaseOrder): string {
@@ -180,10 +198,6 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         retValue = true;
         break;
 
-      case InWarehouseStatusLink:
-        retValue = true;
-        break;
-
       case PrintLink:
         retValue = true;
         break;
@@ -200,14 +214,14 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         retValue = item.closedDate ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
         break;
 
-      case InWarehouseStatusLink:
-        if (item.purchaseOrderItems.length) {
-          retValue = item.inWarehouseCompletedDate ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
-        }
-        else {
-          retValue = OliveConstants.iconStatus.error;
-        }
-        break;
+      // case InWarehouseStatus:
+      //   if (item.purchaseOrderItems.length) {
+      //     retValue = item.inWarehouseCompletedDate ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
+      //   }
+      //   else {
+      //     retValue = OliveConstants.iconStatus.error;
+      //   }
+      //   break;
 
       case PrintLink:
         retValue = item.printOutCount > 0 ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
@@ -221,7 +235,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
     let retValue = '';
     switch (columnName) {
-      case InWarehouseStatusLink:
+      case InWarehouseStatus:
         if (item.purchaseOrderItems.length) {
           retValue = item.inWarehouseCompletedDate ?
           this.translator.get('common.status.inWarehouseComplete') :
@@ -244,7 +258,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
     if (
       columnName === FinishLink ||
-      columnName === InWarehouseStatusLink ||
+      columnName === InWarehouseStatus ||
       columnName === PrintLink
     ) {
       this.setTdId(item.id, columnName);
@@ -256,7 +270,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         this.onFinish(item);
         break;
 
-      case InWarehouseStatusLink:
+      case InWarehouseStatus:
         this.onInWarehouseStatus(item);
         break;
 
@@ -276,7 +290,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         addedClass = item.closedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
         break;
 
-      case InWarehouseStatusLink:
+      case InWarehouseStatus:
         if (item.purchaseOrderItems.length) {
           addedClass = item.inWarehouseCompletedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
         }

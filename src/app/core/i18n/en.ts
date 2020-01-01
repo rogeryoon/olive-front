@@ -681,7 +681,7 @@ export const locale = {
             },
             'purchaseOrdersHeader': {
                 'totalAmount': '총액',
-                'inWarehouseStatusLink': '입고',
+                'inWarehouseStatus': '입고',
                 'finishLink' : '종결',
                 'printLink': '인쇄',
                 'paymentsName' : '결제'

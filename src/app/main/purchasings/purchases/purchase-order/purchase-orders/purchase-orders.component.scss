@@ -4,52 +4,56 @@
             width: 20px;
         }
 
-        th:nth-child(2) {
+        th.id {
             width: 110px;
         }
 
-        th:nth-child(3) {
+        th.supplier {
             width: 90px;
         }
 
-        th:nth-child(5) {
+        th.warehouse {
             width: 90px;
         }        
 
-        th:nth-child(6) {
+        th.total-amount {
             width: 70px;
         }
 
-        th:nth-child(7) {
+        th.payments-name {
             width: 70px;
         }
         
-        th:nth-child(8) {
+        th.in-warehouse-status {
             width: 50px;
         }
         
-        th:nth-child(9) {
+        th.finish-link {
             width: 50px;
         }
 
-        th:nth-child(10) {
+        th.print-link {
             width: 50px;
         }
         
-        td:nth-child(1), td:nth-child(2) {
+        td:nth-child(1), 
+        td.id,
+        td.warehouse,
+        td.payments-name,
+        td.in-warehouse-status,
+        td.finish-link,
+        td.print-link,
+        td.supplier
+        {
             text-align: center;
         }
 
-        td:nth-child(3), td:nth-child(4) {
+        td.items-name {
             text-align: justify;
         }
 
-        td:nth-child(6) {
+        td.total-amount {
             text-align: right;
-        }
-
-        td:nth-child(5), td:nth-child(7), td:nth-child(8), td:nth-child(9), td:nth-child(10) {
-            text-align: center;
         }
     }
 }
