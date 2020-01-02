@@ -41,7 +41,7 @@
             <mat-form-field appearance="outline" class="w-100-p">
                 <mat-label>{{'purchasing.purchaseOrder.currency' | translate}}</mat-label>
                 <mat-select name="currency" formControlName="currency" required
-                    (valueChange)="onCurrencyValueChanged($event)">
+                    (valueChange)="onCurrencyValueChanged($event)" [disableControl]="!isNewItem">
                     <mat-option *ngFor="let item of currencies" [value]="item.id">{{item.name}}</mat-option>
                 </mat-select>
                 <mat-error *ngIf="hasEntryError('currency')">{{errorMessage('currency')}}</mat-error>
