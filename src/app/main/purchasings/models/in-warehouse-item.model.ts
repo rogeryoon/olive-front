@@ -2,6 +2,7 @@
 
 export class InWarehouseItem extends OliveTrackingAttribute {
     id?: number;
+    purchaseOrderClosed?: boolean;
     quantity?: number;
     balance?: number;
     purchaseOrderItemId?: number;

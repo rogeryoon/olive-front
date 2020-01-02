@@ -646,7 +646,9 @@ export const locale = {
                 'currency' : '화폐',
                 'currencyRate' : '환율',
                 'saveUnmatchedAmountConfirmMessage' : '발주서 전체 금액 합계와 실결제 총금액이 일치하지 않습니다.\n그래도 저장하겠습니까?',
-                'notMinimumQuantity' : '이미 작성된 입고/반품 총 수량이 {0}개 입니다. {0}개 미만 수량저장은 불가능합니다. 품명 : {1}'
+                'notMinimumQuantity' : '이미 작성된 입고/반품 총 수량이 {0}개 입니다. {0}개 미만 수량저장은 불가능합니다. 품명 : {1}',
+                'closedStatus': '종결',
+                'pendingStatus' : '입고진행중'
             },
             'purchaseOrders': {
                 'noItem' : '발주서 상품등록을 하지 않아서 입고 및 종결처리를 할 수 없습니다.',

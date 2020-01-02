@@ -19,7 +19,7 @@ import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/purchase-order-manager.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { NameValue } from 'app/core/models/name-value';
-import { purchaseOrderId } from 'app/core/utils/olive-helpers';
+import { purchaseOrderId, purchaseOrderStatusRemark } from 'app/core/utils/olive-helpers';
 import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
 
 @Component({
@@ -113,7 +113,7 @@ export class OliveInWarehousePendingComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: PurchaseOrder) {
     if (item) {
-      return `${this.translator.get('navi.purchase.group')} ID : ${purchaseOrderId(item)}`;
+      return `${this.translator.get('navi.purchase.group')} ID : ${purchaseOrderId(item)} ${purchaseOrderStatusRemark(item, this.translator)}`;
     }
     else {
       return this.translator.get(NavTranslates.Purchase.entry);

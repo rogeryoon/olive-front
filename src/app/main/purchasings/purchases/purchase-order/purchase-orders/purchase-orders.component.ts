@@ -30,7 +30,7 @@ import { OliveInWarehouseItemService } from '../../../services/in-warehouse-item
 import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.model';
 import { getItemsName, addCountTooltip } from 'app/core/utils/string-helper';
 import { createSearchOption } from 'app/core/utils/search-helpers';
-import { purchaseOrderId } from 'app/core/utils/olive-helpers';
+import { purchaseOrderId, purchaseOrderStatusRemark } from 'app/core/utils/olive-helpers';
 import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
 
 const Selected = 'selected';
@@ -114,7 +114,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
   getEditorCustomTitle(item: PurchaseOrder): string {
     if (item) {
-      return `${this.translator.get('navi.purchase.group')} ID : ${purchaseOrderId(item)}`;
+      return `${this.translator.get('navi.purchase.group')} ID : ${purchaseOrderId(item)} ${purchaseOrderStatusRemark(item, this.translator)}`;
     }
     else {
       return this.translator.get(NavTranslates.Purchase.entry);

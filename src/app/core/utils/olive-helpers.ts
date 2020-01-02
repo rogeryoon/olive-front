@@ -1,6 +1,8 @@
 import { OliveConstants } from '../classes/constants';
+
 import { PurchaseOrder } from 'app/main/purchasings/models/purchase-order.model';
-import { get6DigitDate } from './date-helper';
+import { get6DigitDate, getShortDate } from './date-helper';
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 
 /**
@@ -19,6 +21,27 @@ export function checkIcon(condition: boolean): string {
  */
 export function purchaseOrderId(item: PurchaseOrder, datePropertyName = 'date', shortIdPropertyName = 'shortId'): string {
     return `${get6DigitDate(item[datePropertyName])}-${item[shortIdPropertyName]}`;
+}
+
+
+/**
+ * Purchases order status remark
+ * @param item 
+ * @param translator 
+ * @returns order status remark 
+ */
+export function purchaseOrderStatusRemark(item: PurchaseOrder, translator: FuseTranslationLoaderService): string {
+    let returnValue = '';
+
+    if (item.closedDate) {
+        returnValue = translator.get('purchasing.purchaseOrder.closedStatus');
+        returnValue = `[${returnValue}-${getShortDate(item.closedDate)}]`;
+    }
+    else {
+        returnValue = `[${translator.get('purchasing.purchaseOrder.pendingStatus')}]`;
+    }
+
+    return returnValue;
 }
 
 /**

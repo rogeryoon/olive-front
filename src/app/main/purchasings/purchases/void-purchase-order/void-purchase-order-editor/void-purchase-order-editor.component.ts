@@ -1,6 +1,8 @@
 ﻿import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 
+import { String } from 'typescript-string-operations';
+
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
@@ -12,9 +14,8 @@ import { OlivePurchaseOrderService } from '../../../services/purchase-order.serv
 import { VoidPurchaseOrder } from '../../../models/void-purchase-order.model';
 import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { OlivePurchaseOrderManagerComponent } from '../../purchase-order/purchase-order-manager/purchase-order-manager.component';
-import { showParamMessage } from 'app/core/utils/string-helper';
 import { ReferHostSetting } from 'app/core/interfaces/setting/refer-host-setting';
-import { purchaseOrderId, addActivatedCacheKey } from 'app/core/utils/olive-helpers';
+import { purchaseOrderId, addActivatedCacheKey, purchaseOrderStatusRemark } from 'app/core/utils/olive-helpers';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
 import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
@@ -121,7 +122,7 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
       managerComponent: OlivePurchaseOrderManagerComponent,
       managePermission: null,
       translateTitleId: NavTranslates.Purchase.entry,
-      customTitleTemplate: this.translator.get('navi.purchase.group') + ' ID : {0}',
+      customTitleTemplate: this.translator.get('navi.purchase.group') + ' ID : {0} {1}',
       customTitleCallback: this.customTitleCallback,
       customNameCallback: this.customNameCallback,
       readonly: true
@@ -133,7 +134,7 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
   }
 
   customTitleCallback(order: PurchaseOrder, template: string): string {
-    return showParamMessage(template, purchaseOrderId(order));
+    return String.Format(template, purchaseOrderId(order),  purchaseOrderStatusRemark(order, this.translator));
   }
 
   onWarehouseChanged(value: any, eventFromWarehouseDropDown: boolean) {
