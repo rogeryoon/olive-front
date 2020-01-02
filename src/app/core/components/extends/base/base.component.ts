@@ -7,7 +7,7 @@ import { Address } from 'app/core/models/address.model';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { numberFormat } from 'app/core/utils/number-helper';
-import { getShortDate, getMomentDate } from 'app/core/utils/date-helper';
+import { getShortDate } from 'app/core/utils/date-helper';
 import { showAddress } from 'app/core/utils/string-helper';
 import { convertToBase36, convertToBase26 } from 'app/core/utils/encode-helpers';
 import { testIsUndefined } from 'app/core/utils/object-helpers';
@@ -70,14 +70,6 @@ export class OliveBaseComponent implements OnInit {
   date(input: any): string {
     return getShortDate(input);
   }
-
-  moment(input: any): string {
-    return getMomentDate(input);
-  }  
-
-  // dateCode(date: any, id: number = 0): string {
-  //   return dateCode(date, id);
-  // }  
 
   boolValue(value?: boolean): boolean {
     return value == null ? true : value;

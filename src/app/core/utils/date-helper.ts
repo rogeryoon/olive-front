@@ -38,9 +38,9 @@ export function isoDateString(date: any, showTime: boolean = false): string {
  * @param date 
  * @returns short date 
  */
-export function getShortDate(date: any): string {
+export function getShortDate(date: any, showTime: boolean = false): string {
     moment.locale();
-    return moment(date).format('L');
+    return moment(date).format(showTime ? 'L HH:mm' : 'L');
 }
 
 /**
@@ -55,24 +55,12 @@ export function get6DigitDate(date: any): string {
 }
 
 /**
- * Gets moment date
- * @param date 
- * @returns moment date 
- */
-export function getMomentDate(date: any): string {
-    if (!date) { return ''; }
-
-    moment.locale();
-    return moment(date).fromNow();
-}
-
-/**
  * Shows event date and name
  * @param date 
  * @param userName 
  * @returns event date and name 
  */
-export function showEventDateAndName(date: any, userName: UserName): string {
+export function showEventDateAndName(date: any, userName: UserName, showTime: boolean = false): string {
     let value = null;
 
     if (!date && !userName) {
@@ -85,10 +73,10 @@ export function showEventDateAndName(date: any, userName: UserName): string {
 
     if (date) {
         if (value) {
-            value = `${getMomentDate(date)} - ${value}`;
+            value = `${getShortDate(date, showTime)} - ${value}`;
         }
         else {
-            value = getMomentDate(date);
+            value = getShortDate(date, showTime);
         }
     }
 

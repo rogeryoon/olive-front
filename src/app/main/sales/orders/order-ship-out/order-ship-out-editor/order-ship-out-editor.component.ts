@@ -7,7 +7,7 @@ import { OliveEntityFormComponent } from 'app/core/components/extends/entity-for
 import { OrderShipOut } from '../../../models/order-ship-out.model';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { Order } from 'app/main/sales/models/order.model';
-import { showEventDateAndName } from 'app/core/utils/date-helper';
+import { showEventDateAndName, getShortDate } from 'app/core/utils/date-helper';
 
 @Component({
   selector: 'olive-order-ship-out-editor',
@@ -69,7 +69,7 @@ export class OliveOrderShipOutEditorComponent extends OliveEntityFormComponent {
               this.oForm.patchValue({canceledUser: showEventDateAndName(item.canceledDate, userNames[0])});
             }
             else {
-              this.oForm.patchValue({canceledUser: this.moment(item.canceledDate)});
+              this.oForm.patchValue({canceledUser: getShortDate(item.canceledDate)});
             }
           });
     }

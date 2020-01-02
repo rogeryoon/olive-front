@@ -116,7 +116,7 @@ export class OliveEntityDateComponent extends OliveEntityFormBaseComponent {
   }
 
   private setUnitTitle(userName: UserName, date: any, personTitle: string): string {
-    let title = showEventDateAndName(date, userName);
+    let title = showEventDateAndName(date, userName, true);
 
     if (this.mode === 'button' && title) {
       title = personTitle + ' : ' + title;
