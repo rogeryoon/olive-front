@@ -40,7 +40,11 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
    * Initializes child component 
    * : virtual - ngOnInit()에서 Call됨
    */
-  initializeChildComponent() {}
+  initializeChildComponent() {
+    $(document).ready(function () {
+      ($('input.auto-size') as any).inputfit();
+    });   
+  }
 
   buildForm() { this.oForm = this.formBuilder.group({}); }
   resetForm() { this.oForm.reset({}); }

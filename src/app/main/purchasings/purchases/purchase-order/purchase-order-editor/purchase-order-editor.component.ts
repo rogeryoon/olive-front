@@ -124,6 +124,8 @@ export class OlivePurchaseOrderEditorComponent extends OliveEntityFormComponent 
   }
 
   initializeChildComponent() {
+    super.initializeChildComponent();
+    
     this.standCurrency = this.cacheService.standCurrency;
     this.currencies = this.cacheService.currencies;
     this.standCurrencyCode = this.standCurrency.code;

@@ -29,7 +29,7 @@
         <div flex>
             <mat-form-field appearance="outline" class="w-100-p" fxFlex>
                 <mat-label>{{'purchasing.purchaseOrder.supplierOrderNo' | translate}}</mat-label>
-                <input matInput name="supplierOrderId" formControlName="supplierOrderId" maxlength="100">
+                <input matInput name="supplierOrderId" formControlName="supplierOrderId" maxlength="100" class="auto-size">
                 <mat-hint align="end">{{getControl('supplierOrderId').value?.length || 0}}/100</mat-hint>
             </mat-form-field>
         </div>
