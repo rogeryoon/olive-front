@@ -26,6 +26,7 @@ import { isNumberPattern, showParamMessage } from 'app/core/utils/string-helper'
 import { createSearchOption } from 'app/core/utils/search-helpers';
 import { purchaseOrderId } from 'app/core/utils/olive-helpers';
 import { OliveConstants } from 'app/core/classes/constants';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'olive-in-warehouse-items-editor',
@@ -356,6 +357,11 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     });
   }
 
+  isReadOnlyRow(item: InWarehouseItem): boolean {
+    console.log('A', this.isNewItem , this.isReturnMode, item.purchaseOrderClosed);
+    return !this.isNewItem && !this.isReturnMode && item.purchaseOrderClosed;
+  }
+
   updateBalance(index: number) {
     const quantityValue = this.getArrayFormGroup(index).get('quantity').value;
 
@@ -425,6 +431,8 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     if (obj) {
       this.dataSource.loadItems(obj);
     }
+
+    this.isNewItem = isNullOrUndefined(obj);
   }
   registerOnChange(fn: any): void {
     this._onChange = fn;
