@@ -1,3 +1,4 @@
+// https://github.com/vxsx/jquery.inputfit.js?files=1
 /*global define:true */
 (function (factory) {
     if (typeof define === 'function' && define.amd) {

@@ -334,7 +334,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
           item.lastPrintOutUser = this.accountService.currentUser.userAuditKey;
         }
         else {
-          item.inWarehouseCompletedDate = transactionType === 'close' ? response.model : null;
+          item.closedDate = transactionType === 'close' ? new Date(Date.now()) : null;
         }
       },
       error => {

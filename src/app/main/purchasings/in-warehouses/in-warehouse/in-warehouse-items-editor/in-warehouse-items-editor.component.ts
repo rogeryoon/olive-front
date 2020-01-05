@@ -358,7 +358,6 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   }
 
   isReadOnlyRow(item: InWarehouseItem): boolean {
-    console.log('A', this.isNewItem , this.isReturnMode, item.purchaseOrderClosed);
     return !this.isNewItem && !this.isReturnMode && item.purchaseOrderClosed;
   }
 
