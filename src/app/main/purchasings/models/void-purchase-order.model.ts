@@ -8,6 +8,7 @@ export class VoidPurchaseOrder extends OliveTrackingAttribute {
     voidTypeCode?: string;
     closedDate?: any;
     confirmedDate?: any;
+    confirmedUser?: string;
 
     inWarehouseFk?: InWarehouse;
 

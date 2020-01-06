@@ -40,7 +40,7 @@ export class OliveConstants {
 
     static foregroundColor = class {
         static blue = 'foreground-blue';
-        static orange = 'K';
+        static orange = 'foreground-orange';
         static red = 'foreground-red';
     };
 
@@ -109,7 +109,10 @@ export class OliveConstants {
     static cacheSubKey = class {
         static activated = 'activated';
     };
+
+    static listExtraCommand = class {
+        static close = 'close';
+        static open = 'open';
+        static print = 'print';
+    };
 }
-
-
-

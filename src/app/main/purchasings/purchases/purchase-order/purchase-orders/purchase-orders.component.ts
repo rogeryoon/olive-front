@@ -310,16 +310,16 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
   patchPurchaseOrder(item: PurchaseOrder, transactionType: string) {
     this.loadingIndicator = true;
 
-     this.miscService.patchPurchaseOrder('purchaseOrder', transactionType, item.id).subscribe(
+     this.miscService.patchPurchaseOrder(transactionType, item.id).subscribe(
       response => {
         this.loadingIndicator = false;
 
         let message = '';
 
-        if (transactionType === 'close') {
+        if (transactionType === OliveConstants.listExtraCommand.close) {
           message = this.translator.get('purchasing.purchaseOrders.closed');
         }
-        else if (transactionType === 'open') {
+        else if (transactionType === OliveConstants.listExtraCommand.open) {
           message = this.translator.get('purchasing.purchaseOrders.opened');
         }
 
@@ -329,12 +329,12 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
           MessageSeverity.success
         );
 
-        if (transactionType === 'print') {
+        if (transactionType === OliveConstants.listExtraCommand.print) {
           item.printOutCount = response.model;
           item.lastPrintOutUser = this.accountService.currentUser.userAuditKey;
         }
         else {
-          item.closedDate = transactionType === 'close' ? new Date(Date.now()) : null;
+          item.closedDate = transactionType === OliveConstants.listExtraCommand.close ? new Date(Date.now()) : null;
         }
       },
       error => {
@@ -352,7 +352,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     let startTabIndex = 0;
 
     if (item.closedDate) {
-      transactionType = 'open';
+      transactionType = OliveConstants.listExtraCommand.open;
     }
     else { // 종결 요청 Validation
       if (item.purchaseOrderItems.length === 0) { // No Item?
@@ -377,7 +377,8 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     if (transactionType) { // 저장 확인
       this.alertService.showDialog(
         this.translator.get('common.title.yesOrNo'),
-        transactionType === 'open' ? this.translator.get('purchasing.purchaseOrders.confirmOpen') : this.translator.get('purchasing.purchaseOrders.confirmClose'),
+        transactionType === OliveConstants.listExtraCommand.open ? 
+          this.translator.get('purchasing.purchaseOrders.confirmOpen') : this.translator.get('purchasing.purchaseOrders.confirmClose'),
         DialogType.confirm,
         () => this.patchPurchaseOrder(item, transactionType),
         () => null,
@@ -421,7 +422,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
    * @returns  
    */
   onPOPrint(item: PurchaseOrder) {
-    const printAction = 'print';
+    const printAction = OliveConstants.listExtraCommand.print;
     // 아이템 작성한게 없으면 오류처리
     if (item.purchaseOrderItems.length === 0) {
       const startTabIndex = 1;

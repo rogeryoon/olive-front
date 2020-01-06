@@ -23,7 +23,11 @@ export class OlivePurchasingMiscService extends OliveEntityService {
     this.setApiUrl('purchasingMisc');
   }
 
-  patchPurchaseOrder(methodName: string, transactionType: string, id: number) {
-    return this.put(`${methodName}/${transactionType}/${id}`, null);
+  patchPurchaseOrder(transactionType: string, id: number) {
+    return this.put(`purchaseOrder/${transactionType}/${id}`, null);
+  }
+
+  patchInWarehouse(transactionType: string, id: number) {
+    return this.put(`inWarehouse/${transactionType}/${id}`, null);
   }
 }
