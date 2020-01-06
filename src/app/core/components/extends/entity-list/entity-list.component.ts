@@ -111,6 +111,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   getEditorCustomTitle(item: any): string { return null; }
   convertModel(model: any): any { return model; }
   getEditDialogReadOnly(item: any): boolean { return this.setting.isEditDialogReadOnly; }
+  getEditDialogDeleteDisabled(item: any): boolean { return false; }
   navigateDetailPage(item: any) { }
   onDestroy() { }
   onItemsLoaded() { }
@@ -323,6 +324,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
         customTitle: this.getEditorCustomTitle(this.sourceItem),
         startTabIndex: startTabIndex,
         readOnly: this.getEditDialogReadOnly(this.sourceItem),
+        deleteDisabled: this.getEditDialogDeleteDisabled(this.sourceItem),
         customButtons: this.setting.editCustomButtons
       } as OliveOnEdit
     );

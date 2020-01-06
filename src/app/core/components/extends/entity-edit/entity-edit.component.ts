@@ -39,6 +39,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   customTitle: string;
   startTabIndex = 0;
   readonly = false;
+  deleteDisabled = false;
   isSaving = false;
   isDeleting = false;
   hideDelete = false;
@@ -152,7 +153,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
    * @returns true if delete 
    */
   public canDelete(): boolean {
-    return !this.isDeleting && !this.isSaving;
+    return !this.isDeleting && !this.isSaving && !this.deleteDisabled;
   }
 
   /**

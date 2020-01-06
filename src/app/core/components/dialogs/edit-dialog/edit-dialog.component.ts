@@ -86,6 +86,7 @@ export class OliveEditDialogComponent extends OliveBaseComponent implements OnIn
     this.createdComponent.customTitle = this.setting.data.customTitle;
     this.createdComponent.startTabIndex = this.setting.data.startTabIndex;
     this.createdComponent.readOnly = this.setting.data.readOnly;
+    this.createdComponent.deleteDisabled = this.setting.data.deleteDisabled;
     this.createdComponent.hideDelete = this.setting.data.hideDelete;
     this.createdComponent.extraParameter = this.setting.data.extraParameter;
   }

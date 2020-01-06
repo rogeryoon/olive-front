@@ -139,4 +139,8 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
     item.inWarehouseItems.forEach(unit => totalQuantity += unit.quantity);
     return this.commaNumber(totalQuantity);
   }  
+
+  getEditDialogDeleteDisabled(item: InWarehouse): boolean {
+    return item.inWarehouseItems.some(x => x.purchaseOrderClosed);
+  }
 }

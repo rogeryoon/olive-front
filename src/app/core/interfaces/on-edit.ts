@@ -14,6 +14,8 @@ export interface OliveOnEdit {
 
     readOnly?: boolean;
 
+    deleteDisabled?: boolean;
+
     isSaving?: boolean;
 
     isDeleting?: boolean;
