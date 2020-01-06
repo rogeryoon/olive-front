@@ -29,10 +29,17 @@
             width: 60px;
         }
 
+        th.lock-link,
+        th.confirm-link {
+            width: 50px;
+        }
+
         td.id,
         td.void-type,
         td.warehouse,
-        td.supplier
+        td.supplier,
+        td.lock-link,
+        td.confirm-link
         {
             text-align: center;
         }

@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { AlertService } from '@quick/services/alert.service';
+import { AlertService, MessageSeverity, DialogType } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
 
 import { NavIcons } from 'app/core/navigations/nav-icons';
@@ -22,6 +22,9 @@ import { OliveVoidPurchaseOrderService } from '../../services/void-purchase-orde
 import { getItemsName } from 'app/core/utils/string-helper';
 import { createdDateShortId } from 'app/core/utils/olive-helpers';
 import { PurchaseOrderPayment } from '../../models/purchase-order-payment.model';
+import { OliveConstants } from 'app/core/classes/constants';
+import { getShortDate } from 'app/core/utils/date-helper';
+import { OlivePurchasingMiscService } from '../../services/purchasing-misc.service';
 
 const Selected  = 'selected';
 const Id = 'id';
@@ -31,6 +34,8 @@ const Items = 'items';
 const Quantity = 'quantity';
 const TotalAmount = 'totalAmount';
 const Warehouse = 'warehouse';
+const LockLink = 'lockLink';
+const ConfirmLink = 'confirmLink';
 
 @Component({
   selector: 'olive-void-purchase-orders',
@@ -43,7 +48,8 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
     translator: FuseTranslationLoaderService, alertService: AlertService, 
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     documentService: OliveDocumentService, dialog: MatDialog, 
-    dataService: OliveVoidPurchaseOrderService, private cacheService: OliveCacheService
+    dataService: OliveVoidPurchaseOrderService, private cacheService: OliveCacheService,
+    private miscService: OlivePurchasingMiscService
   ) {
     super(
       translator, alertService, 
@@ -81,6 +87,12 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
 
         { data: TotalAmount, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.totalAmount'), 
           tdClass: 'print right -ex-type-number total-amount', thClass: 'print -ex-type-number total-amount' },
+
+        { data: LockLink, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.lockLink'), 
+          tdClass: 'left -ex-type-text foreground-blue lock-link', thClass: '-ex-type-text lock-link' },
+
+        { data: ConfirmLink, orderable: false, thName: this.translator.get('purchasing.inWarehousesHeader.confirmLink'), 
+          tdClass: 'left -ex-type-text foreground-blue confirm-link', thClass: '-ex-type-text confirm-link' }          
       ],
       editComponent: OliveVoidPurchaseOrderManagerComponent,
       searchComponent: OliveSearchVoidPurchaseOrderComponent,
@@ -137,6 +149,169 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
     }
 
     return retValue;
+  }
+
+  icon(order: VoidPurchaseOrder, columnName: string): boolean {
+
+    let retValue = false;
+
+    switch (columnName) {
+      case LockLink:
+        retValue = true;
+        break;
+
+      case ConfirmLink:
+        retValue = true;
+        break;
+    }
+
+    return retValue;
+  }
+
+  iconName(order: VoidPurchaseOrder, columnName: string): string {
+
+    let retValue = '';
+    switch (columnName) {
+      case LockLink:
+        retValue = order.closedDate ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
+        break;
+
+      case ConfirmLink:
+        retValue = order.confirmedDate ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
+        break;
+    }
+
+    return retValue;
+  }
+
+  renderTdTooltip(order: VoidPurchaseOrder, columnName: string): string {
+
+    let retValue = '';
+    switch (columnName) {
+      case LockLink:
+        if (order.confirmedDate) {
+          retValue = this.translator.get('purchasing.voidPurchaseOrders.disabledOpened');
+        }
+        break;
+
+      case ConfirmLink:
+        if (order.confirmedDate) {
+          retValue = getShortDate(order.confirmedDate, true);
+        }
+        break;
+    }
+
+    return retValue;
+  }
+
+  renderTDClass(order: VoidPurchaseOrder, column: any): string {
+    let addedClass = '';
+
+    switch (column.data) {
+      case LockLink:
+        addedClass = order.closedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
+        break;
+
+      case ConfirmLink:
+        addedClass = order.confirmedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
+        break;
+    }
+
+    return super.renderTDClass(order, column, addedClass);
+  }
+
+  onTdClick(event: any, order: VoidPurchaseOrder, columnName: string): boolean {
+    let retValue = false;
+
+    if (
+      columnName === LockLink ||
+      columnName === ConfirmLink
+    ) {
+      this.setTdId(order.id, columnName);
+      retValue = true;
+    }
+
+    switch (columnName) {
+      case LockLink:
+        this.onLock(order);
+        break;
+
+      case ConfirmLink:
+        this.onConfirm(order);
+        break;
+    }
+
+    return retValue;
+  }
+
+  onLock(order: VoidPurchaseOrder) {
+    if (order.confirmedDate) {
+      return;
+    }
+
+    const transactionType = order.closedDate ? OliveConstants.listExtraCommand.open : OliveConstants.listExtraCommand.close;
+
+    this.patchInWarehouse([order], transactionType);
+  }
+
+  onConfirm(order: VoidPurchaseOrder) {
+    if (order.confirmedDate) {
+      return;
+    }
+
+    this.alertService.showDialog(
+      this.translator.get('common.title.yesOrNo'),
+      this.translator.get('purchasing.voidPurchaseOrders.confirmConfirm'),
+      DialogType.confirm,
+      () => this.patchInWarehouse([order], OliveConstants.listExtraCommand.confirm),
+      () => null,
+      this.translator.get('common.button.save'),
+      this.translator.get('common.button.cancel')
+    );  
+  }
+
+  patchInWarehouse(orders: VoidPurchaseOrder[], transactionType: string) {
+    this.loadingIndicator = true;
+
+    const orderIdsString = orders.map(x => x.id).join();
+
+     this.miscService.patchInWarehouse(transactionType, orderIdsString).subscribe(
+      response => {
+        this.loadingIndicator = false;
+
+        let message = '';
+
+        if (transactionType === OliveConstants.listExtraCommand.close) {
+          message = this.translator.get('purchasing.voidPurchaseOrders.closed');
+        }
+        else if (transactionType === OliveConstants.listExtraCommand.open) {
+          message = this.translator.get('purchasing.voidPurchaseOrders.opened');
+        }
+
+        this.alertService.showMessage(
+          this.translator.get('common.title.success'), 
+          message, 
+          MessageSeverity.success
+        );
+
+        if (transactionType === OliveConstants.listExtraCommand.confirm) {
+          const results = response.model as any[];
+          for (const result of results) {
+            const row = orders.find(x => x.id === result.id);
+            row.confirmedDate = result.confirmedDate;
+            row.confirmedUser = result.confirmedUser;
+            row.closedDate = row.confirmedDate;
+          }
+        }
+        else {
+          orders[0].closedDate = transactionType === OliveConstants.listExtraCommand.close ? response.model.closedDate : null;
+        }
+      },
+      error => {
+        this.loadingIndicator = false;
+        this.messageHelper.showStickySaveFailed(error, false);
+      }
+    );
   }
 
   getRefundAmount(payments: PurchaseOrderPayment[]): string {

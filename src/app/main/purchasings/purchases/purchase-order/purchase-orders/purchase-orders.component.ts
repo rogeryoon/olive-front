@@ -321,11 +321,11 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         );
 
         if (transactionType === OliveConstants.listExtraCommand.print) {
-          item.printOutCount = response.model;
-          item.lastPrintOutUser = this.accountService.currentUser.userAuditKey;
+          item.printOutCount = response.model.printOutCount;
+          item.lastPrintOutUser = response.model.lastPrintOutUser;
         }
         else {
-          item.closedDate = transactionType === OliveConstants.listExtraCommand.close ? new Date(Date.now()) : null;
+          item.closedDate = transactionType === OliveConstants.listExtraCommand.close ? response.model.closedDate : null;
         }
       },
       error => {
@@ -357,7 +357,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         startTabIndex = 2;
       }
       else if (item.inWarehouseCompletedDate) { // 입고완료
-        transactionType = 'close';
+        transactionType = OliveConstants.listExtraCommand.close;
       }
       else { // 입고중
         errorDialogTitle = this.translator.get('common.title.errorConfirm');

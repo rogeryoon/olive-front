@@ -114,5 +114,6 @@ export class OliveConstants {
         static close = 'close';
         static open = 'open';
         static print = 'print';
+        static confirm = 'confirm';
     };
 }

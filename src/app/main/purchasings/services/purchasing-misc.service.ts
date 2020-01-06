@@ -27,7 +27,7 @@ export class OlivePurchasingMiscService extends OliveEntityService {
     return this.put(`purchaseOrder/${transactionType}/${id}`, null);
   }
 
-  patchInWarehouse(transactionType: string, id: number) {
-    return this.put(`inWarehouse/${transactionType}/${id}`, null);
+  patchInWarehouse(transactionType: string, ids: string) {
+    return this.put(`inWarehouse/${transactionType}/${ids}`, null);
   }
 }

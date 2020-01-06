@@ -688,6 +688,12 @@ export const locale = {
                 'printLink': '인쇄',
                 'paymentsName' : '결제'
             },
+            'voidPurchaseOrders': {
+                'closed': '잠금 처리되었습니다.',
+                'opened': '잠금 해제되었습니다.',
+                'confirmConfirm' : '반품금액확인후엔 수정이 불가능합니다.\n정말 반품 금액확인을 완료하겠습니까? ',
+                'disabledOpened' : '잠금해제 불가능(반품금액 확인완료)'
+            },
             'voidPurchaseOrderItems': {
                 'quantity': '취소 갯수',
                 'balance': '취소 잔량',
@@ -724,7 +730,9 @@ export const locale = {
                 'items': '품명',
                 'quantity': '수량',
                 'totalAmount': '총액',
-                'warehouse': '창고'
+                'warehouse': '창고',
+                'lockLink' : '잠금',
+                'confirmLink' : '확인'
             },
             'inWarehouseStatusHeader': {
                 'productVariantId': '품목 ID',
