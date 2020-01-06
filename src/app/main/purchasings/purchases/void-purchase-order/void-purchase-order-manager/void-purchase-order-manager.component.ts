@@ -86,7 +86,7 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
   }
 
   get totalItemsAmount(): number {
-    return this.inWarehouseItems.map(y => Number(y.quantity) * Number(y.price)).reduce((a, b) => a + (b || 0), 0);
+    return applyPrecision(this.inWarehouseItems.map(y => Number(y.quantity) * Number(y.price)).reduce((a, b) => a + (b || 0), 0), 2);
   }
 
   getEditedItem(): VoidPurchaseOrder {
