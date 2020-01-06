@@ -77,7 +77,7 @@
 
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef>
-        <button mat-button color="primary" matTooltip="{{'common.button.add' | translate}}" (click)="lookupPurchaseOrder()" [disabled]="!canAddOrDeleteItems">
+        <button mat-button color="primary" matTooltip="{{'common.button.add' | translate}}" (click)="lookupPurchaseOrder()" [disabled]="!canAddItems">
           <mat-icon class="mat-button-icon">add</mat-icon>{{'common.button.add' | translate}}
         </button>
       </mat-header-cell>

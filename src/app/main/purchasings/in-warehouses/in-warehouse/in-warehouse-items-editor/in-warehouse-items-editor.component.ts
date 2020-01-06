@@ -89,8 +89,12 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     return this.dataSource.items.filter(x => x.quantity > 0);
   }
 
-  get canAddOrDeleteItems(): boolean {
-    return true;
+  /**
+   * Gets whether can add or delete items
+   * 신규 작성일때만 추가를 허용한다.
+   */
+  get canAddItems(): boolean {
+    return this.isNewItem;
   }
 
   getPurchaseOrderId(item: InWarehouseItem): string {
