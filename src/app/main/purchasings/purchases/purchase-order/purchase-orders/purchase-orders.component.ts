@@ -214,15 +214,6 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         retValue = item.closedDate ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
         break;
 
-      // case InWarehouseStatus:
-      //   if (item.purchaseOrderItems.length) {
-      //     retValue = item.inWarehouseCompletedDate ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
-      //   }
-      //   else {
-      //     retValue = OliveConstants.iconStatus.error;
-      //   }
-      //   break;
-
       case PrintLink:
         retValue = item.printOutCount > 0 ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
         break;

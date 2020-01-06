@@ -21,6 +21,7 @@ import { VoidPurchaseOrder } from '../../models/void-purchase-order.model';
 import { OliveVoidPurchaseOrderService } from '../../services/void-purchase-order.service';
 import { getItemsName } from 'app/core/utils/string-helper';
 import { createdDateShortId } from 'app/core/utils/olive-helpers';
+import { PurchaseOrderPayment } from '../../models/purchase-order-payment.model';
 
 const Selected  = 'selected';
 const Id = 'id';
@@ -96,17 +97,17 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
     }
   }
 
-  renderItem(item: VoidPurchaseOrder, columnName: string): string {
+  renderItem(order: VoidPurchaseOrder, columnName: string): string {
 
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = createdDateShortId(item.inWarehouseFk);
+        retValue = createdDateShortId(order.inWarehouseFk);
         break;
 
       case Suppliers:
         const sets = new Set([]);
-        item.inWarehouseFk.inWarehouseItems.forEach(i => sets.add(i.supplierName));
+        order.inWarehouseFk.inWarehouseItems.forEach(i => sets.add(i.supplierName));
         const suppliers = [];
         sets.forEach(s => suppliers.push({name: s}));
         retValue = getItemsName(suppliers);
@@ -114,32 +115,32 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
 
       case Items:
         const items = [];
-        item.inWarehouseFk.inWarehouseItems.forEach(i => items.push({name: i.productName}));
-        retValue = getItemsName(item.inWarehouseFk.inWarehouseItems, 'productName', 'quantity');
+        order.inWarehouseFk.inWarehouseItems.forEach(i => items.push({name: i.productName}));
+        retValue = getItemsName(order.inWarehouseFk.inWarehouseItems, 'productName', 'quantity');
         break;
 
       case Quantity:
-        retValue = this.getTotalQuantity(item.inWarehouseFk);
+        retValue = this.getTotalQuantity(order.inWarehouseFk);
         break;
 
       case TotalAmount:
-        retValue = this.getTotalAmount(item.inWarehouseFk);
+        retValue = this.getRefundAmount(order.purchaseOrderFk.purchaseOrderPayments);
         break;
         
       case Warehouse:
-        retValue = item.inWarehouseFk.warehouseFk.code;
+        retValue = order.inWarehouseFk.warehouseFk.code;
         break;
 
       case VoidType:
-        retValue = this.translator.get('code.voidPurchaseOrderTypeCode.' + item.voidTypeCode);
+        retValue = this.translator.get('code.voidPurchaseOrderTypeCode.' + order.voidTypeCode);
         break;        
     }
 
     return retValue;
   }
 
-  getTotalAmount(item: InWarehouse): string {
-    return this.cacheService.showMoney(Math.abs(item.inWarehouseItems.map(x => x.price * x.quantity).reduce((a, b) => a + (b || 0), 0)));
+  getRefundAmount(payments: PurchaseOrderPayment[]): string {
+    return this.cacheService.showMoney(Math.abs(payments.map(x => Math.abs(x.amount)).reduce((a, b) => a + (b || 0), 0)));
   }
 
   getTotalQuantity(item: InWarehouse): string {
