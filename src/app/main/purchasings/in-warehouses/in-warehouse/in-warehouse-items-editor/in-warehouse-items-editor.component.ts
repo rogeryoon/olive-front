@@ -1,4 +1,4 @@
-import { Component, forwardRef, Output, EventEmitter, Input } from '@angular/core';
+import { Component, forwardRef, Output, EventEmitter, Input, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { FormBuilder, FormControl, ValidationErrors, NG_VALUE_ACCESSOR, 
   NG_VALIDATORS, ControlValueAccessor, Validator } from '@angular/forms';
 import { MatSnackBar, MatDialog } from '@angular/material';
@@ -45,7 +45,7 @@ import { isNullOrUndefined } from 'util';
     }
   ]
 })
-export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
+export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator, AfterContentChecked {
   displayedColumns = ['purchaseOrderId26', 'productVariantId26', 'productName', 'balance', 'price', 'quantityDue', 'quantity', 'remark', 'actions'];
   dataSource: OliveInWarehouseItemDataSource = new OliveInWarehouseItemDataSource(this.cacheService);
 
@@ -66,10 +66,15 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     private purchaseOrderService: OlivePurchaseOrderService, private snackBar: MatSnackBar,
     private dialog: MatDialog, private alertService: AlertService,
     private cacheService: OliveCacheService, private messageHelperService: OliveMessageHelperService,
+    private cdRef: ChangeDetectorRef, 
   ) {
     super(
       formBuilder, translator
     );
+  }
+
+  ngAfterContentChecked() {
+    this.cdRef.detectChanges();
   }
 
   initializeChildComponent() {
@@ -162,6 +167,8 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     if (this.dataSource.items.length === 0) {
       this.oFArray.removeAt(0);
     }
+
+    this._onChange(0);
 
     this.updateTotalDue();
   }
@@ -348,7 +355,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
       if (needToRender) {
         this.dataSource.renderItems();
-        this.oForm.markAsDirty();
+        this._onChange(0);
       }
 
       this.updateTotalDue();
