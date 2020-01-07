@@ -52,6 +52,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   warehouse: Warehouse;
   voidTypeCode: '';
   value: InWarehouseItem[] = null;
+  preLoadedPurchaseOrder: PurchaseOrder;
 
   @Input() isVoidMode = false;
 
@@ -114,9 +115,10 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     });
   }
 
-  setWarehouse(event: any) {
+  setWarehouse(event: any, preLoadedPurchaseOrder: PurchaseOrder = null) {
     this.warehouse = event.item;
     this.voidTypeCode = event.voidTypeCode;
+    this.preLoadedPurchaseOrder = preLoadedPurchaseOrder;
 
     if (event.loading) {
       return;
@@ -136,7 +138,13 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
       this.clearAllItemsDataSource();
 
       if (!this.isNull(this.warehouse)) {
-        this.lookupPurchaseOrder();
+        if (this.preLoadedPurchaseOrder) {
+          this.buildByPreLoadedPurchaseOrder();
+        }
+        else
+        {
+          this.lookupPurchaseOrder();
+        }
       }
     }
   }
@@ -354,8 +362,37 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
             });
         });
 
+      this.renderAfterFetchingPurchaseOrders(firstAddedPurchaseOrder, needToRender);
+      this.messageHelperService.showDuplicatedItems(duplicatedIdStrings);
+    });
+  }
+
+  buildByPreLoadedPurchaseOrder() {
+    for (const item of this.preLoadedPurchaseOrder.purchaseOrderItems) {
+      this.dataSource.addNewItem({
+        quantity: item.balance,
+        balance: 0,
+
+        purchaseOrderItemId: item.id,
+        purchaseOrderShortId: this.preLoadedPurchaseOrder.shortId,
+
+        productName: item.productName,
+        originalBalance: item.balance,
+        price: item.appliedCost,
+        productVariantId: item.productVariantId,
+        productVariantShortId: item.productVariantShortId,
+        supplierName: this.preLoadedPurchaseOrder.supplierFk.name
+      } as InWarehouseItem);      
+    }
+
+    this.renderAfterFetchingPurchaseOrders(this.preLoadedPurchaseOrder, true);
+  }
+
+  renderAfterFetchingPurchaseOrders(firstAddedPurchaseOrder: PurchaseOrder, needToRender: boolean) {
       // For Void Transaction 참조 이벤트
-      this.inWarehouseItemAdded.emit(firstAddedPurchaseOrder);
+      setTimeout(() => {
+        this.inWarehouseItemAdded.emit(firstAddedPurchaseOrder);
+      });
 
       if (needToRender) {
         this.dataSource.renderItems();
@@ -363,9 +400,6 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
       }
 
       this.updateTotalDue();
-
-      this.messageHelperService.showDuplicatedItems(duplicatedIdStrings);
-    });
   }
 
   isReadOnlyRow(item: InWarehouseItem): boolean {

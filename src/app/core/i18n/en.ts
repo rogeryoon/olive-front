@@ -749,13 +749,13 @@ export const locale = {
                 'warehouse': '창고',
                 'supplier': '공급자',
                 'memo': '메모',
-                'finishLink' : '종결',
+                'cancelInWarehouseLink' : '입고 취소',
                 'itemId' : '품목 ID',
                 'itemName': '품명',
-                'quantity': '수량',
+                'quantity': '발주',
                 'balance': '잔량',
                 'price': '단가',
-                'due': '계',
+                'due': '잔량액',
                 'remark': '비고'
             }
         },

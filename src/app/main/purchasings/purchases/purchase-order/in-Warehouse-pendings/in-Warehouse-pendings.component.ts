@@ -21,6 +21,11 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { NameValue } from 'app/core/models/name-value';
 import { purchaseOrderId, purchaseOrderStatusRemark } from 'app/core/utils/olive-helpers';
 import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
+import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
+import { OliveVoidPurchaseOrderManagerComponent } from '../../void-purchase-order/void-purchase-order-manager/void-purchase-order-manager.component';
+import { VoidPurchaseOrder } from 'app/main/purchasings/models/void-purchase-order.model';
+import { OliveOnEdit } from 'app/core/interfaces/on-edit';
+import { OliveEditDialogComponent } from 'app/core/components/dialogs/edit-dialog/edit-dialog.component';
 
 @Component({
   selector: 'olive-in-warehouse-pendings',
@@ -109,6 +114,34 @@ export class OliveInWarehousePendingComponent extends OliveEntityListComponent {
     }
 
     return model;
+  }
+
+  onTdClick(event: any, order: PurchaseOrder, columnName: string): boolean {
+    const setting = new OliveDialogSetting(
+      OliveVoidPurchaseOrderManagerComponent,
+      {
+        item: null,
+        itemType: VoidPurchaseOrder,
+        customTitle: this.translator.get('purchasing.inWarehousePendingHeader.cancelInWarehouseLink'),
+        extraParameter: order
+      } as OliveOnEdit
+    );
+
+    const dialogRef = this.dialog.open(
+      OliveEditDialogComponent,
+      {
+        disableClose: true,
+        panelClass: 'mat-dialog-md',
+        data: setting
+      });
+
+    dialogRef.afterClosed().subscribe(item => {
+      if (item) {
+        this.reRender();
+      }
+    });
+
+    return true;
   }
 
   getEditorCustomTitle(item: PurchaseOrder) {

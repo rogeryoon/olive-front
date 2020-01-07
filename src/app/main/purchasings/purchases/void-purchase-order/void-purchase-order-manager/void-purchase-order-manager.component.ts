@@ -21,6 +21,7 @@ import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.mod
 import { OliveVoidPurchaseOrderService } from '../../../services/void-purchase-order.service';
 import { OlivePurchaseOrderPaymentService } from 'app/main/purchasings/services/purchase-order-payment.service';
 import { applyPrecision } from 'app/core/utils/number-helper';
+import { OliveConstants } from 'app/core/classes/constants';
 
 @Component({
   selector: 'olive-void-purchase-order-manager',
@@ -36,6 +37,8 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
 
   @ViewChild(OlivePurchaseOrderPaymentsEditorComponent)
   purchaseOrderPaymentsEditor: OlivePurchaseOrderPaymentsEditorComponent;
+
+  preLoadedPurchaseOrder: PurchaseOrder;
   
   constructor(
     translator: FuseTranslationLoaderService, alertService: AlertService,
@@ -116,11 +119,20 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
   resetForm() {
     this.oForm.reset({});
 
-    if (this.item) {
+    if (this.extraParameter) {
+      this.preLoadedPurchaseOrder = this.extraParameter;
+    }
+
+    if (!this.isNewItem) {
       this.oForm.patchValue({
         inWarehouseItems: this.changeInWarehouseItemsSignWhenLoading(),
         purchaseOrderPayments: this.changePaymentsSignWhenLoading()
       });
+    }
+    // 미입고현황에서 미입고 발주 취소 목적으로 전송되는 발주 데이터가 있을 경우처리
+    else if (this.preLoadedPurchaseOrder) {
+      this.voidPurchaseOrderEditor.overriddenWarehouse = this.preLoadedPurchaseOrder.warehouseFk;
+      this.voidPurchaseOrderEditor.overriddenVoidPurchaseOrderTypeCode = OliveConstants.voidPurchaseOrderTypeCode.Cancel;
     }
   }
 
@@ -171,7 +183,7 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
   }
 
   onWarehouseChanged(event: any) {
-    this.inWarehouseItemsEditor.setWarehouse(event);
+    this.inWarehouseItemsEditor.setWarehouse(event, this.preLoadedPurchaseOrder);
     this.purchaseOrderPaymentsEditor.clearAll();
 
     if (!event.loading) {

@@ -37,6 +37,12 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
   warehouses: Warehouse[];
   voidPurchaseOrderTypes: any[] = OliveConstants.voidPurchaseOrderTypes;
 
+  /**
+   * 이 값이 있으면 콤보박스에 설정
+   */
+  overriddenWarehouse: Warehouse;  
+  overriddenVoidPurchaseOrderTypeCode: string;
+
   readonly warehouseComboSelectedCacheKey = OliveCacheService.cacheKeys.userPreference.dropDownBox + 
     OliveCacheService.cacheKeys.getItemKey.warehouse + this.queryParams.CompanyGroupId;
 
@@ -98,7 +104,7 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
 
     this.oForm.reset({
       warehouse: item.inWarehouseFk && item.inWarehouseFk.id ? item.inWarehouseFk.id : '',
-      voidPurchaseOrderType: item.voidTypeCode || '',
+      voidPurchaseOrderType: item.voidTypeCode || this.overriddenVoidPurchaseOrderTypeCode || '',
       purchaseOrderFk: item.purchaseOrderFk,
       supplierName: item.purchaseOrderFk && item.purchaseOrderFk.supplierFk && item.purchaseOrderFk.supplierFk.name ? item.purchaseOrderFk.supplierFk.name : '',
       memo: item.inWarehouseFk ? item.inWarehouseFk.memo : ''
@@ -163,6 +169,9 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
     }
   }
 
+  /**
+   * 창고 콤보상자 데이터 로드 & 사용자 편의 창고 로드
+   */
   private getWarehouses() {
     this.cacheService.getItems(this.warehouseService, addActivatedCacheKey(OliveCacheService.cacheKeys.getItemsKey.warehouse), createDefaultSearchOption())
       .then((items: Warehouse[]) => {
@@ -171,7 +180,17 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
       });
   }
 
+  /**
+   * 사용자 편의 데이터에서 저장된 창고로 설정
+   */
   private setLastSelectedWarehouse() {
+    // 우선순위 로딩 창고가 있을 경우
+    if (this.overriddenWarehouse) {
+      this.oForm.patchValue({warehouse: this.overriddenWarehouse.id});
+      this.onWarehouseChanged(this.overriddenWarehouse.id, true);
+      return;
+    }
+
     // Cache Value Loading
     this.cacheService.getUserPreference(this.warehouseComboSelectedCacheKey)
       .then(obj => {

@@ -91,6 +91,9 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
     }
   }
 
+  /**
+   * 창고 콤보상자 데이터 로드 & 사용자 편의 창고 로드
+   */
   private getWarehouses() {
     this.cacheService.getItems(this.warehouseService, addActivatedCacheKey(OliveCacheService.cacheKeys.getItemsKey.warehouse), createDefaultSearchOption())
       .then((items: Warehouse[]) => {
@@ -99,6 +102,9 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
       });
   }
 
+  /**
+   * 사용자 편의 데이터에서 저장된 창고로 설정
+   */
   private setLastSelectedWarehouse() {
     // Cache Value Loading
     this.cacheService.getUserPreference(this.warehouseComboSelectedCacheKey)

@@ -3,7 +3,7 @@
         <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">
             <mat-form-field appearance="outline" fxFlex="15">
                 <mat-label>{{'common.word.warehouse'|translate}}</mat-label>
-                <mat-select name="warehouse" formControlName="warehouse" required (valueChange)="onWarehouseChanged($event, true)" [disableControl]="!this.isNewItem">
+                <mat-select name="warehouse" formControlName="warehouse" required (valueChange)="onWarehouseChanged($event, true)" [disableControl]="!this.isNewItem || overriddenWarehouse">
                     <mat-option *ngIf="warehouses && warehouses.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
                     <mat-option *ngFor="let warehouse of warehouses" [value]="warehouse.id">{{warehouse.name}}
                     </mat-option>
@@ -13,7 +13,7 @@
 
             <mat-form-field appearance="outline" fxFlex="12">
                 <mat-label>{{'common.word.voidPurchaseOrderType'|translate}}</mat-label>
-                <mat-select name="voidPurchaseOrderType" formControlName="voidPurchaseOrderType" required (valueChange)="onWarehouseChanged($event, false)" [disableControl]="!this.isNewItem">
+                <mat-select name="voidPurchaseOrderType" formControlName="voidPurchaseOrderType" required (valueChange)="onWarehouseChanged($event, false)" [disableControl]="!this.isNewItem || overriddenVoidPurchaseOrderTypeCode">
                     <mat-option *ngIf="voidPurchaseOrderTypes && voidPurchaseOrderTypes.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
                     <mat-option *ngFor="let voidPurchaseOrderType of voidPurchaseOrderTypes" [value]="voidPurchaseOrderType.code">{{voidPurchaseOrderType.name}}
                     </mat-option>

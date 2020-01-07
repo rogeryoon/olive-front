@@ -71,7 +71,7 @@
                                     <th style="width:130px;">{{'purchasing.inWarehousePendingHeader.warehouse' | translate}}</th>
                                     <th>{{'purchasing.inWarehousePendingHeader.supplier' | translate}}</th>
                                     <th colspan="4">{{'purchasing.inWarehousePendingHeader.memo' | translate}}</th>
-                                    <th>{{'purchasing.inWarehousePendingHeader.finishLink' | translate}}</th>
+                                    <th>{{'purchasing.inWarehousePendingHeader.cancelInWarehouseLink' | translate}}</th>
                                 </tr>
                                 <tr>
                                     <th>{{'purchasing.inWarehousePendingHeader.itemId' | translate}}</th>
@@ -89,14 +89,14 @@
                                     <td *ngIf="isMaster(item)">{{item.warehouseFk.code}}</td>
                                     <td *ngIf="isMaster(item)">{{item.supplierFk.name}}</td>
                                     <td *ngIf="isMaster(item)" colspan="4"><span class="text-truncate">{{item.memo}}</span></td>
-                                    <td *ngIf="isMaster(item)">종결</td>
+                                    <td *ngIf="isMaster(item)" class="ov-td-click foreground-red" (click)="onTdClick($event, item, 'cancel')">{{'purchasing.inWarehousePendingHeader.cancelInWarehouseLink' | translate}}</td>
 
                                     <td *ngIf="!isMaster(item)">{{productVariantId(item.tagPurchaseOrderItem)}}</td>
                                     <td *ngIf="!isMaster(item)" colspan="2" class="text-left">{{item.tagPurchaseOrderItem.productName}}</td>
                                     <td *ngIf="!isMaster(item)" class="text-right">{{commaNumber(item.tagPurchaseOrderItem.quantity)}}</td>
                                     <td *ngIf="!isMaster(item)" class="text-right">{{commaNumber(item.tagPurchaseOrderItem.balance)}}</td>
                                     <td *ngIf="!isMaster(item)" class="text-right">{{numberFormat(item.tagPurchaseOrderItem.price, standCurrency.decimalPoint)}}</td>
-                                    <td *ngIf="!isMaster(item)" class="text-right">{{numberFormat(item.tagPurchaseOrderItem.quantity*item.tagPurchaseOrderItem.price, standCurrency.decimalPoint)}}</td>
+                                    <td *ngIf="!isMaster(item)" class="text-right">{{numberFormat(item.tagPurchaseOrderItem.balance*item.tagPurchaseOrderItem.price, standCurrency.decimalPoint)}}</td>
                                     <td *ngIf="!isMaster(item)"><span class="text-truncate">{{item.tagPurchaseOrderItem.remarks}}</span></td>
                                 </tr>
                                 <tr *ngIf="items?.length == 0">
