@@ -50,6 +50,8 @@ export class OliveConstants {
         static pending = 'access_time';
         static error = 'error_outline';
         static completed = 'check';
+        static locked = 'lock';
+        static unlocked = 'lock_open';
     };
 
     static orderStatus = class {

@@ -197,7 +197,7 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case LockLink:
-        retValue = order.closedDate ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
+        retValue = order.closedDate ? OliveConstants.iconStatus.locked : OliveConstants.iconStatus.unlocked;
         break;
 
       case ConfirmLink:

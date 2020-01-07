@@ -113,53 +113,53 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     };
   }
 
-  getEditorCustomTitle(item: PurchaseOrder): string {
-    if (item) {
-      return `${this.translator.get('navi.purchase.group')} ID : ${purchaseOrderId(item)} ${purchaseOrderStatusRemark(item, this.translator)}`;
+  getEditorCustomTitle(order: PurchaseOrder): string {
+    if (order) {
+      return `${this.translator.get('navi.purchase.group')} ID : ${purchaseOrderId(order)} ${purchaseOrderStatusRemark(order, this.translator)}`;
     }
     else {
       return this.translator.get(NavTranslates.Purchase.entry);
     }
   }
 
-  getEditDialogReadOnly(item: PurchaseOrder): boolean {
-    return item && !isNullOrUndefined(item.closedDate);
+  getEditDialogReadOnly(order: PurchaseOrder): boolean {
+    return order && !isNullOrUndefined(order.closedDate);
   }
 
-  renderItem(item: PurchaseOrder, columnName: string): string {
+  renderItem(order: PurchaseOrder, columnName: string): string {
 
     let retValue = '';
     switch (columnName) {
       case Id:
-        retValue = purchaseOrderId(item);
+        retValue = purchaseOrderId(order);
         break;
 
       case SupplierName:
-        retValue = item.supplierFk.name;
+        retValue = order.supplierFk.name;
         break;
 
       case ItemsName:
-        retValue = getItemsName(item.purchaseOrderItems, 'productName', 'quantity');
+        retValue = getItemsName(order.purchaseOrderItems, 'productName', 'quantity');
         break;
 
       case Warehouse:
-        retValue = item.warehouseFk.code;
+        retValue = order.warehouseFk.code;
         break;
 
       case TotalAmount:
-        retValue = this.getTotalAmount(item);
+        retValue = this.getTotalAmount(order);
         break;
 
       case PaymentsName:
-        retValue = getItemsName(item.purchaseOrderPayments, 'code');
+        retValue = getItemsName(order.purchaseOrderPayments, 'code');
         break;
 
       case InWarehouseStatus:
-        retValue = this.getInWarehouseStatus(item.purchaseOrderItems);
+        retValue = this.getInWarehouseStatus(order.purchaseOrderItems);
         break;
 
       case PrintLink:
-        retValue = item.printOutCount > 1 ? addCountTooltip(item.printOutCount - 1) : '';
+        retValue = order.printOutCount > 1 ? addCountTooltip(order.printOutCount - 1) : '';
         break;
     }
 
@@ -169,28 +169,28 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
   /**
    * Gets in warehouse status
    * 예) 12/64, 1/10
-   * @param items 
+   * @param orders 
    * @returns in warehouse status 
    */
-  getInWarehouseStatus(items: PurchaseOrderItem[]): string {
-    const totalQuantity = items.map(x => x.quantity).reduce((a, b) => a + (b || 0), 0);
-    const totalInWarehouseQuantity = items.map(x => x.quantity - x.balance).reduce((a, b) => a + (b || 0), 0);
+  getInWarehouseStatus(orders: PurchaseOrderItem[]): string {
+    const totalQuantity = orders.map(x => x.quantity).reduce((a, b) => a + (b || 0), 0);
+    const totalInWarehouseQuantity = orders.map(x => x.quantity - x.balance).reduce((a, b) => a + (b || 0), 0);
 
     return `${this.commaNumber(totalInWarehouseQuantity)}/${this.commaNumber(totalQuantity)}`;
   }
 
-  getTotalAmount(item: PurchaseOrder): string {
+  getTotalAmount(order: PurchaseOrder): string {
     let totalItemDue = 0;
-    item.purchaseOrderItems.forEach(unit => totalItemDue += unit.price * unit.quantity - unit.discount);
+    order.purchaseOrderItems.forEach(unit => totalItemDue += unit.price * unit.quantity - unit.discount);
 
     const totalDue =
-      totalItemDue + Math.abs(item.freightAmount) +
-      Math.abs(item.taxAmount) - Math.abs(item.addedDiscountAmount);
+      totalItemDue + Math.abs(order.freightAmount) +
+      Math.abs(order.taxAmount) - Math.abs(order.addedDiscountAmount);
 
     return this.cacheService.showMoney(totalDue);
   }
 
-  icon(item: PurchaseOrder, columnName: string): boolean {
+  icon(order: PurchaseOrder, columnName: string): boolean {
 
     let retValue = false;
 
@@ -207,29 +207,29 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     return retValue;
   }
 
-  iconName(item: PurchaseOrder, columnName: string): string {
+  iconName(order: PurchaseOrder, columnName: string): string {
 
     let retValue = '';
     switch (columnName) {
       case FinishLink:
-        retValue = item.closedDate ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
+        retValue = order.closedDate ? OliveConstants.iconStatus.locked : OliveConstants.iconStatus.unlocked;
         break;
 
       case PrintLink:
-        retValue = item.printOutCount > 0 ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
+        retValue = order.printOutCount > 0 ? OliveConstants.iconStatus.completed : OliveConstants.iconStatus.pending;
         break;
     }
 
     return retValue;
   }
 
-  renderTdTooltip(item: PurchaseOrder, columnName: string): string {
+  renderTdTooltip(order: PurchaseOrder, columnName: string): string {
 
     let retValue = '';
     switch (columnName) {
       case InWarehouseStatus:
-        if (item.purchaseOrderItems.length) {
-          retValue = item.inWarehouseCompletedDate ?
+        if (order.purchaseOrderItems.length) {
+          retValue = order.inWarehouseCompletedDate ?
           this.translator.get('common.status.inWarehouseComplete') :
           this.translator.get('common.status.inWarehousePending');
         }
@@ -245,7 +245,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     return retValue;
   }
 
-  onTdClick(event: any, item: PurchaseOrder, columnName: string): boolean {
+  onTdClick(event: any, order: PurchaseOrder, columnName: string): boolean {
     let retValue = false;
 
     if (
@@ -253,38 +253,38 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       columnName === InWarehouseStatus ||
       columnName === PrintLink
     ) {
-      this.setTdId(item.id, columnName);
+      this.setTdId(order.id, columnName);
       retValue = true;
     }
 
     switch (columnName) {
       case FinishLink:
-        this.onFinish(item);
+        this.onFinish(order);
         break;
 
       case InWarehouseStatus:
-        this.onInWarehouseStatus(item);
+        this.onInWarehouseStatus(order);
         break;
 
       case PrintLink:
-        this.onPOPrint(item);
+        this.onPOPrint(order);
         break;
     }
 
     return retValue;
   }
 
-  renderTDClass(item: PurchaseOrder, column: any): string {
+  renderTDClass(order: PurchaseOrder, column: any): string {
     let addedClass = '';
 
     switch (column.data) {
       case FinishLink:
-        addedClass = item.closedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
+        addedClass = order.closedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
         break;
 
       case InWarehouseStatus:
-        if (item.purchaseOrderItems.length) {
-          addedClass = item.inWarehouseCompletedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
+        if (order.purchaseOrderItems.length) {
+          addedClass = order.inWarehouseCompletedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
         }
         else {
           addedClass = OliveConstants.foregroundColor.red;
@@ -292,17 +292,17 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         break;
 
       case PrintLink:
-        addedClass = item.printOutCount === 0 ? OliveConstants.foregroundColor.orange : OliveConstants.foregroundColor.blue;
+        addedClass = order.printOutCount === 0 ? OliveConstants.foregroundColor.orange : OliveConstants.foregroundColor.blue;
         break;
     }
 
-    return super.renderTDClass(item, column, addedClass);
+    return super.renderTDClass(order, column, addedClass);
   }
 
-  patchPurchaseOrder(item: PurchaseOrder, transactionType: string) {
+  patchPurchaseOrder(order: PurchaseOrder, transactionType: string) {
     this.loadingIndicator = true;
 
-     this.miscService.patchPurchaseOrder(transactionType, item.id).subscribe(
+     this.miscService.patchPurchaseOrder(transactionType, order.id).subscribe(
       response => {
         this.loadingIndicator = false;
 
@@ -322,11 +322,11 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         );
 
         if (transactionType === OliveConstants.listExtraCommand.print) {
-          item.printOutCount = response.model.printOutCount;
-          item.lastPrintOutUser = response.model.lastPrintOutUser;
+          order.printOutCount = response.model.printOutCount;
+          order.lastPrintOutUser = response.model.lastPrintOutUser;
         }
         else {
-          item.closedDate = transactionType === OliveConstants.listExtraCommand.close ? response.model.closedDate : null;
+          order.closedDate = transactionType === OliveConstants.listExtraCommand.close ? response.model.closedDate : null;
         }
       },
       error => {
@@ -336,28 +336,28 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     );
   }
 
-  onFinish(item: PurchaseOrder) {
+  onFinish(order: PurchaseOrder) {
     let errorDialogMessage: string;
     let errorDialogTitle: string;
     let transactionType: string;
 
     let startTabIndex = 0;
 
-    if (item.closedDate) {
+    if (order.closedDate) {
       transactionType = OliveConstants.listExtraCommand.open;
     }
     else { // 종결 요청 Validation
-      if (item.purchaseOrderItems.length === 0) { // No Item?
+      if (order.purchaseOrderItems.length === 0) { // No Item?
         errorDialogTitle = this.translator.get('common.title.errorConfirm');
         errorDialogMessage = this.translator.get('purchasing.purchaseOrders.noItem');
         startTabIndex = 1;
       }
-      else if (item.purchaseOrderPayments.length === 0) { // No Payment?
+      else if (order.purchaseOrderPayments.length === 0) { // No Payment?
         errorDialogTitle = this.translator.get('common.title.errorConfirm');
         errorDialogMessage = this.translator.get('purchasing.purchaseOrders.noPayment');
         startTabIndex = 2;
       }
-      else if (item.inWarehouseCompletedDate) { // 입고완료
+      else if (order.inWarehouseCompletedDate) { // 입고완료
         transactionType = OliveConstants.listExtraCommand.close;
       }
       else { // 입고중
@@ -372,7 +372,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         transactionType === OliveConstants.listExtraCommand.open ? 
           this.translator.get('purchasing.purchaseOrders.confirmOpen') : this.translator.get('purchasing.purchaseOrders.confirmClose'),
         DialogType.confirm,
-        () => this.patchPurchaseOrder(item, transactionType),
+        () => this.patchPurchaseOrder(order, transactionType),
         () => null,
         this.translator.get('common.button.save'),
         this.translator.get('common.button.cancel')
@@ -384,12 +384,12 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
           errorDialogTitle,
           errorDialogMessage,
           DialogType.alert,
-          () => this.editItem(item, new Event('custom'), startTabIndex)
+          () => this.editItem(order, new Event('custom'), startTabIndex)
         );
     }
   }
 
-  onInWarehouseStatus(item: PurchaseOrder) {
+  onInWarehouseStatus(order: PurchaseOrder) {
     this.dialog.open(
       OliveInWarehouseStatusComponent,
       {
@@ -403,27 +403,27 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
           itemTitle: this.translator.get(NavTranslates.InWarehouse.status),
           itemType: InWarehouseItem,
           dataService: this.inWarehouseItemService,
-          searchOption: createSearchOption([{ name: 'status', value: item.id }] as NameValue[])
+          searchOption: createSearchOption([{ name: 'status', value: order.id }] as NameValue[])
         } as LookupListerSetting
       });
   }
 
   /**
    * 발주 인쇄
-   * @param item 
+   * @param order 
    * @returns  
    */
-  onPOPrint(item: PurchaseOrder) {
+  onPOPrint(order: PurchaseOrder) {
     const printAction = OliveConstants.listExtraCommand.print;
     // 아이템 작성한게 없으면 오류처리
-    if (item.purchaseOrderItems.length === 0) {
+    if (order.purchaseOrderItems.length === 0) {
       const startTabIndex = 1;
       this.alertService.showDialog
       (
         this.translator.get('common.title.errorConfirm'),
         this.translator.get('purchasing.purchaseOrders.noItemToPrint'),
         DialogType.alert,
-        () => this.editItem(item, new Event('custom'), startTabIndex)
+        () => this.editItem(order, new Event('custom'), startTabIndex)
       );
       return;
     }
@@ -431,7 +431,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     const dialogSetting = new OliveDialogSetting(
       OlivePreviewPurchaseOrderComponent, 
       {
-        item: item
+        item: order
       }
     );
     const dialogRef = this.dialog.open(
@@ -444,7 +444,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === printAction) {
-        this.patchPurchaseOrder(item, printAction);
+        this.patchPurchaseOrder(order, printAction);
       }
     });
   }
