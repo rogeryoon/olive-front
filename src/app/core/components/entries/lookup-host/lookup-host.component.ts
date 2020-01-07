@@ -109,7 +109,8 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
    * Binds auto complete event
    */
   private bindAutoCompleteEvent() {
-    this.lookupName.valueChanges
+    setTimeout(() => {
+      this.lookupName.valueChanges
       .pipe(
         debounceTime(500),
         tap(() => this.isLoading = true),
@@ -122,6 +123,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
       .subscribe((response: any) => {
         this.searchedItems = response.model;
       });
+    }, 200);
   }
 
   /**

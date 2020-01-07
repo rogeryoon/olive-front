@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, forwardRef, Input, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, ValidationErrors, 
   NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
@@ -32,7 +32,7 @@ import { addActivatedCacheKey } from 'app/core/utils/olive-helpers';
     }
   ]
 })
-export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
+export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator, AfterContentChecked {
   displayedColumns = ['paymentMethodId', 'amount', 'remarkId', 'actions'];
   dataSource: OlivePurchaseOrderPaymentDataSource = new OlivePurchaseOrderPaymentDataSource(this.cacheService);
   paymentMethods: PaymentMethod[];
@@ -41,16 +41,18 @@ export class OlivePurchaseOrderPaymentsEditorComponent extends OliveEntityFormCo
 
   @Input() isVoidMode = false;
 
-  
-
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private snackBar: MatSnackBar, private cacheService: OliveCacheService, 
-    private paymentMethodService: OlivePaymentMethodService
+    private paymentMethodService: OlivePaymentMethodService, private cdRef: ChangeDetectorRef
   ) {
     super(
       formBuilder, translator
     );
+  }
+
+  ngAfterContentChecked() {
+    this.cdRef.detectChanges();
   }
 
   initializeChildComponent() {

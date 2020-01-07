@@ -133,8 +133,8 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
     return purchaseOrderId(order);
   }
 
-  customTitleCallback(order: PurchaseOrder, template: string): string {
-    return String.Format(template, purchaseOrderId(order),  purchaseOrderStatusRemark(order, this.translator));
+  customTitleCallback(order: PurchaseOrder, template: string, translator: FuseTranslationLoaderService): string {
+    return String.Format(template, purchaseOrderId(order),  purchaseOrderStatusRemark(order, translator));
   }
 
   onWarehouseChanged(value: any, eventFromWarehouseDropDown: boolean) {

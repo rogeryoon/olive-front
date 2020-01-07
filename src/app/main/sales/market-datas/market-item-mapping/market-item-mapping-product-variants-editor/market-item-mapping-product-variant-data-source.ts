@@ -42,19 +42,21 @@ export class OliveMarketItemMappingProductVariantDataSource extends TableDataSou
 
         this.products.push([]);
 
-        fg.get('productName').valueChanges
-        .pipe(
-          debounceTime(500),
-          tap(() => this.isLoading = true),
-          switchMap(value => this.productService.search(value)
-          .pipe(
-            finalize(() => this.isLoading = false),
+        setTimeout(() => {
+            fg.get('productName').valueChanges
+            .pipe(
+              debounceTime(500),
+              tap(() => this.isLoading = true),
+              switchMap(value => this.productService.search(value)
+              .pipe(
+                finalize(() => this.isLoading = false),
+                )
+              )
             )
-          )
-        )
-        .subscribe(response => {
-            this.products[this.products.length - 1] = response.model;
-        });
+            .subscribe(response => {
+                this.products[this.products.length - 1] = response.model;
+            });            
+        }, 200);
 
         return fg;
     }

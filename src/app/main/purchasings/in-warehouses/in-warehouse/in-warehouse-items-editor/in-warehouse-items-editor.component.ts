@@ -66,7 +66,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     private purchaseOrderService: OlivePurchaseOrderService, private snackBar: MatSnackBar,
     private dialog: MatDialog, private alertService: AlertService,
     private cacheService: OliveCacheService, private messageHelperService: OliveMessageHelperService,
-    private cdRef: ChangeDetectorRef, 
+    private cdRef: ChangeDetectorRef
   ) {
     super(
       formBuilder, translator

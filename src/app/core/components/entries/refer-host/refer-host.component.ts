@@ -33,7 +33,6 @@ export class OliveReferHostComponent implements ControlValueAccessor, OnInit, Va
   value: any = null;  
   @Input() placeholder = '';
   @Input() type = 'text';
-  @Input() isEditMode = false;
 
   @Output() changed = new EventEmitter();
   @Output() selected = new EventEmitter();
@@ -64,8 +63,6 @@ export class OliveReferHostComponent implements ControlValueAccessor, OnInit, Va
   }
 
   lookUp() {
-    if (!this.isEditMode) { return; }
-
     this.loadingIndicator = true;
 
     if (this.savedObjects.has(this.value.id)) {
@@ -110,7 +107,7 @@ export class OliveReferHostComponent implements ControlValueAccessor, OnInit, Va
 
   getCustomTitle(item): string {
     if (this.setting.customTitleCallback) {
-      return this.setting.customTitleCallback(item, this.setting.customTitleTemplate);
+      return this.setting.customTitleCallback(item, this.setting.customTitleTemplate, this.translator);
     }
     return null;
   }
@@ -126,10 +123,6 @@ export class OliveReferHostComponent implements ControlValueAccessor, OnInit, Va
     }
 
     return returnValue;
-  }
-
-  get floatLabels(): string {
-    return this.isEditMode ? 'auto' : 'always';
   }
 
   markAsTouched() {
