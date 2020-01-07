@@ -8,7 +8,7 @@
         </mat-form-field>
 
         <olive-lookup-host #companyGroupFk formControlName="companyGroupFk" 
-            [placeholder]="companyGroupTitle | translate" [isEditMode]="canAssignCompanyGroups"></olive-lookup-host>
+            [placeholder]="companyGroupTitle | translate" [readOnly]="!canAssignCompanyGroups"></olive-lookup-host>
     </div>
 
     <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em">

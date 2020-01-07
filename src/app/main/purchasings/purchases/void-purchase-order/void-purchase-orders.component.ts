@@ -320,5 +320,9 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
 
   getTotalQuantity(item: InWarehouse): string {
     return this.commaNumber(Math.abs(item.inWarehouseItems.map(x => x.quantity).reduce((a, b) => a + (b || 0), 0)));
-  }  
+  }
+
+  getEditDialogReadOnly(order: VoidPurchaseOrder): boolean {
+    return order.confirmedDate || order.closedDate;
+  }
 }

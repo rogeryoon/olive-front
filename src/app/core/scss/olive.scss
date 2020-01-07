@@ -244,3 +244,7 @@ input[type=search]::-webkit-search-cancel-button {
 input:disabled {
     color: #4d4d4d !important;
 }
+
+textarea:disabled {
+    color: #4d4d4d !important;
+}

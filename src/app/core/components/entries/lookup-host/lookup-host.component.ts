@@ -34,7 +34,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
 
   @Input() id: string;
   @Input() placeholder = '';
-  @Input() isEditMode = false;
+  @Input() readOnly = false;
   @Input() classMode = '';
   @Input() required = true;
   @Input() cacheKey: string;
@@ -147,7 +147,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
    * @returns  
    */
   popUpLookUpDialog() {
-    if (!this.isEditMode) { return; }
+    if (!this.readOnly) { return; }
 
     this.savedSearchedItems = _.cloneDeep(this.searchedItems);
     this.searchedItems = null;

@@ -35,15 +35,15 @@
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
         <div fxFlex="33">
             <olive-lookup-host #carrier formControlName="carrierFk" 
-                [placeholder]="'common.word.carrier' | translate" [isEditMode]="true"></olive-lookup-host>
+                [placeholder]="'common.word.carrier' | translate" [readOnly]="false"></olive-lookup-host>
         </div>
         <div fxFlex="34">
             <olive-lookup-host #branch formControlName="branchFk" [required]="false"
-                [placeholder]="'common.word.branch' | translate" [isEditMode]="true"></olive-lookup-host>
+                [placeholder]="'common.word.branch' | translate" [readOnly]="false"></olive-lookup-host>
         </div>
         <div fxFlex="33">
             <olive-lookup-host #companyGroup formControlName="companyGroupFk" [required]="false"
-                [placeholder]="'common.word.companyGroup' | translate" [isEditMode]="true"></olive-lookup-host>
+                [placeholder]="'common.word.companyGroup' | translate" [readOnly]="false"></olive-lookup-host>
         </div>
     </div>
 

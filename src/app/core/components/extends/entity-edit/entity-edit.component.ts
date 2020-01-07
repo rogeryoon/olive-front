@@ -38,7 +38,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   managePermission: PermissionValues;
   customTitle: string;
   startTabIndex = 0;
-  readonly = false;
+  readOnly = false;
   deleteDisabled = false;
   isSaving = false;
   isDeleting = false;
@@ -89,6 +89,8 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
     }
 
     this.registerSubControl();
+
+    this.setSubControlProperties();
 
     if (this.dateComponent) {
       this.dateComponent.item = this.item;
@@ -181,6 +183,14 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
         this.markFormGroupTouched(control);
       }
     });
+  }
+
+  setSubControlProperties() {
+    for (const control of this.subControls) {
+      if (control.hasOwnProperty('readOnly')) {
+        control.readOnly = this.readOnly;
+      }
+    }  
   }
 
   public save() {

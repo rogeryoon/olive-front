@@ -1,8 +1,15 @@
 ﻿:host {
-  div {
-    width: 100%;
-  }
-  .right {
-    text-align: right;
-  }
+    div {
+        width: 100%;
+    }
+
+    .right {
+        text-align: right;
+    }
+
+    .mat-select-disabled {
+        ::ng-deep .mat-select-value {
+          color: #4d4d4d;
+        }
+    }
 }

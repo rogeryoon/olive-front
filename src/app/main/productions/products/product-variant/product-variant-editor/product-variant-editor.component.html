@@ -2,7 +2,7 @@
 
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
         <olive-lookup-host #product formControlName="productFk" [placeholder]="'common.word.productGroup' | translate"
-            [isEditMode]="canAssignItem" [required]="false" fxFlex="{{groupWidth}}"></olive-lookup-host>
+            [readOnly]="!canAssignItem" [required]="false" fxFlex="{{groupWidth}}"></olive-lookup-host>
 
         <mat-form-field appearance="outline" fxFlex="{{itemWidth}}">
             <mat-label>{{(this.haveMultiVariants ? 'common.word.productVariantName' : 'common.word.generalProductVariantName') | translate}}</mat-label>

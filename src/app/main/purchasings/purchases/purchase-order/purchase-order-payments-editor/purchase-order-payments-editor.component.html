@@ -14,7 +14,7 @@
       <mat-header-cell *matHeaderCellDef>{{'common.word.paymentMethod' | translate}}</mat-header-cell>
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
-          <mat-select name="paymentMethodId" formControlName="paymentMethodId" required (selectionChange)="onSelectionChange($event)" (blur)="onBlur($event)">
+          <mat-select name="paymentMethodId" formControlName="paymentMethodId" required (selectionChange)="onSelectionChange($event)" (blur)="onBlur($event)" [disableControl]="readOnly">
             <mat-option *ngIf="paymentMethods && paymentMethods.length > 1">{{'common.message.chooseOption' | translate}}</mat-option>
             <mat-option *ngFor="let method of paymentMethods" [value]="method.id">{{method.name}}</mat-option>
           </mat-select>
@@ -29,7 +29,7 @@
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <input name="inputAmount{{row.ObjId}}" matInput class="right" formControlName="amount" 
-            (focus)="currentRow=row" (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)">
+            (focus)="currentRow=row" (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" [disableControl]="readOnly">
           <mat-error *ngIf="hasArrayEntryError('amount',i)">{{arrayErrorMessage('amount',i)}}</mat-error>
         </mat-form-field>
       </mat-cell>
@@ -41,7 +41,7 @@
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <input name="inputRemark{{row.ObjId}}" matInput type="text" formControlName="remarkId"
-          (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" maxlength="200">
+          (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" maxlength="200" [disableControl]="readOnly">
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
@@ -49,13 +49,13 @@
 
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef>
-        <button mat-button color="primary" matTooltip="{{'common.button.add' | translate}}" (click)="newItem()">
+        <button mat-button color="primary" matTooltip="{{'common.button.add' | translate}}" (click)="newItem()" [disabled]="readOnly">
           <mat-icon class="mat-button-icon">add</mat-icon>{{'common.button.add' | translate}}
         </button>
       </mat-header-cell>
       <mat-cell *matCellDef="let row" class="justify-center">
-        <button mat-icon-button matTooltip="{{'common.button.delete' | translate}}" (click)="deleteItem(row)">
-          <mat-icon color="warn">delete</mat-icon>
+        <button mat-icon-button matTooltip="{{'common.button.delete' | translate}}" (click)="deleteItem(row)" [disabled]="readOnly">
+          <mat-icon [ngClass]="{'foreground-red': !readOnly, 'foreground-disabled': readOnly}">delete</mat-icon>
         </button>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>

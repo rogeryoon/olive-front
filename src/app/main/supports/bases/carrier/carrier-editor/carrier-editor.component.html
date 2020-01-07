@@ -14,7 +14,7 @@
       </mat-form-field>
 
       <olive-lookup-host #standCarrier formControlName="standCarrierFk" 
-        [placeholder]="'support.carrier.standCarrier' | translate" [isEditMode]="true" (selected)="onStandCarrierSelected($event)"></olive-lookup-host>      
+        [placeholder]="'support.carrier.standCarrier' | translate" [readOnly]="false" (selected)="onStandCarrierSelected($event)"></olive-lookup-host>      
 
       <mat-form-field appearance="outline" class="w-100-p">
         <input matInput name="webSite" formControlName="webSite" maxlength="3000">

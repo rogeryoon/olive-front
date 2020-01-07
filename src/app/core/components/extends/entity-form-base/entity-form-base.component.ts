@@ -21,8 +21,10 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
   }
 
   @Input() idVisible = false;
-  
+
   @Output() formReady = new EventEmitter<FormGroup>();
+
+  readOnly = false;
 
   constructor(
     protected formBuilder: FormBuilder, 
@@ -35,7 +37,7 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
   get isIdVisible(): boolean {
     return this.idVisible && !this.isNewItem;
   }
-
+  
   /**
    * Initializes child component 
    * : virtual - ngOnInit()에서 Call됨

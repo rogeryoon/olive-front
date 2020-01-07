@@ -13,9 +13,9 @@
     <mat-error *ngIf="hasEntryError('name')">{{errorMessage('name')}}</mat-error>
   </mat-form-field>
 
-  <olive-lookup-host #company formControlName="companyFk" [placeholder]="'common.word.company' | translate" [isEditMode]="canAssignCompanyGroups"></olive-lookup-host>
+  <olive-lookup-host #company formControlName="companyFk" [placeholder]="'common.word.company' | translate" [readOnly]="!canAssignCompanyGroups"></olive-lookup-host>
 
-  <olive-lookup-host #branch formControlName="companyMasterBranchFk" [placeholder]="'common.word.branch' | translate" [isEditMode]="canAssignCompanyGroups"></olive-lookup-host>
+  <olive-lookup-host #branch formControlName="companyMasterBranchFk" [placeholder]="'common.word.branch' | translate" [readOnly]="!canAssignCompanyGroups"></olive-lookup-host>
 
   <mat-checkbox formControlName="activated">{{'common.word.activated' | translate}}</mat-checkbox>
 

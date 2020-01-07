@@ -32,6 +32,7 @@ import { getItemsName, addCountTooltip } from 'app/core/utils/string-helper';
 import { createSearchOption } from 'app/core/utils/search-helpers';
 import { purchaseOrderId, purchaseOrderStatusRemark } from 'app/core/utils/olive-helpers';
 import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
+import { isNullOrUndefined } from 'util';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -122,7 +123,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
   }
 
   getEditDialogReadOnly(item: PurchaseOrder): boolean {
-    return item && item.closedDate;
+    return !isNullOrUndefined(item.closedDate);
   }
 
   renderItem(item: PurchaseOrder, columnName: string): string {
