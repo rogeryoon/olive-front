@@ -81,8 +81,8 @@ export class OliveVoidPurchaseOrderEditorComponent extends OliveEntityFormCompon
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      warehouse: [{value: '', disabled: !this.isNewItem}],
-      voidPurchaseOrderType: [{value: '', disabled: !this.isNewItem}],
+      warehouse: '',
+      voidPurchaseOrderType: '',
       purchaseOrderFk: null,
       supplierName: '',
       memo: '',

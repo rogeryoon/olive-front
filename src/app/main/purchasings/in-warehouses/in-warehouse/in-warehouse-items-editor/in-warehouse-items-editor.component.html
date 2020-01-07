@@ -57,7 +57,7 @@
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i" [matTooltip]="arrayErrorMessage('quantity',i)">
         <mat-form-field fxFlex='95%'>
           <input name="inputQuantity{{row.ObjId}}" class="right olive-error" matInput formControlName="quantity"
-            (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" (input)="updateBalance(i)" [disableControl]="isReadOnlyRow(row.Obj)">
+            (change)="onChange($event)" (keyup)="onKeyup($event)" (blur)="onBlur($event)" (input)="updateBalance(i)" [disableControl]="isReadOnlyRow(row.Obj) || readOnly">
           <mat-error *ngIf="hasArrayEntryError('quantity',i)">{{'common.validate.error' | translate}}</mat-error>
         </mat-form-field>
       </mat-cell>
@@ -69,7 +69,7 @@
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <input name="inputRemark{{row.ObjId}}" matInput type="text" formControlName="remark" (change)="onChange($event)"
-            (keyup)="onKeyup($event)" (blur)="onBlur($event)">
+            (keyup)="onKeyup($event)" (blur)="onBlur($event)" [disableControl]="readOnly">
         </mat-form-field>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
@@ -83,7 +83,7 @@
       </mat-header-cell>
       <mat-cell *matCellDef="let row" class="justify-center">
         <button mat-icon-button matTooltip="{{'common.button.delete' | translate}}" (click)="deleteItem(row)" [disabled]="isReadOnlyRow(row.Obj)">
-          <mat-icon [ngClass]="{'foreground-red': !isReadOnlyRow(row.Obj), 'foreground-disabled': isReadOnlyRow(row.Obj)}">delete</mat-icon>
+          <mat-icon [ngClass]="{'foreground-red': !isReadOnlyRow(row.Obj) && !readOnly, 'foreground-disabled': isReadOnlyRow(row.Obj) || readOnly}">delete</mat-icon>
         </button>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>

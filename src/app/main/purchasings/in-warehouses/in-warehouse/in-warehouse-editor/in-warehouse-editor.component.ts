@@ -54,7 +54,7 @@ export class OliveInWarehouseEditorComponent extends OliveEntityFormComponent {
 
   buildForm() {
     this.oForm = this.formBuilder.group({
-      warehouse: [{value: '', disabled: !this.isNewItem}, requiredValidator()],
+      warehouse: ['', requiredValidator()],
       memo: ''
     });
   }

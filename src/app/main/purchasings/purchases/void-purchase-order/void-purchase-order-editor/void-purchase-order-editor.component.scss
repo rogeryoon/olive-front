@@ -1,10 +1,15 @@
 :host {
     div {
-      width: 100%;
+        width: 100%;
     }
 
     .max-width {
-      max-width: 1100px;
+        max-width: 1100px;
     }
-  }
-  
+
+    .mat-select-disabled {
+        ::ng-deep .mat-select-value {
+            color: #4d4d4d;
+        }
+    }
+}

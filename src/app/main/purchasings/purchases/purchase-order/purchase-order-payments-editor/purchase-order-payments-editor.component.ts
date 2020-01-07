@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, forwardRef, Input, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, ValidationErrors, 
   NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
