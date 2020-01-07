@@ -96,7 +96,9 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
       ],
       editComponent: OliveVoidPurchaseOrderManagerComponent,
       searchComponent: OliveSearchVoidPurchaseOrderComponent,
-      itemType: VoidPurchaseOrder
+      itemType: VoidPurchaseOrder,
+      disabledContextMenus: [ OliveConstants.contextMenu.upload ],
+      customContextMenus: [{ iconName: 'polymer', titleId: 'purchasing.voidPurchaseOrders.batchConfirmMenuName' }]
     };
   }
 
@@ -323,6 +325,6 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
   }
 
   getEditDialogReadOnly(order: VoidPurchaseOrder): boolean {
-    return order.confirmedDate || order.closedDate;
+    return order && (order.confirmedDate || order.closedDate);
   }
 }

@@ -692,7 +692,8 @@ export const locale = {
                 'closed': '잠금 처리되었습니다.',
                 'opened': '잠금 해제되었습니다.',
                 'confirmConfirm' : '반품금액확인후엔 수정이 불가능합니다.\n정말 반품 금액확인을 완료하겠습니까? ',
-                'disabledOpened' : '잠금해제 불가능(반품금액 확인완료)'
+                'disabledOpened' : '잠금해제 불가능(반품금액 확인완료)',
+                'batchConfirmMenuName' : '반품/취소 확인'
             },
             'voidPurchaseOrderItems': {
                 'quantity': '취소 갯수',

@@ -141,6 +141,6 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
   }  
 
   getEditDialogDeleteDisabled(item: InWarehouse): boolean {
-    return item.inWarehouseItems.some(x => x.purchaseOrderClosed);
+    return item && item.inWarehouseItems.some(x => x.purchaseOrderClosed);
   }
 }

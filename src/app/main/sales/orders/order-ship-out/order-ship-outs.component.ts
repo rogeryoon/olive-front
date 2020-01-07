@@ -19,6 +19,7 @@ import { OrderShipOut } from '../../models/order-ship-out.model';
 import { OliveOrderShipOutManagerComponent } from './order-ship-out-manager/order-ship-out-manager.component';
 import { OliveConstants } from 'app/core/classes/constants';
 import { getItemsName } from 'app/core/utils/string-helper';
+import { isNullOrUndefined } from 'util';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -100,7 +101,7 @@ export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
   }
 
   getEditDialogReadOnly(item: OrderShipOut): boolean {
-    return item && item.shipOutDate;
+    return item && !isNullOrUndefined(item.shipOutDate);
   }
 
   renderItem(item: OrderShipOut, columnName: string): string {

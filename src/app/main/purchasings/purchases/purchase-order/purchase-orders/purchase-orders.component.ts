@@ -123,7 +123,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
   }
 
   getEditDialogReadOnly(item: PurchaseOrder): boolean {
-    return !isNullOrUndefined(item.closedDate);
+    return item && !isNullOrUndefined(item.closedDate);
   }
 
   renderItem(item: PurchaseOrder, columnName: string): string {
