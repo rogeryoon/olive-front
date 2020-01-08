@@ -46,7 +46,7 @@ import { isNullOrUndefined } from 'util';
   ]
 })
 export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator, AfterContentChecked {
-  displayedColumns = ['purchaseOrderId26', 'productVariantId26', 'productName', 'balance', 'price', 'quantityDue', 'quantity', 'remark', 'actions'];
+  displayedColumns = ['purchaseOrderId26', 'productVariantId26', 'productName', 'balance', 'appliedCost', 'quantityDue', 'quantity', 'remark', 'actions'];
   dataSource: OliveInWarehouseItemDataSource = new OliveInWarehouseItemDataSource(this.cacheService);
 
   warehouse: Warehouse;
@@ -159,7 +159,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
   }
 
   private deleteItem(item: any) {
-    if (item.Obj.id || item.Obj.name || item.Obj.quantity || item.Obj.price || item.Obj.remark) {
+    if (item.Obj.id || item.Obj.name || item.Obj.quantity || item.Obj.appliedCost || item.Obj.remark) {
       this.snackBar.open(
         showParamMessage(this.translator.get('common.message.confirmDelete')),
         this.translator.get('common.button.delete'),
@@ -213,8 +213,8 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     let due = 0;
 
     this.dataSource.items.forEach(item => {
-      if (!isNaN(item.quantity) && !isNaN(item.price)) {
-        due += +item.quantity * +item.price;
+      if (!isNaN(item.quantity) && !isNaN(item.appliedCost)) {
+        due += +item.quantity * +item.appliedCost;
       }
     });
 
@@ -353,7 +353,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
                 productName: sItem.productName,
                 originalBalance: quantity,
-                price: sItem.appliedCost,
+                appliedCost: sItem.appliedCost,
                 productVariantId: sItem.productVariantId,
                 productVariantShortId: sItem.productVariantShortId,
                 supplierName: pItem.supplierFk.name
@@ -378,7 +378,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
 
         productName: item.productName,
         originalBalance: item.balance,
-        price: item.appliedCost,
+        appliedCost: item.appliedCost,
         productVariantId: item.productVariantId,
         productVariantShortId: item.productVariantShortId,
         supplierName: this.preLoadedPurchaseOrder.supplierFk.name

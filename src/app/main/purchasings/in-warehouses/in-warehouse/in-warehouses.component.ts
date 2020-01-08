@@ -130,7 +130,7 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
 
   getTotalAmount(item: InWarehouse): string {
     let totalItemDue = 0;
-    item.inWarehouseItems.forEach(unit => totalItemDue += unit.price * unit.quantity);
+    item.inWarehouseItems.forEach(unit => totalItemDue += unit.appliedCost * unit.quantity);
     return this.cacheService.showMoney(totalItemDue);
   }
 

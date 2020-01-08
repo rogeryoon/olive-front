@@ -40,15 +40,15 @@
       <mat-footer-cell *matFooterCellDef class="justify-end pr-4">{{totalBalance|number:'1.0-0'}}</mat-footer-cell>
     </ng-container>
 
-    <ng-container matColumnDef="price">
-      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.price' | translate}}</mat-header-cell>
-      <mat-cell *matCellDef="let row" class="justify-end pr-4">{{numberFormat(row.Obj.price, standCurrency.decimalPoint)}}</mat-cell>
+    <ng-container matColumnDef="appliedCost">
+      <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.appliedCost' | translate}}</mat-header-cell>
+      <mat-cell *matCellDef="let row" class="justify-end pr-4">{{numberFormat(row.Obj.appliedCost, standCurrency.decimalPoint)}}</mat-cell>
       <mat-footer-cell *matFooterCellDef>&nbsp;</mat-footer-cell>
     </ng-container>
     
     <ng-container matColumnDef="quantityDue">
       <mat-header-cell *matHeaderCellDef>{{'purchasing.inWarehouseItems.quantityDue' | translate}}</mat-header-cell>
-      <mat-cell *matCellDef="let row" class="justify-end pr-4">{{numberFormat(row.Obj.price*row.Obj.quantity, standCurrency.decimalPoint)}}</mat-cell>
+      <mat-cell *matCellDef="let row" class="justify-end pr-4">{{numberFormat(row.Obj.appliedCost*row.Obj.quantity, standCurrency.decimalPoint)}}</mat-cell>
       <mat-footer-cell *matFooterCellDef class="justify-end pr-4">{{numberFormat(totalQuantityDue, standCurrency.decimalPoint)}}</mat-footer-cell>
     </ng-container>
 

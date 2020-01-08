@@ -721,7 +721,7 @@ export const locale = {
                 'quantityDue': '금액',
                 'balance': '입고 잔량',
                 'remark' : '비고',
-                'price' : '단가',
+                'appliedCost' : '단가',
                 'searchPlaceHolderName' : '미입고 상품 검색',
                 'returnSearchPlaceHolderName' : '입고 상품 검색'
             },
