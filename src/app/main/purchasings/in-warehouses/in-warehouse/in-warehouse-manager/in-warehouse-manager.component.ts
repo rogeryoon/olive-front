@@ -66,6 +66,15 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
     });
   }
 
+  convertModel() {
+    const inWarehouse = this.item as InWarehouse;
+
+    for (const item of inWarehouse.inWarehouseItems) {
+      item.balance = item.currentBalance;
+      item.originalBalance = item.quantity + item.balance;
+    }
+  }
+
   resetForm() {
     this.oForm.reset({});
 

@@ -120,22 +120,6 @@ export class OliveEntityFormBaseComponent extends OliveBaseComponent implements 
     return invalid;
   }
 
-  getMoney(value: any) {
-    let amount = 0;
-    if (isMoneyPattern(value)) {
-      amount = +value;
-    }
-    return amount;
-  }
-
-  getNumber(value: any) {
-    let amount = 0;
-    if (isNumberPattern(value)) {
-      amount = +value;
-    }
-    return amount;
-  }
-
   setControlValue(name: string, value: any) {
     this.oForm.controls[name].setValue(value);
   }

@@ -699,7 +699,8 @@ export const locale = {
             },
             'voidPurchaseOrderItems': {
                 'quantity': '취소 갯수',
-                'balance': '취소 잔량',
+                'returnBalanceHeaderName': '반품 잔량',
+                'cancelBalanceHeaderName': '취소 잔량',
             },
             'voidPurchaseOrderManager': {
                 'saveConfirmTitle' : '반품/취소 확인',

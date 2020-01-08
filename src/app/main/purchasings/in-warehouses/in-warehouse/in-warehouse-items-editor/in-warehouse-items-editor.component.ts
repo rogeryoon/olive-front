@@ -98,6 +98,21 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     return this.isNewItem;
   }
 
+  get balanceHeaderName(): string {
+    let name = this.translator.get('purchasing.inWarehouseItems.balance');
+
+    if (this.isVoidMode) {
+      if (this.voidTypeCode === OliveConstants.voidPurchaseOrderTypeCode.Return) {
+        name = this.translator.get('purchasing.voidPurchaseOrderItems.returnBalanceHeaderName');
+      }
+      else {
+        name = this.translator.get('purchasing.voidPurchaseOrderItems.cancelBalanceHeaderName');
+      }
+    }
+
+    return name;
+  }
+
   getPurchaseOrderId(item: InWarehouseItem): string {
     return purchaseOrderId(item, 'purchaseOrderDate', 'purchaseOrderShortId');
   }
@@ -412,8 +427,8 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
     const quantityValue = this.getArrayFormGroup(index).get('quantity').value;
 
     if (isNumberPattern(quantityValue)) {
-      const item = this.dataSource.items[index];
-      item.balance = item.originalBalance - this.getNumber(quantityValue);
+      const item = this.dataSource.items[index] as InWarehouseItem;
+      item.balance = item.originalBalance - Number(quantityValue);
     }
 
     this.updateTotalDue();

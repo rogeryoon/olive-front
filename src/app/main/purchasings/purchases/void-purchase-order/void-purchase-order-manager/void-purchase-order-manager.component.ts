@@ -116,6 +116,21 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     });
   }
 
+  convertModel() {
+    const order = this.item as VoidPurchaseOrder;
+
+    for (const item of order.inWarehouseFk.inWarehouseItems) {
+      if (order.voidTypeCode === OliveConstants.voidPurchaseOrderTypeCode.Return) {
+        item.balance = item.returnableQuantity;
+      }
+      else if (order.voidTypeCode === OliveConstants.voidPurchaseOrderTypeCode.Cancel) {
+        item.balance = item.currentBalance;
+      }
+
+      item.originalBalance = Math.abs(item.quantity) + item.balance;
+    }
+  }
+
   resetForm() {
     this.oForm.reset({});
 

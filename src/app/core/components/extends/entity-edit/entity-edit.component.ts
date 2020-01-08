@@ -77,6 +77,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
   buildForm() { }
   getEditedItem(): any { }
   resetForm() { }
+  convertModel(): any {}
   registerSubControl() { }
   onAfterViewInit() { }
   isCustomValidationOk(): boolean { return true; }
@@ -111,6 +112,7 @@ export class OliveEntityEditComponent extends OliveBaseComponent implements OnCh
     }
 
     if (this.item) {
+      this.convertModel();
       this.isNewItem = false;
     }
     else {

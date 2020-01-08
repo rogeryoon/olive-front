@@ -103,15 +103,15 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   }
 
   get freight() {
-    return this.getMoney(this.oForm.value.freightAmount);
+    return Number(this.oForm.value.freightAmount);
   }
 
   get tax() {
-    return this.getMoney(this.oForm.value.taxAmount);
+    return Number(this.oForm.value.taxAmount);
   }
 
   get addedDiscount() {
-    return this.getMoney(this.oForm.value.addedDiscountAmount);
+    return Number(this.oForm.value.addedDiscountAmount);
   }
 
   get extraAmount(): number {
@@ -451,16 +451,16 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
 
   updateCosts() {
     this.oFArray.controls.forEach((formGroup: FormGroup) => {
-      const lineOtherCurrencyPrice = this.getMoney(formGroup.get('otherCurrencyPrice').value);
+      const lineOtherCurrencyPrice = Number(formGroup.get('otherCurrencyPrice').value);
 
       if (lineOtherCurrencyPrice > 0 && this.otherCurrencyPriceRequired) {
         formGroup.get('price').markAsTouched();
         formGroup.patchValue({ price: (lineOtherCurrencyPrice / this.exchangeRate).toFixed(this.standCurrency.decimalPoint) });
       }
 
-      const lineQuantity = this.getNumber(formGroup.get('quantity').value);
-      const lineDiscount = this.getMoney(formGroup.get('discount').value);
-      const linePrice = this.getMoney(formGroup.get('price').value);
+      const lineQuantity = Number(formGroup.get('quantity').value);
+      const lineDiscount = Number(formGroup.get('discount').value);
+      const linePrice = Number(formGroup.get('price').value);
 
       const appliedCost = linePrice - +(lineDiscount / lineQuantity).toFixed(2) + this.extraCostPerUnit;
 
