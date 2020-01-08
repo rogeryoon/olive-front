@@ -55,7 +55,7 @@ export class OlivePurchaseOrderLookupDialogComponent extends OliveLookupDialogCo
           retValue = getItemsName(
             isReturnMode ?
             // 반품 모드 
-            item.purchaseOrderItems.filter(x => x.quantity - x.balance + x.cancelQuantity - x.returnQuantity > 0) :
+            item.purchaseOrderItems.filter(x => x.quantity - x.balance - x.cancelQuantity - x.returnQuantity > 0) :
             // 입고 또는 취소
             item.purchaseOrderItems.filter(x => x.balance > 0), 
             'productName', 

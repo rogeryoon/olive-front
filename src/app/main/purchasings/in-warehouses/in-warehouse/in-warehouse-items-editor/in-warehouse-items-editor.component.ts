@@ -275,8 +275,9 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
             this.isReturnMode ? 
             this.translator.get('purchasing.inWarehouseItems.returnSearchPlaceHolderName') :
             this.translator.get('purchasing.inWarehouseItems.searchPlaceHolderName'),
-          // 잔여수량 표시 
-          extra1: this.isReturnMode ? 'quantity - balance + cancelQuantity - returnQuantity' : 'balance',
+          // 잔여수량 표시
+          // 반품 가능 수량 공식
+          extra1: this.isReturnMode ? 'quantity - balance - cancelQuantity - returnQuantity' : 'balance',
           // 반품/취소시 취소 타입 코드 설정
           extra2: this.isReturnMode
         } as LookupListerSetting
@@ -326,7 +327,8 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
             .filter((sItem: PurchaseOrderItem) => 
               (
                 ( !this.isReturnMode && sItem.balance > 0 ) ||
-                ( this.isReturnMode && sItem.quantity - sItem.balance + sItem.cancelQuantity - sItem.returnQuantity > 0)
+                // 반품 가능 수량 공식
+                ( this.isReturnMode && sItem.quantity - sItem.balance - sItem.cancelQuantity - sItem.returnQuantity > 0)
               ) && 
               !dupPOItemIdCheckSet.has(sItem.id)
             )
@@ -334,7 +336,7 @@ export class OliveInWarehouseItemsEditorComponent extends OliveEntityFormCompone
               let quantity = 0;
 
               if (this.isReturnMode) {
-                quantity = sItem.quantity - sItem.balance + sItem.cancelQuantity - sItem.returnQuantity;
+                quantity = sItem.quantity - sItem.balance - sItem.cancelQuantity - sItem.returnQuantity;
               }
               else {
                 quantity = sItem.balance;
