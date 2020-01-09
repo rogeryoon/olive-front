@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { FormBuilder } from '@angular/forms';
 
@@ -20,7 +20,7 @@ import { toTrimString } from 'app/core/utils/string-helper';
   templateUrl: './product-hs-codes-editor.component.html',
   styleUrls: ['./product-hs-codes-editor.component.scss']
 })
-export class OliveProductHsCodesEditorComponent extends OliveEntityEditComponent {
+export class OliveProductHsCodesEditorComponent extends OliveEntityEditComponent implements AfterContentChecked {
   readonly hsCodeName = 'hsCode';
   displayedColumns = ['id', 'name', 'hsCode'];
   dataSource: 
@@ -32,7 +32,8 @@ export class OliveProductHsCodesEditorComponent extends OliveEntityEditComponent
     translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService,
     snackBar: MatSnackBar, formBuilder: FormBuilder,
-    dataService: OliveProductService, private cacheService: OliveCacheService
+    dataService: OliveProductService, private cacheService: OliveCacheService,
+    private cdRef: ChangeDetectorRef
   ) {
     super(
       translator, alertService,
@@ -40,6 +41,10 @@ export class OliveProductHsCodesEditorComponent extends OliveEntityEditComponent
       snackBar, formBuilder,
       dataService
     );
+  }
+
+  ngAfterContentChecked() {
+    this.cdRef.detectChanges();
   }
 
   getEditedItem(): ProductHsCode[] {

@@ -1,4 +1,4 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, forwardRef, AfterContentChecked, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormControl, ValidationErrors, 
   NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, FormGroup } from '@angular/forms';
 
@@ -26,7 +26,7 @@ import { MarketItemMappingExcelColumn } from '../../../models/market-item-mappin
     }
   ]
 })
-export class OliveMarketItemMappingExcelColumnsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
+export class OliveMarketItemMappingExcelColumnsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator, AfterContentChecked {
   displayedColumns = ['name', 'matchValue', 'matchSearch', 'actions'];
   dataSource: OliveMarketItemMappingExcelColumnDataSource = new OliveMarketItemMappingExcelColumnDataSource(this.cacheService);
 
@@ -34,11 +34,15 @@ export class OliveMarketItemMappingExcelColumnsEditorComponent extends OliveEnti
 
   constructor(
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
-    private cacheService: OliveCacheService
+    private cacheService: OliveCacheService, private cdRef: ChangeDetectorRef
   ) {
     super(
       formBuilder, translator
     );
+  }
+
+  ngAfterContentChecked() {
+    this.cdRef.detectChanges();
   }
 
   initializeChildComponent() {

@@ -1,4 +1,4 @@
-import { Component, forwardRef, Output, EventEmitter } from '@angular/core';
+import { Component, forwardRef, Output, EventEmitter, AfterContentChecked, ChangeDetectorRef } from '@angular/core';
 import {
   FormBuilder, FormControl, ValidationErrors,
   NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator, FormGroup
@@ -51,7 +51,7 @@ import { createSearchOption } from 'app/core/utils/search-helpers';
     }
   ]
 })
-export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
+export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator, AfterContentChecked {
   displayedColumns = ['productVariantId26', 'productName', 'quantity', 'price', 'amount', 'discount', 'appliedCost', 'otherCurrencyPrice', 'remark', 'actions'];
   dataSource: OlivePurchaseOrderItemDataSource = new OlivePurchaseOrderItemDataSource(this.cacheService, this.productVariantService);
   paymentMethods: PaymentMethod[];
@@ -68,12 +68,16 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     private snackBar: MatSnackBar, private dialog: MatDialog,
     private messageHelperService: OliveMessageHelperService, private cacheService: OliveCacheService,
     private productVariantService: OliveProductVariantService, private purchaseOrderService: OlivePurchaseOrderService,
-    private alertService: AlertService
+    private alertService: AlertService, private cdRef: ChangeDetectorRef
 
   ) {
     super(
       formBuilder, translator
     );
+  }
+
+  ngAfterContentChecked() {
+    this.cdRef.detectChanges();
   }
 
   get poCurrency() {

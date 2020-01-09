@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, forwardRef, Input, AfterContentChecked, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormArray, FormControl, ValidationErrors, 
   NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor, Validator } from '@angular/forms';
 import { MatSnackBar, MatDialog } from '@angular/material';
@@ -39,7 +39,7 @@ import { ProductVariantPrice } from 'app/main/productions/models/product-variant
     }
   ]
 })
-export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator {
+export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComponent implements ControlValueAccessor, Validator, AfterContentChecked {
   displayedColumns = ['productVariantId26', 'productName', 'quantity', 'actions'];
   dataSource: 
   OliveOrderShipOutDetailDataSource = new OliveOrderShipOutDetailDataSource(this.cacheService, this.productVariantService);
@@ -51,11 +51,16 @@ export class OliveOrderShipOutDetailsEditorComponent extends OliveEntityFormComp
     formBuilder: FormBuilder, translator: FuseTranslationLoaderService,
     private alertService: AlertService, private snackBar: MatSnackBar,
     private cacheService: OliveCacheService, private dialog: MatDialog,
-    private productVariantService: OliveProductVariantService, private messageHelperService: OliveMessageHelperService
+    private productVariantService: OliveProductVariantService, private messageHelperService: OliveMessageHelperService,
+    private cdRef: ChangeDetectorRef
   ) {
     super(
       formBuilder, translator
     );
+  }
+
+  ngAfterContentChecked() {
+    this.cdRef.detectChanges();
   }
 
   initializeChildComponent() {

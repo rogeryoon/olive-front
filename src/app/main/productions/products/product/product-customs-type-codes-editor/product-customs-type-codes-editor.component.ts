@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { FormBuilder, AbstractControl } from '@angular/forms';
 
@@ -22,7 +22,7 @@ import { toTrimString } from 'app/core/utils/string-helper';
   templateUrl: './product-customs-type-codes-editor.component.html',
   styleUrls: ['./product-customs-type-codes-editor.component.scss']
 })
-export class OliveProductCustomsTypeCodesEditorComponent extends OliveEntityEditComponent {
+export class OliveProductCustomsTypeCodesEditorComponent extends OliveEntityEditComponent implements AfterContentChecked {
   readonly customsTypeCodeName = 'customsTypeCode';
   displayedColumns = ['id', 'name', this.customsTypeCodeName];
   dataSource: OliveProductCustomsTypeCodeDataSource = new OliveProductCustomsTypeCodeDataSource(this.cacheService);
@@ -33,7 +33,8 @@ export class OliveProductCustomsTypeCodesEditorComponent extends OliveEntityEdit
     translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService,
     snackBar: MatSnackBar, formBuilder: FormBuilder,
-    dataService: OliveProductService, private cacheService: OliveCacheService
+    dataService: OliveProductService, private cacheService: OliveCacheService,
+    private cdRef: ChangeDetectorRef
   ) {
     super(
       translator, alertService,
@@ -41,6 +42,10 @@ export class OliveProductCustomsTypeCodesEditorComponent extends OliveEntityEdit
       snackBar, formBuilder,
       dataService
     );
+  }
+
+  ngAfterContentChecked() {
+    this.cdRef.detectChanges();
   }
 
   getEditedItem(): ProductCustomsTypeCode[] {
