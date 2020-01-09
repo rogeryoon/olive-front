@@ -1,10 +1,11 @@
 ﻿import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs';
 
 import { fuseAnimations } from '@fuse/animations';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
-import { AlertService, DialogType, MessageSeverity } from '@quick/services/alert.service';
+import { AlertService, DialogType } from '@quick/services/alert.service';
 import { AccountService } from '@quick/services/account.service';
 
 import { NavIcons } from 'app/core/navigations/nav-icons';
@@ -18,7 +19,6 @@ import { OliveSearchPurchaseOrderComponent } from '../search-purchase-order/sear
 import { OlivePurchaseOrderService } from '../../../services/purchase-order.service';
 import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/purchase-order-manager.component';
-import { OlivePurchasingMiscService } from '../../../services/purchasing-misc.service';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OlivePreviewPurchaseOrderComponent } from '../preview-purchase-order/preview-purchase-order.component';
 import { OlivePreviewDialogComponent } from 'app/core/components/dialogs/preview-dialog/preview-dialog.component';
@@ -33,6 +33,7 @@ import { createSearchOption } from 'app/core/utils/search-helpers';
 import { purchaseOrderId, purchaseOrderStatusRemark } from 'app/core/utils/olive-helpers';
 import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
 import { isNullOrUndefined } from 'util';
+import { OlivePurchaseOrderHelperService } from 'app/main/purchasings/services/purchase-order-helper.service';
 
 const Selected = 'selected';
 const Id = 'id';
@@ -53,12 +54,13 @@ const PrintLink = 'printLink';
 })
 export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
   purchaseService: OlivePurchaseOrderService;
+  errorSubscription: Subscription;
 
   constructor(
     translator: FuseTranslationLoaderService, alertService: AlertService, 
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     documentService: OliveDocumentService, dialog: MatDialog, 
-    dataService: OlivePurchaseOrderService, private miscService: OlivePurchasingMiscService, 
+    dataService: OlivePurchaseOrderService, private purchaseOrderHelperService: OlivePurchaseOrderHelperService, 
     private cacheService: OliveCacheService, private inWarehouseItemService: OliveInWarehouseItemService
   ) {
     super(
@@ -72,6 +74,10 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
   }
 
   initializeChildComponent() {
+    this.errorSubscription = this.purchaseOrderHelperService.getError().subscribe(error => {
+      this.editItem(error.order, new Event('custom'), error.startTabIndex);
+    });
+
     this.setting = {
       icon: NavIcons.Purchase.list,
       translateTitleId: NavTranslates.Purchase.list,
@@ -111,6 +117,10 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       searchComponent: OliveSearchPurchaseOrderComponent,
       itemType: PurchaseOrder
     };
+  }
+
+  onDestroy() {
+    this.errorSubscription.unsubscribe();
   }
 
   getEditorCustomTitle(order: PurchaseOrder): string {
@@ -259,7 +269,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
     switch (columnName) {
       case FinishLink:
-        this.onFinish(order);
+        this.purchaseOrderHelperService.finishPurchaseOrder(order);
         break;
 
       case InWarehouseStatus:
@@ -267,7 +277,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         break;
 
       case PrintLink:
-        this.onPOPrint(order);
+        this.Print(order);
         break;
     }
 
@@ -299,96 +309,6 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     return super.renderTDClass(order, column, addedClass);
   }
 
-  patchPurchaseOrder(order: PurchaseOrder, transactionType: string) {
-    this.loadingIndicator = true;
-
-     this.miscService.patchPurchaseOrder(transactionType, order.id).subscribe(
-      response => {
-        this.loadingIndicator = false;
-
-        let message = '';
-
-        if (transactionType === OliveConstants.listExtraCommand.close) {
-          message = this.translator.get('purchasing.purchaseOrders.closed');
-        }
-        else if (transactionType === OliveConstants.listExtraCommand.open) {
-          message = this.translator.get('purchasing.purchaseOrders.opened');
-        }
-
-        this.alertService.showMessage(
-          this.translator.get('common.title.success'), 
-          message, 
-          MessageSeverity.success
-        );
-
-        if (transactionType === OliveConstants.listExtraCommand.print) {
-          order.printOutCount = response.model.printOutCount;
-          order.lastPrintOutUser = response.model.lastPrintOutUser;
-        }
-        else {
-          order.closedDate = transactionType === OliveConstants.listExtraCommand.close ? response.model.closedDate : null;
-        }
-      },
-      error => {
-        this.loadingIndicator = false;
-        this.messageHelper.showStickySaveFailed(error, false);
-      }
-    );
-  }
-
-  onFinish(order: PurchaseOrder) {
-    let errorDialogMessage: string;
-    let errorDialogTitle: string;
-    let transactionType: string;
-
-    let startTabIndex = 0;
-
-    if (order.closedDate) {
-      transactionType = OliveConstants.listExtraCommand.open;
-    }
-    else { // 종결 요청 Validation
-      if (order.purchaseOrderItems.length === 0) { // No Item?
-        errorDialogTitle = this.translator.get('common.title.errorConfirm');
-        errorDialogMessage = this.translator.get('purchasing.purchaseOrders.noItem');
-        startTabIndex = 1;
-      }
-      else if (order.purchaseOrderPayments.length === 0) { // No Payment?
-        errorDialogTitle = this.translator.get('common.title.errorConfirm');
-        errorDialogMessage = this.translator.get('purchasing.purchaseOrders.noPayment');
-        startTabIndex = 2;
-      }
-      else if (order.inWarehouseCompletedDate) { // 입고완료
-        transactionType = OliveConstants.listExtraCommand.close;
-      }
-      else { // 입고중
-        errorDialogTitle = this.translator.get('common.title.errorConfirm');
-        errorDialogMessage = this.translator.get('purchasing.purchaseOrders.pendingInWarehouse');
-      }
-    }
-
-    if (transactionType) { // 저장 확인
-      this.alertService.showDialog(
-        this.translator.get('common.title.yesOrNo'),
-        transactionType === OliveConstants.listExtraCommand.open ? 
-          this.translator.get('purchasing.purchaseOrders.confirmOpen') : this.translator.get('purchasing.purchaseOrders.confirmClose'),
-        DialogType.confirm,
-        () => this.patchPurchaseOrder(order, transactionType),
-        () => null,
-        this.translator.get('common.button.save'),
-        this.translator.get('common.button.cancel')
-      );
-    }
-    else {
-      this.alertService.showDialog
-        (
-          errorDialogTitle,
-          errorDialogMessage,
-          DialogType.alert,
-          () => this.editItem(order, new Event('custom'), startTabIndex)
-        );
-    }
-  }
-
   onInWarehouseStatus(order: PurchaseOrder) {
     this.dialog.open(
       OliveInWarehouseStatusComponent,
@@ -413,7 +333,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
    * @param order 
    * @returns  
    */
-  onPOPrint(order: PurchaseOrder) {
+  Print(order: PurchaseOrder) {
     const printAction = OliveConstants.listExtraCommand.print;
     // 아이템 작성한게 없으면 오류처리
     if (order.purchaseOrderItems.length === 0) {
@@ -444,7 +364,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === printAction) {
-        this.patchPurchaseOrder(order, printAction);
+        this.purchaseOrderHelperService.patchPurchaseOrder(order, printAction);
       }
     });
   }
