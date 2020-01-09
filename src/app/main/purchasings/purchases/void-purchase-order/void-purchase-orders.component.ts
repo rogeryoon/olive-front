@@ -197,7 +197,12 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
     let retValue = '';
     switch (columnName) {
       case LockLink:
-        retValue = order.closedDate ? OliveConstants.iconStatus.locked : OliveConstants.iconStatus.unlocked;
+        if (order.voidTypeCode === OliveConstants.voidPurchaseOrderTypeCode.Cancel) {
+          retValue = order.closedDate || order.purchaseOrderFk.closedDate ? OliveConstants.iconStatus.locked : OliveConstants.iconStatus.unlocked;
+        }
+        else {
+          retValue = order.closedDate ? OliveConstants.iconStatus.locked : OliveConstants.iconStatus.unlocked;
+        }
         break;
 
       case ConfirmLink:
@@ -214,7 +219,10 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
     switch (columnName) {
       case LockLink:
         if (order.confirmedDate) {
-          retValue = this.translator.get('purchasing.voidPurchaseOrders.disabledOpened');
+          retValue = this.translator.get('purchasing.voidPurchaseOrders.disabledOpenedByConfirmed');
+        }
+        else if (order.voidTypeCode === OliveConstants.voidPurchaseOrderTypeCode.Cancel && order.purchaseOrderFk.closedDate) {
+          retValue = this.translator.get('purchasing.voidPurchaseOrders.disabledOpenedByPurchaseOrderClosed');
         }
         break;
 
@@ -233,7 +241,12 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
 
     switch (column.data) {
       case LockLink:
-        addedClass = order.closedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
+        if (order.voidTypeCode === OliveConstants.voidPurchaseOrderTypeCode.Cancel) {
+          addedClass = order.closedDate || order.purchaseOrderFk.closedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
+        }
+        else {
+          addedClass = order.closedDate ? OliveConstants.foregroundColor.blue : OliveConstants.foregroundColor.orange;
+        }
         break;
 
       case ConfirmLink:
@@ -269,7 +282,11 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
   }
 
   onLock(order: VoidPurchaseOrder) {
-    if (order.confirmedDate) {
+    if 
+    (
+      order.confirmedDate ||
+      (order.voidTypeCode === OliveConstants.voidPurchaseOrderTypeCode.Cancel && order.purchaseOrderFk.closedDate)
+    ) {
       return;
     }
 
