@@ -151,7 +151,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         break;
 
       case PaymentsName:
-        retValue = getItemsName(order.purchaseOrderPayments, 'code');
+        retValue = getItemsName(order.purchaseOrderPayments.filter(x => x.amount > 0), 'code');
         break;
 
       case InWarehouseStatus:
