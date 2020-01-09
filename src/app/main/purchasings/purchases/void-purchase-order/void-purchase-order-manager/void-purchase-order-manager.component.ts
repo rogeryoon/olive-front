@@ -19,9 +19,9 @@ import { OlivePurchaseOrderPaymentsEditorComponent } from '../../purchase-order/
 import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.model';
 import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.model';
 import { OliveVoidPurchaseOrderService } from '../../../services/void-purchase-order.service';
-import { OlivePurchaseOrderPaymentService } from 'app/main/purchasings/services/purchase-order-payment.service';
 import { applyPrecision } from 'app/core/utils/number-helper';
 import { OliveConstants } from 'app/core/classes/constants';
+import { OlivePurchaseOrderHelperService } from 'app/main/purchasings/services/purchase-order-helper.service';
 
 @Component({
   selector: 'olive-void-purchase-order-manager',
@@ -44,7 +44,7 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
-    dataService: OliveVoidPurchaseOrderService, private purchaseOrderPaymentService: OlivePurchaseOrderPaymentService
+    dataService: OliveVoidPurchaseOrderService, private purchaseOrderHelperService: OlivePurchaseOrderHelperService
   ) {
     super(
       translator, alertService,
@@ -296,5 +296,10 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
     }
 
     super.popUpConfirmSaveDialog();    
+  }
+
+  onSaveFail(error: any) {
+    this.purchaseOrderHelperService.inWarehouseServerValidationErrorHandler(error, this.inWarehouseItems);
+    this.isSaving = false;
   }
 }

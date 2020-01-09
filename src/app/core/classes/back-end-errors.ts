@@ -12,4 +12,5 @@ export class OliveBackEndErrors {
 
 export class OliveBackEndErrorMessages {
     static NotMinimumQuantity = 'NOT-MIN-QUANTITY';
+    static NotRangeQuantity = 'NOT-RANGE-QUANTITY';
 }

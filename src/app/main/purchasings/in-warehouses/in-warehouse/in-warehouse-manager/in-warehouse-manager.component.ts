@@ -13,6 +13,8 @@ import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edi
 import { OliveInWarehouseEditorComponent } from '../in-warehouse-editor/in-warehouse-editor.component';
 import { OliveInWarehouseItemsEditorComponent } from '../in-warehouse-items-editor/in-warehouse-items-editor.component';
 import { InWarehouse } from '../../../models/in-warehouse.model';
+import { OlivePurchaseOrderHelperService } from 'app/main/purchasings/services/purchase-order-helper.service';
+import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.model';
 
 @Component({
   selector: 'olive-in-warehouse-manager',
@@ -30,7 +32,7 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
     translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService, 
     snackBar: MatSnackBar, formBuilder: FormBuilder, 
-    dataService: OliveInWarehouseService
+    dataService: OliveInWarehouseService, private purchaseOrderHelperService: OlivePurchaseOrderHelperService
   ) {
     super(
       translator, alertService,
@@ -48,15 +50,18 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
     this.subControls.push(this.inWarehouseItemsEditor);
   }
 
+  get inWarehouseItems(): InWarehouseItem[] {
+    return this.inWarehouseItemsEditor.getEditedItem();
+  }
+
   getEditedItem(): any {
     const inWarehouse = this.inWarehouseEditor.getEditedItem();
-    const inWarehouseItems = this.inWarehouseItemsEditor.getEditedItem();
 
     return this.itemWithIdNAudit({
       itemCount: this.inWarehouseItemsEditor.totalQuantity,
       memo: inWarehouse.memo,
       warehouseId: inWarehouse.warehouseId,
-      inWarehouseItems: inWarehouseItems
+      inWarehouseItems: this.inWarehouseItems
     } as InWarehouse);
   }
 
@@ -94,5 +99,10 @@ export class OliveInWarehouseManagerComponent extends OliveEntityEditComponent {
       this.translator.get('common.title.errorConfirm'),
       this.translator.get('purchasing.inWarehouseManager.noWarehouseSelected')
     );
+  }
+
+  onSaveFail(error: any) {
+    this.purchaseOrderHelperService.inWarehouseServerValidationErrorHandler(error, this.inWarehouseItems);
+    this.isSaving = false;
   }
 }

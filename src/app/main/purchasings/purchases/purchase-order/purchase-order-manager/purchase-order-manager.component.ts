@@ -164,12 +164,12 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
       const values = error.error.errorMessage.split(',');
       if (values[0] === OliveBackEndErrorMessages.NotMinimumQuantity) {
         const purchaseOrderItemId = Number(values[1]);
-        const minimumQuantity = Number(values[2]);
+        const minQuantity = Number(values[2]);
 
         const items = this.purchaseOrderItems.getEditedItem().items as PurchaseOrderItem[];
         const itemName = items.find(x => x.id === purchaseOrderItemId).productName;
 
-        errorMessage = String.Format(this.translator.get('purchasing.purchaseOrder.notMinimumQuantity'), minimumQuantity, itemName); 
+        errorMessage = String.Format(this.translator.get('purchasing.purchaseOrder.notMinimumQuantity'), minQuantity, itemName); 
       }
 
       this.alertService.showMessageBox(this.translator.get('common.title.saveError'), errorMessage);

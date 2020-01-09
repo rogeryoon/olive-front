@@ -646,7 +646,7 @@ export const locale = {
                 'currency' : '화폐',
                 'currencyRate' : '환율',
                 'saveUnmatchedAmountConfirmMessage' : '발주서 전체 금액 합계와 실결제 총금액이 일치하지 않습니다.\n그래도 저장하겠습니까?',
-                'notMinimumQuantity' : '이미 작성된 입고/반품 총 수량이 {0}개 입니다. {0}개 미만 수량저장은 불가능합니다. 품명 : {1}',
+                'notMinimumQuantity' : '이미 작성된 입고/취소/반품 총 수량이 {0}개 입니다. {0}개 미만 수량저장은 불가능합니다. 품명 : {1}',
                 'closedStatus': '종결',
                 'pendingStatus' : '미종결/입고진행중'
             },
@@ -712,7 +712,8 @@ export const locale = {
                 'saveConfirmTitle' : '입고 확인',
                 'saveConfirmMessage' : '정말 입고 내용을 저장하시겠습니까?',
                 'noWarehouseSelected' : '창고를 먼저 선택하십시오.',
-                'mustSelectWarehouseAndVoidPurchaseOrderType' : '창고와 발주취소 타입을 모두 먼저 선택하십시오.'
+                'mustSelectWarehouseAndVoidPurchaseOrderType' : '창고와 발주취소 타입을 모두 먼저 선택하십시오.',
+                'notRangeQuantity' : '입력한 수량이 {0}~{1}범위의 값이 아닙니다.\n품명 : {2}',
             },
             'inWarehouseItems': {
                 'purchaseOrderId' : '발주 ID',

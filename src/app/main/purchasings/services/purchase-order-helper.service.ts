@@ -1,6 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material';
 import { Subject, Observable } from 'rxjs';
+
+import { String } from 'typescript-string-operations';
 
 import { AlertService, MessageSeverity, DialogType } from '@quick/services/alert.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -9,9 +10,8 @@ import { PurchaseOrder } from '../models/purchase-order.model';
 import { OlivePurchasingMiscService } from './purchasing-misc.service';
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
-import { OlivePreviewPurchaseOrderComponent } from '../purchases/purchase-order/preview-purchase-order/preview-purchase-order.component';
-import { OlivePreviewDialogComponent } from 'app/core/components/dialogs/preview-dialog/preview-dialog.component';
+import { OliveBackEndErrors, OliveBackEndErrorMessages } from 'app/core/classes/back-end-errors';
+import { InWarehouseItem } from '../models/in-warehouse-item.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +24,7 @@ export class OlivePurchaseOrderHelperService {
   constructor
   (
     private miscService: OlivePurchasingMiscService, private translator: FuseTranslationLoaderService,
-    private alertService: AlertService, private messageHelper: OliveMessageHelperService,
-    private dialog: MatDialog
+    private alertService: AlertService, private messageHelper: OliveMessageHelperService
   ) 
   {
   }
@@ -130,6 +129,32 @@ export class OlivePurchaseOrderHelperService {
           DialogType.alert,
           () => this.subject.next({order: order, startTabIndex: startTabIndex})
         );
+    }
+  }
+
+  inWarehouseServerValidationErrorHandler(error: any, items: InWarehouseItem[]) {
+    this.alertService.stopLoadingMessage();
+
+    // 서버쪽 Validation Error 검출시
+    // 이경우 User에게 알리고 다시 재입력하게 한다.
+    if (error.error && error.error.errorCode === OliveBackEndErrors.ServerValidationError) {
+      let errorMessage = this.translator.get('common.validate.serverValidationGeneralMessage');
+
+      const values = error.error.errorMessage.split(',');
+      if (values[0] === OliveBackEndErrorMessages.NotRangeQuantity) {
+        const inWarehouseItemId = Number(values[1]);
+        const minQuantity = Number(values[2]);
+        const maxQuantity = Number(values[3]);
+
+        const itemName = items.find(x => x.id === inWarehouseItemId).productName;
+
+        errorMessage = String.Format(this.translator.get('purchasing.inWarehouseManager.notRangeQuantity'), minQuantity, maxQuantity, itemName); 
+      }
+
+      this.alertService.showMessageBox(this.translator.get('common.title.saveError'), errorMessage);
+    }
+    else {
+      this.messageHelper.showStickySaveFailed(error, false);
     }
   }
 }
