@@ -391,6 +391,6 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
   }
 
   getEditDialogReadOnly(order: VoidPurchaseOrder): boolean {
-    return order && (order.confirmedDate || order.closedDate);
+    return order && (order.confirmedDate || order.closedDate || order.purchaseOrderFk.closedDate);
   }
 }
