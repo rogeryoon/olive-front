@@ -294,6 +294,7 @@ export const locale = {
                 'remark' : '비고',
             },
             'word': {
+                'deletedRow' : '삭제행',
                 'userName' : '아이디',
                 'password' : '암호',
                 'search' : '검색',

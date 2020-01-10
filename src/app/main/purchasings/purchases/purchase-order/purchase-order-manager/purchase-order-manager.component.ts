@@ -167,7 +167,10 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
         const minQuantity = Number(values[2]);
 
         const items = this.purchaseOrderItems.getEditedItem().items as PurchaseOrderItem[];
-        const itemName = items.find(x => x.id === purchaseOrderItemId).productName;
+        
+        const foundItem = items.find(x => x.id === purchaseOrderItemId);
+
+        const itemName = foundItem ? foundItem.productName : this.translator.get('common.word.deletedRow');
 
         errorMessage = String.Format(this.translator.get('purchasing.purchaseOrder.notMinimumQuantity'), minQuantity, itemName); 
       }

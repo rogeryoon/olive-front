@@ -146,7 +146,8 @@ export class OlivePurchaseOrderHelperService {
         const minQuantity = Number(values[2]);
         const maxQuantity = Number(values[3]);
 
-        const itemName = items.find(x => x.id === inWarehouseItemId).productName;
+        const foundItem = items.find(x => x.id === inWarehouseItemId); 
+        const itemName = foundItem ? foundItem.productName : this.translator.get('common.word.deletedRow');
 
         errorMessage = String.Format(this.translator.get('purchasing.inWarehouseManager.notRangeQuantity'), minQuantity, maxQuantity, itemName); 
       }
