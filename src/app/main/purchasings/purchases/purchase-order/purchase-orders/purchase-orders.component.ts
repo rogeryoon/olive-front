@@ -184,9 +184,15 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
    */
   getInWarehouseStatus(orders: PurchaseOrderItem[]): string {
     const totalQuantity = orders.map(x => x.quantity).reduce((a, b) => a + (b || 0), 0);
-    const totalInWarehouseQuantity = orders.map(x => x.quantity - x.balance).reduce((a, b) => a + (b || 0), 0);
+    const totalInWarehouseQuantity = orders.map(x => x.quantity - x.balance - x.cancelQuantity).reduce((a, b) => a + (b || 0), 0);
+    const totalCancelQuantity = orders.map(x => x.cancelQuantity).reduce((a, b) => a + (b || 0), 0);
 
-    return `${this.commaNumber(totalInWarehouseQuantity)}/${this.commaNumber(totalQuantity)}`;
+    let cancelQuantityRemark = '';
+    if (totalCancelQuantity > 0) {
+      cancelQuantityRemark = `(-${this.commaNumber(totalCancelQuantity)})`;
+    }
+
+    return `${this.commaNumber(totalInWarehouseQuantity)}/${this.commaNumber(totalQuantity)}${cancelQuantityRemark}`;
   }
 
   getTotalAmount(order: PurchaseOrder): string {

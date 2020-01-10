@@ -309,13 +309,6 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
         this.translator.get('common.button.cancel')
       );
     }
-    else {
-      this.alertService.showMessage(
-        this.translator.get('common.title.success'),
-        this.translator.get('purchasing.voidPurchaseOrders.confirmed'),
-        MessageSeverity.success
-      );      
-    }
   }
 
   patchInWarehouse(orders: VoidPurchaseOrder[], transactionType: string) {
