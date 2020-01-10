@@ -304,6 +304,9 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     if (this.dataSource.items.length === 0) {
       this.oFArray.removeAt(0);
     }
+
+    this._onChange(0);
+
     this.updateCosts();
   }
 
@@ -366,7 +369,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
 
       if (needToRender) {
         this.dataSource.renderItems();
-        this.oForm.markAsDirty();
+        this._onChange(0);
       }
 
       this.updateCosts();
@@ -436,7 +439,7 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
 
       if (needToRender) {
         this.dataSource.renderItems();
-        this.oForm.markAsDirty();
+        this._onChange(0);
       }
 
       this.updateCosts();

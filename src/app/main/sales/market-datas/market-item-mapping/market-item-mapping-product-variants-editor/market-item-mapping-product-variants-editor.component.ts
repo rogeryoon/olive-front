@@ -191,7 +191,7 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
   
         if (needToRender) {
           this.dataSource.renderItems();
-          this.oForm.markAsDirty();
+          this._onChange(0);
         }
       
         this.messageHelperService.showDuplicatedItems(duplicatedIdStrings);
@@ -242,7 +242,8 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
     if (this.dataSource.items.length === 0) {
       const fa = <FormArray>this.oForm.get('formArray');
       fa.removeAt(0);
-    }    
+    }
+    this._onChange(0);
   }
 
   private _onChange = (_: any) => { };
