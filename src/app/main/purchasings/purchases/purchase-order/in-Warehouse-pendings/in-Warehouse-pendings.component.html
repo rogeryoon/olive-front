@@ -95,8 +95,8 @@
                                     <td *ngIf="!isMaster(item)" colspan="2" class="text-left">{{item.tagPurchaseOrderItem.productName}}</td>
                                     <td *ngIf="!isMaster(item)" class="text-right">{{commaNumber(item.tagPurchaseOrderItem.quantity)}}</td>
                                     <td *ngIf="!isMaster(item)" class="text-right">{{commaNumber(item.tagPurchaseOrderItem.balance)}}</td>
-                                    <td *ngIf="!isMaster(item)" class="text-right">{{numberFormat(item.tagPurchaseOrderItem.price, standCurrency.decimalPoint)}}</td>
-                                    <td *ngIf="!isMaster(item)" class="text-right">{{numberFormat(item.tagPurchaseOrderItem.balance*item.tagPurchaseOrderItem.price, standCurrency.decimalPoint)}}</td>
+                                    <td *ngIf="!isMaster(item)" class="text-right">{{numberFormat(item.tagPurchaseOrderItem.appliedCost, standCurrency.decimalPoint)}}</td>
+                                    <td *ngIf="!isMaster(item)" class="text-right">{{numberFormat(item.tagPurchaseOrderItem.balance*item.tagPurchaseOrderItem.appliedCost, standCurrency.decimalPoint)}}</td>
                                     <td *ngIf="!isMaster(item)"><span class="text-truncate">{{item.tagPurchaseOrderItem.remarks}}</span></td>
                                 </tr>
                                 <tr *ngIf="items?.length == 0">
