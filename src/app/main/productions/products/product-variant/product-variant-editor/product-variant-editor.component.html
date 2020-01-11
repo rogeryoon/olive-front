@@ -1,11 +1,15 @@
 ﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" autocomplete="off">
 
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
-        <olive-lookup-host #product formControlName="productFk" [placeholder]="'common.word.productGroup' | translate"
-            [readOnly]="!canAssignItem" [required]="false" fxFlex="{{groupWidth}}"></olive-lookup-host>
+        <div fxFlex="{{groupWidth}}">
+            <olive-lookup-host #product formControlName="productFk" [placeholder]="'common.word.productGroup' | translate" 
+                [readOnly]="!canAssignItem" [required]="false"></olive-lookup-host>
+        </div>
 
         <mat-form-field appearance="outline" fxFlex="{{itemWidth}}">
-            <mat-label>{{(this.haveMultiVariants ? 'common.word.productVariantName' : 'common.word.generalProductVariantName') | translate}}</mat-label>
+            <mat-label>
+                {{(this.haveMultiVariants ? 'common.word.productVariantName' : 'common.word.generalProductVariantName') | translate}}
+            </mat-label>
             <input matInput name="name" formControlName="name" maxlength="200">
             <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
         </mat-form-field>
@@ -49,7 +53,7 @@
             <mat-label>{{'common.word.hsCode' | translate}}</mat-label>
             <input matInput name="hsCode" formControlName="hsCode" maxlength="100">
             <mat-hint align="end">{{getControl('hsCode').value?.length || 0}}/100</mat-hint>
-        </mat-form-field>        
+        </mat-form-field>
     </div>
 
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">

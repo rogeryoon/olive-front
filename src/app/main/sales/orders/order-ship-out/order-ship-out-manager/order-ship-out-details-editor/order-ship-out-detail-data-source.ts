@@ -9,6 +9,7 @@ import { OliveProductVariantService } from 'app/main/productions/services/produc
 import { OrderShipOutDetail } from 'app/main/sales/models/order-ship-out-detail.model';
 import { convertToBase26, convertBase26ToNumber } from 'app/core/utils/encode-helpers';
 import { ProductVariantPrice } from 'app/main/productions/models/product-variant-price.model';
+import { Observable } from 'rxjs';
 
 export class OliveOrderShipOutDetailDataSource extends TableDataSource {
 
@@ -47,7 +48,7 @@ export class OliveOrderShipOutDetailDataSource extends TableDataSource {
             .pipe(
               debounceTime(500),
               tap(() => this.isLoading = true),
-              switchMap(value => this.productService.search(value)
+              switchMap((value: string) => (value.trim().length > 1 ? this.productService.search(value) : Observable.of({model: []}))
               .pipe(
                 finalize(() => this.isLoading = false),
                 )

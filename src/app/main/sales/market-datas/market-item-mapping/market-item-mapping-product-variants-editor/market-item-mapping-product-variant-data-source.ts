@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { debounceTime, switchMap, tap, finalize } from 'rxjs/operators';
 
 import { FormGroup, FormControl } from '@angular/forms';
@@ -9,6 +10,7 @@ import { MarketItemMappingProductVariant } from '../../../models/market-item-map
 import { OliveProductVariantService } from 'app/main/productions/services/product-variant.service';
 import { convertToBase26, convertBase26ToNumber } from 'app/core/utils/encode-helpers';
 import { ProductVariantPrice } from 'app/main/productions/models/product-variant-price.model';
+
 
 export class OliveMarketItemMappingProductVariantDataSource extends TableDataSource {
 
@@ -47,7 +49,7 @@ export class OliveMarketItemMappingProductVariantDataSource extends TableDataSou
             .pipe(
               debounceTime(500),
               tap(() => this.isLoading = true),
-              switchMap(value => this.productService.search(value)
+              switchMap((value: string) => (value.trim().length > 1 ? this.productService.search(value) : Observable.of({model: []}))
               .pipe(
                 finalize(() => this.isLoading = false),
                 )

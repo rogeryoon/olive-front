@@ -285,3 +285,12 @@ export function showParamMessage(template: string, firstValue: string = null, se
 
     return message;
 }
+
+/**
+ * Determines whether empty or whitespace is
+ * @param value 
+ * @returns true if empty or white space 
+ */
+export function isEmptyOrWhiteSpace(value: string): boolean {
+    return value.trim().length === 0;
+}

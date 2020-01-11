@@ -19,7 +19,7 @@ import { OliveProductVariantManagerComponent } from 'app/main/productions/produc
 import { ProductVariant } from 'app/main/productions/models/product-variant.model';
 import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { showParamMessage } from 'app/core/utils/string-helper';
+import { showParamMessage, isEmptyOrWhiteSpace } from 'app/core/utils/string-helper';
 import { ProductVariantPrice } from 'app/main/productions/models/product-variant-price.model';
 
 @Component({
@@ -273,12 +273,12 @@ export class OliveMarketItemMappingProductVariantsEditorComponent extends OliveE
     this._onChange(event.value);
   }
   onChange(event: any, index: number) {
-    if (event.target.name.includes('ProductName') && event.target.value === '') {
-      this.onProductNameValueEmpty(index);
-    }
     this._onChange(event.target.value);
   }
-  onKeyup(event: any) {
+  onKeyup(event: any, index: number) {
+    if (event.target.name.includes('ProductName') && isEmptyOrWhiteSpace(event.target.value)) {
+      this.onProductNameValueEmpty(index);
+    }    
     this._onChange(event.target.value);
   }
   onBlur(event: any) {

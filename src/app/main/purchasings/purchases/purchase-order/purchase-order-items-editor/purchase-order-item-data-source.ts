@@ -1,4 +1,5 @@
 import { FormGroup, FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { debounceTime, tap, switchMap, finalize } from 'rxjs/operators';
 
 import { TableDataSource } from 'app/core/classes/table-data-source';
@@ -67,7 +68,7 @@ export class OlivePurchaseOrderItemDataSource extends TableDataSource {
             .pipe(
               debounceTime(500),
               tap(() => this.isLoading = true),
-              switchMap(value => this.productService.search(value)
+              switchMap((value: string) => (value.trim().length > 1 ? this.productService.search(value) : Observable.of({model: []}))
               .pipe(
                 finalize(() => this.isLoading = false),
                 )

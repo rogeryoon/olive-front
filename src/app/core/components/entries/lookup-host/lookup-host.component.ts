@@ -1,6 +1,8 @@
 import { Component, forwardRef, ViewChild, ElementRef, Renderer2, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl, Validator, ValidationErrors, NG_VALIDATORS } from '@angular/forms';
 import { MatDialog } from '@angular/material';
+import { Observable } from 'rxjs';
+import 'rxjs/add/observable/of';
 
 import * as _ from 'lodash';
 
@@ -114,7 +116,8 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
       .pipe(
         debounceTime(500),
         tap(() => this.isLoading = true),
-        switchMap(value => this.setting.dataService.getItems(createKeywordSearchOption(value, this.setting.searchOption))
+        switchMap((value: string) => 
+        (value.trim().length > 1 ? this.setting.dataService.getItems(createKeywordSearchOption(value, this.setting.searchOption)) : Observable.of({model: []}))
           .pipe(
             finalize(() => this.isLoading = false),
           )

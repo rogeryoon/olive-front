@@ -29,7 +29,7 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { Currency } from 'app/main/supports/models/currency.model';
 import { numberValidator } from 'app/core/validators/general-validators';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
-import { showParamMessage } from 'app/core/utils/string-helper';
+import { showParamMessage, isEmptyOrWhiteSpace } from 'app/core/utils/string-helper';
 import { AlertService } from '@quick/services/alert.service';
 import { ProductVariantPrice } from 'app/main/productions/models/product-variant-price.model';
 import { createSearchOption } from 'app/core/utils/search-helpers';
@@ -246,6 +246,11 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     });
   }
 
+  /**
+   * 제품이름 검색 오토 컴플리트 드롭다운에서 선택할 경우 이벤트
+   * @param event 
+   * @param index 
+   */
   onProductSelected(event: any, index: number) {
     const formGroup = this.getArrayFormGroup(index);
 
@@ -526,12 +531,12 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
   }
 
   onChange(event: any, index: number) {
-    if (event.target.name.includes('ProductName') && event.target.value === '') {
-      this.onProductNameValueEmpty(index);
-    }    
     this._onChange(event.target.value);
   }
-  onKeyup(event: any) {
+  onKeyup(event: any, index: number) {
+    if (event.target.name.includes('ProductName') && isEmptyOrWhiteSpace(event.target.value)) {
+      this.onProductNameValueEmpty(index);
+    }
     this._onChange(event.target.value);
   }
   onBlur(event: any) {

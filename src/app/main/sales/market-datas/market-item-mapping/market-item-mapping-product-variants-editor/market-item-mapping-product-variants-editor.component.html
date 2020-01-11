@@ -27,7 +27,7 @@
             <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
                 <mat-form-field fxFlex='95%'>
                     <input type="search" name="inputProductName{{row.ObjId}}" matInput formControlName="productName"
-                        (focus)="currentRow=row" (change)="onChange($event, i)" (keyup)="onKeyup($event)"
+                        (focus)="currentRow=row" (change)="onChange($event, i)" (keyup)="onKeyup($event, i)"
                         (blur)="onBlur($event)" autocomplete="off" [matAutocomplete]="auto">
                     <mat-error *ngIf="hasArrayEntryError('productName',i)">{{arrayErrorMessage('productName',i)}}
                     </mat-error>
@@ -52,7 +52,7 @@
                 [matTooltip]="arrayErrorMessage('quantity',i)">
                 <mat-form-field fxFlex='95%'>
                     <input name="inputAmount{{row.ObjId}}" matInput class="right" formControlName="quantity"
-                        (focus)="currentRow=row" (change)="onChange($event, i)" (keyup)="onKeyup($event)"
+                        (focus)="currentRow=row" (change)="onChange($event, i)" (keyup)="onKeyup($event, i)"
                         (blur)="onBlur($event)">
                     <mat-error *ngIf="hasArrayEntryError('quantity',i)">{{'common.validate.error' | translate}}
                     </mat-error>
