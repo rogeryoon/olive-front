@@ -51,7 +51,7 @@ export class OlivePurchaseOrderItemDataSource extends TableDataSource {
             productVariantId26: productVariantId26Control,
             hiddenProductVariantId: this.createNewFormControl(r, 'productVariantId', []),
             productName: this.createNewFormControl(r, 'productName', [requiredValidator()]),
-            quantity: this.createNewFormControl(r, 'quantity', [numberValidator(0, true, 1)]),
+            quantity: this.createNewFormControl(r, 'quantity', [numberValidator(0, true, 0)]),
             price: this.createNewFormControl(r, 'price', [numberValidator(this.standCurrency.decimalPoint, true)]),
             discount: this.createNewFormControl(r, 'discount', [numberValidator(this.standCurrency.decimalPoint, true)]),
             appliedCost: this.createNewFormControl(r, 'appliedCost', [numberValidator(this.standCurrency.decimalPoint, true)]),

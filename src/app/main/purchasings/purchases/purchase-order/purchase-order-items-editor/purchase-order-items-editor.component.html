@@ -27,7 +27,7 @@
       <mat-cell *matCellDef="let row, let i=index" [formGroupName]="i">
         <mat-form-field fxFlex='95%'>
           <input matInput name="inputProductName{{row.ObjId}}" formControlName="productName" (change)="onChange($event, i)" (keyup)="onKeyup($event)"
-            (blur)="onBlur($event)" class="olive-error auto-size" autocomplete="off" [matAutocomplete]="auto" [disableControl]="readOnly">
+            (blur)="onBlur($event)" class="olive-error auto-size" autocomplete="off" [matAutocomplete]="auto" [disableControl]="readOnly || haveChildren(i)">
           <mat-error *ngIf="hasArrayEntryError('productName',i)">{{arrayErrorMessage('productName',i)}}</mat-error>
         </mat-form-field>
 
@@ -42,7 +42,7 @@
         </mat-autocomplete>
       </mat-cell>
       <mat-footer-cell *matFooterCellDef class="justify-center">
-          <button [matMenuTriggerFor]="ctxmenu" mat-button color="primary" matTooltip="{{'common.button.add' | translate}}" [disabled]="readOnly">
+          <button [matMenuTriggerFor]="ctxmenu" mat-button color="primary" matTooltip="{{'common.button.add' | translate}}" [disabled]="readOnly || haveSomeChildren">
               <mat-icon class="mat-button-icon">add</mat-icon>{{'common.button.add' | translate}}
             </button>
             <mat-menu #ctxmenu="matMenu">
@@ -139,7 +139,7 @@
 
     <ng-container matColumnDef="actions">
       <mat-header-cell *matHeaderCellDef>
-        <button mat-button color="primary" matTooltip="{{'common.button.addRow' | translate}}" (click)="newItem()" [disabled]="readOnly">
+        <button mat-button color="primary" matTooltip="{{'common.button.addRow' | translate}}" (click)="newItem()" [disabled]="readOnly || haveSomeChildren">
             <mat-icon class="mat-button-icon">add</mat-icon>{{'common.button.addRow' | translate}}
         </button>
       </mat-header-cell>
@@ -157,6 +157,7 @@
 
   </mat-table>
   <mat-error *ngIf="noItemCreatedError && touched">{{'common.message.noItemCreated' | translate}}</mat-error>
+  <mat-error *ngIf="allZeroQuantityError && touched">{{'common.message.allZeroQuantityError' | translate}}</mat-error>
 
   <div class="entry-max-width">
   <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="1em" class="justify-end">

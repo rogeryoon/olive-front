@@ -33,6 +33,7 @@ import { showParamMessage } from 'app/core/utils/string-helper';
 import { AlertService } from '@quick/services/alert.service';
 import { ProductVariantPrice } from 'app/main/productions/models/product-variant-price.model';
 import { createSearchOption } from 'app/core/utils/search-helpers';
+import { isUndefined } from 'util';
 
 @Component({
   selector: 'olive-purchase-order-items-editor',
@@ -139,6 +140,23 @@ export class OlivePurchaseOrderItemsEditorComponent extends OliveEntityFormCompo
     });
 
     return quantity;
+  }
+
+  get items(): PurchaseOrderItem[] {
+    return this.dataSource.items;
+  }
+
+  get haveSomeChildren(): boolean {
+    return this.items.some(x => !isUndefined(x.id) && Number(x.quantity) !== x.balance || x.cancelQuantity > 0 || x.returnQuantity > 0);
+  }
+
+  get allZeroQuantityError(): boolean {
+    return this.items.length > 0 && this.items.every(item => Number(item.quantity) === 0);
+  }
+
+  haveChildren(index: number): boolean {
+    const item = this.items[index];
+    return !isUndefined(item.id) && Number(item.quantity) !== item.balance || item.cancelQuantity > 0 || item.returnQuantity > 0;
   }
 
   get totalAmount(): number {

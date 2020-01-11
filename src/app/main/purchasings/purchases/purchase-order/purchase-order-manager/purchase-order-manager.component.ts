@@ -17,6 +17,7 @@ import { OlivePurchaseOrderPaymentsEditorComponent } from '../purchase-order-pay
 import { OlivePurchaseOrderItemsEditorComponent } from '../purchase-order-items-editor/purchase-order-items-editor.component';
 import { OliveBackEndErrors, OliveBackEndErrorMessages } from 'app/core/classes/back-end-errors';
 import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
+import { isSameNumber } from 'app/core/utils/number-helper';
 
 @Component({
   selector: 'olive-purchase-order-manager',
@@ -143,7 +144,7 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
   popUpConfirmSaveDialog() {
     const totalPaymentAmount = this.purchaseOrderPayments.items.filter(x => x.amount > 0).map(y => Number(y.amount)).reduce((a, b) => a + (b || 0), 0);
 
-    const saveWithOutConfirm = totalPaymentAmount === this.totalDueAmount;
+    const saveWithOutConfirm = isSameNumber(totalPaymentAmount, this.totalDueAmount);
 
     // 금액이 맞지 않는 오류가 있을 경우 최종 확인
     if (!saveWithOutConfirm) {

@@ -19,7 +19,7 @@ import { OlivePurchaseOrderPaymentsEditorComponent } from '../../purchase-order/
 import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.model';
 import { PurchaseOrderPayment } from '../../../models/purchase-order-payment.model';
 import { OliveVoidPurchaseOrderService } from '../../../services/void-purchase-order.service';
-import { applyPrecision } from 'app/core/utils/number-helper';
+import { applyPrecision, isSameNumber } from 'app/core/utils/number-helper';
 import { OliveConstants } from 'app/core/classes/constants';
 import { OlivePurchaseOrderHelperService } from 'app/main/purchasings/services/purchase-order-helper.service';
 
@@ -287,7 +287,7 @@ export class OliveVoidPurchaseOrderManagerComponent extends OliveEntityEditCompo
   }
 
   popUpConfirmSaveDialog() {
-    if (this.totalPaymentAmount === this.totalItemsAmount) {
+    if (isSameNumber(this.totalPaymentAmount, this.totalItemsAmount)) {
       this.saveConfirmMessage = this.translator.get('purchasing.voidPurchaseOrderManager.saveConfirmMessage');
     }
     // 금액이 맞지 않는 오류가 있을 경우

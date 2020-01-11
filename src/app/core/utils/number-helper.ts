@@ -1,5 +1,17 @@
 import { DecimalPipe } from '@angular/common';
 
+
+/**
+ * Determines whether same number is
+ * 이런 현상 막음 1430.3400000000001 1430.34
+ * @param number1 
+ * @param number2 
+ * @returns true if same number 
+ */
+export function isSameNumber(number1: number, number2: number): boolean {
+    return applyPrecision(number1, 2) === applyPrecision(number2, 2);
+}
+
 /**
  * 반올림 숫자 반환
  * @param num 입력 숫자
