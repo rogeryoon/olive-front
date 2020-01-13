@@ -161,4 +161,18 @@ export class OliveMessageHelperService {
       MessageSeverity.warn
     );
   }
+
+  /**
+   * Gets product not matched error message
+   * @param errorMessages 
+   * @returns product not matched error message 
+   */
+  getProductNotMatchedErrorMessage(errorMessages: string[]): string {
+    if (errorMessages.length !== 4) {
+      console.error('server validation error', errorMessages);
+      return;
+    }
+
+    return String.Format(this.translator.get('common.entryError.productNotMatched'), errorMessages[1], errorMessages[2], errorMessages[3]);
+  }
 }

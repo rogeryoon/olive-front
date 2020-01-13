@@ -140,11 +140,12 @@ export class OlivePurchaseOrderHelperService {
     if (error.error && error.error.errorCode === OliveBackEndErrors.ServerValidationError) {
       let errorMessage = this.translator.get('common.validate.serverValidationGeneralMessage');
 
-      const values = error.error.errorMessage.split(',');
-      if (values[0] === OliveBackEndErrorMessages.NotRangeQuantity) {
-        const inWarehouseItemId = Number(values[1]);
-        const minQuantity = Number(values[2]);
-        const maxQuantity = Number(values[3]);
+      const errors = error.error.errorMessage.split(OliveConstants.constant.serverValidationDelimiter) as string[];
+      const serverErrorType = errors[0];
+      if (serverErrorType === OliveBackEndErrorMessages.NotRangeQuantity) {
+        const inWarehouseItemId = Number(errors[1]);
+        const minQuantity = Number(errors[2]);
+        const maxQuantity = Number(errors[3]);
 
         const foundItem = items.find(x => x.id === inWarehouseItemId); 
         const itemName = foundItem ? foundItem.productName : this.translator.get('common.word.deletedRow');

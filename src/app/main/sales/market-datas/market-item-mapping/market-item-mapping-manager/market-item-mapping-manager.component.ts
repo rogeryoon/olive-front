@@ -13,6 +13,8 @@ import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edi
 import { MarketItemMapping } from '../../../models/market-item-mapping.model';
 import { OliveMarketItemMappingExcelColumnsEditorComponent } from '../market-item-mapping-excel-columns-editor/market-item-mapping-excel-columns-editor.component';
 import { OliveMarketItemMappingProductVariantsEditorComponent } from '../market-item-mapping-product-variants-editor/market-item-mapping-product-variants-editor.component';
+import { OliveBackEndErrors, OliveBackEndErrorMessages } from 'app/core/classes/back-end-errors';
+import { OliveConstants } from 'app/core/classes/constants';
 
 @Component({
   selector: 'olive-market-item-mapping-manager',
@@ -70,5 +72,28 @@ export class OliveMarketItemMappingManagerComponent extends OliveEntityEditCompo
         products: this.item.products
       });
     }
+  }
+
+  onSaveFail(error: any) {
+    this.alertService.stopLoadingMessage();
+
+    // 서버쪽 Validation Error 검출시
+    // 이경우 User에게 알리고 다시 재입력하게 한다.
+    if (error.error && error.error.errorCode === OliveBackEndErrors.ServerValidationError) {
+      let errorMessage = this.translator.get('common.validate.serverValidationGeneralMessage');
+
+      const errors = error.error.errorMessage.split(OliveConstants.constant.serverValidationDelimiter) as string[];
+      const serverErrorType = errors[0];
+      if (serverErrorType === OliveBackEndErrorMessages.NotMatchItem) {
+        errorMessage = this.messageHelper.getProductNotMatchedErrorMessage(errors);
+      }
+
+      this.alertService.showMessageBox(this.translator.get('common.title.saveError'), errorMessage);
+    }
+    else {
+      this.messageHelper.showStickySaveFailed(error, false);
+    }
+
+    this.isSaving = false;
   }
 }

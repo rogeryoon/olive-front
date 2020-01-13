@@ -18,6 +18,7 @@ import { OlivePurchaseOrderItemsEditorComponent } from '../purchase-order-items-
 import { OliveBackEndErrors, OliveBackEndErrorMessages } from 'app/core/classes/back-end-errors';
 import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
 import { isSameNumber } from 'app/core/utils/number-helper';
+import { OliveConstants } from 'app/core/classes/constants';
 
 @Component({
   selector: 'olive-purchase-order-manager',
@@ -162,10 +163,11 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
     if (error.error && error.error.errorCode === OliveBackEndErrors.ServerValidationError) {
       let errorMessage = this.translator.get('common.validate.serverValidationGeneralMessage');
 
-      const values = error.error.errorMessage.split(',');
-      if (values[0] === OliveBackEndErrorMessages.NotMinimumQuantity) {
-        const purchaseOrderItemId = Number(values[1]);
-        const minQuantity = Number(values[2]);
+      const errors = error.error.errorMessage.split(OliveConstants.constant.serverValidationDelimiter) as string[];
+      const serverErrorType = errors[0];
+      if (serverErrorType === OliveBackEndErrorMessages.NotMinimumQuantity) {
+        const purchaseOrderItemId = Number(errors[1]);
+        const minQuantity = Number(errors[2]);
 
         const items = this.purchaseOrderItems.getEditedItem().items as PurchaseOrderItem[];
         
@@ -174,6 +176,9 @@ export class OlivePurchaseOrderManagerComponent extends OliveEntityEditComponent
         const itemName = foundItem ? foundItem.productName : this.translator.get('common.word.deletedRow');
 
         errorMessage = String.Format(this.translator.get('purchasing.purchaseOrder.notMinimumQuantity'), minQuantity, itemName); 
+      }
+      else if (serverErrorType === OliveBackEndErrorMessages.NotMatchItem) {
+        errorMessage = this.messageHelper.getProductNotMatchedErrorMessage(errors);
       }
 
       this.alertService.showMessageBox(this.translator.get('common.title.saveError'), errorMessage);

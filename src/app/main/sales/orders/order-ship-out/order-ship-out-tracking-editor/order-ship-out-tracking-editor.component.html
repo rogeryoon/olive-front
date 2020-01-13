@@ -19,7 +19,7 @@
         </mat-form-field>        
 
         <div fxFlex="{{hasOldTrackingNumber ? 25 : 33}}" class="pb-16">
-            <button mat-raised-button (click)="buttonIssueTrackingNumber()" [disableControl]="readonly || issued"><mat-icon>autorenew</mat-icon> {{(hasTrackingNumber ? 'common.button.reIssueTrackingNumber' : 'common.button.issueTrackingNumber') | translate}}</button>
+            <button mat-raised-button (click)="buttonIssueTrackingNumber()" [disabled]="readonly || issued"><mat-icon>autorenew</mat-icon> {{(hasTrackingNumber ? 'common.button.reIssueTrackingNumber' : 'common.button.issueTrackingNumber') | translate}}</button>
         </div>
 
         <mat-form-field appearance="outline" *ngIf="hasOldTrackingNumber" fxFlex="25">

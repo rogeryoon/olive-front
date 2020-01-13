@@ -19,7 +19,7 @@ import { OliveDeliveryTagEditorComponent } from 'app/core/components/entries/del
 import { OliveOrderShipOutDetailsEditorComponent } from './order-ship-out-details-editor/order-ship-out-details-editor.component';
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveOrderShipOutTrackingEditorComponent } from '../order-ship-out-tracking-editor/order-ship-out-tracking-editor.component';
-import { OliveBackEndErrors } from 'app/core/classes/back-end-errors';
+import { OliveBackEndErrors, OliveBackEndErrorMessages } from 'app/core/classes/back-end-errors';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OliveOnEdit } from 'app/core/interfaces/on-edit';
 import { OliveOrderShipOutSplitterManagerComponent } from './order-ship-out-splitter-manager/order-ship-out-splitter-manager.component';
@@ -231,9 +231,17 @@ export class OliveOrderShipOutManagerComponent extends OliveEntityEditComponent 
     // 저장시 백앤드에서 다른 송장번호 범위와 중첩되는지 검사 오류 반환
     // 이경우 User에게 알리고 다시 재입력하게 한다.
     if (error.error && error.error.errorCode === OliveBackEndErrors.ServerValidationError) {
+      const errors = error.error.errorMessage.split(OliveConstants.constant.serverValidationDelimiter) as string[];
+      const serverErrorType = errors[0];
+      let errorMessage = this.translator.get('common.validate.trackingNumberInvalid');
+
+      if (serverErrorType === OliveBackEndErrorMessages.NotMatchItem) {
+        errorMessage = this.messageHelper.getProductNotMatchedErrorMessage(errors);
+      }
+
       this.alertService.showMessageBox(
         this.translator.get('common.title.saveError'),
-        this.translator.get('common.validate.trackingNumberInvalid')
+        errorMessage
       );
     }
     else {

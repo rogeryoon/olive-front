@@ -25,6 +25,10 @@ export class OliveAppDialogComponent {
     return this.data.title;
   }
 
+  get htmlMessage() {
+    return this.data.message.replace(/\n/g, '<br/>');
+  }
+
   get message() {
     return this.data.message;
   }
