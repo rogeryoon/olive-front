@@ -334,7 +334,8 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
       {
         disableClose: true,
         panelClass: 'mat-dialog-md',
-        data: setting
+        data: setting,
+        autoFocus: false
       });
 
     dialogRef.afterClosed().subscribe(item => {

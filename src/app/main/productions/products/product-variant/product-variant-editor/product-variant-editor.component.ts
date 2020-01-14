@@ -99,7 +99,7 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
 
   resetForm() {
     this.getVariantCount();
-
+    
     this.oForm.reset({
       code: this.item.code || '',
       name: this.item.name || '',
@@ -140,7 +140,7 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
       const control = this.getControl('customsTypeCode');
       control.clearValidators();
       control.setValidators([customsTypeCodeValidator(configs, false)]);
-    });    
+    });
   }
 
   getVariantCount() {
