@@ -36,6 +36,8 @@ export class LookupListerSetting implements IListerSetting {
     // For New Item Support - Start
     newComponent?: any;
 
+    lookUpDialogComponent?: any;
+
     managePermission?: PermissionValues;
 
     translateTitleId?: string;

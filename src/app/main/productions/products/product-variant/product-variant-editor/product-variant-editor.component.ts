@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, AbstractControl } from '@angular/forms';
+import { FormBuilder, AbstractControl, Validators } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { AccountService } from '@quick/services/account.service';
@@ -20,6 +20,7 @@ import { volumeValidator } from 'app/core/validators/shipping-validators';
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { customsTypeErrorMessageByControl } from 'app/core/utils/customs-helpers';
 import { customsTypeCodeValidator } from 'app/core/validators/customs-validators';
+import { OliveProductLookupDialogComponent } from '../../product/product-lookup-dialog/product-lookup-dialog.component';
 
 @Component({
   selector: 'olive-product-variant-editor',
@@ -80,7 +81,7 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
   buildForm() {
     this.oForm = this.formBuilder.group({
       code: '',
-      name: '',
+      name: ['', requiredValidator()],
       activated: false,
       memo: '',
       standPrice: ['', [numberValidator(this.standCurrency.decimalPoint, false)]],
@@ -173,6 +174,7 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
       dataService: this.productService,
       maxSelectItems: 1,
       newComponent: OliveProductManagerComponent,
+      lookUpDialogComponent: OliveProductLookupDialogComponent,
       itemType: Product,
       managePermission: Permission.manageProductsPermission,
       translateTitleId: NavTranslates.Product.productGroup

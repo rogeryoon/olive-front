@@ -40,6 +40,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
   @Input() classMode = '';
   @Input() required = true;
   @Input() cacheKey: string;
+  @Input() hideInput = false;
 
   @Output() changed = new EventEmitter();
   @Output() selected = new EventEmitter();
@@ -152,8 +153,8 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
    * @returns  
    */
   popUpLookUpDialog() {
-    if (!this.readOnly) { return; }
-
+    if (this.readOnly) { return; }
+    
     this.savedSearchedItems = _.cloneDeep(this.searchedItems);
     this.searchedItems = null;
 
@@ -161,6 +162,8 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
     setting.currentItem = this.value;
 
     const dialogRef = this.dialog.open(
+      this.setting.lookUpDialogComponent ? 
+      this.setting.lookUpDialogComponent : 
       OliveLookupDialogComponent,
       {
         disableClose: true,

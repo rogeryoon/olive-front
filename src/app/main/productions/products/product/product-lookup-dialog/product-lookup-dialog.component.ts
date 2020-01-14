@@ -10,8 +10,8 @@ import { OliveLookupDialogComponent } from 'app/core/components/dialogs/lookup-d
 
 import { OliveMessageHelperService } from 'app/core/services/message-helper.service';
 import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-setting';
-import { ProductVariant } from '../../../models/product-variant.model';
 import { IIDName } from 'app/core/models/id-name';
+import { Product } from 'app/main/productions/models/product.model';
 
 const Id = 'id';
 const Name = 'name';
@@ -21,12 +21,12 @@ const Name = 'name';
   templateUrl: '../../../../../core/components/dialogs/lookup-dialog/lookup-dialog.component.html',
   styleUrls: ['../../../../../core/components/dialogs/lookup-dialog/lookup-dialog.component.scss']
 })
-export class OliveProductVariantLookupDialogComponent extends OliveLookupDialogComponent {
+export class OliveProductLookupDialogComponent extends OliveLookupDialogComponent {
 
   constructor(
     dialog: MatDialog, formBuilder: FormBuilder,
     alertService: AlertService, messageHelper: OliveMessageHelperService,
-    dialogRef: MatDialogRef<OliveProductVariantLookupDialogComponent>,
+    dialogRef: MatDialogRef<OliveProductLookupDialogComponent>,
     @Inject(MAT_DIALOG_DATA) setting: LookupListerSetting,
     translator: FuseTranslationLoaderService
   ) { 
@@ -38,7 +38,7 @@ export class OliveProductVariantLookupDialogComponent extends OliveLookupDialogC
     );
   }
 
-  renderItem(item: ProductVariant, columnName: string): string {
+  renderItem(item: Product, columnName: string): string {
     if (this.setting.renderCallback) {
       return this.setting.renderCallback(item, columnName);
     }
@@ -46,7 +46,7 @@ export class OliveProductVariantLookupDialogComponent extends OliveLookupDialogC
       let retValue = '';
       switch (columnName) {
         case Id:
-          retValue = this.id26(item.id);
+          retValue = this.id36(item.id);
           break;
 
         case Name:
@@ -57,11 +57,11 @@ export class OliveProductVariantLookupDialogComponent extends OliveLookupDialogC
     }
   }
 
-  getItemName(item: ProductVariant) {
-    return `${item.productFk.name} ${item.name}`.trim();
+  getItemName(item: Product) {
+    return item.name === '' && item.variants.length === 1 ? item.variants[0].name : item.name;
   }
 
-  createChip(item: ProductVariant) {
+  createChip(item: Product) {
     return {id: item.id, name: this.getItemName(item) } as IIDName;
   }
 }

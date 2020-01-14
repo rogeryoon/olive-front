@@ -3,14 +3,15 @@
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
         <div fxFlex="{{groupWidth}}">
             <olive-lookup-host #product formControlName="productFk" [placeholder]="'common.word.productGroup' | translate" 
-                [readOnly]="!canAssignItem" [required]="false"></olive-lookup-host>
+                [required]="false" [hideInput]="variantCount==1"></olive-lookup-host>
         </div>
 
         <mat-form-field appearance="outline" fxFlex="{{itemWidth}}">
             <mat-label>
                 {{(this.haveMultiVariants ? 'common.word.productVariantName' : 'common.word.generalProductVariantName') | translate}}
             </mat-label>
-            <input matInput name="name" formControlName="name" maxlength="200">
+            <input matInput name="name" formControlName="name" maxlength="200" required>
+            <mat-error *ngIf="hasEntryError('name')">{{errorMessage('name')}}</mat-error>
             <mat-hint align="end">{{getControl('name').value?.length || 0}}/200</mat-hint>
         </mat-form-field>
     </div>
