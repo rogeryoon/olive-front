@@ -358,7 +358,7 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
    * Saves selected items
    * @param item 
    */
-  private saveSelectedItems(item: any) {
+  saveSelectedItems(item: any) {
     if (item.selected) {
       const notExists = this.selectedItems.every(function (checkItem: any) {
         return checkItem.id !== item.id;

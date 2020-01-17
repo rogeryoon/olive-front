@@ -1,9 +1,9 @@
 ﻿<form [formGroup]="oForm" novalidate fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto" autocomplete="off">
 
     <div fxLayout="row" fxLayoutAlign="start center" fxFlex="1 0 auto" fxLayoutGap="8px">
-        <div fxFlex="{{groupWidth}}">
+        <div *ngIf="haveMultiVariants" fxFlex="{{groupWidth}}">
             <olive-lookup-host #product formControlName="productFk" [placeholder]="'common.word.productGroup' | translate" 
-                [required]="false" [hideInput]="variantCount==1"></olive-lookup-host>
+              [required]="false" [readOnly]="true"></olive-lookup-host>
         </div>
 
         <mat-form-field appearance="outline" fxFlex="{{itemWidth}}">

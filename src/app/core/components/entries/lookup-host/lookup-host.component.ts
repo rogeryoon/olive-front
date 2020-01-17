@@ -40,7 +40,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
   @Input() classMode = '';
   @Input() required = true;
   @Input() cacheKey: string;
-  @Input() hideInput = false;
+  @Input() disableInput = false;
 
   @Output() changed = new EventEmitter();
   @Output() selected = new EventEmitter();
@@ -72,7 +72,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
       this.cacheService.getUserPreference(this.companyGroupIdCacheKey)
         .then(obj => {
           if (obj) {
-            this.lookupName.setValue(obj.name);
+            this.setName(obj.name);
           }
         });
     }
@@ -108,6 +108,10 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
     return OliveCacheService.cacheKeys.userPreference.lookupHost + this.cacheKey + this.queryParams.CompanyGroupId;
   }
 
+  setName(value: string) {
+    this.lookupName.setValue(value);
+  }
+
   /**
    * Binds auto complete event
    */
@@ -134,7 +138,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
    * Clears olive lookup host component
    */
   clear() {
-    this.lookupName.setValue('');
+    this.setName('');
     this.searchedItems = null;
     this.value = null;
   }
@@ -206,7 +210,7 @@ export class OliveLookupHostComponent implements ControlValueAccessor, OnInit, V
 
     if (obj) {
       this.searchedItems = [obj];
-      this.lookupName.setValue(obj.name);
+      this.setName(obj.name);
     }
 
     this.changed.emit(obj);

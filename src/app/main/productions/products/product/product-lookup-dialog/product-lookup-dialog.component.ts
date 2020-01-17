@@ -57,11 +57,22 @@ export class OliveProductLookupDialogComponent extends OliveLookupDialogComponen
     }
   }
 
+  isEmptyProductName(item: Product): boolean {
+    return item.name === '' && item.variants.length === 1;
+  }
+
   getItemName(item: Product) {
-    return item.name === '' && item.variants.length === 1 ? item.variants[0].name : item.name;
+    return this.isEmptyProductName(item) ? item.variants[0].name : item.name;
   }
 
   createChip(item: Product) {
     return {id: item.id, name: this.getItemName(item) } as IIDName;
+  }
+
+  saveSelectedItems(item: Product) {
+    if (this.isEmptyProductName(item)) {
+      item.name = item.variants[0].name;
+    }
+    super.saveSelectedItems(item);
   }
 }

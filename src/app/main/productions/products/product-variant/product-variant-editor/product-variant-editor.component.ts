@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, AbstractControl, Validators } from '@angular/forms';
+import { FormBuilder, AbstractControl } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { AccountService } from '@quick/services/account.service';
@@ -54,7 +54,7 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
   }
 
   get itemWidth(): number {
-    return this.haveMultiVariants ? 30 : 70;
+    return this.haveMultiVariants ? 30 : 100;
   }
 
   getEditedItem(): any {
@@ -100,35 +100,43 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
 
   resetForm() {
     this.getVariantCount();
+
+    const item = this.item as ProductVariant;
     
     this.oForm.reset({
-      code: this.item.code || '',
-      name: this.item.name || '',
-      activated: this.boolValue(this.item.activated),
-      memo: this.item.memo || '',
-      standPrice: this.item.standPrice || '',
-      weight: this.item.weight || '',
-      weightTypeCode: this.item.weightTypeCode || '',
-      volume: this.item.volume || '',
-      volumeWeight: this.item.volume || '',
-      lengthTypeCode: this.item.lengthTypeCode || '',
-      customsName:  this.item.customsName || '',
-      customsPrice: this.item.customsPrice || '',
-      customsTypeCode: this.item.productFk ? this.item.productFk.customsTypeCode || '' : '',
-      hsCode: this.item.productFk ? this.item.productFk.hsCode || '' : '',      
-      productFk: this.item.productFk || ''
+      code: item.code || '',
+      name: item.name || '',
+      activated: this.boolValue(item.activated),
+      memo: item.memo || '',
+      standPrice: item.standPrice || '',
+      weight: item.weight || '',
+      weightTypeCode: item.weightTypeCode || '',
+      volume: item.volume || '',
+      volumeWeight: item.volume || '',
+      lengthTypeCode: item.lengthTypeCode || '',
+      customsName:  item.customsName || '',
+      customsPrice: item.customsPrice || '',
+      customsTypeCode: item.productFk ? item.productFk.customsTypeCode || '' : '',
+      hsCode: item.productFk ? item.productFk.hsCode || '' : '',      
+      productFk: item.productFk || ''
     });
 
+    if (this.lookupProduct && item.productFk && item.productFk.name.length === 0) {
+      setTimeout(() => {
+        this.lookupProduct.setName(item.name);
+      });      
+    }
+    
     // 무게 또는 길이 규격이 없는게 있다면 회사 기본 값을 설정
-    if (!this.item.weightTypeCode || !this.item.lengthTypeCode) {
+    if (!item.weightTypeCode || !item.lengthTypeCode) {
       this.cacheService.GetCompanyGroupSetting()
         .then(setting => {
-          if (!this.item.weightTypeCode) {
+          if (!item.weightTypeCode) {
             this.oForm.patchValue({
               weightTypeCode: setting.productWeightTypeCode
             });
           }
-          if (!this.item.lengthTypeCode) {
+          if (!item.lengthTypeCode) {
             this.oForm.patchValue({
               lengthTypeCode: setting.productLengthTypeCode
             });
@@ -168,21 +176,25 @@ export class OliveProductVariantEditorComponent extends OliveEntityFormComponent
   initializeChildComponent() {
     this.standCurrency = this.cacheService.standCurrency;
 
-    this.lookupProduct.setting = {
-      columnType: 'id',
-      itemTitle: this.translator.get(NavTranslates.Product.productGroup),
-      dataService: this.productService,
-      maxSelectItems: 1,
-      newComponent: OliveProductManagerComponent,
-      lookUpDialogComponent: OliveProductLookupDialogComponent,
-      itemType: Product,
-      managePermission: Permission.manageProductsPermission,
-      translateTitleId: NavTranslates.Product.productGroup
-    };
+    if (this.lookupProduct) {
+      this.lookupProduct.setting = {
+        columnType: 'id',
+        itemTitle: this.translator.get(NavTranslates.Product.productGroup),
+        dataService: this.productService,
+        maxSelectItems: 1,
+        newComponent: OliveProductManagerComponent,
+        lookUpDialogComponent: OliveProductLookupDialogComponent,
+        itemType: Product,
+        managePermission: Permission.manageProductsPermission,
+        translateTitleId: NavTranslates.Product.productGroup
+      };
+    }
   }
 
   markCustomControlsTouched() {
-    this.lookupProduct.markAsTouched();
+    if (this.lookupProduct) {
+      this.lookupProduct.markAsTouched();
+    }
   }
 
   /**
