@@ -1,8 +1,22 @@
 ﻿<form #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()" class="w-100-p" fxLayout="column"
     fxFlex>
 
-    <olive-checkbox-selector-panel class="mt-20" [titleId]="'common.title.selectWarehouses'" (idSelected)="warehouseSelected($event)">
-    </olive-checkbox-selector-panel>
+    <div class="mat-card mat-elevation-z4 p-24" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
+        <div class="mb-16">
+            <h2 class="title">{{'' | translate}}
+                <button [disabled]="false" mat-raised-button (click)="onCheckboxesSelected()"
+                    class="ml-4" color="accent">
+                    <mat-icon>assignment_turned_in</mat-icon> {{'sales.orderShipOutPackageListerManager.loadShipOutDataButton' | translate}}
+                </button>
+            </h2>
+        </div>
+
+        <olive-checkbox-selector-panel #warehouseCheckboxes [titleId]="'common.title.selectWarehouses'" [visibleLoadButton]="false" (idSelected)="warehouseSelected($event)">
+        </olive-checkbox-selector-panel>
+
+        <olive-checkbox-selector-panel #marketSellerCheckboxes class="mt-20" [titleId]="'common.title.selectSellers'" [visibleLoadButton]="false" (idSelected)="warehouseSelected($event)">
+        </olive-checkbox-selector-panel>        
+    </div>
 
     <mat-tab-group (selectedTabChange)="onTabClick($event)">
         <mat-tab *ngFor="let warehouse of warehouses; let index = index">

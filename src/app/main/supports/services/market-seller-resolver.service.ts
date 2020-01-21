@@ -1,24 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { OliveWarehouseService } from 'app/main/supports/services/warehouse.service';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
 import { addActivatedCacheKey } from 'app/core/utils/olive-helpers';
+import { OliveMarketSellerService } from './market-seller.service';
+import { OliveWarehouseService } from './warehouse.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OliveInventoryResolverService implements Resolve<any> {
+export class OliveMarketSellerResolverService implements Resolve<any> {
 
   constructor(
-    private warehouseService: OliveWarehouseService,
+    private marketSellerService: OliveMarketSellerService,
     private cacheService: OliveCacheService
   ) {
   }
 
   resolve() {
     return this.cacheService.getItems(
-        this.warehouseService,
-        addActivatedCacheKey(OliveCacheService.cacheKeys.getItemsKey.warehouse), createDefaultSearchOption());
+        this.marketSellerService,
+        addActivatedCacheKey(OliveCacheService.cacheKeys.getItemsKey.marketSeller), createDefaultSearchOption());
   }
 }

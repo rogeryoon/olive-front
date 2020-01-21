@@ -13,7 +13,8 @@ import { OliveSearchOrderShipOutComponent } from './order-ship-out/search-order-
 import { OliveProductVariantLookupDialogModule } from 'app/main/productions/products/product-variant/product-variant-lookup-dialog/product-variant-lookup-dialog.module';
 import { OliveOrderShipOutPackageListerPageComponent } from './order-ship-out-package-lister/order-ship-out-package-lister-page/order-ship-out-package-lister-page.component';
 import { OliveOrderShipOutPackageListerModule } from './order-ship-out-package-lister/order-ship-out-package-lister-manager/order-ship-out-package-lister-manager.module';
-import { OliveOrderShipOutPackageListerPageResolver } from '../services/order-ship-out-package-lister-page-resolver';
+import { OliveWarehouseResolverService } from 'app/main/supports/services/warehouse-resolver.service';
+import { OliveMarketSellerResolverService } from 'app/main/supports/services/market-seller-resolver.service';
 
 const routes = [
   {
@@ -25,7 +26,10 @@ const routes = [
     path: 'ship-out-package-lister',
     component: OliveOrderShipOutPackageListerPageComponent,
     canActivate: [AuthGuard],
-    resolve: { warehouses: OliveOrderShipOutPackageListerPageResolver }  
+    resolve: { 
+      warehouses: OliveWarehouseResolverService, 
+      marketSellers: OliveMarketSellerResolverService 
+    }  
   }, 
 ];
 

@@ -1,11 +1,10 @@
 ﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormArray } from '@angular/forms';
 
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { OliveEntityFormComponent } from 'app/core/components/extends/entity-form/entity-form.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
-import { OliveQueryParameterService } from 'app/core/services/query-parameter.service';
 
 @Component({
   selector: 'olive-checkbox-selector-panel',
@@ -32,6 +31,9 @@ export class OliveCheckboxSelectorPanelComponent extends OliveEntityFormComponen
 
   @Input()
   cacheKey: string;
+
+  @Input()
+  visibleLoadButton = true;
 
   @Output() idSelected = new EventEmitter<any[]>();
 

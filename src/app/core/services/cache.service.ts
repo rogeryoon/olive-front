@@ -53,6 +53,7 @@ export class OliveCacheService {
     static userPreferenceCacheKey = 'userPreference-';
     static userPreference = class {
       static warehouseCheckboxes = 'warehouseCheckboxes-';
+      static markerSellerCheckboxes = 'markerSellerCheckboxes-';
       static lookupHost = 'lookupHost-';
       static dropDownBox = 'dropDownBox-';
       static lastSelectedPaymentMethodId = 'lastSelectedPaymentMethodId';
@@ -668,6 +669,13 @@ export class OliveCacheService {
    */
   get keyWarehouseCheckboxes(): string {
     return OliveCacheService.cacheKeys.userPreference.warehouseCheckboxes + this.queryParams.CompanyGroupId;
+  }
+
+  /**
+   * Gets key market seller checkboxes
+   */
+  get keyMarketSellerCheckboxes(): string {
+    return OliveCacheService.cacheKeys.userPreference.markerSellerCheckboxes + this.queryParams.CompanyGroupId;
   }
 
   /**

@@ -14,6 +14,7 @@ import { AlertService } from '@quick/services/alert.service';
 import { OliveOrderShipOutPackageListerManagerComponent } from '../order-ship-out-package-lister-manager/order-ship-out-package-lister-manager.component';
 import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { OrderShipOut } from 'app/main/sales/models/order-ship-out.model';
+import { MarketSeller } from 'app/main/supports/models/market-seller.model';
 
 @Component({
   selector: 'olive-order-ship-out-package-lister-page',
@@ -23,6 +24,7 @@ import { OrderShipOut } from 'app/main/sales/models/order-ship-out.model';
 })
 export class OliveOrderShipOutPackageListerPageComponent extends OliveEditPageComponent {
   warehouses: Warehouse[] = [];
+  marketSellers: MarketSeller[] = [];
     
   constructor(
     private route: ActivatedRoute, componentFactoryResolver: ComponentFactoryResolver,
@@ -37,6 +39,7 @@ export class OliveOrderShipOutPackageListerPageComponent extends OliveEditPageCo
 
   initializeChildComponent() {
     this.warehouses = this.route.snapshot.data.warehouses;
+    this.marketSellers = this.route.snapshot.data.marketSellers;
 
     this.setting = {
       component: OliveOrderShipOutPackageListerManagerComponent,
@@ -49,6 +52,6 @@ export class OliveOrderShipOutPackageListerPageComponent extends OliveEditPageCo
       noHeader: true
     };
 
-    this.setting.item = this.warehouses;
+    this.setting.item = {warehouses: this.warehouses, marketSellers: this.marketSellers} ;
   }
 }

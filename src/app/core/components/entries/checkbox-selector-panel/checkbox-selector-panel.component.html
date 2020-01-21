@@ -1,6 +1,6 @@
 ﻿<form *ngIf="visible" [formGroup]="oForm" novalidate class="w-100-p" fxLayout="column" fxFlex autocomplete="off">
-    <div class="mat-card mat-elevation-z4 p-24 mr-24" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
-        <div class="mb-12">
+    <div class="mat-card mat-elevation-z4 p-24" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
+        <div class="mb-12" *ngIf="visibleLoadButton">
             <h2 class="title">{{titleId|translate}}
                 <button [disabled]="!selectedAnyCheckbox || loadingIndicator" mat-raised-button (click)="load()"
                     class="ml-4" color="accent">
@@ -9,16 +9,24 @@
             </h2>
         </div>
 
-        <div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="8px grid" fxLayout.gt-md="row">
-            <label>
-                <input type="checkbox" class="margin" formControlName="selectAll" [disableControl]="loadingIndicator">
-                {{'common.title.selectDeselectAll'|translate}}
-            </label>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px grid">
+            <div fxLayout="column" class="left-menu" *ngIf="!visibleLoadButton">
+                <h2 class="title">{{titleId|translate}}</h2>
 
-            <label formArrayName="formArray" *ngFor="let item of oFArray.controls; let i = index">
-                <input type="checkbox" class="margin" [formControlName]="i" [disableControl]="loadingIndicator">
-                {{items[i].name}}
-            </label>
+                <div>
+                    <label>
+                        <input type="checkbox" class="margin" formControlName="selectAll" [disableControl]="loadingIndicator">
+                        {{'common.title.selectDeselectAll'|translate}}
+                    </label>
+                </div>
+            </div>
+
+            <div fxLayout="row wrap">
+                <label formArrayName="formArray" *ngFor="let item of oFArray.controls; let i = index">
+                    <input type="checkbox" class="margin" [formControlName]="i" id="{{i}}" [disableControl]="loadingIndicator">
+                    {{items[i].name}}
+                </label>
+            </div>
         </div>
     </div>
     <mat-progress-bar *ngIf="loadingIndicator" mode="query"></mat-progress-bar>

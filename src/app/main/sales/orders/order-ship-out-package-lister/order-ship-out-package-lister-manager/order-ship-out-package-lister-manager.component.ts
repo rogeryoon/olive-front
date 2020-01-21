@@ -12,7 +12,6 @@ import { OliveEntityEditComponent } from 'app/core/components/extends/entity-edi
 import { OliveInWarehouseService } from 'app/main/purchasings/services/in-warehouse.service';
 import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { OliveCheckboxSelectorPanelComponent } from 'app/core/components/entries/checkbox-selector-panel/checkbox-selector-panel.component';
-import { NameValue } from 'app/core/models/name-value';
 import { OliveOrderShipOutService } from 'app/main/sales/services/order-ship-out.service';
 import { OrderShipOut } from 'app/main/sales/models/order-ship-out.model';
 import { OliveOrderShipOutPackageListerComponent } from '../order-ship-out-package-lister/order-ship-out-package-lister.component';
@@ -86,8 +85,11 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   countries = new Map<number, Country>();
   carrierTrackingNumbersGroups: CarrierTrackingNumbersGroup[] = [];
 
-  @ViewChild(OliveCheckboxSelectorPanelComponent)
+  @ViewChild('warehouseCheckboxes')
   private warehouseSelector: OliveCheckboxSelectorPanelComponent;
+
+  @ViewChild('marketSellerCheckboxes')
+  private markerSellerSelector: OliveCheckboxSelectorPanelComponent;  
 
   @ViewChildren(OliveOrderShipOutPackageListerComponent) orderPackageListers: QueryList<OliveOrderShipOutPackageListerComponent>;
 
@@ -118,12 +120,18 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   buildForm() {
-    this.warehouseSelector.setItems(this.item);
+    this.warehouseSelector.setItems(this.item.warehouses);
+    this.markerSellerSelector.setItems(this.item.marketSellers);
     this.oForm = this.formBuilder.group({});
   }
 
   resetForm() {
     this.warehouseSelector.cacheKey = this.cacheService.keyWarehouseCheckboxes;
+    this.markerSellerSelector.cacheKey = this.cacheService.keyMarketSellerCheckboxes;
+  }
+
+  onCheckboxesSelected() {
+
   }
 
   warehouseSelected(warehouses: any[]) {

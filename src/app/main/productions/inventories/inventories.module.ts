@@ -12,7 +12,7 @@ import { OliveInventoryBalancesComponent } from './inventory-balances/inventory-
 import { OliveInventoryWarehousesComponent } from './inventory-warehouses/inventory-warehouses.component';
 import { OliveInventoryHistoriesComponent } from './inventory-histories/inventory-histories.component';
 import { OliveInventoryBalanceSaveComponent } from './inventory-balance-save/inventory-balance-save.component';
-import { OliveInventoryResolverService } from '../services/inventory-resolver.service';
+import { OliveWarehouseResolverService } from 'app/main/supports/services/warehouse-resolver.service';
 
 const routes = [
   {
@@ -29,7 +29,7 @@ const routes = [
     path     : 'warehouse',
     component: OliveInventoryWarehousesComponent,
     canActivate: [AuthGuard],
-    resolve: { warehouses: OliveInventoryResolverService }    
+    resolve: { warehouses: OliveWarehouseResolverService }    
   },
   {
     path     : 'history-old',

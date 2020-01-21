@@ -159,6 +159,7 @@ export const locale = {
                 'finalConfirm' : '최종확인',
                 'selectWarehouses': '창고 선택',
                 'selectDeselectAll': '모두 선택/해제', // Select/Deselect All
+                'selectSellers': '판매자 선택',
                 'select': '선택',
                 'pendingShipOut' : '대기',
                 'shipOut' : '출고',
@@ -640,6 +641,9 @@ export const locale = {
             'orderShipOutSplitterManager' : {
                 'saveConfirmMessage' : '정말 주문 분할/복사를 저장하시겠습니까?',
                 'saveUnmatchedConfirmQuantityMessage' : '원래 등록된 상품 갯수와 저장하려는 상품 총갯수가 일치 하지 않습니다. 그래도 주문 분할/복사를 진행할까요?'
+            },
+            'orderShipOutPackageListerManager' : {
+                'loadShipOutDataButton' : '출고 데이터 로드'
             }
         },
         'purchasing' : {

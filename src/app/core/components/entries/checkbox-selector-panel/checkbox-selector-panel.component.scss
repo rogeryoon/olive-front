@@ -1,8 +1,9 @@
-﻿.section {
-    display: flex;
-    align-content: center;
-    align-items: center;
-    height: 60px;
+﻿div.left-menu {
+    width: 180px;
+}
+
+label {
+    margin-right: 5px;
 }
 
 .margin {
@@ -11,4 +12,5 @@
 
 .title {
     margin: 10px;
+    font-weight: bold;
 }
