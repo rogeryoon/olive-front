@@ -130,6 +130,11 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     this.markerSellerSelector.cacheKey = this.cacheService.keyMarketSellerCheckboxes;
   }
 
+  get canLoadShipOutData(): boolean {
+    return this.warehouseSelector.selectedItems.length > 0 && 
+      this.markerSellerSelector.selectedItems.length > 0;
+  }
+
   onCheckboxesSelected() {
 
   }

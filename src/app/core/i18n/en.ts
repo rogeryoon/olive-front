@@ -643,7 +643,8 @@ export const locale = {
                 'saveUnmatchedConfirmQuantityMessage' : '원래 등록된 상품 갯수와 저장하려는 상품 총갯수가 일치 하지 않습니다. 그래도 주문 분할/복사를 진행할까요?'
             },
             'orderShipOutPackageListerManager' : {
-                'loadShipOutDataButton' : '출고 데이터 로드'
+                'loadShipOutDataButton' : '출고 데이터 로드',
+                'selectWarehouseAndMarketSeller' : '창고와 판매자를 선택하면 출고 데이터를 로드할 수 있습니다.'
             }
         },
         'purchasing' : {

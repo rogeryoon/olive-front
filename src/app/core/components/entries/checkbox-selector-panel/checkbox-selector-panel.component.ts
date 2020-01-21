@@ -14,8 +14,6 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 export class OliveCheckboxSelectorPanelComponent extends OliveEntityFormComponent {
   items: any[] = [];
 
-  selectedIds: number[];
-
   selectedAnyCheckbox = false;
 
   loadingIndicator = false;
@@ -47,6 +45,22 @@ export class OliveCheckboxSelectorPanelComponent extends OliveEntityFormComponen
     super(
       formBuilder, translator
     );
+  }
+
+  get selectedItems(): any[] {
+    if (!this.oForm) { return []; }
+
+    return this.oForm.value.formArray
+    .map((checked, index) => checked ? this.items[index] : null)
+    .filter(value => value !== null);
+  }
+
+  get selectedIds(): number[] {
+    if (!this.oForm) { return []; }
+    
+    return this.oForm.value.formArray
+    .map((checked, index) => checked ? this.items[index].id : null)
+    .filter(value => value !== null);
   }
 
   buildForm() {
@@ -108,17 +122,8 @@ export class OliveCheckboxSelectorPanelComponent extends OliveEntityFormComponen
   load() {
     this.loadingIndicator = true;
 
-    // Filter out the selected ids
-    this.selectedIds = this.oForm.value.formArray
-      .map((checked, index) => checked ? this.items[index].id : null)
-      .filter(value => value !== null);
-
     this.cacheService.setUserPreference(this.cacheKey, this.selectedIds);
 
-    const selectedItems = this.oForm.value.formArray
-    .map((checked, index) => checked ? this.items[index] : null)
-    .filter(value => value !== null);
-
-    this.idSelected.emit(selectedItems);    
+    this.idSelected.emit(this.selectedItems);
   }
 }

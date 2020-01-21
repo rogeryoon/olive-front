@@ -13,7 +13,7 @@
             <div fxLayout="column" class="left-menu" *ngIf="!visibleLoadButton">
                 <h2 class="title">{{titleId|translate}}</h2>
 
-                <div>
+                <div *ngIf="oFArray.controls.length > 1">
                     <label>
                         <input type="checkbox" class="margin" formControlName="selectAll" [disableControl]="loadingIndicator">
                         {{'common.title.selectDeselectAll'|translate}}
@@ -23,7 +23,7 @@
 
             <div fxLayout="row wrap">
                 <label formArrayName="formArray" *ngFor="let item of oFArray.controls; let i = index">
-                    <input type="checkbox" class="margin" [formControlName]="i" id="{{i}}" [disableControl]="loadingIndicator">
+                    <input type="checkbox" class="margin" [formControlName]="i" [disableControl]="loadingIndicator">
                     {{items[i].name}}
                 </label>
             </div>
