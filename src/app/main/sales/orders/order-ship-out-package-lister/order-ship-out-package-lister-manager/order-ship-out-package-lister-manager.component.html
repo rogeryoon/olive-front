@@ -1,23 +1,21 @@
-﻿<form #form="ngForm" name="oForm" [formGroup]="oForm" novalidate (ngSubmit)="save()" class="w-100-p" fxLayout="column"
-    fxFlex>
-
-    <div class="mat-card mat-elevation-z4 p-24" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
+﻿<div fxLayout="column">
+    <div [hidden]="hideSelector" class="mat-card mat-elevation-z4 p-24" fxLayout="column" fxLayoutAlign="start" fxFlex="1 0 auto">
         <div class="mb-16">
-            <button mat-raised-button (click)="onCheckboxesSelected()" class="ml-4 mr-12" color="accent"
+            <button mat-raised-button (click)="onAllCheckboxesSelected()" class="ml-4 mr-12" color="accent"
                 [disabled]="!canLoadShipOutData">
                 <mat-icon>assignment_turned_in</mat-icon>
                 {{'sales.orderShipOutPackageListerManager.loadShipOutDataButton' | translate}}
             </button>
-            <span *ngIf="!canLoadShipOutData">{{'sales.orderShipOutPackageListerManager.selectWarehouseAndMarketSeller' | translate}}</span>
+            <span *ngIf="!canLoadShipOutData">
+                {{'sales.orderShipOutPackageListerManager.selectWarehouseAndMarketSeller' | translate}}
+            </span>
         </div>
 
         <olive-checkbox-selector-panel #warehouseCheckboxes [titleId]="'common.title.selectWarehouses'"
-            [visibleLoadButton]="false" (idSelected)="warehouseSelected($event)">
-        </olive-checkbox-selector-panel>
+            [visibleLoadButton]="false"></olive-checkbox-selector-panel>
 
         <olive-checkbox-selector-panel #marketSellerCheckboxes class="mt-20" [titleId]="'common.title.selectSellers'"
-            [visibleLoadButton]="false" (idSelected)="warehouseSelected($event)">
-        </olive-checkbox-selector-panel>
+            [visibleLoadButton]="false"></olive-checkbox-selector-panel>
     </div>
 
     <mat-tab-group (selectedTabChange)="onTabClick($event)">
@@ -34,4 +32,4 @@
             </div>
         </mat-tab>
     </mat-tab-group>
-</form>
+</div>

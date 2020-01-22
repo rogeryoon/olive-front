@@ -101,6 +101,10 @@ export class OliveCheckboxSelectorPanelComponent extends OliveEntityFormComponen
     this.items = items;
   }
 
+  setUserPreference() {
+    this.cacheService.setUserPreference(this.cacheKey, this.selectedIds);
+  }
+
   subscribeChanges() {
     // Subscribe to changes on the selectAll checkbox
     this.oForm.get('selectAll').valueChanges.subscribe(bool => {
@@ -122,8 +126,10 @@ export class OliveCheckboxSelectorPanelComponent extends OliveEntityFormComponen
   load() {
     this.loadingIndicator = true;
 
-    this.cacheService.setUserPreference(this.cacheKey, this.selectedIds);
+    this.setUserPreference();
 
     this.idSelected.emit(this.selectedItems);
+
+    this.loadingIndicator = false;
   }
 }

@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, QueryList, ViewChildren, Output, EventEmitter } from '@angular/core';
+﻿import { Component, ViewChild, QueryList, ViewChildren } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 
@@ -28,6 +28,7 @@ import { OliveConstants } from 'app/core/classes/constants';
 import { OliveCarrierTrackingNumberRangeService } from 'app/main/shippings/services/carrier-tracking-number-range.service';
 import { createMapFrom } from 'app/core/utils/array-helpers';
 import { createSearchOption } from 'app/core/utils/search-helpers';
+import { MarketSeller } from 'app/main/supports/models/market-seller.model';
 
 class OliveTable {
   static readonly selector = '.roger-table';
@@ -77,6 +78,7 @@ class OliveTable {
 })
 export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityEditComponent {
   warehouses: Warehouse[];
+  markerSellers: MarketSeller[];
   inventories: InventoryWarehouse[];
   pendingOrderShipOuts: OrderShipOut[] = [];
   pendingOrderShipOutPackages: OrderShipOutPackage[] = [];
@@ -130,18 +132,26 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     this.markerSellerSelector.cacheKey = this.cacheService.keyMarketSellerCheckboxes;
   }
 
+  get hideSelector(): boolean {
+    return !this.isNull(this.warehouses) && !this.isNull(this.markerSellers);
+  }
+
   get canLoadShipOutData(): boolean {
     return this.warehouseSelector.selectedItems.length > 0 && 
       this.markerSellerSelector.selectedItems.length > 0;
   }
 
-  onCheckboxesSelected() {
+  onAllCheckboxesSelected() {
+    this.warehouses = this.warehouseSelector.selectedItems;
+    this.warehouseSelector.setUserPreference();
 
+    this.markerSellers = this.markerSellerSelector.selectedItems;
+    this.markerSellerSelector.setUserPreference();
+
+    this.loadAllData();
   }
 
-  warehouseSelected(warehouses: any[]) {
-    this.warehouses = warehouses;
-
+  private loadAllData() {
     setTimeout(() => {
       this.getInventories();
       this.getPendingOrderPackages();
