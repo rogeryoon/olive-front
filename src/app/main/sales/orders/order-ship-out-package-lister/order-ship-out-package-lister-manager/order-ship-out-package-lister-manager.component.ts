@@ -29,6 +29,7 @@ import { OliveCarrierTrackingNumberRangeService } from 'app/main/shippings/servi
 import { createMapFrom } from 'app/core/utils/array-helpers';
 import { createSearchOption } from 'app/core/utils/search-helpers';
 import { MarketSeller } from 'app/main/supports/models/market-seller.model';
+import { fuseAnimations } from '@fuse/animations';
 
 class OliveTable {
   static readonly selector = '.roger-table';
@@ -74,7 +75,8 @@ class OliveTable {
 @Component({
   selector: 'olive-order-ship-out-lister-manager',
   templateUrl: './order-ship-out-package-lister-manager.component.html',
-  styleUrls: ['./order-ship-out-package-lister-manager.component.scss']
+  styleUrls: ['./order-ship-out-package-lister-manager.component.scss'],
+  animations: fuseAnimations
 })
 export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityEditComponent {
   warehouses: Warehouse[];
@@ -204,7 +206,15 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   private getPendingOrderPackages(refresh: boolean = false) {
-    this.orderShipOutPackageService.getItems(createSearchOption([{ name: 'listing', value: true }], 'id', 'desc'))
+    this.orderShipOutPackageService.getItems(
+      createSearchOption(
+        [
+          { name: 'listing', value: true },
+          { name: 'marketSeller', value: this.markerSellers.map(x => x.id).join() }
+        ], 
+        'id',
+        'desc'
+      ))
       .subscribe(res => {
         this.pendingOrderShipOutPackages = res.model;
         this.orderPackageListers.forEach((lister) => {
@@ -218,7 +228,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   private getInventories(refresh: boolean = false) {
     const option = createSearchOption(
       [
-        { name: 'quantity', value: 0 },
+        { name: 'quantity', value: 0 }, 
         { name: 'warehouse', value: this.warehouses.map(a => a.id).join() }
       ],
       'id', 
@@ -235,7 +245,15 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   private getPendingOrders(refresh: boolean) {
-    this.orderShipOutService.getItems(createSearchOption([{ name: 'listing', value: true }], 'id', 'desc'))
+    this.orderShipOutService.getItems(
+      createSearchOption(
+        [
+          { name: 'listing', value: true },
+          { name: 'marketSeller', value: this.markerSellers.map(x => x.id).join() }
+        ], 
+        'id',
+        'desc'
+      ))
       .subscribe(res => {
         this.pendingOrderShipOuts = res.model;
 

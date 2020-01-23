@@ -1906,6 +1906,8 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
   cleanUpChildComponent() {
     this.productCustomsPriceSelectedTrigger.unsubscribe();
     this.productCustomsWeightSelectedTrigger.unsubscribe();
-    this.trackingAssignTriggerSubscription.unsubscribe();
+    if (this.trackingAssignTriggerSubscription) {
+      this.trackingAssignTriggerSubscription.unsubscribe();
+    }
   }
 }

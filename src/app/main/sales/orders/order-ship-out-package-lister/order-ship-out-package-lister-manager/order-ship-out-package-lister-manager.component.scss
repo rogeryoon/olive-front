@@ -6,3 +6,13 @@
 [hidden] {
     display: none !important;
 }
+
+.menu {
+    position: relative;
+    .menu-button {
+        position: absolute;
+        bottom: -60px;
+        left: -16px;
+        z-index: 99999;
+    }
+}
