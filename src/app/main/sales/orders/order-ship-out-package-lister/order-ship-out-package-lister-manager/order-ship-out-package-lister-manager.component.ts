@@ -30,6 +30,7 @@ import { createMapFrom } from 'app/core/utils/array-helpers';
 import { createSearchOption } from 'app/core/utils/search-helpers';
 import { MarketSeller } from 'app/main/supports/models/market-seller.model';
 import { fuseAnimations } from '@fuse/animations';
+import { OrderShipOutSummary } from 'app/main/sales/models/order-ship-out-summary.model';
 
 class OliveTable {
   static readonly selector = '.roger-table';
@@ -81,6 +82,7 @@ class OliveTable {
 export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityEditComponent {
   warehouses: Warehouse[];
   markerSellers: MarketSeller[];
+  orderShipOutSummary: OrderShipOutSummary;
   inventories: InventoryWarehouse[];
   pendingOrderShipOuts: OrderShipOut[] = [];
   pendingOrderShipOutPackages: OrderShipOutPackage[] = [];
@@ -118,9 +120,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   initializeChildComponent() { }
 
   onAfterViewInit() {
-    if (this.orderPackageListers.length === 0) {
-      return;
-    }
+    this.loadOrderShipOutSummary();
   }
 
   buildForm() {
@@ -139,20 +139,61 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   get canLoadShipOutData(): boolean {
-    return this.warehouseSelector.selectedItems.length > 0 && 
-      this.markerSellerSelector.selectedItems.length > 0;
+    return this.warehouseSelector.allItems.filter(x => x.selected).length > 0 && 
+      this.markerSellerSelector.allItems.filter(x => x.selected).length > 0;
+  }
+
+  get selectedWarehouses(): Warehouse[] {
+    if (!this.warehouses) { return null; }
+    return this.warehouses.filter(x => x.selected);
+  }
+
+  get selectedMarketSellers(): MarketSeller[] {
+    return this.markerSellers.filter(x => x.selected);
   }
 
   onAllCheckboxesSelected() {
-    this.warehouses = this.warehouseSelector.selectedItems;
+    this.initializeData();
+  }
+
+  private initializeData() {
+    this.warehouses = this.warehouseSelector.allItems;
     this.warehouseSelector.setUserPreference();
 
-    this.markerSellers = this.markerSellerSelector.selectedItems;
+    this.markerSellers = this.markerSellerSelector.allItems;
     this.markerSellerSelector.setUserPreference();
 
     this.loadAllData();
   }
 
+  private loadOrderShipOutSummary() {
+    this.orderShipOutService.summary().subscribe(
+      response => {
+        this.orderShipOutSummary = response.model;
+        this.bindCheckboxesData();
+      },
+      error => this.messageHelper.showLoadFailedSticky(error)
+    );
+  }
+
+  private bindCheckboxesData() {
+    for (const warehouse of this.warehouseSelector.allItems) {
+      const found = this.orderShipOutSummary.warehouses.find(x => x.id === warehouse.id);
+      if (!found) { continue; }
+
+      const item = warehouse as any;
+      item.checkRemark = this.commaNumber(found.countOut);
+    }
+
+    for (const seller of this.markerSellerSelector.allItems) {
+      const found = this.orderShipOutSummary.marketSellers.find(x => x.id === seller.id);
+      if (!found) { continue; }
+
+      const item = seller as any;
+      item.checkRemark = this.commaNumber(found.countIn) + '|' + this.commaNumber(found.countOut);
+    }
+  }
+  
   private loadAllData() {
     setTimeout(() => {
       this.getInventories();
@@ -210,7 +251,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
       createSearchOption(
         [
           { name: 'listing', value: true },
-          { name: 'marketSeller', value: this.markerSellers.map(x => x.id).join() }
+          { name: 'marketSeller', value: this.selectedMarketSellers.map(x => x.id).join() }
         ], 
         'id',
         'desc'
@@ -229,7 +270,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     const option = createSearchOption(
       [
         { name: 'quantity', value: 0 }, 
-        { name: 'warehouse', value: this.warehouses.map(a => a.id).join() }
+        { name: 'warehouse', value: this.selectedWarehouses.map(a => a.id).join() }
       ],
       'id', 
       'desc'
@@ -249,7 +290,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
       createSearchOption(
         [
           { name: 'listing', value: true },
-          { name: 'marketSeller', value: this.markerSellers.map(x => x.id).join() }
+          { name: 'marketSeller', value: this.selectedMarketSellers.map(x => x.id).join() }
         ], 
         'id',
         'desc'
@@ -259,7 +300,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
 
         // 아이템 Checkbox 선택을 저장하기위한 변수 배열 - 각 창고 Tab 수 만큼 생성
         this.pendingOrderShipOuts.forEach(order => {
-          order.choices = new Array(this.warehouses.length).fill(false);
+          order.choices = new Array(this.selectedWarehouses.length).fill(false);
         });
 
         this.switchWarehouseSelector();

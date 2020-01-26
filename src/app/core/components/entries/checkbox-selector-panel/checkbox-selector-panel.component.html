@@ -24,7 +24,7 @@
             <div fxLayout="row wrap">
                 <label formArrayName="formArray" *ngFor="let item of oFArray.controls; let i = index">
                     <input type="checkbox" class="margin" [formControlName]="i" [disableControl]="loadingIndicator">
-                    {{items[i].name}}
+                    {{items[i].name}}<span *ngIf="hasRemarkProperty(i)" class="remark">({{items[i].checkRemark}})</span>
                 </label>
             </div>
         </div>

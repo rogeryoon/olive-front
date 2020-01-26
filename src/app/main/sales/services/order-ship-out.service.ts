@@ -35,4 +35,8 @@ export class OliveOrderShipOutService extends OliveEntityService {
   splitOrder(id: number, orderItemsGroups: OrderShipOutDetail[][]) {
     return this.post(`splitOrder/${id}`, orderItemsGroups);
   }
+
+  summary() {
+    return this.get('summary');
+  }
 }

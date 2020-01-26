@@ -23,7 +23,6 @@ import { Subject } from 'rxjs';
 import { CustomsRule } from 'app/main/shippings/models/customs/customs-rule.model';
 import { Icon } from 'app/core/models/icon';
 import { Country } from 'app/main/supports/models/country.model';
-import { Warehouse } from 'app/main/supports/models/warehouse.model';
 
 class CustomsTypeDue {
   quantity: number;

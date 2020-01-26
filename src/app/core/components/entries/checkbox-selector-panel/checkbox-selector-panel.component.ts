@@ -47,6 +47,30 @@ export class OliveCheckboxSelectorPanelComponent extends OliveEntityFormComponen
     );
   }
 
+  /**
+   * Gets whether has remark property
+   */
+  hasRemarkProperty(index: number): boolean {
+    return this.items && this.items.length > 0 && this.items[index].hasOwnProperty('checkRemark');
+  }
+
+  /**
+   * 모든 아이템을 반환하되 체크되었다면 selected에 true를 설정
+   */
+  get allItems(): any[] {
+    if (!this.oForm) { return []; }
+
+    return this.oForm.value.formArray
+    .map((checked, index) => {
+      this.items[index].selected = checked;
+      return this.items[index];
+    })
+    .filter(value => value !== null);
+  }
+
+  /**
+   * Gets selected items
+   */
   get selectedItems(): any[] {
     if (!this.oForm) { return []; }
 

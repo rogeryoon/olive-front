@@ -45,7 +45,7 @@
     </div>
 
     <mat-tab-group (selectedTabChange)="onTabClick($event)">
-        <mat-tab *ngFor="let warehouse of warehouses; let index = index">
+        <mat-tab *ngFor="let warehouse of selectedWarehouses; let index = index">
             <ng-template mat-tab-label>
                 <div matTooltip="{{warehouse.name}}">
                     {{warehouse.code+lister.packageRemark}}
