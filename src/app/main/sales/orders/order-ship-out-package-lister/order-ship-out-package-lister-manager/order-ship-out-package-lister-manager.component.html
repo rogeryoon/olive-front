@@ -32,7 +32,7 @@
                 <mat-icon>assignment_turned_in</mat-icon>
                 {{'sales.orderShipOutPackageListerManager.loadShipOutDataButton' | translate}}
             </button>
-            <span *ngIf="!canLoadShipOutData">
+            <span class="message-box" *ngIf="!canLoadShipOutData">
                 {{'sales.orderShipOutPackageListerManager.selectWarehouseAndMarketSeller' | translate}}
             </span>
         </div>

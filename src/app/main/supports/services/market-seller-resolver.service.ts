@@ -4,7 +4,6 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { createDefaultSearchOption } from 'app/core/utils/search-helpers';
 import { addActivatedCacheKey } from 'app/core/utils/olive-helpers';
 import { OliveMarketSellerService } from './market-seller.service';
-import { OliveWarehouseService } from './warehouse.service';
 
 @Injectable({
   providedIn: 'root'

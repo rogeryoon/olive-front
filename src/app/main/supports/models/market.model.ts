@@ -9,6 +9,7 @@ export class Market extends OliveTrackingAttribute {
     email: string;
     webSite: string;
     memo: string;
+    internalTransaction: boolean;
     activated?: boolean;
     companyGroupId: number;
     marketExcelInterfaceId: number;

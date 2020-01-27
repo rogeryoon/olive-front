@@ -45,6 +45,7 @@ export class OliveMarketManagerComponent extends OliveEntityEditComponent {
     const market = this.marketEditor.getEditedItem();
 
     this.cacheService.invalidateCaches(OliveCacheService.cacheKeys.getItemsKey.market);
+    this.cacheService.invalidateCaches(OliveCacheService.cacheKeys.getItemsKey.marketSeller);
 
     return this.itemWithIdNAudit({
       code: market.code,
@@ -53,6 +54,7 @@ export class OliveMarketManagerComponent extends OliveEntityEditComponent {
       email: market.email,
       webSite: market.webSite,
       memo: market.memo,
+      internalTransaction: market.internalTransaction,
       activated: market.activated,
       marketExcelInterfaceId: market.marketExcelInterfaceId
     } as Market);

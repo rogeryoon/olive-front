@@ -59,5 +59,5 @@ export function createdDateShortId(item: any, datePropertyName = 'createdUtc', s
  * @returns activated cache key 
  */
 export function addActivatedCacheKey(key: string): string {
-    return key + OliveConstants.cacheSubKey + '-';
+    return key + OliveConstants.cacheSubKey.activated + '-';
 }

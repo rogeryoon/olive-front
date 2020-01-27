@@ -64,7 +64,7 @@ export class OliveMarketExcelImportDialogComponent extends OliveImportFileDialog
   private getMarketSellers() {
     this.cacheService.getItems(this.marketSellerService, addActivatedCacheKey(OliveCacheService.cacheKeys.getItemsKey.marketSeller), createDefaultSearchOption())
     .then((items: MarketSeller[]) => {
-      this.sellers = items;
+      this.sellers = items.filter(x => !x.marketFk.internalTransaction);
     });
   }
 

@@ -41,6 +41,7 @@ export class OliveMarketEditorComponent extends OliveEntityFormComponent {
       email: formModel.email,
       webSite: formModel.webSite,
       memo: formModel.memo,
+      internalTransaction: formModel.internalTransaction,
       activated: formModel.activated,
       marketExcelInterfaceId : formModel.marketExcelInterface
     } as Market);
@@ -54,6 +55,7 @@ export class OliveMarketEditorComponent extends OliveEntityFormComponent {
       email: '',
       webSite: '',
       memo: '',
+      internalTransaction: false,
       activated: false,
       marketExcelInterface: ''
     });
@@ -67,6 +69,7 @@ export class OliveMarketEditorComponent extends OliveEntityFormComponent {
       email: this.item.email || '',
       webSite: this.item.webSite || '',
       memo: this.item.memo || '',
+      internalTransaction: this.boolValue(this.item.internalTransaction),
       activated: this.boolValue(this.item.activated),
       marketExcelInterface: this.item.marketExcelInterfaceFk ? this.item.marketExcelInterfaceFk.id : null
     });

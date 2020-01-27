@@ -296,6 +296,7 @@ export const locale = {
                 'remark' : '비고',
             },
             'word': {
+                'internalTransaction' : '내부거래',
                 'deletedRow' : '삭제행',
                 'userName' : '아이디',
                 'password' : '암호',

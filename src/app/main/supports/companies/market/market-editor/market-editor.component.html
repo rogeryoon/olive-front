@@ -58,6 +58,9 @@
             <mat-checkbox formControlName="activated">{{'common.word.activated' | translate}}</mat-checkbox>
         </div>
         <div class="w-100-p">
+            <mat-checkbox formControlName="internalTransaction">{{'common.word.internalTransaction' | translate}}</mat-checkbox>
+        </div>        
+        <div class="w-100-p">
             <olive-entity-date [item]="item" (formReady)="formInitialized('date', $event)"></olive-entity-date>
         </div>
     </div>

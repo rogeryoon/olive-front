@@ -52,6 +52,6 @@ export class OliveOrderShipOutPackageListerPageComponent extends OliveEditPageCo
       noHeader: true
     };
 
-    this.setting.item = {warehouses: this.warehouses, marketSellers: this.marketSellers} ;
+    this.setting.item = {warehouses: this.warehouses, marketSellers: this.marketSellers.filter(x => !x.marketFk.internalTransaction)} ;
   }
 }

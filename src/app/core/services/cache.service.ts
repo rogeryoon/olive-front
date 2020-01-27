@@ -140,7 +140,7 @@ export class OliveCacheService {
   public invalidateCaches(keyPartial: string) {
     for (const key of Array.from(this.cache.keys())) {
       if (key.startsWith(keyPartial)) {
-        this.delete(keyPartial);
+        this.delete(key);
       }
     }
   }
