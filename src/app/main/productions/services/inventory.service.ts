@@ -30,4 +30,8 @@ export class OliveInventoryService extends OliveEntityService {
   getInventoryWarehouse(dataTablesParameters: any) {
     return this.post('warehouse/', dataTablesParameters);
   }
+
+  getCurrentAvailWarehouseInventories() {
+    return this.get('currentInventory');
+  }
 }

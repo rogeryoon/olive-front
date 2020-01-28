@@ -45,6 +45,7 @@ import { OliveQueryParameterService } from 'app/core/services/query-parameter.se
 import { OliveOrderShipOutHelperService } from 'app/main/sales/services/order-ship-out-helper.service';
 import { Icon } from 'app/core/models/icon';
 import { OliveOrderTrackingExcelService } from 'app/main/sales/services/order-tracking-excel.service';
+import { WarehouseInventory } from 'app/main/productions/models/warehouse-inventory';
 
 class AllocatedQuantity {
   productVariantId: number;
@@ -398,7 +399,7 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * @param parentObject 
    * @param refresh 
    */
-  startTable(orders: OrderShipOut[], inventories: InventoryWarehouse[], parentObject: any, refresh: boolean) {
+  startTable(orders: OrderShipOut[], inventories: WarehouseInventory[], parentObject: any, refresh: boolean) {
     this.parentObject = parentObject;
 
     this.combinedShippingGroups = new Map<string, Array<string>>();
@@ -491,12 +492,9 @@ export class OlivePendingOrderShipOutListComponent extends OliveEntityFormCompon
    * Sets warehouse inventories
    * @param inventories 
    */
-  private setWarehouseInventories(inventories: InventoryWarehouse[]) {
-    for (const item of inventories) {
-      const founded = item.inventories.find(x => x.id === this.warehouse.id);
-      if (founded) {
-        this.inventories.set(item.id, founded.value);
-      }
+  private setWarehouseInventories(inventories: WarehouseInventory[]) {
+    for (const inventory of inventories.filter(x => x.warehouseId === this.warehouse.id)) {
+      this.inventories.set(inventory.variantId, inventory.quantity);
     }
   }
 

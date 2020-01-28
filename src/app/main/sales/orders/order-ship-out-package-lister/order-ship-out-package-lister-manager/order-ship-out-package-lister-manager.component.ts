@@ -17,7 +17,6 @@ import { OrderShipOut } from 'app/main/sales/models/order-ship-out.model';
 import { OliveOrderShipOutPackageListerComponent } from '../order-ship-out-package-lister/order-ship-out-package-lister.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveInventoryService } from 'app/main/productions/services/inventory.service';
-import { InventoryWarehouse } from 'app/main/productions/models/inventory-warehouse';
 import { OliveOrderShipOutPackageService } from 'app/main/sales/services/order-ship-out-package.service';
 import { OrderShipOutPackage } from 'app/main/sales/models/order-ship-out-package.model';
 import { OliveOnShare } from 'app/core/interfaces/on-share';
@@ -31,6 +30,7 @@ import { createSearchOption } from 'app/core/utils/search-helpers';
 import { MarketSeller } from 'app/main/supports/models/market-seller.model';
 import { fuseAnimations } from '@fuse/animations';
 import { OrderShipOutSummary } from 'app/main/sales/models/order-ship-out-summary.model';
+import { WarehouseInventory } from 'app/main/productions/models/warehouse-inventory';
 
 class OliveTable {
   static readonly selector = '.roger-table';
@@ -83,7 +83,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   warehouses: Warehouse[];
   markerSellers: MarketSeller[];
   orderShipOutSummary: OrderShipOutSummary;
-  inventories: InventoryWarehouse[];
+  inventories: WarehouseInventory[];
   pendingOrderShipOuts: OrderShipOut[] = [];
   pendingOrderShipOutPackages: OrderShipOutPackage[] = [];
   parentObject: OliveOnShare = { bool1: false };
@@ -267,16 +267,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   private getInventories(refresh: boolean = false) {
-    const option = createSearchOption(
-      [
-        { name: 'quantity', value: 0 }, 
-        { name: 'warehouse', value: this.selectedWarehouses.map(a => a.id).join() }
-      ],
-      'id', 
-      'desc'
-    );
-
-    this.inventoryService.getInventoryWarehouse(option)
+    this.inventoryService.getCurrentAvailWarehouseInventories()
       .subscribe(res => {
         this.inventories = res.model;
         this.getPendingOrders(refresh);
