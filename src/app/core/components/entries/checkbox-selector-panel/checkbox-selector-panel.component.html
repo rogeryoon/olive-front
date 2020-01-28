@@ -22,9 +22,10 @@
             </div>
 
             <div fxLayout="row wrap">
-                <label formArrayName="formArray" *ngFor="let item of oFArray.controls; let i = index">
-                    <input type="checkbox" class="margin" [formControlName]="i" [disableControl]="loadingIndicator">
-                    {{items[i].name}}<span *ngIf="hasRemarkProperty(i)" class="remark">({{items[i].checkRemark}})</span>
+                <label formArrayName="formArray" *ngFor="let item of oFArray.controls; let i = index" [class]="remarkClass(i)">
+                    <input type="checkbox" class="margin" [formControlName]="i" [disableControl]="loadingIndicator || disabledCheckbox(i)">
+                    {{items[i].name}}
+                    <span *ngIf="hasRemarkProperty(i)" [class]="remarkClass(i)">({{items[i].checkRemark}})</span>
                 </label>
             </div>
         </div>

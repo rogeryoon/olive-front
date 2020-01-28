@@ -177,20 +177,28 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   private bindCheckboxesData() {
+    let index = 0;
     for (const warehouse of this.warehouseSelector.allItems) {
       const found = this.orderShipOutSummary.warehouses.find(x => x.id === warehouse.id);
-      if (!found) { continue; }
-
       const item = warehouse as any;
-      item.checkRemark = this.commaNumber(found.countOut);
+      item.checkRemark = found ? this.commaNumber(found.countIn) + '|' + this.commaNumber(found.countOut) : '0'; 
+      // Disable 될 행이라면 
+      if (!found) {
+        this.warehouseSelector.setChecked(index, false);
+      }
+      index++;
     }
 
+    index = 0;
     for (const seller of this.markerSellerSelector.allItems) {
-      const found = this.orderShipOutSummary.marketSellers.find(x => x.id === seller.id);
-      if (!found) { continue; }
-
       const item = seller as any;
-      item.checkRemark = this.commaNumber(found.countIn) + '|' + this.commaNumber(found.countOut);
+      const found = this.orderShipOutSummary.marketSellers.find(x => x.id === seller.id);
+      item.checkRemark = found ? this.commaNumber(found.countIn) + '|' + this.commaNumber(found.countOut) : '0';
+      // Disable 될 행이라면 
+      if (!found) {
+        this.markerSellerSelector.setChecked(index, false);
+      }
+      index++;
     }
   }
   

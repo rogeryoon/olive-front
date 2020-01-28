@@ -38,10 +38,10 @@
         </div>
 
         <olive-checkbox-selector-panel #warehouseCheckboxes [titleId]="'common.title.selectWarehouses'"
-            [visibleLoadButton]="false"></olive-checkbox-selector-panel>
+            [visibleLoadButton]="false" [disabledRemarkPattern]="'0'"></olive-checkbox-selector-panel>
 
         <olive-checkbox-selector-panel #marketSellerCheckboxes class="mt-20" [titleId]="'common.title.selectSellers'"
-            [visibleLoadButton]="false"></olive-checkbox-selector-panel>
+            [visibleLoadButton]="false" [disabledRemarkPattern]="'0'"></olive-checkbox-selector-panel>
     </div>
 
     <mat-tab-group (selectedTabChange)="onTabClick($event)">

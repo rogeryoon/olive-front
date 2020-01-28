@@ -5,8 +5,15 @@
 label {
     margin-right: 5px;
     .remark {
+        color: red;
+    }
+    span.remark {
         color: maroon;
     }
+}
+
+.disabled {
+    color: silver;
 }
 
 .margin {

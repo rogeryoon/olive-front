@@ -31,6 +31,9 @@ export class OliveCheckboxSelectorPanelComponent extends OliveEntityFormComponen
   cacheKey: string;
 
   @Input()
+  disabledRemarkPattern;
+
+  @Input()
   visibleLoadButton = true;
 
   @Output() idSelected = new EventEmitter<any[]>();
@@ -54,37 +57,90 @@ export class OliveCheckboxSelectorPanelComponent extends OliveEntityFormComponen
     return this.items && this.items.length > 0 && this.items[index].hasOwnProperty('checkRemark');
   }
 
+  readonly disabledClassName = 'disabled';
+
+  remarkClass(index: number): string {
+    if (!this.items || this.items.length === 0) {
+      return '';
+    }
+
+    const remark = this.items[index].checkRemark;
+    const disabledRemarkPattern = this.disabledRemarkPattern;
+
+    let returnCssClass = this.disabledClassName;
+    if (disabledRemarkPattern) {
+      if (remark !== disabledRemarkPattern) {
+        returnCssClass = 'remark';
+      }
+    }
+
+    return returnCssClass;
+  }
+
+  disabledCheckbox(index: number): boolean {
+    return this.remarkClass(index) === this.disabledClassName;
+  }
+
+  /**
+   * Determines whether checked is
+   * @param index 
+   * @returns true if checked 
+   */
+  isChecked(index: number): boolean {
+    if (!this.oForm.controls.formArray) { return false; }
+
+    const formArray = this.oForm.controls.formArray as FormArray;
+
+    return formArray.length >= index + 1 && formArray[index].value;
+  }
+
+  /**
+   * Sets checked
+   * @param index 
+   * @param value 
+   */
+  setChecked(index: number, value: boolean) {
+    this.oFArray.controls[index].patchValue(value ? { value: true } : null);
+  }
+
+  /**
+   * Determines whether disabled is
+   * @param index 
+   * @returns true if disabled 
+   */
+  isDisabled(index: number): boolean {
+    if (!this.oForm.controls.formArray) { return false; }
+
+    const formArray = this.oForm.controls.formArray as FormArray;
+
+    return formArray.length >= index + 1 && formArray[index].disabled;    
+  }
+
   /**
    * 모든 아이템을 반환하되 체크되었다면 selected에 true를 설정
    */
   get allItems(): any[] {
     if (!this.oForm) { return []; }
 
-    return this.oForm.value.formArray
-    .map((checked, index) => {
+    const formArray = this.oForm.controls.formArray as FormArray;
+
+    formArray.controls.map((control, index) => {
+      const checked = control.value;
       this.items[index].selected = checked;
-      return this.items[index];
-    })
-    .filter(value => value !== null);
+    });
+
+    return this.items;
   }
 
   /**
    * Gets selected items
    */
   get selectedItems(): any[] {
-    if (!this.oForm) { return []; }
-
-    return this.oForm.value.formArray
-    .map((checked, index) => checked ? this.items[index] : null)
-    .filter(value => value !== null);
+    return this.allItems.filter(x => x.selected);
   }
 
   get selectedIds(): number[] {
-    if (!this.oForm) { return []; }
-    
-    return this.oForm.value.formArray
-    .map((checked, index) => checked ? this.items[index].id : null)
-    .filter(value => value !== null);
+    return this.selectedItems.map(x => x.id);
   }
 
   buildForm() {
@@ -133,8 +189,13 @@ export class OliveCheckboxSelectorPanelComponent extends OliveEntityFormComponen
     // Subscribe to changes on the selectAll checkbox
     this.oForm.get('selectAll').valueChanges.subscribe(bool => {
       this.selectedAnyCheckbox = bool;
+
+      const formArray = this.oForm.controls.formArray as FormArray;
+
+      const patchValues = formArray.controls.map(x => x.disabled ? null : (bool ? {value: true} : null));
+
       this.oFArray
-        .patchValue(Array(this.items.length).fill(bool), { emitEvent: false });
+        .patchValue(patchValues, { emitEvent: false });
     });
 
     // Subscribe to changes on the checkboxes
