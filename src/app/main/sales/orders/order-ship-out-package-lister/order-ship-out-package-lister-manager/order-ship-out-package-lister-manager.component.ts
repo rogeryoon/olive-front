@@ -101,6 +101,8 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
 
   @ViewChildren(OliveOrderShipOutPackageListerComponent) orderPackageListers: QueryList<OliveOrderShipOutPackageListerComponent>;
 
+  isLoading = false;
+
   constructor(
     translator: FuseTranslationLoaderService, alertService: AlertService,
     accountService: AccountService, messageHelper: OliveMessageHelperService,
@@ -182,12 +184,17 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   private loadOrderShipOutSummary() {
+    this.isLoading = true;
     this.orderShipOutService.summary().subscribe(
       response => {
         this.orderShipOutSummary = response.model;
         this.bindCheckboxesData();
+        this.isLoading = false;
       },
-      error => this.messageHelper.showLoadFailedSticky(error)
+      error => {
+        this.messageHelper.showLoadFailedSticky(error);
+        this.isLoading = false;
+      }
     );
   }
 
@@ -232,6 +239,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   private getCarrierTrackingNumbersGroups() {
+    this.isLoading = true;
     this.carrierTrackingNumberRangeService.get('numbersGroup')
       .subscribe(res => {
         this.carrierTrackingNumbersGroups = res.model;
@@ -241,8 +249,10 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
           group.id = id++;
         }
         this.setChildConfigs(OliveConstants.listerConfigType.carrierTrackingNumbersGroups, res.model);
+        this.isLoading = false;
       }, error => {
         this.messageHelper.showLoadFailedSticky(error);
+        this.isLoading = false;
       });
   }
 
@@ -270,6 +280,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
   }
 
   private getPendingOrderPackages(refresh: boolean = false) {
+    this.isLoading = true;
     this.orderShipOutPackageService.getItems(
       createSearchOption(
         [
@@ -284,22 +295,28 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
         this.orderPackageListers.forEach((lister) => {
           lister.setPendingOrderPackages(this.pendingOrderShipOutPackages, this.parentObject, refresh);
         });
+        this.isLoading = false;
       }, error => {
         this.messageHelper.showLoadFailedSticky(error);
+        this.isLoading = false;
       });
   }
 
   private getInventories(refresh: boolean = false) {
+    this.isLoading = true;
     this.inventoryService.getCurrentAvailWarehouseInventories()
       .subscribe(res => {
         this.inventories = res.model;
         this.getPendingOrders(refresh);
+        this.isLoading = false;
       }, error => {
         this.messageHelper.showLoadFailedSticky(error);
+        this.isLoading = false;
       });
   }
 
   private getPendingOrders(refresh: boolean) {
+    this.isLoading = true;
     this.orderShipOutService.getItems(
       createSearchOption(
         [
@@ -320,8 +337,10 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
         this.orderPackageListers.forEach((lister) => {
           lister.setPendingOrders(this.pendingOrderShipOuts, this.inventories, this.parentObject, refresh);
         });
+        this.isLoading = false;
       }, error => {
         this.messageHelper.showLoadFailedSticky(error);
+        this.isLoading = false;
       });
   }
 

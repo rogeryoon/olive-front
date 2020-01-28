@@ -1,7 +1,7 @@
 ﻿<div *ngIf="hideSelector" class="menu">
     <button mat-fab class="menu-button" title="{{'common.menu.goPreviousPage' | translate}}" 
         *fuseIfOnDom [@animate]="{value:'*', params:{delay:'300ms',scale:'0.2'}}"
-        (click)="goSelectors()">
+        (click)="goSelectors()" [disabled]="isLoading">
         <mat-icon>keyboard_backspace</mat-icon>
     </button>
 </div>
@@ -10,7 +10,7 @@
         fxFlex="1 0 auto">
         <div class="mb-16">
             <button mat-raised-button (click)="onAllCheckboxesSelected()" class="ml-4 mr-12" color="accent"
-                [disabled]="!canLoadShipOutData">
+                [disabled]="!canLoadShipOutData || isLoading">
                 <mat-icon>assignment_turned_in</mat-icon>
                 {{'sales.orderShipOutPackageListerManager.loadShipOutDataButton' | translate}}
             </button>
