@@ -1,27 +1,9 @@
 ﻿<div *ngIf="hideSelector" class="menu">
-    <button [matMenuTriggerFor]="ctxmenu" mat-fab class="menu-button"
-        title="{{'common.menu.menuButton' | translate}}" *fuseIfOnDom
-        [@animate]="{value:'*', params:{delay:'300ms',scale:'0.2'}}">
-        <mat-icon>keyboard_hide</mat-icon>
+    <button mat-fab class="menu-button" title="{{'common.menu.goPreviousPage' | translate}}" 
+        *fuseIfOnDom [@animate]="{value:'*', params:{delay:'300ms',scale:'0.2'}}"
+        (click)="goSelectors()">
+        <mat-icon>keyboard_backspace</mat-icon>
     </button>
-    <mat-menu #ctxmenu="matMenu">
-        <button mat-menu-item (click)="null" [disabled]="!canManageItems">
-            <mat-icon>add_box</mat-icon>
-            <span>{{'common.menu.addNewItem' | translate}}</span>
-        </button>
-        <!-- <button mat-menu-item (click)="onExcel()" *ngIf="contextButtonVisible('excel')">
-            <mat-icon>cancel_presentation</mat-icon>
-            <span>{{'common.menu.exportExcelFile' | translate}}</span>
-        </button>
-        <button mat-menu-item (click)="onPrint()" *ngIf="contextButtonVisible('print')">
-            <mat-icon>print</mat-icon>
-            <span>{{'common.menu.printList' | translate}}</span>
-        </button>
-        <button mat-menu-item (click)="onUpload()" [disabled]="!canManageItems" *ngIf="contextButtonVisible('upload')">
-            <mat-icon>cloud_upload</mat-icon>
-            <span>{{'common.menu.upload' | translate}}</span>
-        </button> -->
-    </mat-menu>
 </div>
 <div fxLayout="column">
     <div [hidden]="hideSelector" class="mat-card mat-elevation-z4 p-24" fxLayout="column" fxLayoutAlign="start"
@@ -32,7 +14,10 @@
                 <mat-icon>assignment_turned_in</mat-icon>
                 {{'sales.orderShipOutPackageListerManager.loadShipOutDataButton' | translate}}
             </button>
-            <span class="message-box info" *ngIf="!canLoadShipOutData">
+            <span class="message-box info ml-8 mr-8" *ngIf="orderShipOutSummary">
+                {{totalShipOutCountSummary}}
+            </span>            
+            <span class="message-box warning" *ngIf="!canLoadShipOutData">
                 {{'sales.orderShipOutPackageListerManager.selectWarehouseAndMarketSeller' | translate}}
             </span>
         </div>

@@ -104,7 +104,8 @@ export const locale = {
                 'concurrencyKeyName' : '입력한 키 \'{0}\'(이)가 기존 데이터값과 중복되어 데이터를 저장할 수 없습니다. \'{0}\'(을)를 다른값으로 변경하십시오.',
                 'deleteByConcurrency' : '해당 데이터를 참조하고 있는 관련 데이터가 존재하여 삭제를 할 수 없습니다. ',
                 'volumeError' : '(예: 12.5 5 9)와 같은 형식으로 입력하십시오.',
-                'productNotMatched' : '입력한 상품명 {0}은\n등록된 상품 {1}. {2}와 매치하지 않습니다.\n상품명을 다시 입력하십시오.'
+                'productNotMatched' : '입력한 상품명 {0}은\n등록된 상품 {1}. {2}와 매치하지 않습니다.\n상품명을 다시 입력하십시오.',
+                'needToRegisterItem' : '해당 데이터가 없습니다. 데이터를 등록하십시오.'
             },
             'validate' : {
                 'required' : '필수 입력(선택) 항목입니다.',
@@ -202,6 +203,7 @@ export const locale = {
                 'removeFilter' : '필터 제거'
             },
             'menu': {
+                'goPreviousPage' : '전화면으로 돌아가기',
                 'menuButton' : '부가 기능',
                 'addNewItem' : '신규 등록', // 'Add New Item',
                 'exportExcelFile' : '엑셀 다운로드', // 'Export Excel File',
@@ -645,7 +647,8 @@ export const locale = {
             },
             'orderShipOutPackageListerManager' : {
                 'loadShipOutDataButton' : '출고 데이터 로드',
-                'selectWarehouseAndMarketSeller' : '창고와 판매자를 선택하면 출고 데이터를 로드할 수 있습니다.'
+                'selectWarehouseAndMarketSeller' : '창고와 판매자를 선택하면 출고 데이터를 로드할 수 있습니다.',
+                'totalShipOutCountSummary' : '출고 (대기 {0}건 | 출고 {1}건)'
             }
         },
         'purchasing' : {

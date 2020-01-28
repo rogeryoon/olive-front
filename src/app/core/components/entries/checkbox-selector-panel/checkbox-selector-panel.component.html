@@ -21,13 +21,17 @@
                 </div>
             </div>
 
-            <div fxLayout="row wrap">
+            <div *ngIf="items.length > 0" fxLayout="row wrap">
                 <label formArrayName="formArray" *ngFor="let item of oFArray.controls; let i = index" [class]="remarkClass(i)">
                     <input type="checkbox" class="margin" [formControlName]="i" [disableControl]="loadingIndicator || disabledCheckbox(i)">
                     {{items[i].name}}
                     <span *ngIf="hasRemarkProperty(i)" [class]="remarkClass(i)">({{items[i].checkRemark}})</span>
                 </label>
             </div>
+
+            <span *ngIf="items.length == 0" class="message-box error" fxLayout>
+                {{'common.entryError.needToRegisterItem' | translate}}
+            </span>            
         </div>
     </div>
     <mat-progress-bar *ngIf="loadingIndicator" mode="query"></mat-progress-bar>

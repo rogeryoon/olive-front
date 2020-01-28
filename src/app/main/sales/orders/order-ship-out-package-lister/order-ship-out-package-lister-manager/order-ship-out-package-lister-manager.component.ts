@@ -2,6 +2,8 @@
 import { FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 
+import { String } from 'typescript-string-operations';
+
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 import { AlertService } from '@quick/services/alert.service';
@@ -117,24 +119,7 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     );
   }
 
-  initializeChildComponent() { }
-
-  onAfterViewInit() {
-    this.loadOrderShipOutSummary();
-  }
-
-  buildForm() {
-    this.warehouseSelector.setItems(this.item.warehouses);
-    this.markerSellerSelector.setItems(this.item.marketSellers);
-    this.oForm = this.formBuilder.group({});
-  }
-
-  resetForm() {
-    this.warehouseSelector.cacheKey = this.cacheService.keyWarehouseCheckboxes;
-    this.markerSellerSelector.cacheKey = this.cacheService.keyMarketSellerCheckboxes;
-  }
-
-  get hideSelector(): boolean {
+    get hideSelector(): boolean {
     return !this.isNull(this.warehouses) && !this.isNull(this.markerSellers);
   }
 
@@ -152,8 +137,38 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     return this.markerSellers.filter(x => x.selected);
   }
 
+  get totalShipOutCountSummary(): string {
+    if (!this.orderShipOutSummary) { return ''; }
+
+    return String.Format(this.translator.get('sales.orderShipOutPackageListerManager.totalShipOutCountSummary'),
+      this.commaNumber(this.orderShipOutSummary.totalCountIn), this.commaNumber(this.orderShipOutSummary.totalCountOut));
+  }
+
+  initializeChildComponent() { }
+
+  onAfterViewInit() {
+    this.loadOrderShipOutSummary();
+  }
+
+  buildForm() {
+    this.oForm = this.formBuilder.group({});
+  }
+
+  resetForm() {
+    this.warehouseSelector.setItems(this.item.warehouses);
+    this.markerSellerSelector.setItems(this.item.marketSellers);
+    this.warehouseSelector.cacheKey = this.cacheService.keyWarehouseCheckboxes;
+    this.markerSellerSelector.cacheKey = this.cacheService.keyMarketSellerCheckboxes;
+  }
+
   onAllCheckboxesSelected() {
     this.initializeData();
+  }
+
+  private resetData() {
+    this.warehouses = null;
+    this.markerSellers = null;
+    this.orderShipOutSummary = null;
   }
 
   private initializeData() {
@@ -302,20 +317,12 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
           order.choices = new Array(this.selectedWarehouses.length).fill(false);
         });
 
-        this.switchWarehouseSelector();
         this.orderPackageListers.forEach((lister) => {
           lister.setPendingOrders(this.pendingOrderShipOuts, this.inventories, this.parentObject, refresh);
         });
       }, error => {
         this.messageHelper.showLoadFailedSticky(error);
       });
-  }
-
-  private switchWarehouseSelector() {
-    this.warehouseSelector.visible =
-      this.warehouses == null &&
-      this.inventories == null &&
-      this.pendingOrderShipOuts == null;
   }
 
   onShipOutPackageCanceled() {
@@ -339,5 +346,14 @@ export class OliveOrderShipOutPackageListerManagerComponent extends OliveEntityE
     OliveTable.setBottomTableWidth();    
     OliveTable.setBottomTableScrollWidth();
     OliveTable.bindTopTableResizeEvent();
+  }
+
+  /**
+   * 창고 / 판매자 선택화면을 보여준다.
+   */
+  // TODO : goSelectors
+  goSelectors() {
+    this.resetData();
+    this.loadOrderShipOutSummary();
   }
 }
