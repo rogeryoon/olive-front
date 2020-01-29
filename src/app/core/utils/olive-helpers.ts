@@ -61,3 +61,17 @@ export function createdDateShortId(item: any, datePropertyName = 'createdUtc', s
 export function addActivatedCacheKey(key: string): string {
     return key + OliveConstants.cacheSubKey.activated + '-';
 }
+
+/**
+ * 유저가 마우스로 문자를 선택한 값이 있을 경우 참을 반환
+ */
+export function hasTextSelection(): boolean {
+    const selection = window.getSelection();
+
+    // User가 문자를 복사하려고 하는 경우엔 편집창을 팝업하지 않는다.
+    if (selection && selection.type === 'Range') {
+        return true;
+    }
+
+    return false;
+}

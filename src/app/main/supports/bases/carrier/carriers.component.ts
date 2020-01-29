@@ -17,7 +17,7 @@ import { OliveCarrierService } from '../../services/carrier.service';
 import { Carrier } from '../../models/carrier.model';
 import { OliveCarrierManagerComponent } from './carrier-manager/carrier-manager.component';
 import { OliveEntityListComponent } from 'app/core/components/extends/entity-list/entity-list.component';
-import { checkIcon } from 'app/core/utils/olive-helpers';
+import { checkIcon, hasTextSelection } from 'app/core/utils/olive-helpers';
 import { webSiteHostName, webSiteUrl } from 'app/core/utils/string-helper';
 
 const Selected  = 'selected';
@@ -124,20 +124,19 @@ export class OliveCarriersComponent extends OliveEntityListComponent {
     return retValue;
   }
 
-  onTdClick(event: any, item: Carrier, columnName: string): boolean {
-    let retValue = false;
+  onTdClick(event: any, item: Carrier, columnName: string) {
+    if (hasTextSelection()) {
+      return;
+    }
 
     switch (columnName) {
       case WebSite:
         const url = webSiteUrl(item.webSite);
         if (url) {
           this.setTdId(item.id, columnName);
-          retValue = true;
           window.open(url, '_blank');
         }
         break;
     }
-
-    return retValue;
   }
 }

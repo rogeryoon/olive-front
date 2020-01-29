@@ -17,7 +17,7 @@ import { OliveSearchSupplierComponent } from './search-supplier/search-supplier.
 import { OliveSupplierService } from '../../services/supplier.service';
 import { Supplier } from '../../models/supplier.model';
 import { OliveSupplierManagerComponent } from './supplier-manager/supplier-manager.component';
-import { checkIcon } from 'app/core/utils/olive-helpers';
+import { checkIcon, hasTextSelection } from 'app/core/utils/olive-helpers';
 import { webSiteHostName, webSiteUrl } from 'app/core/utils/string-helper';
 
 const Selected = 'selected';
@@ -113,20 +113,19 @@ export class OliveSuppliersComponent extends OliveEntityListComponent {
     return retValue;
   }
 
-  onTdClick(event: any, item: Supplier, columnName: string): boolean {
-    let retValue = false;
+  onTdClick(event: any, item: Supplier, columnName: string) {
+    if (hasTextSelection()) {
+      return;
+    }
 
     switch (columnName) {
       case WebSite:
         const url = webSiteUrl(item.webSite);
         if (url) {
           this.setTdId(item.id, columnName);
-          retValue = true;
           window.open(url, '_blank');
         }
         break;
     }
-
-    return retValue;
   }
 }

@@ -30,7 +30,7 @@ import { OliveInWarehouseItemService } from '../../../services/in-warehouse-item
 import { InWarehouseItem } from 'app/main/purchasings/models/in-warehouse-item.model';
 import { getItemsName, addCountTooltip } from 'app/core/utils/string-helper';
 import { createSearchOption } from 'app/core/utils/search-helpers';
-import { purchaseOrderId, purchaseOrderStatusRemark } from 'app/core/utils/olive-helpers';
+import { purchaseOrderId, purchaseOrderStatusRemark, hasTextSelection } from 'app/core/utils/olive-helpers';
 import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
 import { isNullOrUndefined } from 'util';
 import { OlivePurchaseOrderHelperService } from 'app/main/purchasings/services/purchase-order-helper.service';
@@ -261,8 +261,10 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
     return retValue;
   }
 
-  onTdClick(event: any, order: PurchaseOrder, columnName: string): boolean {
-    let retValue = false;
+  onTdClick(event: any, order: PurchaseOrder, columnName: string) {
+    if (hasTextSelection()) {
+      return;
+    }
 
     if (
       columnName === FinishLink ||
@@ -270,7 +272,7 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       columnName === PrintLink
     ) {
       this.setTdId(order.id, columnName);
-      retValue = true;
+      return;
     }
 
     switch (columnName) {
@@ -286,8 +288,6 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
         this.Print(order);
         break;
     }
-
-    return retValue;
   }
 
   renderTDClass(order: PurchaseOrder, column: any): string {

@@ -100,7 +100,7 @@
                                         [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}"
                                         [class]="renderTDClass(item, column)"
                                         (click)="onTdClick($event, item, column.data)"
-                                        [matTooltip]="renderTdTooltip(item, column.data)">
+                                        title="{{renderTdTooltip(item, column.data)}}">
                                         <mat-icon *ngIf="icon(item, column.data)"
                                             [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}">{{iconName(item,
                                             column.data)}}</mat-icon>

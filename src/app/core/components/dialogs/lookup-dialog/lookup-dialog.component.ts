@@ -19,6 +19,7 @@ import { IIDName } from 'app/core/models/id-name';
 import { OliveBaseComponent } from '../../extends/base/base.component';
 import { splitStickyWords } from 'app/core/utils/string-helper';
 import { addSearchOption } from 'app/core/utils/search-helpers';
+import { hasTextSelection } from 'app/core/utils/olive-helpers';
 
 const Id = 'id';
 const Code = 'code';
@@ -316,6 +317,10 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
    * @returns  
    */
   clickItem(item?: any, event?: any) {
+    if (hasTextSelection()) {
+      return;
+    }
+
     if (event && event.srcElement.getAttribute('type') === 'checkbox' || this.setting.maxSelectItems === 0) { return; }
 
     if (this.setting.customClick) {

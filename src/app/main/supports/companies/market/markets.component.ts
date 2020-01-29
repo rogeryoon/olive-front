@@ -17,7 +17,7 @@ import { OliveSearchMarketComponent } from './search-market/search-market.compon
 import { OliveMarketService } from '../../services/market.service';
 import { Market } from '../../models/market.model';
 import { OliveMarketManagerComponent } from './market-manager/market-manager.component';
-import { checkIcon } from 'app/core/utils/olive-helpers';
+import { checkIcon, hasTextSelection } from 'app/core/utils/olive-helpers';
 import { webSiteUrl } from 'app/core/utils/string-helper';
 
 const Selected  = 'selected';
@@ -118,20 +118,19 @@ export class OliveMarketsComponent extends OliveEntityListComponent {
     return retValue;
   }
 
-  onTdClick(event: any, item: Market, columnName: string): boolean {
-    let retValue = false;
+  onTdClick(event: any, item: Market, columnName: string) {
+    if (hasTextSelection()) {
+      return;
+    }
 
     switch (columnName) {
       case WebSite:
         const url = webSiteUrl(item.webSite);
         if (url) {
           this.setTdId(item.id, columnName);
-          retValue = true;
           window.open(url, '_blank');
         }
         break;
     }
-
-    return retValue;
   }
 }

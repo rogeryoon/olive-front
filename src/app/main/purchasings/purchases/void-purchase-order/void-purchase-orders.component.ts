@@ -20,7 +20,7 @@ import { InWarehouse } from '../../models/in-warehouse.model';
 import { VoidPurchaseOrder } from '../../models/void-purchase-order.model';
 import { OliveVoidPurchaseOrderService } from '../../services/void-purchase-order.service';
 import { getItemsName } from 'app/core/utils/string-helper';
-import { createdDateShortId } from 'app/core/utils/olive-helpers';
+import { createdDateShortId, hasTextSelection } from 'app/core/utils/olive-helpers';
 import { PurchaseOrderPayment } from '../../models/purchase-order-payment.model';
 import { OliveConstants } from 'app/core/classes/constants';
 import { getShortDate } from 'app/core/utils/date-helper';
@@ -257,15 +257,17 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
     return super.renderTDClass(order, column, addedClass);
   }
 
-  onTdClick(event: any, order: VoidPurchaseOrder, columnName: string): boolean {
-    let retValue = false;
+  onTdClick(event: any, order: VoidPurchaseOrder, columnName: string) {
+    if (hasTextSelection()) {
+      return;
+    }
 
     if (
       columnName === LockLink ||
       columnName === ConfirmLink
     ) {
       this.setTdId(order.id, columnName);
-      retValue = true;
+      return;
     }
 
     switch (columnName) {
@@ -277,8 +279,6 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
         this.onConfirm([order]);
         break;
     }
-
-    return retValue;
   }
 
   onLock(order: VoidPurchaseOrder) {

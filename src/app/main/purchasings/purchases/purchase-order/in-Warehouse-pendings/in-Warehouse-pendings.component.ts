@@ -19,7 +19,7 @@ import { PurchaseOrder } from '../../../models/purchase-order.model';
 import { OlivePurchaseOrderManagerComponent } from '../purchase-order-manager/purchase-order-manager.component';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { NameValue } from 'app/core/models/name-value';
-import { purchaseOrderId, purchaseOrderStatusRemark } from 'app/core/utils/olive-helpers';
+import { purchaseOrderId, purchaseOrderStatusRemark, hasTextSelection } from 'app/core/utils/olive-helpers';
 import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-item.model';
 import { OliveDialogSetting } from 'app/core/classes/dialog-setting';
 import { OliveVoidPurchaseOrderManagerComponent } from '../../void-purchase-order/void-purchase-order-manager/void-purchase-order-manager.component';
@@ -116,7 +116,11 @@ export class OliveInWarehousePendingComponent extends OliveEntityListComponent {
     return model;
   }
 
-  onTdClick(event: any, order: PurchaseOrder, columnName: string): boolean {
+  onTdClick(event: any, order: PurchaseOrder, columnName: string) {
+    if (hasTextSelection()) {
+      return;
+    }
+
     const setting = new OliveDialogSetting(
       OliveVoidPurchaseOrderManagerComponent,
       {
@@ -140,8 +144,6 @@ export class OliveInWarehousePendingComponent extends OliveEntityListComponent {
         this.reRender();
       }
     });
-
-    return true;
   }
 
   getEditorCustomTitle(item: PurchaseOrder) {

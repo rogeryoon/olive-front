@@ -28,6 +28,7 @@ import { OliveBackEndErrors } from 'app/core/classes/back-end-errors';
 import { trimStringByMaxLength, splitStickyWords } from 'app/core/utils/string-helper';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { hasTextSelection } from 'app/core/utils/olive-helpers';
 
 @Component({
   selector: 'olive-entity-list',
@@ -107,7 +108,7 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
 
   icon(item: any, columnName: string) { return false; }
   iconName(item: any, columnName: string) { return ''; }
-  onTdClick(event: any, item: any, columnName: string): boolean { return false; }
+  onTdClick(event: any, item: any, columnName: string): void { return;  }
   getEditorCustomTitle(item: any): string { return null; }
   convertModel(model: any): any { return model; }
   getEditDialogReadOnly(item: any): boolean { return this.setting.isEditDialogReadOnly; }
@@ -268,6 +269,10 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   }
 
   protected editItem(item?: any, event?: any, startTabIndex = 0) {
+    if (hasTextSelection()) {
+      return;
+    }
+
     if (event && event.srcElement && event.srcElement.getAttribute('type') === 'checkbox') { return; }
 
     if (!this.setting.editComponent) {
