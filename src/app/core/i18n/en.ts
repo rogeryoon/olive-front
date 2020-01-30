@@ -105,7 +105,8 @@ export const locale = {
                 'deleteByConcurrency' : '해당 데이터를 참조하고 있는 관련 데이터가 존재하여 삭제를 할 수 없습니다. ',
                 'volumeError' : '(예: 12.5 5 9)와 같은 형식으로 입력하십시오.',
                 'productNotMatched' : '입력한 상품명 {0}은\n등록된 상품 {1}. {2}와 매치하지 않습니다.\n상품명을 다시 입력하십시오.',
-                'needToRegisterItem' : '해당 데이터가 없습니다. 데이터를 등록하십시오.'
+                'needToRegisterItem' : '해당 데이터가 없습니다. 데이터를 등록하십시오.',
+                'noSelectableItems' : '선택 가능 아이템 없음',
             },
             'validate' : {
                 'required' : '필수 입력(선택) 항목입니다.',
@@ -153,13 +154,13 @@ export const locale = {
                 'errorConfirm' : '오류 알림',
                 'duplicated' : '중복 오류 알림',
                 'deleteConfirm' : '삭제 알림',
-                'yesOrNo': '확인',
+                'yesOrNo' : '확인',
                 'creator' : '등록',
                 'lastUpdater' : '최종수정',
                 'validationError' : '입력 오류',
                 'finalConfirm' : '최종확인',
-                'selectWarehouses': '창고 선택',
-                'selectDeselectAll': '모두 선택/해제', // Select/Deselect All
+                'selectWarehouses' : '창고 선택',
+                'selectDeselectAll' : '모두 선택/해제', // Select/Deselect All
                 'selectSellers': '판매자 선택',
                 'select': '선택',
                 'pendingShipOut' : '대기',

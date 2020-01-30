@@ -77,11 +77,20 @@ export class OliveCheckboxSelectorPanelComponent extends OliveEntityFormComponen
     return returnCssClass;
   }
 
+  /**
+   * Get checkbox Disabled Status
+   * @param index 
+   * @returns true if checkbox is disabled
+   */
   disabledCheckbox(index: number): boolean {
     return this.remarkClass(index) === this.disabledClassName;
   }
 
-  /**
+  get enabledCheckboxCount(): number {
+    return this.oFArray.controls.filter(x => !x.disabled).length;
+  }
+
+    /**
    * Determines whether checked is
    * @param index 
    * @returns true if checked 

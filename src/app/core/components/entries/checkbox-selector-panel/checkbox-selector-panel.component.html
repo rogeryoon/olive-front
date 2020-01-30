@@ -13,12 +13,11 @@
             <div fxLayout="column" class="left-menu" *ngIf="!visibleLoadButton">
                 <h2 class="title">{{titleId|translate}}</h2>
 
-                <div *ngIf="oFArray.controls.length > 1">
-                    <label>
-                        <input type="checkbox" class="margin" formControlName="selectAll" [disableControl]="loadingIndicator">
-                        {{'common.title.selectDeselectAll'|translate}}
-                    </label>
-                </div>
+                <label *ngIf="enabledCheckboxCount > 0">
+                    <input type="checkbox" class="margin" formControlName="selectAll" [disableControl]="loadingIndicator">
+                    {{'common.title.selectDeselectAll'|translate}}
+                </label>
+                <label *ngIf="enabledCheckboxCount == 0" class="foreground-orange">{{'common.entryError.noSelectableItems'|translate}}</label>
             </div>
 
             <div *ngIf="items.length > 0" fxLayout="row wrap">
