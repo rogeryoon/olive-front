@@ -40,8 +40,8 @@ export class OliveBaseComponent implements OnInit {
    * @param amount 
    * @returns  
    */
-  commaNumber(amount: number) {
-    return numberFormat(amount, 0);
+  commaNumber(amount: number, nullToZero = true) {
+    return numberFormat(amount, 0, null, nullToZero);
   }
 
   /**

@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-
+import { isUndefined } from 'util';
 
 /**
  * Determines whether same number is
@@ -35,7 +35,11 @@ export function applyPrecision(num: number, precision: number): number {
  * @param [zero] 0일 경우 숫자대체 문자열
  * @returns 포맷 반환 문자열
  */
-export function numberFormat(amount: number, digits = 0, zero = null): string {
+export function numberFormat(amount: number, digits = 0, zero = null, nullToZero = true): string {
+    if (nullToZero && amount == null) {
+        amount = 0;
+    }
+
     if (zero !== null && amount === 0) {
         return zero;
     }

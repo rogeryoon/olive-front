@@ -18,13 +18,15 @@ import { OliveMarketExcelService } from '../../services/market-excel.service';
 import { MarketExcel } from '../../models/market-excel.model';
 import { OliveConstants } from 'app/core/classes/constants';
 import { OliveMarketExcelImportDialogComponent } from './market-excel-import-dialog/market-excel-import-dialog.component';
-import { checkIcon } from 'app/core/utils/olive-helpers';
+import { getShortDate } from 'app/core/utils/date-helper';
 
 const Selected  = 'selected';
-const Id = 'id';
+const CreatedUtc = 'id';
 const InterfaceName = 'interfaceName';
-const TransferredUtc = 'transferredUtc';
-const CreatedUtc = 'createdUtc';
+const ExcelRowCount = 'excelRowCount';
+const DuplicatedOrderCount = 'duplicatedOrderCount';
+const MappingItemCount = 'mappingItemCount';
+const OrderTransferredCount = 'orderTransferredCount';
 
 @Component({
   selector: 'olive-market-excel',
@@ -54,10 +56,18 @@ export class OliveMarketExcelsComponent extends OliveEntityListComponent {
       managePermission: null,
       columns: [
         { data: Selected },
-        { data: Id, thName: this.translator.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
-        { data: InterfaceName, thName: this.translator.get('common.tableHeader.interfaceName'),  tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
-        { data: TransferredUtc, thName: this.translator.get('common.tableHeader.imported'), tdClass: '', thClass: '' },
-        { data: CreatedUtc, thName: this.translator.get('common.tableHeader.createdUtc'), tdClass: '', thClass: '' }
+        { data: CreatedUtc, thName: this.translator.get('common.tableHeader.createdUtc'), 
+          tdClass: 'print -ex-type-text created-utc', thClass: 'print -ex-type-text created-utc' },
+        { data: InterfaceName, thName: this.translator.get('common.tableHeader.interfaceName'),  
+          tdClass: 'print left -ex-type-text inInterface-name', thClass: 'print -ex-type-text -ex-width-60 inInterface-name' },
+        { data: ExcelRowCount, thName: this.translator.get('common.tableHeader.excelRowCount'), 
+          tdClass: 'print right -ex-type-number excel-row-count', thClass: 'print right -ex-type-number excel-row-count' },
+        { data: OrderTransferredCount, thName: this.translator.get('common.tableHeader.orderTransferredCount'), 
+          tdClass: 'print right -ex-type-number order-transferred-count', thClass: 'print right -ex-type-number order-transferred-count' },
+        { data: DuplicatedOrderCount, thName: this.translator.get('common.tableHeader.duplicatedOrderCount'), 
+          tdClass: 'print right -ex-type-number duplicated-order-count', thClass: 'print right -ex-type-number duplicated-order-count' },
+        { data: MappingItemCount, thName: this.translator.get('common.tableHeader.mappingItemCount'), 
+          tdClass: 'print right -ex-type-number mapping-item-count', thClass: 'print right -ex-type-number mapping-item-count' },
       ],
       itemType: MarketExcel,
       disabledContextMenus: [ OliveConstants.contextMenu.newItem, OliveConstants.contextMenu.excel, OliveConstants.contextMenu.print ],
@@ -70,40 +80,24 @@ export class OliveMarketExcelsComponent extends OliveEntityListComponent {
 
     let retValue = '';
     switch (columnName) {
-      case Id:
-        retValue = this.id36(item.id);
+      case CreatedUtc:
+        retValue = getShortDate(item.createdUtc, true);
         break;
       case InterfaceName:
         retValue = item.interfaceName;
         break;
-      case CreatedUtc:
-        retValue = this.date(item.createdUtc);
+      case ExcelRowCount:
+        retValue = this.commaNumber(item.excelRowCount);
         break;
-    }
-
-    return retValue;
-  }
-
-  icon(item: MarketExcel, columnName: string): boolean {
-
-    let retValue = false;
-
-    switch (columnName) {
-      case TransferredUtc:
-        retValue = true;
-        break;        
-    }
-
-    return retValue;
-  }
-
-  iconName(item: MarketExcel, columnName: string): string {
-
-    let retValue = '';
-    switch (columnName) {
-      case TransferredUtc:
-        retValue = checkIcon(item.transferredUtc);
+      case DuplicatedOrderCount:
+        retValue = this.commaNumber(item.duplicatedOrderCount);
         break;
+      case MappingItemCount:
+        retValue = this.commaNumber(item.mappingItemCount);
+        break;
+      case OrderTransferredCount:
+        retValue = this.commaNumber(item.orderTransferredCount);
+        break;                
     }
 
     return retValue;

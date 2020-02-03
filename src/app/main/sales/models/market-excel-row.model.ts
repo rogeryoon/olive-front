@@ -8,5 +8,6 @@ export class MarketExcelRow extends OliveTrackingAttribute {
     quantity?: number;
     marketItemMappingId?: number;
     orderId?: number;
+    duplicatedOrder?: boolean;
     data?: string;
 }

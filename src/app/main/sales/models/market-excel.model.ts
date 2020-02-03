@@ -6,5 +6,8 @@ export class MarketExcel extends OliveTrackingAttribute {
     companyGroupId?: number;
     interfaceId?: number;
     interfaceName?: string;
-    count?: number;
+    excelRowCount?: number;
+    duplicatedOrderCount?: number;
+    mappingItemCount?: number;
+    orderTransferredCount?: number;
 }

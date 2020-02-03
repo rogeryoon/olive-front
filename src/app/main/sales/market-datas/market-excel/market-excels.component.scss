@@ -4,36 +4,26 @@
             width: 20px;
         }
 
-        th:nth-child(2) {
-            width: 80px;
+        th.created-utc {
+            width: 130px;
         }
 
-        th:nth-child(4) {
-            width: 150px;
-        }
-
-        th:nth-child(5) {
-            width: 150px;
+        th.excel-row-count,
+        th.duplicated-order-count,
+        th.mapping-item-count,
+        th.order-transferred-count {
+            width: 90px;
         }
 
         td:nth-child(1) {
             text-align: center;
         }
 
-        td:nth-child(2) {
-            text-transform: uppercase;
-        }
-
-        td:nth-child(3) {
-            text-align: center;
-        }
-
-        td:nth-child(4) {
-            text-align: center;
-        }
-
-        td:nth-child(5) {
-            text-align: center;
+        td.excel-row-count,
+        td.duplicated-order-count,
+        td.mapping-item-count,
+        td.order-transferred-count {
+            text-align: right;
         }
     }
 }
