@@ -20,7 +20,6 @@ import { OliveSupplierManagerComponent } from './supplier-manager/supplier-manag
 import { checkIcon, hasTextSelection } from 'app/core/utils/olive-helpers';
 import { webSiteHostName, webSiteUrl } from 'app/core/utils/string-helper';
 
-const Selected = 'selected';
 const Code = 'code';
 const Name = 'name';
 const WebSite = 'webSite';
@@ -54,7 +53,6 @@ export class OliveSuppliersComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Company.supplier,
       managePermission: null,
       columns: [
-        { data: Selected },
         { data: Code, thName: this.translator.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         { data: Name, thName: this.translator.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         { data: WebSite, thName: this.translator.get('common.tableHeader.webSite'), tdClass: 'print left -ex-type-text link', thClass: 'print -ex-type-text' }, 

@@ -18,7 +18,6 @@ import { OliveProductVariantService } from '../../services/product-variant.servi
 import { ProductVariant } from '../../models/product-variant.model';
 import { OliveProductVariantManagerComponent } from './product-variant-manager/product-variant-manager.component';
 
-const Selected = 'selected';
 const Id = 'id';
 const Code = 'code';
 const Name = 'name';
@@ -53,7 +52,6 @@ export class OliveProductVariantsComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Product.productVariant,
       managePermission: null,
       columns: [
-        { data: Selected },
         { data: Id, thName: this.translator.get('common.tableHeader.productVariantId'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         { data: Code, thName: this.translator.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         { data: GroupName, thName: this.translator.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-80' },

@@ -20,6 +20,7 @@ import { OliveBaseComponent } from '../../extends/base/base.component';
 import { splitStickyWords } from 'app/core/utils/string-helper';
 import { addSearchOption } from 'app/core/utils/search-helpers';
 import { hasTextSelection } from 'app/core/utils/olive-helpers';
+import { OliveConstants } from 'app/core/classes/constants';
 
 const Id = 'id';
 const Code = 'code';
@@ -140,7 +141,7 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
    */
   get dataColumns() {
     if (this.tableColumns === null) { return null; }
-    return this.tableColumns.filter(c => c.data !== 'selected');
+    return this.tableColumns.filter(c => c.data !== OliveConstants.constant.selected);
   }
 
   /**
@@ -168,7 +169,7 @@ export class OliveLookupDialogComponent extends OliveBaseComponent implements On
     this.setTableColumns();
 
     if (this.checkBoxEnable) {
-      this.tableColumns.unshift({ data: 'selected' });
+      this.tableColumns.unshift({ data: OliveConstants.constant.selected });
     }
 
     this.dtOptions = {

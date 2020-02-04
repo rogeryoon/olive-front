@@ -26,7 +26,6 @@ import { OliveConstants } from 'app/core/classes/constants';
 import { getShortDate } from 'app/core/utils/date-helper';
 import { OlivePurchasingMiscService } from '../../services/purchasing-misc.service';
 
-const Selected = 'selected';
 const Id = 'id';
 const VoidType = 'voidType';
 const Suppliers = 'suppliers';
@@ -65,8 +64,6 @@ export class OliveVoidPurchaseOrdersComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Purchase.cancel,
       managePermission: null,
       columns: [
-        { data: Selected },
-
         {
           data: Id, thName: this.translator.get('purchasing.inWarehousesHeader.voidPurchaseOrderId'),
           tdClass: 'print -ex-type-id id', thClass: 'print -ex-type-id id'

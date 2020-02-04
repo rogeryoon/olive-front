@@ -152,17 +152,80 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
 
         this.loadItems(dataTablesParameters, callback);
       },
-      columns: this.setting.columns,
+      columns: this.dataTableColumns,
       dom: 'ltip',
-      columnDefs: [
-        { targets: 'nosort', orderable: false }
-      ],
-      order: this.setting.order ? this.setting.order : [[1, 'desc']]
+      ordering: !this.setting.hideSortArrow,
+      order: this.dataTableOrders
     };
 
     $(document).ready(function () {
       $('.olive-datatable').css('width', '100%');
     });
+  }
+
+  /**
+   * Gets data only columns
+   */
+  get dataOnlyColumns(): any[] {
+    return this.setting.columns.filter(c => c.data !== OliveConstants.constant.selected);
+  }
+
+  /**
+   * Gets need to add checkboxes
+   */
+  get needToAddCheckboxes(): boolean {
+    return !this.setting.hideSelectCheckBox && !this.setting.columns.find(x => x.data === OliveConstants.constant.selected);
+  }
+
+  /**
+   * Gets data table columns
+   */
+  get dataTableColumns(): any[] {
+    // 체크박스 옵션이라면 컬럼에 Checkbox 추가
+    if (this.needToAddCheckboxes) {
+      return [{ data: OliveConstants.constant.selected, orderable: false }].concat(this.setting.columns);
+    }
+
+    return this.setting.columns;
+  }
+
+  /**
+   * Gets data table orders
+   */
+  get dataTableOrders(): any[] {
+    const returnOrders: any[] = [];
+    const orders = this.setting.orders ? this.setting.orders : [];
+
+    // 정렬을 하지 않았다면 기본정렬을 만든다.
+    if (orders.length === 0) {
+      for (const column of this.dataTableColumns) {
+        const columnName = column.data.toLowerCase();
+        if (columnName === 'id') {
+          orders.push([columnName, 'desc']);
+          break;
+        }
+        else if (columnName === 'createdUtc'.toLowerCase()) {
+          orders.push([columnName, 'desc']);
+          break;
+        }
+      }
+
+      if (orders.length === 0) {
+        console.error('dataTableOrder has no order');
+      }
+    }
+
+    for (const order of orders) {
+      let colIndex = 0;
+      for (const column of this.dataTableColumns) {
+        if (order[0].toLowerCase() === column.data.toLowerCase()) {
+          returnOrders.push([colIndex, order[1]]);
+        }
+        colIndex++;
+      }
+    }
+
+    return returnOrders;
   }
 
   /**
@@ -423,10 +486,18 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
   }
 
   uploadItems(data: any, dialogRef: any) {
-    this.uploadHandler(this.dataService.uploadItems(data), dialogRef);
+    this.uploadHandler(data.excelJson.length, this.dataService.uploadItems(data), dialogRef);
   }
 
-  uploadHandler(handler: any, dialogRef: any): void {
+  showUploadSuccessMessage(item: any, itemCount: number): string {
+    return String.Format(this.translator.get('common.message.uploadSaved'), this.commaNumber(itemCount));
+  }
+
+  getRefreshButtonNameAfterUploading(): string {
+    return this.translator.get('common.button.refresh');
+  }
+
+  uploadHandler(itemCount: number, handler: any, dialogRef: any): void {
     handler.subscribe(
       response => {
         this.messageHelper.showSavedUploadSuccess();
@@ -436,11 +507,11 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
         this.alertService.showDialog
           (
             this.translator.get('common.title.success'),
-            this.translator.get('common.message.uploadSaved'),
+            this.showUploadSuccessMessage(response.model, itemCount),
             DialogType.alert,
             () => this.onUploaded(response.model),
             null,
-            this.translator.get('common.button.refresh')
+            this.getRefreshButtonNameAfterUploading()
           );
       },
       error => {
@@ -497,10 +568,6 @@ export class OliveEntityListComponent extends OliveBaseComponent implements Afte
 
   renderTHClass(classString: any) {
     return this.isNull(classString) ? '' : classString;
-  }
-
-  get dataColumns() {
-    return this.setting.columns.filter(c => c.data !== 'selected');
   }
 
   renderTableClass(): string {

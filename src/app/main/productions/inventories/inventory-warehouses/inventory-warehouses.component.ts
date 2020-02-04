@@ -19,7 +19,6 @@ import { OliveConstants } from 'app/core/classes/constants';
 import { Warehouse } from 'app/main/supports/models/warehouse.model';
 import { InventoryWarehouse } from '../../models/inventory-warehouse';
 
-const Selected = 'selected';
 const Id = 'id';
 const ProductName = 'productName';
 const VariantName = 'variantName';
@@ -67,8 +66,6 @@ export class OliveInventoryWarehousesComponent extends OliveEntityListComponent 
 
   get columns() {
     const columns = [
-        // 1
-        { data: Selected },
         // 2
         { data: Id, orderable: true, thName: this.translator.get('common.tableHeader.productVariantId'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3

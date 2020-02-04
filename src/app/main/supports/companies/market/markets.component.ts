@@ -20,7 +20,6 @@ import { OliveMarketManagerComponent } from './market-manager/market-manager.com
 import { checkIcon, hasTextSelection } from 'app/core/utils/olive-helpers';
 import { webSiteUrl } from 'app/core/utils/string-helper';
 
-const Selected  = 'selected';
 const Code = 'code';
 const Name = 'name';
 const WebSite = 'webSite';
@@ -54,7 +53,6 @@ export class OliveMarketsComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Company.market,
       managePermission: null,
       columns: [
-        { data: Selected },
         { data: Code, thName: this.translator.get('common.tableHeader.code'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         { data: Name, thName: this.translator.get('common.tableHeader.name'), 

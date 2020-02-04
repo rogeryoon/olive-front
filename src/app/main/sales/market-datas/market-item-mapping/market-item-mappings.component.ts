@@ -21,7 +21,6 @@ import { MarketItemMapping } from '../../models/market-item-mapping.model';
 import { OliveMarketItemMappingManagerComponent } from './market-item-mapping-manager/market-item-mapping-manager.component';
 import { convertBase36ToNumber } from 'app/core/utils/encode-helpers';
 
-const Selected  = 'selected';
 const Id = 'id';
 const InterfaceName = 'interfaceName';
 const ExcelColumns = 'excelColumns';
@@ -73,8 +72,6 @@ export class OliveMarketItemMappingsComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Sales.matchItems,
       managePermission: null,
       columns: [
-        // 1
-        { data: Selected },
         // 2
         { data: Id, thName: this.translator.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3

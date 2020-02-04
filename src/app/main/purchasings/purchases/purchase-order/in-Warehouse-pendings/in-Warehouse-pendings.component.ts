@@ -71,9 +71,11 @@ export class OliveInWarehousePendingComponent extends OliveEntityListComponent {
       editComponent: OlivePurchaseOrderManagerComponent,
       searchComponent: OliveSearchPurchaseOrderComponent,
       itemType: PurchaseOrder,
-      order: [[0, 'desc']],
+      orders: [['id', 'desc']],
       extraSearches: [{ name: 'InWarehousePending', value: 'true' }] as NameValue[],
-      isEditDialogReadOnly: true
+      isEditDialogReadOnly: true,
+      hideSortArrow: true,
+      hideSelectCheckBox: true
     };
   }
 

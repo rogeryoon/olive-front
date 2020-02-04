@@ -14,6 +14,7 @@ import { InventoryBalance } from '../../models/inventory-balance';
 import { OliveInventoryService } from '../../services/inventory.service';
 import { OliveDocumentService } from '../../../../core/services/document.service';
 import { OliveMessageHelperService } from '../../../../core/services/message-helper.service';
+import { OliveConstants } from 'app/core/classes/constants';
 
 @Component({
   selector: 'olive-inventory-balance-save',
@@ -93,7 +94,7 @@ export class OliveInventoryBalanceSaveComponent implements AfterViewInit, OnDest
             });
       },
       columns: [
-        { data: 'selected' },
+        { data: OliveConstants.constant.selected },
         { data: 'Id' },
         { data: 'productName' },
         { data: 'variantName' },

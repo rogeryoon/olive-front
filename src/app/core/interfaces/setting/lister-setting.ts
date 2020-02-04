@@ -47,8 +47,18 @@ export class ListerSetting implements IListerSetting {
     // 팝업 편집창 읽기전용 
     isEditDialogReadOnly?: boolean;
 
-    // Datatable Order Overriding
-    order?: any;
+    /**
+     * Hide/Show selecting check box of lister setting
+     */
+    hideSelectCheckBox?: boolean;
+
+    /**
+     * Datatable Order Overriding
+     * 예 : [['id','asc'],['date','desc']]
+     */
+    orders?: any[];
+
+    hideSortArrow?: boolean;
 
     // 페이지 테이블 Footer 열 정의
     footerColumns?: any[];

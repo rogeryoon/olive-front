@@ -21,7 +21,6 @@ import { OliveCacheService } from 'app/core/services/cache.service';
 import { getItemsName } from 'app/core/utils/string-helper';
 import { createdDateShortId } from 'app/core/utils/olive-helpers';
 
-const Selected  = 'selected';
 const Id = 'id';
 const Suppliers = 'suppliers';
 const Items = 'items';
@@ -56,8 +55,6 @@ export class OliveInWarehousesComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.InWarehouse.list,
       managePermission: null,
       columns: [
-        // 1
-        { data: Selected },
         // 2
         { data: Id, thName: this.translator.get('purchasing.inWarehousesHeader.inWarehouseId'), 
           tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },

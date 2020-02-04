@@ -27,8 +27,8 @@ import { MarketExcelRowsStatus } from '../../models/market-excel-rows-status.mod
 import { MarketExcel } from '../../models/market-excel.model';
 import { checkIcon } from 'app/core/utils/olive-helpers';
 import { convertBase36ToNumber } from 'app/core/utils/encode-helpers';
+import { OliveMarketExcelImportDialogComponent } from '../market-excel/market-excel-import-dialog/market-excel-import-dialog.component';
 
-const Selected = 'selected';
 const Id = 'id';
 const OrderNumber = 'orderNumber';
 const Consignee = 'consignee';
@@ -84,8 +84,6 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Sales.marketExcelRows,
       managePermission: null,
       columns: [
-        // 1
-        { data: Selected },
         // 2
         {
           data: Id, thName: this.translator.get('common.tableHeader.id'),
@@ -281,15 +279,6 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
     return retValue;
   }
 
-  navigateDetailPage(item: MarketExcel) { 
-    this.router.navigateByUrl(`/data/market/orders/${this.id36(item.id)}?name=${encodeURI(item.interfaceName)}`);
-  }
-
-  onUploaded(item: MarketExcel) {
-    super.onUploaded(item);
-    this.navigateDetailPage(item);
-  }
-
   transferOrders() {
     this.loadingIndicator = true;
 
@@ -314,5 +303,28 @@ export class OliveMarketExcelRowsComponent extends OliveEntityListComponent {
         this.messageHelper.showLoadFailedSticky(error);
       }
     );    
+  }
+
+  navigateDetailPage(item: MarketExcel) { 
+    this.router.navigateByUrl(`/data/market/orders/${this.id36(item.id)}?name=${encodeURI(item.interfaceName)}`);
+  }
+
+  onUploaded(item: MarketExcel) {
+    super.onUploaded(item);
+    this.navigateDetailPage(item);
+  }
+
+  onUpload() {
+    const dialogRef = this.dialog.open(
+      OliveMarketExcelImportDialogComponent,
+      {
+        disableClose: true,
+        panelClass: 'mat-dialog-md',
+        data: { importType: this.setting.itemType.name }
+      });
+
+    dialogRef.componentInstance.onSave.subscribe(data => {
+      this.uploadItems(data, dialogRef);
+    });
   }
 }

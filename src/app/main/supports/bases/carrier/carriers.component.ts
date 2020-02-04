@@ -20,7 +20,6 @@ import { OliveEntityListComponent } from 'app/core/components/extends/entity-lis
 import { checkIcon, hasTextSelection } from 'app/core/utils/olive-helpers';
 import { webSiteHostName, webSiteUrl } from 'app/core/utils/string-helper';
 
-const Selected  = 'selected';
 const Code = 'code';
 const Name = 'name';
 const WebSite = 'website';
@@ -54,8 +53,6 @@ export class OliveCarriersComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Basic.carrier,
       managePermission: null,
       columns: [
-        // 1
-        { data: Selected },
         // 2
         { data: Code, thName: this.translator.get('common.tableHeader.code'), 
           tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },

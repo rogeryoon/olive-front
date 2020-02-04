@@ -20,7 +20,6 @@ import { Company } from '../../models/company.model';
 import { OliveCompanyManagerComponent } from './company-manager/company-manager.component';
 import { checkIcon } from 'app/core/utils/olive-helpers';
 
-const Selected = 'selected';
 const Id = 'id';
 const Code = 'code';
 const Name = 'name';
@@ -55,8 +54,6 @@ export class OliveCompaniesComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Company.list,
       managePermission: Permission.assignCompanyGroups,
       columns: [
-        // 1
-        { data: Selected },
         // 2
         { data: Code, thName: this.translator.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 3

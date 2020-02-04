@@ -83,20 +83,20 @@
                             <!--display nowrap 해도 안됨 https://stackoverflow.com/questions/47063834/jquery-datatables-with-scrollx-true-initially-does-not-render-columns-->
                             <thead>
                                 <tr>
-                                    <th class="nosort">
+                                    <th *ngIf="!setting.hideSelectCheckBox" class="nosort">
                                         <input type="checkbox" [disabled]="items && !items.length" [(ngModel)]="selectedAll" (change)="selectAll();" />
                                     </th>
-                                    <th *ngFor="let column of dataColumns" [class]="renderTHClass(column.thClass)">
+                                    <th *ngFor="let column of dataOnlyColumns" [class]="renderTHClass(column.thClass)">
                                         {{column.thName}}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let item of items" (click)="editItem(item, $event)" class="print">
-                                    <td>
+                                    <td *ngIf="!setting.hideSelectCheckBox">
                                         <input class="select" name="select" type="checkbox" [(ngModel)]="item.selected"
                                             (change)="checkIfAllSelected();">
                                     </td>
-                                    <td *ngFor="let column of dataColumns"
+                                    <td *ngFor="let column of dataOnlyColumns"
                                         [ngClass]="{'ov-td-click' : tdId == item.id.toString()+column.data}"
                                         [class]="renderTDClass(item, column)"
                                         (click)="onTdClick($event, item, column.data)"
@@ -109,7 +109,7 @@
                                     </td>
                                 </tr>
                                 <tr *ngIf="items?.length == 0">
-                                    <td [attr.colspan]="setting.columns.length" class="no-data-available">{{'common.message.noRecordsFound'
+                                    <td [attr.colspan]="dataTableColumns.length" class="no-data-available">{{'common.message.noRecordsFound'
                                         | translate}}</td>
                                 </tr>
                             </tbody>

@@ -19,7 +19,6 @@ import { MarketSeller } from '../../models/market-seller.model';
 import { OliveMarketSellerManagerComponent } from './market-seller-manager/market-seller-manager.component';
 import { checkIcon } from 'app/core/utils/olive-helpers';
 
-const Selected  = 'selected';
 const Code = 'code';
 const Name = 'name';
 const Activated = 'activated';
@@ -52,7 +51,6 @@ export class OliveMarketSellersComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Company.marketSeller,
       managePermission: null,
       columns: [
-        { data: Selected },
         { data: Code, thName: this.translator.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         { data: Name, thName: this.translator.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         { data: Activated, thName: this.translator.get('common.tableHeader.activated'), tdClass: '', thClass: '' },

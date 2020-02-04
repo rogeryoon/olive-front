@@ -35,7 +35,6 @@ import { PurchaseOrderItem } from 'app/main/purchasings/models/purchase-order-it
 import { isNullOrUndefined } from 'util';
 import { OlivePurchaseOrderHelperService } from 'app/main/purchasings/services/purchase-order-helper.service';
 
-const Selected = 'selected';
 const Id = 'id';
 const SupplierName = 'supplierName';
 const ItemsName = 'itemsName';
@@ -83,8 +82,6 @@ export class OlivePurchaseOrdersComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Purchase.list,
       managePermission: null,
       columns: [
-        // 1
-        { data: Selected },
         // 2
         { data: Id, thName: this.translator.get('common.tableHeader.purchaseOrderId'), 
           tdClass: 'print -ex-type-id id', thClass: 'print -ex-type-id id' },

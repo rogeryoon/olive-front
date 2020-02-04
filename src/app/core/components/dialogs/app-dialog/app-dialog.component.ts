@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 import { AlertDialog, DialogType } from '@quick/services/alert.service';
+import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
 @Component({
   selector: 'olive-app-dialog',
@@ -12,6 +13,7 @@ export class OliveAppDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<OliveAppDialogComponent>,
+    private translator: FuseTranslationLoaderService,
     @Inject(MAT_DIALOG_DATA) private data: AlertDialog
   ) {
     dialogRef.disableClose = true;
@@ -26,7 +28,7 @@ export class OliveAppDialogComponent {
   }
 
   get htmlMessage() {
-    return this.data.message.replace(/\n/g, '<br/>');
+    return this.data.message.replace(/\n/g, '<br/><br/>');
   }
 
   get message() {
@@ -34,11 +36,11 @@ export class OliveAppDialogComponent {
   }
 
   get okLabel() {
-    return this.data.okLabel || 'OK';
+    return this.data.okLabel || this.translator.get('common.button.ok');
   }
 
   get cancelLabel() {
-    return this.data.cancelLabel || 'CANCEL';
+    return this.data.cancelLabel || this.translator.get('common.button.cancel');
   }
 
   get showCancel() {

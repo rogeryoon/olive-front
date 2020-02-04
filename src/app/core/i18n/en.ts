@@ -29,7 +29,7 @@ export const locale = {
                 'newItemCreated': '"{0}"(이)가 저장되었습니다.', 
                 // 'The item was created successfully',
                 'newItemCreatedGeneral': '데이터가 저장되었습니다.', 
-                'uploadSaved': '업로드 데이터 저장을 완료하였습니다.',
+                'uploadSaved': '{0}건 업로드를 완료하였습니다.',
                 // '"{0}" was deleted successfully'
                 'deleted' : '"{0}"(이)가 삭제되었습니다.', 
                 // 'The item was deleted successfully'
@@ -101,7 +101,7 @@ export const locale = {
             },
             'entryError' : {
                 'concurrency' : '입력한 Code나 Key가 중복되어 데이터를 저장할 수 없습니다.',
-                'concurrencyKeyName' : '입력한 키 \'{0}\'(이)가 기존 데이터값과 중복되어 데이터를 저장할 수 없습니다. \'{0}\'(을)를 다른값으로 변경하십시오.',
+                'concurrencyKeyName' : '입력한 키 \'{0}\'(이)가 기존 데이터값과 중복되어 데이터를 저장할 수 없습니다.\n\'{0}\'(을)를 다른값으로 변경하십시오.',
                 'deleteByConcurrency' : '해당 데이터를 참조하고 있는 관련 데이터가 존재하여 삭제를 할 수 없습니다. ',
                 'volumeError' : '(예: 12.5 5 9)와 같은 형식으로 입력하십시오.',
                 'productNotMatched' : '입력한 상품명 {0}은\n등록된 상품 {1}. {2}와 매치하지 않습니다.\n상품명을 다시 입력하십시오.',
@@ -201,7 +201,8 @@ export const locale = {
                 'reIssueTrackingNumber' : '송장번호 재발급',
                 'issueTrackingNumber' : '송장번호 발급',
                 'filter' : '필터',
-                'removeFilter' : '필터 제거'
+                'removeFilter' : '필터 제거',
+                'redirectPage' : '해당 화면 이동'
             },
             'menu': {
                 'goPreviousPage' : '전화면으로 돌아가기',
@@ -639,7 +640,8 @@ export const locale = {
                 'transferOrders' : '주문 전환',
                 'goToLinkProduct': '클릭하면 판매처상품을 자체 상품과 연결하는 페이지로 이동합니다.',
                 'goToTransferOrders': '클릭하면 오픈마켓 엑셀 주문을 시스템 관리주문으로 전환합니다.',
-                'transferableOrdersSubCount' : '총 주문 {0}건'
+                'transferableOrdersSubCount' : '총 주문 {0}건',
+                'uploadSaved' : '{0}건 업로드 완료\n업로드 엑셀목록으로 이동합니다.'
             },
             'marketItemMappings' : {
                 'linkProductMenuJobDoneTitle' : '상품 연결 완료',

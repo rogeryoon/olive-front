@@ -21,7 +21,6 @@ import { OliveConstants } from 'app/core/classes/constants';
 import { getItemsName } from 'app/core/utils/string-helper';
 import { isNullOrUndefined } from 'util';
 
-const Selected = 'selected';
 const Id = 'id';
 const MarketOrderNumber = 'marketOrderNumber';
 const TrackingNumber = 'trackingNumber';
@@ -59,8 +58,6 @@ export class OliveOrderShipOutsComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Sales.orderList,
       managePermission: null,
       columns: [
-        // 1
-        { data: Selected },
         // 2
         { data: Id, thName: this.translator.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3

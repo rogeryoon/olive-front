@@ -20,7 +20,6 @@ import { Branch } from '../../models/branch.model';
 import { OliveBranchManagerComponent } from './branch-manager/branch-manager.component';
 import { checkIcon } from 'app/core/utils/olive-helpers';
 
-const Selected  = 'selected';
 const Id = 'id';
 const Code = 'code';
 const Name = 'name';
@@ -61,7 +60,6 @@ export class OliveBranchesComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Company.branch,
       managePermission: Permission.assignCompanyGroups,
       columns: [
-        { data: Selected },
         { data: Code, thName: this.translator.get('common.tableHeader.code'),  tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         { data: Name, thName: this.translator.get('common.tableHeader.name'),  tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         { data: Outsourcing, thName: this.translator.get('common.tableHeader.outsourcing'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },

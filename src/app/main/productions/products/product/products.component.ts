@@ -20,7 +20,6 @@ import { OliveProductManagerComponent } from './product-manager/product-manager.
 import { checkIcon } from 'app/core/utils/olive-helpers';
 import { minNumber, maxNumber } from 'app/core/utils/number-helper';
 
-const Selected = 'selected';
 const Id = 'id';
 const Name = 'name';
 const Activated = 'activated';
@@ -56,8 +55,6 @@ export class OliveProductsComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Product.productGroup,
       managePermission: null,
       columns: [
-        // 1
-        { data: Selected },
         // 2
         { data: Id, thName: this.translator.get('common.tableHeader.productId'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3

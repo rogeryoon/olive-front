@@ -17,7 +17,6 @@ import { InventoryBalance } from '../../models/inventory-balance';
 import { OliveCacheService } from 'app/core/services/cache.service';
 import { OliveConstants } from 'app/core/classes/constants';
 
-const Selected = 'selected';
 const Id = 'id';
 const ProductName = 'productName';
 const VariantName = 'variantName';
@@ -60,8 +59,6 @@ export class OliveInventoryBalancesComponent extends OliveEntityListComponent {
       icon: NavIcons.Product.inventoriesBalance,
       translateTitleId: NavTranslates.Product.inventoriesBalance,
       columns: [
-        // 1
-        { data: Selected },
         // 2
         { data: Id, thName: this.translator.get('common.tableHeader.productVariantId'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         // 3

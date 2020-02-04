@@ -19,7 +19,6 @@ import { OliveCarrierTrackingNumberRangeService } from '../../../shippings/servi
 import { CarrierTrackingNumberRange } from '../../../shippings/models/carrier-tracking-number-range.model';
 import { checkIcon } from 'app/core/utils/olive-helpers';
 
-const Selected  = 'selected';
 const Id = 'id';
 const Name = 'name';
 const AvailNumbers = 'availNumbers';
@@ -56,7 +55,6 @@ export class OliveCarrierTrackingNumberRangesComponent extends OliveEntityListCo
       translateTitleId: NavTranslates.Basic.carrierTrackingNumberRange,
       managePermission: null,
       columns: [
-        { data: Selected },
         { data: Id, thName: this.translator.get('common.tableHeader.id'), tdClass: 'print -ex-type-id', thClass: 'print -ex-type-id' },
         { data: Name, thName: this.translator.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         { data: AvailNumbers, thName: this.translator.get('common.tableHeader.availTrackingNumbers'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },

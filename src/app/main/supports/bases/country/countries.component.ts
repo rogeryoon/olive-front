@@ -19,7 +19,6 @@ import { Country } from '../../models/country.model';
 import { OliveCountryManagerComponent } from './country-manager/country-manager.component';
 import { checkIcon } from 'app/core/utils/olive-helpers';
 
-const Selected  = 'selected';
 const Id = 'id';
 const Code = 'code';
 const Name = 'name';
@@ -54,7 +53,6 @@ export class OliveCountriesComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Basic.country,
       managePermission: null,
       columns: [
-        { data: Selected },
         { data: Code, thName: this.translator.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         { data: Name, thName: this.translator.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         { data: Activated, thName: this.translator.get('common.tableHeader.activated'), tdClass: '', thClass: '' },

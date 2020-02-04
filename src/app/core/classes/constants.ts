@@ -92,6 +92,7 @@ export class OliveConstants {
     static constant = class {
         static carrierTrackingNumberRangeEventKey = 'numbersGroup';
         static serverValidationDelimiter = '||';
+        static selected = 'selected';
     };
 
     static uiConfig = class {

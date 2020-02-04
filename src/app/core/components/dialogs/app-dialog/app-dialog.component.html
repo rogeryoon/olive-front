@@ -1,13 +1,12 @@
 <h1 *ngIf="showTitle" mat-dialog-title>{{title}}</h1>
-<div mat-dialog-content>
+<div mat-dialog-content class="mb-16">
 
-    <p *ngIf="!isPrompt" [innerHTML]="htmlMessage"></p>
+    <span *ngIf="!isPrompt" [innerHTML]="htmlMessage" class="mt-4 pt-4"></span>
 
     <mat-form-field appearance="outline" *ngIf="isPrompt" style="width: 100%;">
         <mat-label>{{message}}</mat-label>
         <input matInput [(ngModel)]="result" />
     </mat-form-field>
-
 </div>
 <div mat-dialog-actions>
     <button mat-raised-button (click)="ok()" color="warn">{{okLabel}}</button>

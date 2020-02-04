@@ -19,7 +19,6 @@ import { Currency } from '../../models/currency.model';
 import { OliveCurrencyManagerComponent } from './currency-manager/currency-manager.component';
 import { checkIcon } from 'app/core/utils/olive-helpers';
 
-const Selected  = 'selected';
 const Id = 'id';
 const Code = 'code';
 const Name = 'name';
@@ -55,8 +54,6 @@ export class OliveCurrenciesComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Basic.currency,
       managePermission: null,
       columns: [
-        // 1
-        { data: Selected },
         // 2
         { data: Code, thName: this.translator.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         // 3

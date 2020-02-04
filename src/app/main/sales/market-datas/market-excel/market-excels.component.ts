@@ -2,6 +2,8 @@
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 
+import { String } from 'typescript-string-operations';
+
 import { fuseAnimations } from '@fuse/animations';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 
@@ -20,7 +22,6 @@ import { OliveConstants } from 'app/core/classes/constants';
 import { OliveMarketExcelImportDialogComponent } from './market-excel-import-dialog/market-excel-import-dialog.component';
 import { getShortDate } from 'app/core/utils/date-helper';
 
-const Selected  = 'selected';
 const CreatedUtc = 'id';
 const InterfaceName = 'interfaceName';
 const ExcelRowCount = 'excelRowCount';
@@ -55,8 +56,7 @@ export class OliveMarketExcelsComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Sales.marketExcels,
       managePermission: null,
       columns: [
-        { data: Selected },
-        { data: CreatedUtc, thName: this.translator.get('common.tableHeader.createdUtc'), 
+        { data: CreatedUtc,  thName: this.translator.get('common.tableHeader.createdUtc'), 
           tdClass: 'print -ex-type-text created-utc', thClass: 'print -ex-type-text created-utc' },
         { data: InterfaceName, thName: this.translator.get('common.tableHeader.interfaceName'),  
           tdClass: 'print left -ex-type-text inInterface-name', thClass: 'print -ex-type-text -ex-width-60 inInterface-name' },
@@ -124,5 +124,13 @@ export class OliveMarketExcelsComponent extends OliveEntityListComponent {
     dialogRef.componentInstance.onSave.subscribe(data => {
       this.uploadItems(data, dialogRef);
     });
+  }
+
+  showUploadSuccessMessage(item: MarketExcel, itemCount: number): string {
+    return String.Format(this.translator.get('sales.marketExcelRows.uploadSaved'), this.commaNumber(item.excelRowCount));
+  }
+
+  getRefreshButtonNameAfterUploading(): string {
+    return this.translator.get('common.button.redirectPage');
   }
 }

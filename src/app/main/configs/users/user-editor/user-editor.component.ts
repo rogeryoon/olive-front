@@ -22,12 +22,6 @@ import { LookupListerSetting } from 'app/core/interfaces/setting/lookup-lister-s
 import { CompanyGroup } from 'app/main/supports/models/company-group.model';
 import { requiredValidator, equalValidator } from 'app/core/validators/general-validators';
 
-const Selected = 'selected';
-const Id = 'id';
-const Name = 'name';
-const Memo = 'memo';
-const CreateUtc = 'createdUtc';
-
 @Component({
   selector: 'olive-user-editor',
   templateUrl: './user-editor.component.html',

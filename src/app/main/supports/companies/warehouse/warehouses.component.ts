@@ -19,7 +19,6 @@ import { Warehouse } from '../../models/warehouse.model';
 import { OliveWarehouseManagerComponent } from './warehouse-manager/warehouse-manager.component';
 import { checkIcon } from 'app/core/utils/olive-helpers';
 
-const Selected = 'selected';
 const Id = 'id';
 const Code = 'code';
 const Name = 'name';
@@ -55,7 +54,6 @@ export class OliveWarehousesComponent extends OliveEntityListComponent {
       translateTitleId: NavTranslates.Company.warehouse,
       managePermission: null,
       columns: [
-        { data: Selected },
         { data: Code, thName: this.translator.get('common.tableHeader.code'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
         { data: Name, thName: this.translator.get('common.tableHeader.name'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text -ex-width-60' },
         { data: Company, thName: this.translator.get('common.tableHeader.company'), tdClass: 'print left -ex-type-text', thClass: 'print -ex-type-text' },
